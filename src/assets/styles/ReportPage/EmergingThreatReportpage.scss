@@ -1,0 +1,244 @@
+.emerging-threat-page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 67px;
+  background-color: #ffffff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
+
+  // Hero Section
+  .report-hero-section {
+    background: linear-gradient(to right, #e2e7f7 0%, #faebf0 55%, #f6d2d9 100%);
+    padding: 80px 32px 120px 32px;
+    position: sticky;
+    top: 67px;
+    z-index: 1;
+    overflow: hidden;
+
+    .hero-waves-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+
+      .hero-wave-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        left: -100px;
+        top: 0;
+        opacity: 0.9;
+      }
+    }
+
+    .hero-watermark {
+      position: absolute;
+      right: 3%;
+      top: 55%;
+      transform: translateY(-50%);
+      width: 280px;
+      height: 280px;
+      background-image: url('../../images/largelogo.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-text-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1430px;
+      margin: 0 auto;
+      text-align: left;
+
+      .hero-title {
+        font-size: 38px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #1a0e15;
+        letter-spacing: -0.5px;
+        margin-bottom: 12px;
+      }
+
+      .hero-subtitle {
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.4;
+        color: #70243b;
+        margin: 0;
+      }
+    }
+  }
+
+  // Content Section
+  .report-content-section {
+    background-color: #ffffff;
+    border-radius: 100px 100px 0 0;
+    margin-top: -100px;
+    position: relative;
+    z-index: 10;
+    padding: 48px 60px 80px 60px;
+    flex-grow: 1;
+
+    .content-max-width {
+      max-width: 1430px;
+      margin: 0 auto;
+    }
+
+    // Author and Date Row
+    .author-date-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      font-size: 15px;
+      color: #1a0e15;
+      font-weight: 600;
+
+      .author-name {
+        margin: 0;
+      }
+
+      .publish-date {
+        margin: 0;
+        color: #7a6e73;
+      }
+    }
+
+    // Metadata Pills
+    .metadata-pills-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 40px;
+
+      .meta-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #ffffff;
+        padding: 6px 12px;
+        border-radius: 30px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        transition: all 0.2s ease;
+
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+          border-color: rgba(26, 14, 21, 0.15);
+        }
+
+        .icon-circle-white {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background-color: #ffffff;
+          border: 1px solid rgba(26, 14, 21, 0.08);
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+
+          svg {
+            display: block;
+          }
+        }
+
+        .pill-text {
+          font-size: 11.5px;
+          font-weight: 500;
+          color: #4b3e45;
+          margin: 0;
+
+          .pill-label {
+            font-weight: 600;
+            color: #1a0e15;
+          }
+        }
+      }
+    }
+
+    // Report Narrative/Body Text
+    .report-narrative {
+      font-size: 16.5px;
+      line-height: 1.8;
+      color: #3b2c34;
+      font-weight: 400;
+
+      p {
+        margin-bottom: 24px;
+        text-align: justify;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .emerging-threat-page-container {
+    .report-hero-section {
+      padding: 48px 20px 80px 20px;
+
+      .hero-watermark {
+        right: 20px;
+
+        svg {
+          width: 220px;
+          height: 220px;
+        }
+      }
+
+      .hero-text-content {
+        .hero-title {
+          font-size: 32px;
+        }
+      }
+    }
+
+    .report-content-section {
+      padding: 36px 20px 60px 20px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .emerging-threat-page-container {
+    .report-hero-section {
+      .hero-watermark {
+        display: none; // Hide watermark on small devices to prioritize text readability
+      }
+    }
+
+    .report-content-section {
+      padding: 32px 16px 48px 16px;
+
+      .author-date-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .emerging-threat-page-container {
+    padding-top: 55px;
+
+    .report-hero-section {
+      top: 55px;
+    }
+  }
+}

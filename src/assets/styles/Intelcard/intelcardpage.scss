@@ -1,0 +1,291 @@
+.intelcard-page-container {
+  background-color: #fafbfc;
+  border-top: 1px solid #f1f5f9;
+
+  /* Hide main scroll */
+  overflow: hidden;
+
+
+  .chat-btn {
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #f8fafc !important;
+      transform: translateY(-1px);
+    }
+  }
+
+  .intelcard-main-content {
+    display: flex;
+    width: 100%;
+    /* Enforce flex shrink to keep scrolling inside boundaries */
+    min-height: 0;
+    overflow: hidden;
+    padding: 15px 48px 4px 32px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+
+    .intelcard-list-header-wrapper {
+      width: 100%;
+
+      @media (min-width: 768px) {}
+
+      .intelcard-list-header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        position: relative;
+        width: 100%;
+      }
+
+      .intelcard-list-header-title {
+        color: #1e293b;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        letter-spacing: -0.3px;
+        font-size: 20px;
+        font-weight: 500;
+
+        .bi-question-circle {
+          color: #8b5cf6;
+          font-size: 16px;
+        }
+      }
+
+      .intelcard-list-header-subtitle {
+        color: #64748b;
+        font-weight: 500;
+        margin-bottom: 0;
+        font-size: 13.6px;
+      }
+    }
+  }
+
+  .intelcard-cards-scroll-area {
+    height: calc(100vh - 280px);
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    z-index: 1;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 10px;
+
+      &:hover {
+        background: #cbd5e1;
+      }
+    }
+  }
+
+  .intelcard-pagination-wrapper {
+    padding: 10px 10px 10px 10px;
+    flex-shrink: 0;
+    background-color: #fff;
+  }
+
+  .intelcard-pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 800px; // rounded-pill
+    padding: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: fit-content;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+    .intelcard-pagination-info {
+      color: #64748b;
+      font-weight: 500;
+      margin-left: 16px;
+      margin-right: 16px;
+      font-size: 13.6px;
+    }
+
+    .intelcard-pagination-controls {
+      display: flex;
+      gap: 4px;
+      margin-left: 16px;
+      margin-right: 16px;
+      align-items: center;
+    }
+
+    .intelcard-pagination-btn {
+      width: 32px;
+      height: 32px;
+      background-color: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 50%;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+
+      &:hover {
+        background-color: #f8fafc;
+      }
+
+      &.active {
+        font-weight: 700;
+        color: #fff;
+        background-color: #5200ff;
+        border: none;
+      }
+    }
+
+    .intelcard-pagination-ellipsis {
+      color: #64748b;
+      font-weight: 700;
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+
+    .intelcard-pagination-page-jump {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-right: 24px;
+      color: #64748b;
+      font-weight: 500;
+      font-size: 13.6px;
+
+      .intelcard-pagination-input {
+        width: 45px;
+        text-align: center;
+        background-color: #f8fafc;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        margin-left: 4px;
+        margin-right: 4px;
+        color: #1e293b;
+      }
+
+      .intelcard-pagination-go-btn {
+        font-weight: 700;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: #5200ff;
+        font-size: 13.6px;
+      }
+    }
+  }
+
+  .intelcard-view-checkboxes {
+    .intelcard-checkbox-item {
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.15s ease;
+
+      .intelcard-custom-checkbox {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 1px solid #cbd5e1;
+        accent-color: #4800D9;
+        cursor: pointer;
+        margin: 0;
+      }
+
+      .intelcard-checkbox-label {
+        font-size: 13.5px;
+        color: #334155;
+        font-weight: 500;
+        cursor: pointer;
+        white-space: nowrap;
+        user-select: none;
+      }
+
+      &:hover {
+        .intelcard-checkbox-label {
+          color: #0f172a;
+        }
+      }
+    }
+  }
+
+  .intelcard-date-dropdown-wrapper {
+    .intelcard-date-dropdown-menu {
+      top: 100%;
+      left: 0;
+      min-width: 140px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+      overflow: hidden;
+      animation: fadeInDown 0.15s ease-out;
+
+      .intelcard-date-dropdown-item {
+        font-size: 13px;
+        color: #334155;
+        font-weight: 500;
+        transition: all 0.15s ease;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #f8fafc;
+          color: #4800D9;
+        }
+
+        &.active {
+          background-color: #f1f0fe;
+          color: #4800D9;
+          font-weight: 600;
+        }
+
+        .intelcard-date-dropdown-text {
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  .intelcard-filter-inline-wrapper {
+    .intelcard-filter-triangle {
+      position: absolute;
+      top: -6px;
+      right: 32px;
+      /* Aligns visually with the center of the Filters button */
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid #ffffff;
+      z-index: 10;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -7px;
+      right: 32px;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid #f1f5f9;
+      z-index: 9;
+    }
+  }
+
+}
+

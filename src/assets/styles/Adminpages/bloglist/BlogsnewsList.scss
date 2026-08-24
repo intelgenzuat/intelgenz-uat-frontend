@@ -1,0 +1,127 @@
+.blogsnews-container {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, sans-serif;
+
+    .page-title {
+        font-weight: 700;
+        color: #212529;
+        letter-spacing: -0.5px;
+    }
+
+    .add-new-btn {
+        background-color: #000;
+        color: #fff;
+        border-radius: 2px;
+        font-weight: 600;
+        &:hover {
+            background-color: #222;
+            color: #fff;
+        }
+    }
+
+    .toolbar-card, .table-card {
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.03);
+    }
+
+    .toolbar-input {
+        border-radius: 2px;
+        font-size: 13px;
+        &:focus {
+            box-shadow: none;
+            border-color: #adb5bd;
+        }
+    }
+
+    .view-btn {
+        border-radius: 2px !important;
+        font-weight: 600;
+        font-size: 13px;
+        &.active {
+            background-color: #0d6efd;
+            color: #fff;
+            border-color: #0d6efd;
+        }
+        &.inactive {
+            background-color: #fff;
+            color: #0d6efd;
+            border-color: #dee2e6;
+        }
+    }
+
+    .table-header {
+        font-size: 11px;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        border-bottom: 1px solid #dee2e6;
+        th {
+            border-bottom: 1px solid #dee2e6;
+        }
+    }
+
+    .table-row {
+        td {
+            vertical-align: middle;
+            border-bottom: 1px dashed #dee2e6;
+        }
+        &:last-child td {
+            border-bottom: none;
+        }
+    }
+
+    .title-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .category-badge {
+        font-size: 11px;
+        border-radius: 2px;
+        padding: 4px 8px;
+        font-weight: 600;
+
+        &.malware { background-color: #e0e7ff; color: #4f46e5; }
+        &.phishing { background-color: #f3e8ff; color: #9333ea; }
+        &.tech-news { background-color: #cffafe; color: #0891b2; }
+        &.vulnerability { background-color: #fee2e2; color: #dc2626; }
+        &.default { background-color: #f1f5f9; color: #475569; }
+    }
+
+    .status-badge {
+        font-size: 11px;
+        border-radius: 2px;
+        padding: 4px 8px;
+        font-weight: 600;
+
+        &.published { background-color: #dcfce7; color: #16a34a; }
+        &.draft { background-color: #fef3c7; color: #d97706; }
+    }
+
+    .pagination-custom {
+        display: flex;
+        gap: 4px;
+        
+        .page-item {
+            .page-link {
+                border-radius: 2px;
+                font-size: 13px;
+                color: #6c757d;
+                border: 1px solid #dee2e6;
+                padding: 6px 12px;
+                margin: 0;
+            }
+
+            &.active .page-link {
+                background-color: #0d5cba; /* Slightly darker blue to match screenshot */
+                border-color: #0d5cba;
+                color: #fff;
+                font-weight: 500;
+            }
+        }
+    }
+}

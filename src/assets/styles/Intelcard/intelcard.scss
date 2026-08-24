@@ -1,0 +1,163 @@
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes rotate-border {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+.threat-card {
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  // &:hover {
+  //   transform: translateY(-2px);
+  //   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  // }
+
+  .card-header-banner {
+    border: 2px solid transparent;
+    border-radius: 16px;
+    position: relative;
+    padding: 12px;
+    align-items: center;
+    gap: 16px;
+
+    background:
+      linear-gradient(90deg, #f3f0ff 0%, #fff1f2 100%) padding-box,
+      conic-gradient(from var(--border-angle), #d8b4fe, #f06e84, #ececec, #d8b4fe) border-box;
+
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    animation: rotate-border 4s linear infinite;
+
+    .date-badge {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04) !important;
+    }
+  }
+
+  .card-body-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .view-report-btn {
+    transition: all 0.2s ease;
+    border: none;
+
+    &:hover {
+      background-color: #3100a3 !important;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.tc-month {
+  font-size: 10px;
+  font-weight: 600;
+  color: #000000;
+}
+
+.tc-day {
+  font-size: 19px;
+  font-weight: 800;
+  color: #e11d48;
+  line-height: 1.1;
+}
+
+.tc-year {
+  font-size: 10px;
+  font-weight: 500;
+  color: #000000;
+}
+
+.tc-banner-text {
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 400;
+  color: #000000;
+}
+
+.tc-icon {
+  font-size: 16px;
+  stroke-width: 0px !important;
+}
+
+.tc-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #000000;
+}
+
+.tc-value {
+  font-size: 13px;
+  color: #000000;
+  font-weight: 400;
+}
+
+.tc-badge-region {
+  background-color: #fff;
+  font-size: 11px;
+  border-color: #e2e8f0;
+  color: #151515;
+  font-weight: 400;
+}
+
+.tc-label-sm {
+  font-size: 12px;
+  color: #000000;
+  font-weight: 400;
+}
+
+.tc-value-sm {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #000000;
+  font-weight: 400;
+}
+
+.tc-label-dark {
+  font-size: 13px;
+  color: #000000;
+  font-weight: 400;
+}
+
+.tc-badge-severity {
+  font-size: 11px;
+  border-radius: 50px;
+  padding: 4px 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+}
+
+.tc-btn {
+  background-color: #4300d2 !important;
+  color: #fff !important;
+  font-size: 14px;
+  border-radius: 12px;
+  border: none;
+}
+
+.intelcard-cards-scroll-area {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -1,0 +1,359 @@
+.intelegenzchat-drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 1040;
+}
+
+.intelegenzchat-drawer {
+    position: fixed;
+    top: 0;
+    right: -600px;
+    width: 100%;
+    max-width: 400px;
+    /* Default for laptop/small desktop */
+
+    @media (min-width: 1400px) {
+        max-width: 440px;
+        /* Adjusted per user request in Voicechatdrawer */
+    }
+
+    @media (min-width: 1800px) {
+        max-width: 550px;
+        /* Wide desktop width */
+    }
+
+    height: 100vh;
+    background-color: #ffffff;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.04);
+    z-index: 1055;
+    transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #f1f5f9;
+
+    &.open {
+        right: 0;
+    }
+
+    .text-purple {
+        color: #8b5cf6;
+    }
+
+    .drawer-header {
+        h4 {
+            font-size: 18.4px !important;
+            color: #1e293b;
+        }
+
+        .help-icon {
+            font-size: 16px;
+            color: #8b5cf6;
+            cursor: pointer;
+        }
+    }
+
+    .drawer-body {
+        h3 {
+            font-size: 21.6px !important;
+            letter-spacing: -0.02em;
+
+            &.chat-title-gradient {
+                background: linear-gradient(89.96deg, rgba(188, 191, 255, 0.64) 0.04%, rgba(255, 0, 0, 0.64) 14.04%, rgba(0, 13, 255, 0.64) 34.18%, rgba(255, 0, 0, 0.64) 55.69%, rgb(217 178 210) 71.05%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                text-fill-color: transparent;
+            }
+        }
+
+        p.text-secondary {
+            font-size: 13.6px !important;
+            line-height: 1.6;
+        }
+    }
+
+    .response-content {
+        p {
+            font-size: 13.1px !important;
+        }
+    }
+
+    /* ─── Chips ─── */
+    .chip-btn {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12.5px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            border-color: #cbd5e1;
+        }
+    }
+
+    /* ─── Scrollable chat body ─── */
+    .drawer-chat-body {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 4px;
+        }
+    }
+
+    /* ─── User message bubble ─── */
+    .user-message-bubble {
+        background: #f1f5f9;
+        border: 1px solid #e8edf3;
+        border-radius: 16px;
+        padding: 14px 16px;
+
+        .user-avatar-wrap {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1.5px solid #e2e8f0;
+
+            .user-avatar-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+        .sender-name {
+            font-size: 13.1px;
+            color: #1e293b;
+        }
+
+        .user-bubble-text {
+            font-size: 13.1px;
+            color: #334155;
+            font-weight: 500;
+            line-height: 1.5;
+            padding-left: 2px;
+        }
+    }
+
+    /* ─── Intelgenz response row ─── */
+    .intelgenz-response-row {
+        background: #f8fafc;
+        border: 1px solid #e8edf3;
+        border-radius: 16px;
+        padding: 16px;
+
+        .intelgenz-icon-wrap {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ec4899 0%, #db2777 50%, #7c3aed 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: box-shadow 0.3s ease;
+
+            &.pulsing {
+                animation: logo-pulse 1.2s ease-in-out infinite;
+            }
+        }
+
+        .sender-name {
+            font-size: 13.1px;
+            color: #1e293b;
+        }
+    }
+
+    /* ─── Threat bullet list ─── */
+    .threat-list {
+        padding-left: 19.2px;
+        margin: 0;
+
+        li {
+            font-size: 13.1px;
+            color: #475569;
+            line-height: 1.6;
+            font-weight: 400;
+            margin-bottom: 4px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    /* ─── Pulsing animation for icon ─── */
+    @keyframes logo-pulse {
+
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.5);
+        }
+
+        50% {
+            box-shadow: 0 0 0 7px rgba(124, 58, 237, 0);
+        }
+    }
+
+    @keyframes dreamy-gradient-move {
+        0% {
+            background-position: 200% 0;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    /* ─── Loading dots ─── */
+    .loading-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: #db2777;
+        animation: dot-bounce 1.2s ease-in-out infinite;
+    }
+
+    @keyframes dot-bounce {
+
+        0%,
+        80%,
+        100% {
+            transform: scale(0.7);
+            opacity: 0.5;
+        }
+
+        40% {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+    }
+
+    /* ─── Fade-up entrance ─── */
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animation-fade-in {
+        animation: fadeUp 0.35s ease forwards;
+    }
+
+    /* ─── Footer icon buttons (chat state) ─── */
+    .footer-icon-btn {
+        width: 38px;
+        height: 38px;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        transition: background 0.2s ease;
+
+        &:hover {
+            background: #e2e8f0;
+        }
+    }
+
+    /* ─── Input box ─── */
+    .chat-input-wrapper {
+        .chat-input-field {
+            padding: 17.6px 51.2px 17.6px 51.2px;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            resize: none;
+            min-height: 60px;
+            font-size: 14.1px;
+            background-color: #ffffff;
+            color: #1e293b;
+
+            &::placeholder {
+                color: #94a3b8;
+                font-weight: 500;
+            }
+
+            &:focus {
+                border-color: #a78bfa;
+                box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+                outline: none;
+            }
+        }
+
+        /* ─ Chat mode: single border wraps textarea + footer buttons ─ */
+        &--chat {
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            background: #ffffff;
+            padding: 14px 16px 12px;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+
+            .chat-input-field {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0;
+                min-height: auto;
+                border-radius: 0;
+                font-size: 14.1px;
+                background: transparent;
+
+                &:focus {
+                    border: none;
+                    box-shadow: none !important;
+                    outline: none;
+                }
+            }
+
+            .chat-footer-actions {
+                border-top: none;
+                padding-top: 6px;
+            }
+
+            .dreamy-gradient-bg {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 48px;
+                background: linear-gradient(90deg,
+                        rgba(236, 72, 153, 0.25) 0%,
+                        rgba(124, 58, 237, 0.25) 25%,
+                        rgba(236, 72, 153, 0.25) 50%,
+                        rgba(124, 58, 237, 0.25) 75%,
+                        rgba(236, 72, 153, 0.25) 100%);
+                background-size: 200% 100%;
+                animation: dreamy-gradient-move 4s linear infinite;
+                filter: blur(8px);
+                z-index: 1;
+                pointer-events: none;
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 20px;
+            }
+        }
+    }
+}

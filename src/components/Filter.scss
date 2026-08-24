@@ -1,0 +1,44 @@
+.filter-component {
+    background-color: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    margin-top: 10px;
+    
+    .filter-section {
+        input::placeholder {
+            color: #cbd5e1 !important;
+            font-weight: 500;
+        }
+
+        .btn-outline-light {
+            border-color: #e2e8f0 !important;
+            color: #334155 !important;
+            
+            &:hover {
+                background-color: #f8fafc;
+            }
+        }
+    }
+}
+
+.animation-fade-in {
+    animation: fadeInDown 0.2s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.filter-label { font-size: 14px; }
+.filter-input { font-size: 14px; outline: none; }
+.filter-btn-choose { font-size: 14px; }
+.filter-icon-caret { font-size: 10px; }
+
