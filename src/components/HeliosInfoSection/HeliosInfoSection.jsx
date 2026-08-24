@@ -25,9 +25,9 @@ const HeliosInfoSection = () => {
 
                 <span className="helios-detail-item d-flex align-items-center gap-2 flex-nowrap"><PiTreeViewDuotone className="item-icon" /> Reviewed by: Security Admin</span>
             </div>
-            <a href="#" className="more-details-link text-decoration-none d-flex align-items-center gap-1 flex-shrink-0 ms-auto">
+            {/* <a href="#" className="more-details-link text-decoration-none d-flex align-items-center gap-1 flex-shrink-0 ms-auto">
                 <FiArrowRight style={{ strokeWidth: '3px' }} /> More Details
-            </a>
+            </a> */}
         </div>
     );
 };

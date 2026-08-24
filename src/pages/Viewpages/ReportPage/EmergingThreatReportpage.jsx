@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FiMonitor, FiUser, FiGlobe, FiShield } from 'react-icons/fi';
 import EmergingThreatHeader from './EmergingThreatHeader';
 import EmergingThreatFooter from './EmergingThreatFooter';
@@ -6,11 +6,34 @@ import logo from '../../../assets/images/logo.png';
 import gradientImg from '../../../assets/images/gradient.png';
 import '../../../assets/styles/ReportPage/EmergingThreatReportpage.scss';
 
+const GRADIENT_GROUPS = [
+    // Original (soft pink/lavender)
+    ['#e2e7f7', '#faebf0', '#f6d2d9'],
+    // Mint → Cyan → Lavender
+    ['#CCFFEB', '#A6FCF6', '#C4B5F1'],
+    // Warm sunset (peach → coral → rose)
+    ['#E0A8EA', '#F9BFA0', '#FFEEAC'],
+    // // Ocean breeze (sky → teal → deep blue)
+    ['#FCCCCC', '#B6D7FB'],
+    // // Golden hour (cream → amber → warm orange)
+    ['#FFD8C2', '#D3FFED', '#FFCFE7'],
+    // Northern lights (green → teal → purple)
+    ['#FCE1E2', '#F6E5AB', '#C3F6F4'],
+    ['#C6FEF8', '#E9B4', '#FFC3C4'],
+
+];
+
 export default function EmergingThreatReportpage() {
     const paragraphText = `In May 2026, FortiGuard Labs identified an attack targeting users in Spain and Portugal involving 
     the banking Trojan Ousaban. This malware has been active in Brazil and is spread through an MSI downloader. 
     The malicious payload involves a DLL file that is run via DLL side-loading or process injection. In this campaign, the threat actor primarily targets users in Spain and Portugal. Figure 1 shows how the attack unfolds. The phishing PDF tricks victims into visiting a malicious webpage that scans the user's environment. If they are in Spain or Portugal, the webpage downloads a VBS file to kickstart the next part of the attack. The final payload is an EXE file that is dropped onto the victim’s computer and executed by the VBS script. In May 2026, FortiGuard Labs identified an attack targeting users in Spain and Portugal involving the banking Trojan Ousaban. This malware has been active in Brazil and is spread through an MSI downloader. The malicious payload involves a DLL file that is run via DLL side-loading or process injection. In this campaign, the threat actor primarily targets users in Spain and Portugal. Figure 1 shows how the attack unfolds. The phishing PDF tricks victims into visiting a malicious webpage that scans the user's environment. If they are in Spain or Portugal, the webpage downloads a VBS file to kickstart the next part of the attack. The final payload is an EXE file that is dropped onto the victim’s computer and executed by the VBS script. In May 2026, FortiGuard Labs identified an attack targeting users in Spain and Portugal involving the banking Trojan Ousaban. This malware has been active in Brazil and is spread through an MSI downloader. The malicious payload involves a DLL file that is run via DLL side-loading or process injection. In this campaign, the threat actor primarily targets users in Spain and Portugal. Figure 1 shows how the attack unfolds. The phishing PDF tricks victims into visiting a malicious webpage that scans the user's environment. If they are in Spain or Portugal, the webpage downloads a VBS file to kickstart the next part of the attack. The final payload is an EXE file that is dropped onto the victim’s computer and executed by the VBS script. In May 2026, FortiGuard Labs identified an attack targeting users in Spain and Portugal involving the banking Trojan Ousaban. This malware has been active in Brazil and is spread through an MSI downloader. The malicious payload involves a DLL file that is run via DLL side-loading or process injection. In this campaign, the threat actor primarily targets users in Spain and Portugal. Figure 1 shows how the attack unfolds. The phishing PDF tricks victims into visiting a malicious webpage that scans the user's environment. If they are in Spain or Portugal, the webpage downloads a VBS file to kickstart the next part of the attack. The final payload is an EXE file that is dropped onto the victim’s
      computer and executed by the VBS script.`;
+
+    // Pick a random gradient group once per mount
+    const heroGradient = useMemo(() => {
+        const group = GRADIENT_GROUPS[Math.floor(Math.random() * GRADIENT_GROUPS.length)];
+        return `linear-gradient(to right, ${group[0]} 0%, ${group[1]} 50%, ${group[2]} 100%)`;
+    }, []);
 
     return (
         <div className="emerging-threat-page-container">
@@ -18,7 +41,7 @@ export default function EmergingThreatReportpage() {
             <EmergingThreatHeader />
 
             {/* Hero Section */}
-            <section className="report-hero-section">
+            <section className="report-hero-section" style={{ background: heroGradient }}>
                 {/* Background Waves */}
                 <div className="hero-waves-container">
                     <img src={gradientImg} alt="Wave Background" className="hero-wave-img" />

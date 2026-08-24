@@ -147,23 +147,32 @@ function IntelCard({ cardData }) {
 
   return (
     <div className="threat-card-wrapper" style={{ background: 'linear-gradient(90deg, #F2E8FC 0%, #FAEDF5 100%)', borderRadius: '14px', paddingTop: '6px' }}>
-      <div className="threat-card position-relative d-flex flex-column bg-white" style={{ borderRadius: '14px', padding: '12px 12px', border: '1px solid #f8f9fa' }}>
+      <div
+        className="threat-card position-relative d-flex flex-column bg-white"
+        style={{
+          borderRadius: '14px',
+          padding: '12px 12px',
+          border: '1px solid #f8f9fa',
+          overflow: 'hidden'
+        }}
+      >
 
         {/* Title */}
-        <h5 className="text-center mb-2 mt-1 px-1" title={data.banner_text} style={{
+        <h5 className="text-center mb-2 mt-1 px-1 position-relative" title={data.banner_text} style={{
           fontSize: '15px',
           fontWeight: '600',
           color: '#000',
           display: '-webkit-box',
           WebkitLineClamp: 1,
           WebkitBoxOrient: 'vertical',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          zIndex: 1
         }}>
           {data.banner_text}
         </h5>
 
         {/* Details section */}
-        <div className="d-flex flex-column gap-2 mb-3">
+        <div className="d-flex flex-column gap-2 mb-3 position-relative" style={{ zIndex: 1 }}>
 
           <div className="d-flex justify-content-center align-items-center gap-2 flex-nowrap w-100 px-1">
             {/* Region */}
@@ -219,11 +228,11 @@ function IntelCard({ cardData }) {
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-auto d-flex justify-content-center position-relative w-100 align-items-center pb-1">
+        <div className="mt-auto d-flex justify-content-center position-relative w-100 align-items-center pb-1" style={{ zIndex: 1 }}>
           <button
             onClick={() => navigate('/intel-card-threat-details')}
-            className="btn rounded-pill text-white px-4 py-1 d-flex align-items-center"
-            style={{ backgroundColor: '#4300D2', fontSize: '12px', fontWeight: '500', transition: 'background-color 0.2s', border: 'none' }}
+            className="btn rounded-pill text-white px-4 py-1 d-flex align-items-center position-relative"
+            style={{ backgroundColor: '#4300D2', fontSize: '12px', fontWeight: '500', transition: 'background-color 0.2s', border: 'none', zIndex: 2 }}
             onMouseOver={(e) => e.target.style.backgroundColor = '#3100a3'}
             onMouseOut={(e) => e.target.style.backgroundColor = '#4300D2'}
           >
@@ -231,8 +240,8 @@ function IntelCard({ cardData }) {
           </button>
 
           {/* Zi Watermark Logo */}
-          <div className="position-absolute end-0 d-flex align-items-center justify-content-center rounded-circle">
-           <svg width="44" height="42" viewBox="0 0 44 42" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+          <div className="position-absolute end-0 d-flex align-items-center justify-content-center rounded-circle" style={{ zIndex: 2 }}>
+            <svg width="44" height="42" viewBox="0 0 44 42" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
               <rect width="43.7717" height="42" fill="url(#pattern0_143_129)" fillOpacity="0.31" />
               <defs>
                 <pattern id="pattern0_143_129" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -243,6 +252,21 @@ function IntelCard({ cardData }) {
             </svg>
           </div>
         </div>
+
+        {/* Corner pizza pie / quarter circle shape */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            width: '30px',
+            height: '30px',
+            backgroundColor: '#FDE4EA',
+            borderTopLeftRadius: '100%',
+            pointerEvents: 'none',
+            zIndex: 0
+          }}
+        />
       </div>
     </div>
   );
