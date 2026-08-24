@@ -24,7 +24,7 @@ import AdminLayout from './layout/AdminLayout';
 // Lazy load all components
 const Homepage = lazy(() => import('./pages/Homepage/Homepage'));
 const Dashboardpage = lazy(() => import('./pages/Admindashboard/dashboard/Dashboardpage'));
-const BlogsnewsList = lazy(() => import('./pages/Admindashboard/blogsnews/blogsnewsList'));
+const BlogsnewsList = lazy(() => import('./pages/Admindashboard/blogsnews/BlogsnewsList'));
 const Viewpage = lazy(() => import('./pages/Viewpages/View'))
 const Viewreportpage = lazy(() => import('./pages/Viewpages/ViewReport'))
 const Notfoundpage = lazy(() => import('./common/404/Pagenotfound'))
@@ -33,7 +33,7 @@ const Mitigationttpview = lazy(() => import('./pages/Mitigationttpview/Mitigatio
 const IntelCardDetailsView = lazy(() => import('./pages/IntelCard/IntelCardDetailview'));
 const ThreatActorProfiling = lazy(() => import('./pages/ThreatActorProfiling/ThreatActorProfilingPage'));
 const IntelCardsGrid = lazy(() => import('./pages/IntelCard/IntelCards'));
-const IntelCardMalwareGrid = lazy(() => import('./pages/IntelCard/IntelCardmalware'));
+const IntelCardMalwareGrid = lazy(() => import('./pages/IntelCard/IntelCardMalware'));
 const IntelCardThreatActorDetail = lazy(() => import('./pages/IntelCard/IntelCardThreatActorDetail'));
 const BlogsandNewsPage = lazy(() => import('./pages/Blogsandnews/BlogsandNewsPage'));
 const EmergingThreatReportpage = lazy(() => import('./pages/Viewpages/ReportPage/EmergingThreatReportpage'));
