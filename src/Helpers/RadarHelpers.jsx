@@ -41,7 +41,6 @@ export const renderRadarBackground = () => (
     {/* Inner pink background (Around You range) */}
     <circle cx="0" cy="0" r="38" fill="#ffe8eb" opacity={0.6} />
     {/* Center green background */}
-    <circle cx="0" cy="0" r="22" fill="#ffff" />
     <circle cx="0" cy="0" r="15" fill="#00b85c" />
     
     {/* New SVG Icon Area */}

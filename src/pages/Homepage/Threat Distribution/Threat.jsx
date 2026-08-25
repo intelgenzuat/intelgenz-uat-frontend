@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
+import { Radar, RadarChart, PolarGrid, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import { CustomDotAround, CustomDotAway, CustomDotGlobal, renderRadarBackground } from '../../../Helpers/RadarHelpers';
 
 const threatActorsData = [
@@ -93,8 +93,7 @@ export default function Threat() {
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="75%" data={threatActorsData}>
             <PolarGrid gridType="circle" stroke="#e2e8f0" />
-            <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 500 }} />
-            <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} axisLine={false} />
+            <PolarRadiusAxis angle={30} domain={[0, 150]} ticks={[37.5, 75, 150]} tick={false} axisLine={false} />
             <Radar
               name="Around You"
               dataKey="A"
