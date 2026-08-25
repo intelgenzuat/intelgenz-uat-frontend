@@ -7,16 +7,17 @@ import MitigationView from './MitigationView';
 import Nist from './Nist';
 import Defend from './Defend';
 import TTPview from './TTPview';
-
-
-
-
+import FloatingChatButtons from '../../components/Buttons/FloatingChatButtons';
+import Voicechatdrawer from '../../components/Drawers/Voicechatdrawer';
+import Intelegenzchatdrawer from '../../components/Drawers/Intelegenzchatdrawer';
 const Mitigationttpview = () => {
     const [activeTab, setActiveTab] = useState('customized');
     const [activeViewTab, setActiveViewTab] = useState('ttp');
     const [recentSearches, setRecentSearches] = useState([ 'T1078', 'T1486', 'T1021', 'T1204']);
     const [showOverlaps, setShowOverlaps] = useState(false);
     const { isSidebarCollapsed, toggleSidebar } = useOutletContext() || {};
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isVoicechatDrawerOpen, setIsVoicechatDrawerOpen] = useState(false);
 
     const Navigate = useNavigate();
 
@@ -176,6 +177,16 @@ const Mitigationttpview = () => {
                     </div>
                 </div>
             </div>
+            
+            {/* Floating Chat Drawers */}
+            <FloatingChatButtons
+                onVoiceChatOpen={() => setIsVoicechatDrawerOpen(true)}
+                onIntelgenzOpen={() => setIsDrawerOpen(true)}
+            />
+
+            {/* Drawer components */}
+            <Voicechatdrawer isOpen={isVoicechatDrawerOpen} onClose={() => setIsVoicechatDrawerOpen(false)} />
+            <Intelegenzchatdrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
         </div>
     );
 };

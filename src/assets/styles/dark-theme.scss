@@ -159,6 +159,147 @@
     color: #64748b !important;
   }
 
+  // Radar detailed modal overrides
+  .radar-detailed-modal-overlay {
+    background: rgba(0, 0, 0, 0.7) !important;
+  }
+
+  .radar-detailed-modal-content {
+    background: #1e293b !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .radar-detailed-modal-header {
+    background: #0f172a !important;
+    border-bottom-color: #334155 !important;
+
+    .header-left {
+      .tags {
+        .tag-global {
+          background: rgba(211, 47, 47, 0.2) !important;
+          color: #ef4444 !important;
+        }
+        .tag-id {
+          background: #334155 !important;
+          color: #cbd5e1 !important;
+        }
+      }
+      .modal-title {
+        color: #f1f5f9 !important;
+      }
+    }
+
+    .header-right {
+      .score-container {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+
+        .score-circle {
+          border-color: #ef4444 !important;
+          color: #f1f5f9 !important;
+        }
+
+        .score-text {
+          .score-label {
+            color: #94a3b8 !important;
+          }
+          .score-desc {
+            color: #f1f5f9 !important;
+          }
+        }
+      }
+    }
+  }
+
+  .radar-detailed-modal-body {
+    .detail-section {
+      background: #0f172a !important;
+      border-color: #334155 !important;
+
+      &.critical-match {
+        background: rgba(239, 68, 68, 0.1) !important;
+        border-color: rgba(239, 68, 68, 0.3) !important;
+
+        .section-header {
+          border-right-color: rgba(239, 68, 68, 0.3) !important;
+          .section-title-wrapper {
+            h4, i { color: #ef4444 !important; }
+            .score-badge { background: #ef4444 !important; color: #ffffff !important; }
+          }
+          .section-subtitle {
+            color: #fca5a5 !important;
+          }
+        }
+      }
+
+      .section-header {
+        border-right-color: #334155 !important;
+        
+        .section-title-wrapper {
+          h4 { color: #f1f5f9 !important; }
+          i { color: #94a3b8 !important; }
+          .score-badge { 
+            background: #334155 !important; 
+            color: #f1f5f9 !important; 
+          }
+        }
+
+        .section-subtitle {
+          color: #94a3b8 !important;
+        }
+      }
+
+      .section-content {
+        .content-row .content-col {
+          h5 { color: #94a3b8 !important; }
+          p { color: #cbd5e1 !important; }
+        }
+
+        .overlap-box {
+          background: #1e293b !important;
+          border-color: #334155 !important;
+          
+          h6 { color: #94a3b8 !important; }
+          p { color: #cbd5e1 !important; }
+        }
+
+        .critical-match-box {
+          background: rgba(239, 68, 68, 0.15) !important;
+          border-color: rgba(239, 68, 68, 0.4) !important;
+
+          h6 { color: #ef4444 !important; }
+          p { color: #fca5a5 !important; }
+        }
+      }
+    }
+  }
+
+  .radar-detailed-modal-footer {
+    background: #0f172a !important;
+    border-top-color: #334155 !important;
+
+    .btn-cancel {
+      background: transparent !important;
+      border-color: #475569 !important;
+      color: #cbd5e1 !important;
+
+      &:hover {
+        background: #334155 !important;
+        color: #f1f5f9 !important;
+      }
+    }
+
+    .btn-export {
+      background: #3b82f6 !important;
+      border-color: #3b82f6 !important;
+      color: #ffffff !important;
+
+      &:hover {
+        background: #2563eb !important;
+      }
+    }
+  }
+
   // Helios Info Section overrides
   .helios-info-section {
     background-color: #1e293b !important;

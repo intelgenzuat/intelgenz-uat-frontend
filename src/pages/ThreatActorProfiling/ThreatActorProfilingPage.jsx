@@ -5,6 +5,9 @@ import { GoFlame } from 'react-icons/go';
 import { Link } from 'react-router-dom';
 import cube from '../../assets/images/cube.png';
 import logo from '../../assets/images/logo.jpeg';
+import Voicechatdrawer from '../../components/Drawers/Voicechatdrawer';
+import Intelegenzchatdrawer from '../../components/Drawers/Intelegenzchatdrawer';
+import FloatingChatButtons from '../../components/Buttons/FloatingChatButtons';
 import '../../assets/styles/threatactorprofile/threatactorprofilimg.scss';
 
 const MOCK_DATA = [
@@ -23,6 +26,8 @@ const MOCK_DATA = [
 
 export default function ThreatActorProfilingPage() {
   const [techniqueId, setTechniqueId] = useState('');
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isVoicechatDrawerOpen, setIsVoicechatDrawerOpen] = useState(false);
 
   const getPriorityBadge = (priority) => {
     switch (priority) {
@@ -179,6 +184,16 @@ export default function ThreatActorProfilingPage() {
           &copy; 2024 Threat all rights reserved
         </div>
       </div>
+      
+      {/* Floating Chat Drawers */}
+      <FloatingChatButtons
+        onVoiceChatOpen={() => setIsVoicechatDrawerOpen(true)}
+        onIntelgenzOpen={() => setIsDrawerOpen(true)}
+      />
+
+      {/* Drawer components */}
+      <Voicechatdrawer isOpen={isVoicechatDrawerOpen} onClose={() => setIsVoicechatDrawerOpen(false)} />
+      <Intelegenzchatdrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
     </div>
   );
 }
