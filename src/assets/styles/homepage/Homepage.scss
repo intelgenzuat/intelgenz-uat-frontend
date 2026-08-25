@@ -476,6 +476,168 @@ $card-cap-bg: transparent;
       }
     }
 
+    // Radar modal styles
+    .radar-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: radarModalFadeIn 0.2s ease;
+    }
+
+    .radar-modal-content {
+      background: #ffffff;
+      border-radius: 12px;
+      width: 420px;
+      max-width: 90vw;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      animation: radarModalSlideUp 0.25s ease;
+    }
+
+    .radar-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid #e2e8f0;
+
+      .radar-modal-title {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+
+        i {
+          color: #5200ff;
+        }
+      }
+
+      .radar-modal-close {
+        background: none;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #94a3b8;
+        font-size: 14px;
+        transition: all 0.2s;
+
+        &:hover {
+          background: #f1f5f9;
+          color: #0f172a;
+        }
+      }
+    }
+
+    .radar-modal-body {
+      padding: 20px;
+    }
+
+    .radar-modal-info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #f1f5f9;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .radar-modal-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .radar-modal-value {
+        font-size: 13px;
+        font-weight: 600;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &.highlight {
+          color: #5200ff;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .radar-modal-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+
+      &.badge-around {
+        background: rgba(82, 0, 255, 0.1);
+        color: #5200ff;
+      }
+
+      &.badge-away {
+        background: rgba(0, 169, 247, 0.1);
+        color: #00a9f7;
+      }
+
+      &.badge-global {
+        background: rgba(255, 138, 0, 0.1);
+        color: #ff8a00;
+      }
+    }
+
+    .radar-modal-threat-bar {
+      width: 100px;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 3px;
+      overflow: hidden;
+
+      .radar-modal-threat-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #5200ff, #7c3aed);
+        border-radius: 3px;
+        transition: width 0.4s ease;
+      }
+    }
+
+    .radar-modal-threat-value {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    @keyframes radarModalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes radarModalSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
     // Legend styles
     .legend-indicators {
       display: flex;

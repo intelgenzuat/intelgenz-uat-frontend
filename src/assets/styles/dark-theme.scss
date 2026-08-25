@@ -109,6 +109,56 @@
     }
   }
 
+  .radar-modal-overlay {
+    background: rgba(0, 0, 0, 0.7) !important;
+  }
+
+  .radar-modal-content {
+    background: #1e293b !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .radar-modal-header {
+    border-bottom-color: #334155 !important;
+
+    .radar-modal-title {
+      color: #f1f5f9 !important;
+    }
+
+    .radar-modal-close {
+      color: #94a3b8 !important;
+
+      &:hover {
+        background: #334155 !important;
+        color: #f1f5f9 !important;
+      }
+    }
+  }
+
+  .radar-modal-info-row {
+    border-bottom-color: #334155 !important;
+
+    .radar-modal-label {
+      color: #94a3b8 !important;
+    }
+
+    .radar-modal-value {
+      color: #f1f5f9 !important;
+
+      &.highlight {
+        color: #a78bfa !important;
+      }
+    }
+  }
+
+  .radar-modal-threat-bar {
+    background: #334155 !important;
+  }
+
+  .radar-modal-threat-value {
+    color: #64748b !important;
+  }
+
   // Helios Info Section overrides
   .helios-info-section {
     background-color: #1e293b !important;
