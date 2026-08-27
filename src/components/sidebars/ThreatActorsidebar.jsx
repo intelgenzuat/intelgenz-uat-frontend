@@ -5,8 +5,13 @@ import { BsShieldFillExclamation } from 'react-icons/bs';
 import { MdAccountTree } from 'react-icons/md';
 import { Sidebar } from 'react-pro-sidebar';
 import { PiTreeStructureLight } from 'react-icons/pi';
+import { useState } from 'react';
+
+
 
 export default function ThreatActorsidebar({ collapsed }) {
+    const [selectedMenu, setSelectedMenu] = useState('profiling');
+
     return (
         <Sidebar
             collapsed={collapsed}
@@ -35,7 +40,9 @@ export default function ThreatActorsidebar({ collapsed }) {
                             whiteSpace: 'nowrap',
                         }}
                     >
-                        <BsShieldFillExclamation className="icon-shield text-danger me-2 flex-shrink-0" />
+                        <BsShieldFillExclamation
+                            className="icon-shield text-danger me-2 flex-shrink-0"
+                        />
 
                         {!collapsed && (
                             <>
@@ -55,22 +62,66 @@ export default function ThreatActorsidebar({ collapsed }) {
                     </h6>
 
                     <ul className="actor-sidebar-nav list-unstyled mb-0 px-2">
+
+                        {/* THREAT ACTOR PROFILING */}
                         <li
-                            className="nav-item active d-flex align-items-center px-3 py-2 rounded-3"
+                            onClick={() => setSelectedMenu('profiling')}
+                            className={`nav-item d-flex align-items-center py-2 rounded-3 ${selectedMenu === 'profiling' ? 'active' : ''
+                                }`}
                             style={{
                                 overflow: 'hidden',
                                 whiteSpace: 'nowrap',
                                 justifyContent: collapsed
                                     ? 'center'
                                     : 'flex-start',
-                                paddingLeft: collapsed ? '0' : undefined,
-                                paddingRight: collapsed ? '0' : undefined,
+                                paddingLeft: collapsed ? '0' : '12px',
+                                paddingRight: collapsed ? '0' : '12px',
+                                cursor: 'pointer',
                             }}
                         >
                             <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0">
                                 <PiTreeStructureLight
                                     className="text-danger"
-                                    style={{ fontSize: '18px', backgroundColor: "transparent" }}
+                                    style={{
+                                        fontSize: '18px',
+                                        backgroundColor: 'transparent',
+                                    }}
+                                />
+                            </div>
+
+                            {!collapsed && (
+                                <span className="nav-label">
+                                    Threat Actor Profiling
+                                </span>
+                            )}
+                        </li>
+
+                        {/* VIEW IN KNOWLEDGE GRAPH */}
+                        <li
+                            onClick={() => setSelectedMenu('knowledgeGraph')}
+                            className={`nav-item d-flex align-items-center py-2 rounded-3 ${selectedMenu === 'knowledgeGraph'
+                                ? 'active'
+                                : ''
+                                }`}
+                            style={{
+                                overflow: 'hidden',
+                                whiteSpace: 'nowrap',
+                                justifyContent: collapsed
+                                    ? 'center'
+                                    : 'flex-start',
+                                paddingLeft: collapsed ? '0' : '12px',
+                                paddingRight: collapsed ? '0' : '12px',
+                                marginTop: '10px',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0">
+                                <PiTreeStructureLight
+                                    className="text-danger"
+                                    style={{
+                                        fontSize: '18px',
+                                        backgroundColor: 'transparent',
+                                    }}
                                 />
                             </div>
 
@@ -135,7 +186,9 @@ export default function ThreatActorsidebar({ collapsed }) {
 
                                     <FiChevronRight
                                         className="text-dark"
-                                        style={{ strokeWidth: '2.5px' }}
+                                        style={{
+                                            strokeWidth: '2.5px',
+                                        }}
                                     />
                                 </li>
 
@@ -151,7 +204,9 @@ export default function ThreatActorsidebar({ collapsed }) {
 
                                     <FiChevronRight
                                         className="text-dark"
-                                        style={{ strokeWidth: '2.5px' }}
+                                        style={{
+                                            strokeWidth: '2.5px',
+                                        }}
                                     />
                                 </li>
                             </ul>
