@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { FiHome, FiShield } from 'react-icons/fi';
 import { PiDiamondFill } from 'react-icons/pi';
 import { GoFlame } from 'react-icons/go';
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import cube from '../../assets/images/cube.png';
 import logo from '../../assets/images/logo.jpeg';
 import Voicechatdrawer from '../../components/Drawers/Voicechatdrawer';
 import Intelegenzchatdrawer from '../../components/Drawers/Intelegenzchatdrawer';
 import FloatingChatButtons from '../../components/Buttons/FloatingChatButtons';
+import ThreatActorsidebar from '../../components/sidebars/ThreatActorsidebar';
 import '../../assets/styles/threatactorprofile/threatactorprofilimg.scss';
 
 const MOCK_DATA = [
@@ -28,6 +29,7 @@ export default function ThreatActorProfilingPage() {
   const [techniqueId, setTechniqueId] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isVoicechatDrawerOpen, setIsVoicechatDrawerOpen] = useState(false);
+  const { isSidebarCollapsed, toggleSidebar } = useOutletContext() || {};
 
   const getPriorityBadge = (priority) => {
     switch (priority) {
@@ -62,7 +64,21 @@ export default function ThreatActorProfilingPage() {
   );
 
   return (
-    <div className="threat-actor-detail-page">
+    <div className="threat-actor-page-container container-fluid p-0 d-flex flex-column h-100 overflow-hidden">
+      <div className="d-flex flex-grow-1 overflow-hidden" style={{ minHeight: 0 }}>
+
+        {/* Sidebar */}
+        <div className="flex-shrink-0">
+          <ThreatActorsidebar
+            collapsed={isSidebarCollapsed}
+            toggled={!isSidebarCollapsed && window.innerWidth < 992}
+            onBackdropClick={toggleSidebar}
+          />
+        </div>
+
+        {/* Main Content */}
+        <div className="d-flex flex-column flex-grow-1 overflow-y-auto" style={{ minHeight: 0 }}>
+          <div className="threat-actor-detail-page">
 
       {/* Top Header Section */}
       <div className="tap-header-section">
@@ -194,6 +210,9 @@ export default function ThreatActorProfilingPage() {
       {/* Drawer components */}
       <Voicechatdrawer isOpen={isVoicechatDrawerOpen} onClose={() => setIsVoicechatDrawerOpen(false)} />
       <Intelegenzchatdrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
