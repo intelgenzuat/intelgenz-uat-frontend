@@ -16,6 +16,8 @@ import {
     blogsnewslist,
     blogsnewsadd,
     blogsnewsedit,
+    viewinKnowlegdeGraph,
+    IntelviewinKnowlegdeGraph,
 } from './Routes/Routes';
 
 
@@ -31,14 +33,15 @@ const Notfoundpage = lazy(() => import('./common/404/Pagenotfound'))
 const IntelCardLayout = lazy(() => import('./pages/IntelCard/IntelCardPage'))
 const Mitigationttpview = lazy(() => import('./pages/Mitigationttpview/Mitigationttpview'));
 const IntelCardDetailsView = lazy(() => import('./pages/IntelCard/IntelCardDetailview'));
-const ThreatActorProfiling = lazy(() => import('./pages/ThreatActorProfiling/ThreatActorProfilingPage'));
+const ThreatActorProfilingLayout = lazy(() => import('./pages/ThreatActorProfiling/ThreatActorProfilingPage'));
+const ThreatActorProfilingTable = lazy(() => import('./pages/ThreatActorProfiling/ThreatActorProfilingTable'));
 const IntelCardsGrid = lazy(() => import('./pages/IntelCard/IntelCards'));
 const IntelCardMalwareGrid = lazy(() => import('./pages/IntelCard/IntelCardMalware'));
 const IntelCardThreatActorDetail = lazy(() => import('./pages/IntelCard/IntelCardThreatActorDetail'));
 const BlogsandNewsPage = lazy(() => import('./pages/Blogsandnews/BlogsandNewsPage'));
 const EmergingThreatReportpage = lazy(() => import('./pages/Viewpages/ReportPage/EmergingThreatReportpage'));
 const BlogsnewsEditpage = lazy(() => import('./pages/Admindashboard/blogsnews/BlogsnewsEdit'));
-
+const ViewinKnowledgegrap = lazy(() => import('./pages/ThreatActorProfiling/ViewInKnowledgeGraph/ViewInKnowledegeGraph'))
 
 
 // Guard: only Admin role can access admin routes
@@ -76,9 +79,13 @@ const Privateroutes = () => {
                         <Route element={<IntelCardLayout noFooter />}>
                             <Route exact path={IntelCard} element={<IntelCardsGrid noFooter />}></Route>
                             <Route exact path={IntelCardMalware} element={<IntelCardMalwareGrid noFooter />}></Route>
+                            <Route exact path={IntelviewinKnowlegdeGraph} element={<ViewinKnowledgegrap noFooter />}></Route>
+                        </Route>
+                        <Route element={<ThreatActorProfilingLayout noFooter />}>
+                            <Route exact path={ThreatActorprofile} element={<ThreatActorProfilingTable noFooter />}></Route>
+                            <Route exact path={viewinKnowlegdeGraph} element={<ViewinKnowledgegrap noFooter />}></Route>
                         </Route>
                         <Route exact path={IntelCardDetails} element={<IntelCardDetailsView noFooter />}></Route>
-                        <Route exact path={ThreatActorprofile} element={<ThreatActorProfiling noFooter />}></Route>
                         <Route exact path={IntelCardThreatDetails} element={<IntelCardThreatActorDetail noFooter />}></Route>
                         <Route exact path={BlogsandNews} element={<BlogsandNewsPage noFooter />}></Route>
                         <Route exact path={blogsnewslist} element={<AdminRoute><BlogsnewsList noFooter /></AdminRoute>}></Route>

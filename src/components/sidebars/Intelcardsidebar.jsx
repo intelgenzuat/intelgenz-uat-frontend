@@ -3,13 +3,14 @@ import './Intelcardsidebar.scss';
 import { FiChevronRight, FiHeadphones, FiStar } from 'react-icons/fi';
 import { BsShieldFillExclamation } from 'react-icons/bs';
 import { MdCrisisAlert } from 'react-icons/md';
+import { PiTreeStructureLight } from 'react-icons/pi';
 import { Sidebar } from 'react-pro-sidebar';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { IntelCard, IntelCardMalware, IntelviewinKnowlegdeGraph } from '../../Routes/Routes';
 
 export default function Intelcardsidebar({ collapsed }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const activeTab = location.pathname === '/intel-card' ? 'customized' : (location.pathname === '/intel-card-malware' ? 'all' : '');
 
   return (
     <Sidebar
@@ -35,9 +36,9 @@ export default function Intelcardsidebar({ collapsed }) {
 
           <ul className="sidebar-nav list-unstyled mb-0 px-2">
             <li
-              className={`nav-item threat-actor-item d-flex align-items-center mb-2 px-3 py-2 rounded-3 ${activeTab === 'customized' ? 'active' : ''}`}
+              className={`nav-item threat-actor-item d-flex align-items-center mb-2 px-3 py-2 rounded-3 ${location.pathname === IntelCard ? 'active' : ''}`}
               onClick={() => {
-                navigate('/intel-card');
+                navigate(IntelCard);
               }}
               style={{ overflow: 'hidden', whiteSpace: 'nowrap', justifyContent: collapsed ? 'center' : 'flex-start', paddingLeft: collapsed ? '0' : undefined, paddingRight: collapsed ? '0' : undefined }}
             >
@@ -48,9 +49,9 @@ export default function Intelcardsidebar({ collapsed }) {
             </li>
 
             <li
-              className={`nav-item malware-item d-flex align-items-center px-3 py-2 rounded-3 ${activeTab === 'all' ? 'active' : ''}`}
+              className={`nav-item malware-item d-flex align-items-center mb-2 px-3 py-2 rounded-3 ${location.pathname === IntelCardMalware ? 'active' : ''}`}
               onClick={() => {
-                navigate('/intel-card-malware');
+                navigate(IntelCardMalware);
               }}
               style={{ overflow: 'hidden', whiteSpace: 'nowrap', justifyContent: collapsed ? 'center' : 'flex-start', paddingLeft: collapsed ? '0' : undefined, paddingRight: collapsed ? '0' : undefined }}
             >
@@ -58,6 +59,25 @@ export default function Intelcardsidebar({ collapsed }) {
                 <FiStar style={{ color: '#5200ff', fontSize: '16px' }} />
               </div>
               {!collapsed && <span className="nav-label">Malware</span>}
+            </li>
+
+            <li
+              className={`nav-item d-flex align-items-center px-3 py-2 rounded-3 ${location.pathname === IntelviewinKnowlegdeGraph ? 'active' : ''}`}
+              onClick={() => {
+                navigate(IntelviewinKnowlegdeGraph);
+              }}
+              style={{ overflow: 'hidden', whiteSpace: 'nowrap', justifyContent: collapsed ? 'center' : 'flex-start', paddingLeft: collapsed ? '0' : undefined, paddingRight: collapsed ? '0' : undefined, cursor: 'pointer' }}
+            >
+              <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0">
+                <PiTreeStructureLight
+                  className="text-danger"
+                  style={{
+                    fontSize: '18px',
+                    backgroundColor: 'transparent',
+                  }}
+                />
+              </div>
+              {!collapsed && <span className="nav-label">View in Knowledge Graph</span>}
             </li>
           </ul>
         </div>

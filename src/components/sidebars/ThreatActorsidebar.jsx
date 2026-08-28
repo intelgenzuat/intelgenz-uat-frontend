@@ -2,15 +2,14 @@ import React from 'react';
 import './ThreatActorsidebar.scss';
 import { FiChevronRight, FiHeadphones } from 'react-icons/fi';
 import { BsShieldFillExclamation } from 'react-icons/bs';
-import { MdAccountTree } from 'react-icons/md';
 import { Sidebar } from 'react-pro-sidebar';
 import { PiTreeStructureLight } from 'react-icons/pi';
-import { useState } from 'react';
-
-
+import { useLocation, useNavigate } from 'react-router-dom';
+import { ThreatActorprofile, viewinKnowlegdeGraph } from '../../Routes/Routes';
 
 export default function ThreatActorsidebar({ collapsed }) {
-    const [selectedMenu, setSelectedMenu] = useState('profiling');
+    const location = useLocation();
+    const navigate = useNavigate();
 
     return (
         <Sidebar
@@ -65,8 +64,8 @@ export default function ThreatActorsidebar({ collapsed }) {
 
                         {/* THREAT ACTOR PROFILING */}
                         <li
-                            onClick={() => setSelectedMenu('profiling')}
-                            className={`nav-item d-flex align-items-center py-2 rounded-3 ${selectedMenu === 'profiling' ? 'active' : ''
+                            onClick={() => navigate(ThreatActorprofile)}
+                            className={`nav-item d-flex align-items-center py-2 rounded-3 ${location.pathname === ThreatActorprofile ? 'active' : ''
                                 }`}
                             style={{
                                 overflow: 'hidden',
@@ -98,8 +97,8 @@ export default function ThreatActorsidebar({ collapsed }) {
 
                         {/* VIEW IN KNOWLEDGE GRAPH */}
                         <li
-                            onClick={() => setSelectedMenu('knowledgeGraph')}
-                            className={`nav-item d-flex align-items-center py-2 rounded-3 ${selectedMenu === 'knowledgeGraph'
+                            onClick={() => navigate(viewinKnowlegdeGraph)}
+                            className={`nav-item d-flex align-items-center py-2 rounded-3 ${location.pathname === viewinKnowlegdeGraph
                                 ? 'active'
                                 : ''
                                 }`}

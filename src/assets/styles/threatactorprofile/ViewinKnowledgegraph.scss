@@ -1,6 +1,6 @@
 .threat-page {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   min-height: 650px;
   background: #ffffff;
 
@@ -11,11 +11,11 @@
 
 
 .graph-header {
-  height: 166px;
+  min-height: 180px;
   width: 100%;
   box-sizing: border-box;
 
-  padding: 25px 30px 16px;
+  padding: 16px 30px 16px;
 
   background: linear-gradient(
     180deg,
@@ -28,8 +28,29 @@
   border-bottom: 1px solid #e5e1ec;
 
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
 
+  position: relative;
+}
+
+.tap-breadcrumb {
+  font-size: 12px;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 14px;
+
+  .text-dark {
+    font-weight: 500;
+    color: #212529;
+  }
+}
+
+.graph-header-main {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
   position: relative;
 }
 
@@ -254,8 +275,8 @@
 .graph-controls {
   position: absolute;
 
-  right: 32px;
-  top: 93px;
+  right: 0;
+  top: 68px;
 
   display: flex;
   align-items: center;
