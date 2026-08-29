@@ -18,31 +18,46 @@
         background-color: #f8fafc;
       }
 
-      &.active:not(.threat-actor-item):not(.malware-item) {
-        border-radius: 6px;
-        background: linear-gradient(90deg, rgba(233, 30, 99, 0.08) 0%, rgba(233, 30, 99, 0.02) 100%);
-        position: relative;
-
-        &::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 25%;
-          height: 50%;
-          width: 3.5px;
-          background-color: #e91e63;
-          border-radius: 0 6px 6px 0;
-        }
-
+      &.view-graph-item {
         .icon-wrapper {
-          background-color: #fff !important;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          background-color: #fff0f3;
+          transition: all 0.2s ease;
         }
 
         .nav-label {
-          font-size: 15px !important;
-          color: #1e293b;
+          font-size: 15px;
           font-weight: 500;
+          color: #475569;
+          transition: color 0.2s ease;
+        }
+
+        &.active {
+          border-radius: 6px;
+          background: linear-gradient(90deg, rgba(233, 30, 99, 0.08) 0%, rgba(233, 30, 99, 0.02) 100%);
+          position: relative;
+
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 25%;
+            height: 50%;
+            width: 3.5px;
+            background-color: #e91e63;
+            border-radius: 0 6px 6px 0;
+          }
+
+          .icon-wrapper {
+            background-color: #fff !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          }
+
+          .nav-label {
+            color: #1e293b;
+          }
         }
       }
 

@@ -65,69 +65,50 @@ export default function ThreatActorsidebar({ collapsed }) {
                         {/* THREAT ACTOR PROFILING */}
                         <li
                             onClick={() => navigate(ThreatActorprofile)}
-                            className={`nav-item d-flex align-items-center py-2 rounded-3 ${location.pathname === ThreatActorprofile ? 'active' : ''
-                                }`}
+                            className={`nav-item threat-actor-item d-flex align-items-center mb-2 px-3 py-2 rounded-3 ${location.pathname === ThreatActorprofile ? 'active' : ''}`}
                             style={{
                                 overflow: 'hidden',
                                 whiteSpace: 'nowrap',
-                                justifyContent: collapsed
-                                    ? 'center'
-                                    : 'flex-start',
-                                paddingLeft: collapsed ? '0' : '12px',
-                                paddingRight: collapsed ? '0' : '12px',
+                                justifyContent: collapsed ? 'center' : 'flex-start',
+                                paddingLeft: collapsed ? '0' : undefined,
+                                paddingRight: collapsed ? '0' : undefined,
                                 cursor: 'pointer',
                             }}
                         >
                             <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0">
                                 <PiTreeStructureLight
                                     className="text-danger"
-                                    style={{
-                                        fontSize: '18px',
-                                        backgroundColor: 'transparent',
-                                    }}
+                                    style={{ fontSize: '16px' }}
                                 />
                             </div>
 
                             {!collapsed && (
-                                <span className="nav-label">
-                                    Threat Actor Profiling
-                                </span>
+                                <span className="nav-label">Threat Actor Profiling</span>
                             )}
                         </li>
 
                         {/* VIEW IN KNOWLEDGE GRAPH */}
                         <li
                             onClick={() => navigate(viewinKnowlegdeGraph)}
-                            className={`nav-item d-flex align-items-center py-2 rounded-3 ${location.pathname === viewinKnowlegdeGraph
-                                ? 'active'
-                                : ''
-                                }`}
+                            className={`nav-item view-graph-item d-flex align-items-center mb-2 px-3 py-2 rounded-3 ${location.pathname === viewinKnowlegdeGraph ? 'active' : ''}`}
                             style={{
                                 overflow: 'hidden',
                                 whiteSpace: 'nowrap',
-                                justifyContent: collapsed
-                                    ? 'center'
-                                    : 'flex-start',
-                                paddingLeft: collapsed ? '0' : '12px',
-                                paddingRight: collapsed ? '0' : '12px',
-                                marginTop: '10px',
+                                justifyContent: collapsed ? 'center' : 'flex-start',
+                                paddingLeft: collapsed ? '0' : undefined,
+                                paddingRight: collapsed ? '0' : undefined,
                                 cursor: 'pointer',
                             }}
                         >
                             <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0">
                                 <PiTreeStructureLight
                                     className="text-danger"
-                                    style={{
-                                        fontSize: '18px',
-                                        backgroundColor: 'transparent',
-                                    }}
+                                    style={{ fontSize: '16px' }}
                                 />
                             </div>
 
                             {!collapsed && (
-                                <span className="nav-label">
-                                    View in Knowledge Graph
-                                </span>
+                                <span className="nav-label">View in Knowledge Graph</span>
                             )}
                         </li>
                     </ul>

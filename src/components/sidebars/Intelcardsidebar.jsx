@@ -62,7 +62,7 @@ export default function Intelcardsidebar({ collapsed }) {
             </li>
 
             <li
-              className={`nav-item d-flex align-items-center px-3 py-2 rounded-3 ${location.pathname === IntelviewinKnowlegdeGraph ? 'active' : ''}`}
+              className={`nav-item view-graph-item d-flex align-items-center mb-2 px-3 py-2 rounded-3 ${location.pathname === IntelviewinKnowlegdeGraph ? 'active' : ''}`}
               onClick={() => {
                 navigate(IntelviewinKnowlegdeGraph);
               }}
@@ -71,10 +71,7 @@ export default function Intelcardsidebar({ collapsed }) {
               <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0">
                 <PiTreeStructureLight
                   className="text-danger"
-                  style={{
-                    fontSize: '18px',
-                    backgroundColor: 'transparent',
-                  }}
+                  style={{ fontSize: '16px' }}
                 />
               </div>
               {!collapsed && <span className="nav-label">View in Knowledge Graph</span>}
