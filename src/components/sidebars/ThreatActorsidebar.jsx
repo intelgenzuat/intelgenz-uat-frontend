@@ -6,6 +6,7 @@ import { Sidebar } from 'react-pro-sidebar';
 import { PiTreeStructureLight } from 'react-icons/pi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ThreatActorprofile, viewinKnowlegdeGraph } from '../../Routes/Routes';
+import { GiMatterStates } from 'react-icons/gi';
 
 export default function ThreatActorsidebar({ collapsed }) {
     const location = useLocation();
@@ -76,7 +77,7 @@ export default function ThreatActorsidebar({ collapsed }) {
                             }}
                         >
                             <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0">
-                                <PiTreeStructureLight
+                                <GiMatterStates 
                                     className="text-danger"
                                     style={{ fontSize: '16px' }}
                                 />
