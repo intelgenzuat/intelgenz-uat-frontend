@@ -2132,4 +2132,260 @@
       }
     }
   }
+
+  // =========================================================
+  // Threat Actor Knowledge Graph Dark Theme
+  // =========================================================
+  .threat-page {
+    background-color: #0b0f19 !important;
+    color: #f1f5f9 !important;
+
+    .graph-header {
+      background-color: #0b0f19 !important;
+      border-bottom: 1px solid #1e293b !important;
+
+      .breadcrumb-nav {
+        color: #94a3b8 !important;
+
+        .home-icon {
+          color: #94a3b8 !important;
+        }
+
+        span {
+          color: #94a3b8 !important;
+
+          &.text-dark {
+            color: #f1f5f9 !important;
+          }
+        }
+      }
+
+      .section-label {
+        color: #94a3b8 !important;
+      }
+
+      .search-box {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+
+        &:focus-within {
+          border-color: #3b82f6 !important;
+          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25) !important;
+        }
+
+        .search-icon {
+          color: #94a3b8 !important;
+        }
+
+        input {
+          color: #f1f5f9 !important;
+
+          &::placeholder {
+            color: #64748b !important;
+          }
+        }
+      }
+
+      .filters-row {
+        .entity-badge {
+          &.badge-ta {
+            background-color: rgba(239, 68, 68, 0.2) !important;
+            color: #f87171 !important;
+            border: 1px solid rgba(239, 68, 68, 0.3) !important;
+          }
+          &.badge-mal {
+            background-color: rgba(168, 85, 247, 0.2) !important;
+            color: #c084fc !important;
+            border: 1px solid rgba(168, 85, 247, 0.3) !important;
+          }
+          &.badge-cam {
+            background-color: rgba(59, 130, 246, 0.2) !important;
+            color: #60a5fa !important;
+            border: 1px solid rgba(59, 130, 246, 0.3) !important;
+          }
+        }
+
+        .custom-checkbox-label {
+          .cb-text {
+            color: #cbd5e1 !important;
+          }
+        }
+      }
+
+      .focus-pill-group {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+
+        .focus-pill-btn {
+          color: #94a3b8 !important;
+
+          &:hover:not(.active) {
+            color: #f1f5f9 !important;
+          }
+
+          &.active {
+            background-color: #2563eb !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4) !important;
+          }
+        }
+      }
+
+      .radius-section {
+        .radius-select-btn {
+          background-color: #1e293b !important;
+          border: 1px solid #334155 !important;
+          color: #f1f5f9 !important;
+
+          &:hover {
+            background-color: #28334e !important;
+          }
+
+          .chevron-icon {
+            color: #94a3b8 !important;
+          }
+        }
+
+        .radius-dropdown-menu {
+          background-color: #1e293b !important;
+          border: 1px solid #334155 !important;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+
+          .radius-dropdown-item {
+            color: #cbd5e1 !important;
+
+            &:hover {
+              background-color: #28334e !important;
+              color: #60a5fa !important;
+            }
+
+            &.selected {
+              background-color: rgba(37, 99, 235, 0.25) !important;
+              color: #60a5fa !important;
+            }
+          }
+        }
+      }
+    }
+
+    .graph-container {
+      background-color: #080d1a !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1.2px, transparent 1.2px) !important;
+
+      .graph-floating-controls {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+
+        .control-divider {
+          background-color: #334155 !important;
+        }
+
+        .tool-icon-btn {
+          color: #94a3b8 !important;
+
+          &:hover {
+            background-color: #334155 !important;
+            color: #f1f5f9 !important;
+          }
+        }
+      }
+
+      .connection-line {
+        stroke: rgba(99, 102, 241, 0.35) !important;
+      }
+
+      .node-top-ta, .node-main-ta {
+        background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.45) !important;
+      }
+
+      .node-cam {
+        background: rgba(30, 58, 138, 0.8) !important;
+        border: 1.5px solid #3b82f6 !important;
+        color: #93c5fd !important;
+        box-shadow: 0 0 18px rgba(59, 130, 246, 0.35) !important;
+
+        span {
+          color: #93c5fd !important;
+        }
+      }
+
+      .node-mal {
+        background: rgba(88, 28, 135, 0.8) !important;
+        border: 1.5px solid #a855f7 !important;
+        color: #d8b4fe !important;
+        box-shadow: 0 0 18px rgba(168, 85, 247, 0.35) !important;
+
+        span {
+          color: #d8b4fe !important;
+        }
+      }
+
+      .selection-card {
+        background-color: #131b2e !important;
+        border: 1px solid #1e293b !important;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5) !important;
+
+        .selection-header {
+          border-bottom: 1px solid #1e293b !important;
+
+          .selection-title {
+            color: #f8fafc !important;
+          }
+
+          .info-icon {
+            color: #94a3b8 !important;
+
+            &:hover {
+              color: #f1f5f9 !important;
+            }
+          }
+        }
+
+        .entity-header-row {
+          .entity-name {
+            color: #f8fafc !important;
+          }
+
+          .entity-type {
+            color: #94a3b8 !important;
+          }
+        }
+
+        .stats-grid {
+          .stat-card {
+            background-color: #1e293b !important;
+            border: 1px solid #334155 !important;
+
+            .stat-label {
+              color: #94a3b8 !important;
+            }
+
+            .stat-value {
+              &.text-dark {
+                color: #f1f5f9 !important;
+              }
+
+              &.text-red {
+                color: #f87171 !important;
+              }
+            }
+          }
+        }
+
+        .view-dossier-btn {
+          background-color: rgba(37, 99, 235, 0.15) !important;
+          border: 1px solid rgba(59, 130, 246, 0.4) !important;
+          color: #60a5fa !important;
+
+          &:hover {
+            background-color: rgba(37, 99, 235, 0.3) !important;
+            border-color: #3b82f6 !important;
+            color: #93c5fd !important;
+          }
+        }
+      }
+    }
+  }
 }

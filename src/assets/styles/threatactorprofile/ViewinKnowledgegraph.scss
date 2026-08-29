@@ -425,6 +425,7 @@
   justify-content: center;
   box-sizing: border-box;
   cursor: pointer;
+  border-radius: 50%;
   transform: translate(-50%, -50%);
   transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
   user-select: none;
@@ -445,7 +446,7 @@
   height: 52px;
   top: 27.5%;
   left: 50%;
-  border-radius: 12px;
+  border-radius: 50%;
   background: #ef4444;
   box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
 
@@ -463,7 +464,7 @@
   height: 52px;
   top: 45%;
   left: 50%;
-  border-radius: 12px;
+  border-radius: 50%;
   background: #ef4444;
   box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
 
@@ -481,7 +482,7 @@
   height: 68px;
   top: 66%;
   left: 40.5%;
-  border-radius: 14px;
+  border-radius: 50%;
   background: #dbeafe;
   border: 1.5px solid #93c5fd;
   box-shadow: 0 6px 16px rgba(37, 99, 235, 0.12);
@@ -500,7 +501,7 @@
   height: 54px;
   top: 66%;
   left: 60%;
-  border-radius: 12px;
+  border-radius: 50%;
   background: #ede9fe;
   border: 1.5px solid #c4b5fd;
   box-shadow: 0 6px 16px rgba(124, 58, 237, 0.12);
@@ -702,5 +703,263 @@
   .graph-floating-controls {
     top: 12px;
     right: 12px;
+  }
+}
+
+/* =========================================================
+   DARK MODE OVERRIDES
+========================================================= */
+[data-bs-theme='dark'] {
+  .threat-page {
+    background-color: #0b0f19;
+    color: #f1f5f9;
+
+    .graph-header {
+      background-color: #0b0f19;
+      border-bottom: 1px solid #1e293b;
+
+      .breadcrumb-nav {
+        color: #94a3b8;
+
+        .home-icon {
+          color: #94a3b8;
+        }
+
+        span {
+          color: #94a3b8;
+
+          &.text-dark {
+            color: #f1f5f9;
+          }
+        }
+      }
+
+      .section-label {
+        color: #94a3b8;
+      }
+
+      .search-box {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+
+        &:focus-within {
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+        }
+
+        .search-icon {
+          color: #94a3b8;
+        }
+
+        input {
+          color: #f1f5f9;
+
+          &::placeholder {
+            color: #64748b;
+          }
+        }
+      }
+
+      .filters-row {
+        .entity-badge {
+          &.badge-ta {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+          }
+          &.badge-mal {
+            background-color: rgba(168, 85, 247, 0.2);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+          }
+          &.badge-cam {
+            background-color: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+          }
+        }
+
+        .custom-checkbox-label {
+          .cb-text {
+            color: #cbd5e1;
+          }
+        }
+      }
+
+      .focus-pill-group {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+
+        .focus-pill-btn {
+          color: #94a3b8;
+
+          &:hover:not(.active) {
+            color: #f1f5f9;
+          }
+
+          &.active {
+            background-color: #2563eb;
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+          }
+        }
+      }
+
+      .radius-section {
+        .radius-select-btn {
+          background-color: #1e293b;
+          border: 1px solid #334155;
+          color: #f1f5f9;
+
+          &:hover {
+            background-color: #28334e;
+          }
+
+          .chevron-icon {
+            color: #94a3b8;
+          }
+        }
+
+        .radius-dropdown-menu {
+          background-color: #1e293b;
+          border: 1px solid #334155;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+          .radius-dropdown-item {
+            color: #cbd5e1;
+
+            &:hover {
+              background-color: #28334e;
+              color: #60a5fa;
+            }
+
+            &.selected {
+              background-color: rgba(37, 99, 235, 0.25);
+              color: #60a5fa;
+            }
+          }
+        }
+      }
+    }
+
+    .graph-container {
+      background-color: #080d1a;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1.2px, transparent 1.2px);
+
+      .graph-floating-controls {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+
+        .control-divider {
+          background-color: #334155;
+        }
+
+        .tool-icon-btn {
+          color: #94a3b8;
+
+          &:hover {
+            background-color: #334155;
+            color: #f1f5f9;
+          }
+        }
+      }
+
+      .connection-line {
+        stroke: rgba(99, 102, 241, 0.35);
+      }
+
+      .node-top-ta, .node-main-ta {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.45);
+      }
+
+      .node-cam {
+        background: rgba(30, 58, 138, 0.8);
+        border: 1.5px solid #3b82f6;
+        color: #93c5fd;
+        box-shadow: 0 0 18px rgba(59, 130, 246, 0.35);
+
+        span {
+          color: #93c5fd;
+        }
+      }
+
+      .node-mal {
+        background: rgba(88, 28, 135, 0.8);
+        border: 1.5px solid #a855f7;
+        color: #d8b4fe;
+        box-shadow: 0 0 18px rgba(168, 85, 247, 0.35);
+
+        span {
+          color: #d8b4fe;
+        }
+      }
+
+      .selection-card {
+        background-color: #131b2e;
+        border: 1px solid #1e293b;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+        .selection-header {
+          border-bottom: 1px solid #1e293b;
+
+          .selection-title {
+            color: #f8fafc;
+          }
+
+          .info-icon {
+            color: #94a3b8;
+
+            &:hover {
+              color: #f1f5f9;
+            }
+          }
+        }
+
+        .entity-header-row {
+          .entity-name {
+            color: #f8fafc;
+          }
+
+          .entity-type {
+            color: #94a3b8;
+          }
+        }
+
+        .stats-grid {
+          .stat-card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+
+            .stat-label {
+              color: #94a3b8;
+            }
+
+            .stat-value {
+              &.text-dark {
+                color: #f1f5f9;
+              }
+
+              &.text-red {
+                color: #f87171;
+              }
+            }
+          }
+        }
+
+        .view-dossier-btn {
+          background-color: rgba(37, 99, 235, 0.15);
+          border: 1px solid rgba(59, 130, 246, 0.4);
+          color: #60a5fa;
+
+          &:hover {
+            background-color: rgba(37, 99, 235, 0.3);
+            border-color: #3b82f6;
+            color: #93c5fd;
+          }
+        }
+      }
+    }
   }
 }
