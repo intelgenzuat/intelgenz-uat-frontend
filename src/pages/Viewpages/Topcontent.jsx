@@ -13,12 +13,12 @@ const Topcontent = ({ showHeliosInfo = true, children }) => {
         < div className="top-content-wrapper flex-shrink-0" >
 
             {/* Breadcrumb */}
-            < div className="breadcrumb-nav text-muted" >
-                <FiHome className="home-icon" />
-                <span onClick={() => navigate('/')} >Home</span>
+            <div className="breadcrumb-nav text-muted" style={{ fontSize: '14px', marginBottom: '16px' }}>
+                <FiHome className="home-icon me-2" />
+                <span onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Home</span>
                 <span className="mx-2 text-black-50">/</span>
-                <span className="text-dark">Emerging Threats</span>
-            </div >
+                <span className="text-dark fw-medium">Emerging Threats</span>
+            </div>
 
             {/* Top Header specific to View Page */}
             < div className="view-top-header d-flex justify-content-between align-items-center" >

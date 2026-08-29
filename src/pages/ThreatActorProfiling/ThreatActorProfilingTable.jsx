@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FiHome } from 'react-icons/fi';
 import { PiDiamondFill } from 'react-icons/pi';
 import { GoFlame } from 'react-icons/go';
 import cube from '../../assets/images/cube.png';
@@ -20,6 +22,7 @@ const MOCK_DATA = [
 ];
 
 export default function ThreatActorProfilingTable() {
+  const navigate = useNavigate();
   const [techniqueId, setTechniqueId] = useState('');
 
   const getPriorityBadge = (priority) => {
@@ -64,18 +67,11 @@ export default function ThreatActorProfilingTable() {
 
         <div className="tap-header-content">
           {/* Breadcrumbs */}
-          <div className="tap-breadcrumb">
-            <svg width="10" height="10" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g clipPath="url(#clip0_95_193)">
-                <path d="M11.4563 12.6547H8.79534C8.14534 12.6547 7.5969 12.1266 7.5969 11.4563V9.30312C7.5969 9.14062 7.47502 9.01875 7.31252 9.01875H5.68752C5.52502 9.01875 5.40315 9.14062 5.40315 9.30312V11.4563C5.40315 12.1266 4.87502 12.6547 4.20471 12.6547H1.54377C0.893774 12.6547 0.345337 12.1266 0.345337 11.4563V4.61094C0.345337 4.26563 0.507837 3.96094 0.792212 3.77813L5.9719 0.507812C6.2969 0.304688 6.70315 0.304688 7.00784 0.507812L12.1875 3.79844C12.4719 3.98125 12.6344 4.28594 12.6344 4.63125V11.4563C12.6547 12.1063 12.1063 12.6547 11.4563 12.6547ZM5.68752 8.10469H7.31252C7.98284 8.10469 8.51096 8.63281 8.51096 9.30312V11.4563C8.51096 11.6188 8.63284 11.7406 8.79534 11.7406H11.4563C11.6188 11.7406 11.7406 11.6188 11.7406 11.4563V4.61094C11.7406 4.59063 11.7203 4.57031 11.7203 4.55L6.52034 1.27969C6.50002 1.25938 6.47971 1.25938 6.4594 1.27969L1.30002 4.55C1.27971 4.57031 1.2594 4.59063 1.2594 4.61094V11.4563C1.2594 11.6188 1.38127 11.7406 1.54377 11.7406H4.20471C4.36721 11.7406 4.48909 11.6188 4.48909 11.4563V9.30312C4.48909 8.65312 5.01721 8.10469 5.68752 8.10469Z" fill="#130C2C" />
-              </g>
-              <defs>
-                <clipPath id="clip0_95_193">
-                  <rect width="13" height="13" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
-            Home <span>/</span> <span className="text-dark">Threat Actor Profile</span>
+          <div className="breadcrumb-nav text-muted" style={{ fontSize: '14px', marginBottom: '16px' }}>
+            <FiHome className="home-icon me-2" />
+            <span onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Home</span>
+            <span className="mx-2 text-black-50">/</span>
+            <span className="text-dark fw-medium">Threat Actor Profile</span>
           </div>
 
           {/* Title Row */}

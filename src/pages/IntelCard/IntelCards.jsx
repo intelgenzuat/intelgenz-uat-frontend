@@ -232,9 +232,8 @@ function IntelCard({ cardData }) {
           <button
             onClick={() => navigate('/intel-card-threat-details')}
             className="btn rounded-pill text-white px-4 py-1 d-flex align-items-center position-relative"
-            style={{ backgroundColor: '#4300D2', fontSize: '12px', fontWeight: '500', transition: 'background-color 0.2s', border: 'none', zIndex: 2 }}
-            onMouseOver={(e) => e.target.style.backgroundColor = '#3100a3'}
-            onMouseOut={(e) => e.target.style.backgroundColor = '#4300D2'}
+            style={{ backgroundColor: '#d2002aff', fontSize: '12px', fontWeight: '500', transition: 'background-color 0.2s', border: 'none', zIndex: 2 }}
+          
           >
             <FiArrowRight className="me-2" style={{ strokeWidth: '2.5px', fontSize: '14px' }} /> View Report
           </button>
