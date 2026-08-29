@@ -39,17 +39,94 @@ const ThreatActorGraph = () => {
         <div className="threat-page">
             {/* Header Section */}
             <div className="graph-header">
-                {/* Breadcrumb Header matching IntelTopcontent */}
-                <div className="breadcrumb-nav text-muted" style={{ fontSize: '14px', marginBottom: '16px' }}>
-                    <FiHome className="home-icon me-2" />
-                    <span onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Home</span>
-                    <span className="mx-2 text-black-50">/</span>
-                    <span onClick={() => navigate(parentPath)} style={{ cursor: 'pointer' }}>{parentName}</span>
-                    <span className="mx-2 text-black-50">/</span>
-                    <span className="text-dark fw-medium">View in Knowledge Graph</span>
+                {/* Breadcrumb + Heading Group */}
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', gap: '12px', alignSelf: 'stretch' }}>
+
+                    {/* Breadcrumb */}
+                    <div className="breadcrumb-nav text-muted" style={{ fontSize: '14px' }}>
+                        <FiHome className="home-icon me-2" />
+                        <span onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Home</span>
+                        <span className="mx-2 text-black-50">/</span>
+                        <span onClick={() => navigate(parentPath)} style={{ cursor: 'pointer' }}>{parentName}</span>
+                        <span className="mx-2 text-black-50">/</span>
+                        <span className="text-dark fw-medium">View in Knowledge Graph</span>
+                    </div>
+
+                    {/* Page Heading - matching IntelTopcontent style */}
+                    <div className="view-top-header d-flex justify-content-between align-items-center mb-3">
+                        {/* Left: Icon + Title */}
+                        <div className="d-flex align-items-center gap-3">
+                            <div className="header-icon-wrapper rounded-3 d-flex align-items-center justify-content-center subtle text-danger" style={{ width: '36px', height: '36px' }}>
+                                <svg width="15" height="26" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9.43627 16.4528C9.72418 16.4528 9.96554 16.3555 10.1604 16.1609C10.3552 15.9661 10.4526 15.7247 10.4526 15.4368C10.4526 15.1489 10.3552 14.9075 10.1604 14.7127C9.96554 14.5179 9.72418 14.4205 9.43627 14.4205C9.14836 14.4205 8.907 14.5179 8.7122 14.7127C8.51739 14.9075 8.41999 15.1489 8.41999 15.4368C8.41999 15.7247 8.51739 15.9661 8.7122 16.1609C8.907 16.3555 9.14836 16.4528 9.43627 16.4528ZM8.49265 12.1703H10.3799V6.09741H8.49265V12.1703ZM9.43627 23.8326C6.71506 23.0905 4.4621 21.4887 2.67739 19.0273C0.892462 16.5659 0 13.8141 0 10.7718V3.53263L9.43627 0L18.8725 3.53263V10.7718C18.8725 13.8141 17.9801 16.5659 16.1952 19.0273C14.4104 21.4887 12.1575 23.0905 9.43627 23.8326Z" fill="#E9004A" />
+                                </svg>
+                            </div>
+                            <h2 className="mb-0 d-flex align-items-center">
+                                <span className="header pe-3" style={{ fontSize: '24px', fontWeight: '500', color: '1A1B1E' }}>View in Knowledge Graph</span>
+                            </h2>
+                        </div>
+
+                        {/* Right: Assessment Focus + Radius */}
+                        <div className="d-flex align-items-center gap-4">
+                            {/* Assessment Focus Section */}
+                            <div className="assessment-focus-section">
+                                <label className="section-label">Assessment Focus</label>
+                                <div className="intelcard-view-checkboxes d-flex align-items-center gap-3">
+                                    {["Capability", "Intent", "Opportunity"].map((focus) => (
+                                        <label
+                                            key={focus}
+                                            className="intelcard-checkbox-item d-flex align-items-center gap-2 mb-0"
+                                            htmlFor={`focus-${focus}`}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                id={`focus-${focus}`}
+                                                className="intelcard-custom-checkbox"
+                                                checked={assessmentFocus === focus}
+                                                onChange={() => setAssessmentFocus(focus)}
+                                            />
+                                            <span className="intelcard-checkbox-label">{focus}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Radius Section */}
+                            <div className="radius-section">
+                                <label className="section-label">Radius</label>
+                                <div className="radius-control-wrapper">
+                                    <button
+                                        className="radius-select-btn"
+                                        type="button"
+                                        onClick={() => setIsRadiusOpen(!isRadiusOpen)}
+                                    >
+                                        <span>{radius}</span>
+                                        <FiChevronDown className="chevron-icon" />
+                                    </button>
+                                    {isRadiusOpen && (
+                                        <div className="radius-dropdown-menu">
+                                            {["1-3", "1-5", "1-8", "1-10"].map((item) => (
+                                                <div
+                                                    key={item}
+                                                    className={`radius-dropdown-item ${radius === item ? "selected" : ""}`}
+                                                    onClick={() => {
+                                                        setRadius(item);
+                                                        setIsRadiusOpen(false);
+                                                    }}
+                                                >
+                                                    {item}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                {/* Top Controls: Entity Query & Assessment Focus */}
+                {/* Top Controls: Entity Query */}
                 <div className="graph-header-controls">
                     {/* Entity Query Section */}
                     <div className="entity-query-section">
@@ -110,54 +187,6 @@ const ThreatActorGraph = () => {
                                     <span className="cb-text">CAM</span>
                                 </label>
                             </div>
-                        </div>
-                    </div>
-
-                    {/* Assessment Focus Section */}
-                    <div className="assessment-focus-section">
-                        <label className="section-label">Assessment Focus</label>
-                        <div className="focus-pill-group">
-                            {["Capability", "Intent", "Opportunity"].map((focus) => (
-                                <button
-                                    key={focus}
-                                    className={`focus-pill-btn ${assessmentFocus === focus ? "active" : ""}`}
-                                    onClick={() => setAssessmentFocus(focus)}
-                                    type="button"
-                                >
-                                    {focus}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Radius Section to the right of Assessment Focus */}
-                    <div className="radius-section">
-                        <label className="section-label">Radius</label>
-                        <div className="radius-control-wrapper">
-                            <button
-                                className="radius-select-btn"
-                                type="button"
-                                onClick={() => setIsRadiusOpen(!isRadiusOpen)}
-                            >
-                                <span>{radius}</span>
-                                <FiChevronDown className="chevron-icon" />
-                            </button>
-                            {isRadiusOpen && (
-                                <div className="radius-dropdown-menu">
-                                    {["1-3", "1-5", "1-8", "1-10"].map((item) => (
-                                        <div
-                                            key={item}
-                                            className={`radius-dropdown-item ${radius === item ? "selected" : ""}`}
-                                            onClick={() => {
-                                                setRadius(item);
-                                                setIsRadiusOpen(false);
-                                            }}
-                                        >
-                                            {item}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>
