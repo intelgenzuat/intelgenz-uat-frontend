@@ -11,14 +11,12 @@ import { Home, IntelCard } from '../../Routes/Routes';
 
 const overviewData = [
   { id: 1, label: "Name", value: "Linux/Ladvix.E, Linux/Promitei.B, Adware/SpyLoan!Android, Linux/Filecoder.BR!tr" },
-  { id: 2, label: "Threat Summary", value: "A new report highlights how artificial intelligence is transforming both malware development and antivirus defenses. Malware authors are leveraging new frameworks, languages, and obfuscation methods, while defenders use AI to automate malware unpacking, string deobfuscation, and code analysis. Recent samples across Linux, Android, and ransomware families exemplify this ongoing arms race. The adoption of AI by both sides is increasing the sophistication and speed of cyber threats and defenses." },
-  { id: 3, label: "Threat Type", value: "Malware" },
-  { id: 4, label: "Threat Group Name", value: "Unknown" },
-  { id: 5, label: "Malware Name", value: "Linux/Ladvix.E, Linux/Promitei.B, Adware/SpyLoan!Android, Linux/Filecoder.BR!tr" },
-  { id: 6, label: "Target Sector", value: "Target Sector Enterprise environments, FinTech, Government, Healthcare, IT, Manufacturing, Telecom" },
-  { id: 7, label: "Target Region", value: "Global" },
-  { id: 8, label: "Severity Level", value: "High", badge: true },
-  { id: 9, label: "Affected Platforms", value: "Linux, Android" }
+  { id: 2, label: "Summary", value: "A new report highlights how artificial intelligence is transforming both malware development and antivirus defenses. Malware authors are leveraging new frameworks, languages, and obfuscation methods, while defenders use AI to automate malware unpacking, string deobfuscation, and code analysis." },
+  { id: 3, label: "Description", value: "Recent samples across Linux, Android, and ransomware families exemplify this ongoing arms race. The adoption of AI by both sides is increasing the sophistication and speed of cyber threats and defenses." },
+  { id: 4, label: "Activity Timeline", value: "Jan 2026 – Jun 2026" },
+  { id: 5, label: "Execution Path", value: "Phishing → Dropper → C2 Beacon → Lateral Movement → Exfiltration" },
+  { id: 6, label: "TTP", value: "T1566 (Phishing), T1059 (Command and Scripting Interpreter), T1105 (Ingress Tool Transfer), T1041 (Exfiltration Over C2 Channel)" },
+  { id: 7, label: "IOC", value: "194.26.29.81, hxxp://malware-c2.example.com, SHA256: a1b2c3d4e5f6..., linux_ladvix_dropper.elf" }
 ];
 
 export default function IntelCardDetailview() {

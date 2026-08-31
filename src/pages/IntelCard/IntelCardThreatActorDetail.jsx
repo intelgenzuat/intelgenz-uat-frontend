@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PiWarningDiamondLight } from 'react-icons/pi';
 import '../../assets/styles/view/ViewReport.scss';
@@ -7,17 +7,19 @@ import { Home, IntelCard } from '../../Routes/Routes';
 
 const overviewData = [
   { id: 1, label: "Name", value: "Linux/Ladvix.E, Linux/Promitei.B, Adware/SpyLoan!Android, Linux/Filecoder.BR!tr" },
-  { id: 2, label: "Threat Summary", value: "A new report highlights how artificial intelligence is transforming both malware development and antivirus defenses. Malware authors are leveraging new frameworks, languages, and obfuscation methods, while defenders use AI to automate malware unpacking, string deobfuscation, and code analysis. Recent samples across Linux, Android, and ransomware families exemplify this ongoing arms race. The adoption of AI by both sides is increasing the sophistication and speed of cyber threats and defenses." },
-  { id: 3, label: "Threat Type", value: "Malware" },
-  { id: 4, label: "Threat Group Name", value: "Unknown" },
-  { id: 5, label: "Malware Name", value: "Linux/Ladvix.E, Linux/Promitei.B, Adware/SpyLoan!Android, Linux/Filecoder.BR!tr" },
-  { id: 6, label: "Target Sector", value: "Target Sector Enterprise environments, FinTech, Government, Healthcare, IT, Manufacturing, Telecom" },
-  { id: 7, label: "Target Region", value: "Global" },
-  { id: 8, label: "Severity Level", value: "High", badge: true },
-  { id: 9, label: "Affected Platforms", value: "Linux, Android" }
+  { id: 2, label: "Active/Not Active", value: "Active", badge: true },
+  { id: 3, label: "Summary", value: "A new report highlights how artificial intelligence is transforming both malware development and antivirus defenses. Malware authors are leveraging new frameworks, languages, and obfuscation methods, while defenders use AI to automate malware unpacking, string deobfuscation, and code analysis." },
+  { id: 4, label: "Description", value: "Recent samples across Linux, Android, and ransomware families exemplify this ongoing arms race. The adoption of AI by both sides is increasing the sophistication and speed of cyber threats and defenses." },
+  { id: 5, label: "Activity Timeline", value: "Jan 2026 – Jun 2026" },
+  { id: 6, label: "Diamond Model", value: "Adversary → Capabilities → Infrastructure → Victim" },
+  { id: 7, label: "Execution Path", value: "Phishing → Dropper → C2 Beacon → Lateral Movement → Exfiltration" },
+  { id: 8, label: "TTP", value: "T1566 (Phishing), T1059 (Command and Scripting Interpreter), T1105 (Ingress Tool Transfer), T1041 (Exfiltration Over C2 Channel)" },
+  { id: 9, label: "IOC", value: "194.26.29.81, hxxp://malware-c2.example.com, SHA256: a1b2c3d4e5f6..., linux_ladvix_dropper.elf" }
 ];
 
 export default function IntelCardThreatActorDetail() {
+  const [isActive, setIsActive] = useState(true);
+
   return (
     <div className="view-report-container container-fluid p-0 d-flex flex-column h-100 overflow-hidden">
       <div className="d-flex flex-grow-1 overflow-hidden">
@@ -28,15 +30,57 @@ export default function IntelCardThreatActorDetail() {
             <div className="rounded-4 overflow-hidden bg-white shadow-sm" style={{ border: '1px solid #f1f5f9' }}>
               <div style={{ height: '16px', background: 'linear-gradient(90deg, #f3e8ff 0%, #fce7f3 50%, #ffe4e6 100%)' }}></div>
               <div className="report-header px-4 py-4 pb-4">
-                <div className="d-flex align-items-center gap-2 text-secondary mb-3" style={{ fontSize: '13px', fontWeight: 500 }}>
-                  <Link to={Home} className="text-secondary text-decoration-none d-flex align-items-center gap-1">
-                    <i className="bi bi-house"></i> Home
-                  </Link>
-                  <span className="text-muted">/</span>
-                  <Link to={IntelCard} className="text-secondary text-decoration-none">
-                    Intel Card
-                  </Link>
-                  <span className="text-muted">/</span> Threat Actor <span className="text-muted">/</span> Details page
+                <div className="d-flex align-items-center justify-content-between text-secondary mb-3" style={{ fontSize: '13px', fontWeight: 500 }}>
+                  <div className="d-flex align-items-center gap-2">
+                    <Link to={Home} className="text-secondary text-decoration-none d-flex align-items-center gap-1">
+                      <i className="bi bi-house"></i> Home
+                    </Link>
+                    <span className="text-muted">/</span>
+                    <Link to={IntelCard} className="text-secondary text-decoration-none">
+                      Intel Card
+                    </Link>
+                    <span className="text-muted">/</span> Threat Actor <span className="text-muted">/</span> Details page
+                  </div>
+
+                  {/* Active - Non-Active Toggle Button */}
+                  <div className="d-flex align-items-center gap-2" title="Active - Non-Active">
+                    <span style={{ fontSize: '12px', fontWeight: 600, color: isActive ? '#059669' : '#64748b' }}>
+                      {isActive ? 'Active' : 'Non-Active'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setIsActive(!isActive)}
+                      className="btn p-0 border-0 d-inline-flex align-items-center"
+                      style={{
+                        width: '52px',
+                        height: '28px',
+                        borderRadius: '50px',
+                        background: isActive 
+                          ? 'linear-gradient(135deg, #4ade80 0%, #38bdf8 50%, #3b82f6 100%)' 
+                          : '#cbd5e1',
+                        padding: '3px',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        boxShadow: isActive 
+                          ? '0 2px 8px rgba(56, 189, 248, 0.35)' 
+                          : 'inset 0 1px 2px rgba(0,0,0,0.1)',
+                        outline: 'none'
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: '22px',
+                          height: '22px',
+                          borderRadius: '50%',
+                          backgroundColor: '#ffffff',
+                          display: 'block',
+                          boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                          transform: isActive ? 'translateX(24px)' : 'translateX(4px)',
+                          transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                        }}
+                      />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
@@ -96,7 +140,17 @@ export default function IntelCardThreatActorDetail() {
                           <div className="row-value">
                             <div className="w-100">
                               {item.badge ? (
-                                <span className="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-1 severity-pill" style={{ fontSize: '12px', fontWeight: 600 }}><PiWarningDiamondLight className="me-1" />{item.value}</span>
+                                item.label === "Active/Not Active" ? (
+                                  <span className={`badge ${isActive ? 'bg-success-subtle text-success border-success-subtle' : 'bg-secondary-subtle text-secondary border-secondary-subtle'} border rounded-pill px-3 py-1 severity-pill`} style={{ fontSize: '12px', fontWeight: 600 }}>
+                                    <PiWarningDiamondLight className="me-1" />
+                                    {isActive ? "Active" : "Non-Active"}
+                                  </span>
+                                ) : (
+                                  <span className="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-1 severity-pill" style={{ fontSize: '12px', fontWeight: 600 }}>
+                                    <PiWarningDiamondLight className="me-1" />
+                                    {item.value}
+                                  </span>
+                                )
                               ) : (
                                 item.value
                               )}

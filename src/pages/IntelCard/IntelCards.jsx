@@ -17,6 +17,7 @@ const MOCK_CARDS = [
     "target_regions": ["Asia", "North America"],
     "industries": ["Banking", "Finance"],
     "severity_level": "high",
+    "status": "Active",
     "analyst_comments": "Multiple banks reported encrypted systems and ransom demands."
   },
   {
@@ -29,6 +30,7 @@ const MOCK_CARDS = [
     "target_regions": ["Europe"],
     "industries": ["Healthcare"],
     "severity_level": "medium",
+    "status": "Active",
     "analyst_comments": "Fake emails impersonating hospital staff to steal credentials."
   },
   {
@@ -41,6 +43,7 @@ const MOCK_CARDS = [
     "target_regions": ["Europe"],
     "industries": ["E-commerce"],
     "severity_level": "high",
+    "status": "Active",
     "analyst_comments": "Websites experienced downtime due to massive traffic floods."
   },
   {
@@ -53,6 +56,7 @@ const MOCK_CARDS = [
     "target_regions": ["Asia"],
     "industries": ["Technology"],
     "severity_level": "medium",
+    "status": "Active",
     "analyst_comments": "Malicious apps found stealing user data from mobile devices."
   },
   {
@@ -65,6 +69,7 @@ const MOCK_CARDS = [
     "target_regions": ["North America"],
     "industries": ["IT Services"],
     "severity_level": "low",
+    "status": "Active",
     "analyst_comments": "Employee leaked sensitive company information."
   },
   {
@@ -77,6 +82,7 @@ const MOCK_CARDS = [
     "target_regions": ["Oceania"],
     "industries": ["Government"],
     "severity_level": "critical",
+    "status": "Active",
     "analyst_comments": "Attackers exploited unknown vulnerability affecting systems."
   },
   {
@@ -89,6 +95,7 @@ const MOCK_CARDS = [
     "target_regions": ["Global"],
     "industries": ["Manufacturing"],
     "severity_level": "critical",
+    "status": "Active",
     "analyst_comments": "Software update mechanism compromised to deliver payload."
   },
   {
@@ -101,6 +108,7 @@ const MOCK_CARDS = [
     "target_regions": ["South America"],
     "industries": ["Retail"],
     "severity_level": "high",
+    "status": "Active",
     "analyst_comments": "Millions of customer records exposed."
   },
   {
@@ -113,6 +121,7 @@ const MOCK_CARDS = [
     "target_regions": ["Asia"],
     "industries": ["Education"],
     "severity_level": "low",
+    "status": "Active",
     "analyst_comments": "University servers infected with cryptomining malware."
   }
 ];
@@ -142,7 +151,8 @@ function IntelCard({ cardData }) {
     target_region: cardData?.target_regions?.join(', ') || 'Global',
     target_country: cardData?.target_countries?.join(', ') || 'Global',
     target_sector: cardData?.industries?.join(', ') || 'General',
-    severity: (cardData?.severity_level || 'Low').charAt(0).toUpperCase() + (cardData?.severity_level || 'Low').slice(1)
+    severity: (cardData?.severity_level || 'Low').charAt(0).toUpperCase() + (cardData?.severity_level || 'Low').slice(1),
+    status: cardData?.status || 'Active'
   };
 
   return (
@@ -156,6 +166,26 @@ function IntelCard({ cardData }) {
           overflow: 'hidden'
         }}
       >
+        {/* Top Header with Active Indicator */}
+        <div className="d-flex justify-content-end align-items-center mb-2 px-1 position-relative gap-1" style={{ zIndex: 1 }}>
+          <div className="d-flex align-items-center gap-1">
+         
+          </div>
+
+             <span
+              style={{
+                width: '7px',
+                height: '7px',
+                backgroundColor: data.status === 'Active' ? '#ef4444' : '#94a3b8',
+                borderRadius: '50%',
+                display: 'inline-block',
+                boxShadow: data.status === 'Active' ? '0 0 0 2.5px rgba(239, 68, 68, 0.25)' : 'none'
+              }}
+            />
+            <span style={{ fontSize: '11px', fontWeight: '600', color: data.status === 'Active' ? '#ef4444' : '#64748b' }}>
+              {data.status}
+            </span>
+        </div>
 
         {/* Title */}
         <h5 className="text-center mb-2 mt-1 px-1 position-relative" title={data.banner_text} style={{
