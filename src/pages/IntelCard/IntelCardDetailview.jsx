@@ -118,7 +118,7 @@ export default function IntelCardDetailview() {
               {/* Overview Table */}
               <div className="report-details-container rounded-4 bg-white d-flex flex-column w-100 overflow-hidden">
                 <div className="d-flex flex-column w-100">
-                  <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: '400px' }}>
+                  <div className="custom-scrollbar">
                     <div className="d-flex flex-column">
                       {overviewData.map((item, index) => (
                     <div key={item.id} className="d-flex border-bottom">

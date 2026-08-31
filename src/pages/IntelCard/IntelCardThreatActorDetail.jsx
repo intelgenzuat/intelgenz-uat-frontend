@@ -127,7 +127,7 @@ export default function IntelCardThreatActorDetail() {
           <div className="px-5 pt-3 pb-5 d-flex flex-column flex-grow-1 report-details-section">
             <div className="d-flex flex-column w-100 gap-4">
               <div className="report-details-container rounded-4 bg-white d-flex flex-column w-100 overflow-hidden">
-                  <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: '400px' }}>
+                  <div className=" custom-scrollbar" >
                     <div className="d-flex flex-column">
                       {overviewData.map((item, index) => (
                         <div key={item.id} className="d-flex border-bottom">
