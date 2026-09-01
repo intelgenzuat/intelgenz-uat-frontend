@@ -710,14 +710,11 @@ const ViewInKnowledgeGraph = () => {
                     <div className="view-top-header d-flex justify-content-between align-items-center mb-2 flex-wrap gap-3">
                         <div className="d-flex align-items-center gap-3">
                             <div className="header-icon-wrapper rounded-3 d-flex align-items-center justify-content-center">
-                                <FiShare2 className="text-primary" style={{ fontSize: "20px" }} />
+                                <FiShare2 className="text-danger" style={{ fontSize: "20px", color: "#e11d48" }} />
                             </div>
                             <div>
                                 <h2 className="mb-0 fs-5 fw-bold text-dark d-flex align-items-center gap-2">
-                                    Knowledge Graph Explorer
-                                    <span className="badge bg-primary-subtle text-primary border border-primary-subtle fs-7 fw-medium px-2 py-1 rounded-pill">
-                                        Interactive Exploration
-                                    </span>
+                                   View in Knowledge Graph
                                 </h2>
                                 <p className="text-muted mb-0" style={{ fontSize: "12.5px" }}>
                                     Click any node in the graph to add a chip and isolate its related relationships
