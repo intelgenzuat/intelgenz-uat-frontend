@@ -38,6 +38,7 @@ export default function LiveThreatMap() {
     const [landMesh, setLandMesh] = useState(null);
     const [timeRange, setTimeRange] = useState("24h");
     const [hoveredCountry, setHoveredCountry] = useState(null);
+    const [isZoomed, setIsZoomed] = useState(false);
 
     const mapWidth = 900;
     const mapHeight = 550;
@@ -181,6 +182,10 @@ export default function LiveThreatMap() {
                 centerOnInit={true}
                 wheel={{ step: 0.1 }}
                 doubleClick={{ disabled: true }}
+                panning={{ disabled: !isZoomed }}
+                onTransform={(ref, state) => {
+                    setIsZoomed(state.scale > 1.01);
+                }}
             >
                 {({ zoomIn, zoomOut, resetTransform }) => (
                     <>
@@ -197,7 +202,7 @@ export default function LiveThreatMap() {
                             <button onClick={() => zoomOut()} className="map-zoom-btn" style={zoomButtonStyle}>-</button>
                             <button onClick={() => resetTransform()} className="map-zoom-btn" style={zoomButtonStyle}>↺</button>
                         </div>
-                        <TransformComponent wrapperStyle={{ width: "100%", height: "100%", cursor: 'grab' }} contentStyle={{ width: "100%", height: "100%", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <TransformComponent wrapperStyle={{ width: "100%", height: "100%", cursor: isZoomed ? 'grab' : 'default' }} contentStyle={{ width: "100%", height: "100%", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <svg viewBox={`0 0 ${mapWidth} ${mapHeight}`} style={{ width: "100%", height: "100%", display: 'block' }}>
                         
                         <defs>
