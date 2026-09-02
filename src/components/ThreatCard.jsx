@@ -105,7 +105,7 @@ export default function ThreatCard({ cardData }) {
           <span className="badge tc-badge-severity" style={getSeverityStyle(data.severity)}>{data.severity}</span>
         </div>
 
-        <button onClick={() => navigate('/emerging-threat-report')} className="btn w-100 py-2 d-flex justify-content-center align-items-center view-report-btn tc-btn">
+        <button onClick={() => navigate('/emerging-threat-report')} className="view-report-btn w-100 py-2 d-flex justify-content-center align-items-center view-report-btn">
           <FiArrowRight className="me-2" style={{ strokeWidth: '2.5px' }} /> View Report
         </button>
       </div>

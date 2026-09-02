@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { FiRadio } from "react-icons/fi";
 import '../../assets/styles/homepage/Homepage.scss'
 import Threat from './Threat Distribution/Threat';
-import Malware from './Threat Distribution/Malware';
 import HeliosInfoSection from '../../components/HeliosInfoSection/HeliosInfoSection';
 import EmergingThreatDashboard from './Threat Intelligence/EmergingThreatDashboard';
 import ThreatTTPMitigation from './Threat Intelligence/ThreatTTPMitigation';
@@ -34,8 +33,8 @@ export default function Homepage() {
                             </h5>
                             <div className="d-flex flex-wrap gap-4 w-100">
                                 <EmergingThreatDashboard />
-                                <ThreatTTPMitigation />
                                 <KnowledgeGraph />
+                                <ThreatTTPMitigation />
                                 <ThreatActorProfiling />
                             </div>
                         </div>
@@ -85,9 +84,6 @@ export default function Homepage() {
                                 <div className="threat-data-grid mt-4">
                                     <div className="threat-card-wrapper">
                                         <Threat />
-                                    </div>
-                                    <div className="malware-card-wrapper">
-                                        <Malware />
                                     </div>
                                 </div>
                             </div>
