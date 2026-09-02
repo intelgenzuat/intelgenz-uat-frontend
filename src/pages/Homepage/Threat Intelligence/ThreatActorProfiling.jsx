@@ -23,7 +23,8 @@ export default function ThreatActorProfiling() {
                     {/* <p className="text-muted mb-0" style={{ fontSize: "13px", color: "#64748b" }}>Stay ahead of emerging threats</p> */}
                 </div>
             </div>
-            <button className="start-btn w-100" onClick={() => navigate('/threat-actor-profiling')} style={{ backgroundColor: '#4800D9', border: 'none', borderRadius: "50px", padding: "10px 0", color: "#fff", display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", fontSize: "15px", fontWeight: "500" }}>
+            <button className="start-btn w-100" onClick={() => navigate('/threat-actor-profiling')} style={{ 
+                background: "linear-gradient(90deg, #4c0a829c 0%, #a0005585 50%, #e60026bb 100%)", border: 'none', borderRadius: "50px", padding: "10px 0", color: "#fff", display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", fontSize: "15px", fontWeight: "500" }}>
                 <i className="bi bi-arrow-right"></i> Start
             </button>
         </div>

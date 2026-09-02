@@ -262,7 +262,7 @@ function IntelCard({ cardData }) {
           <button
             onClick={() => navigate('/intel-card-threat-details')}
             className="btn rounded-pill text-white px-4 py-1 d-flex align-items-center position-relative"
-            style={{ background: "linear-gradient(90deg, #4c0a829c 0%, #a0005585 50%, #e60026bb 100%)", fontSize: '12px', fontWeight: '500', transition: 'background-color 0.2s', border: 'none', zIndex: 2 }}
+            style={{ background: "linear-gradient(90deg, #4c0a829c 0%, #95051e85 50%, #e60026bb 100%)", fontSize: '12px', fontWeight: '500', transition: 'background-color 0.2s', border: 'none', zIndex: 2 }}
           
           >
             <FiArrowRight className="me-2" style={{ strokeWidth: '2.5px', fontSize: '14px' }} /> View Report
