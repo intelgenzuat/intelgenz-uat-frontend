@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import { CustomDotAround, CustomDotAway, CustomDotGlobal, renderRadarBackground } from '../../../Helpers/RadarHelpers';
 import ThreatModal from './ThreatModal';
@@ -64,6 +64,47 @@ export default function Threat() {
   const hoveredNameRef = useRef('');
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
+  const [selectedRadius, setSelectedRadius] = useState('1-2');
+  const [chartRadius, setChartRadius] = useState(145);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const updateRadius = () => {
+      if (containerRef.current) {
+        const { clientWidth, clientHeight } = containerRef.current;
+        const minDim = Math.min(clientWidth, clientHeight);
+        // outerRadius="84%" corresponds to (minDim / 2) * 0.84
+        const computedR = (minDim / 2) * 0.84;
+        if (computedR > 0) {
+          setChartRadius(computedR);
+        }
+      }
+    };
+    updateRadius();
+    const resizeObserver = new ResizeObserver(updateRadius);
+    resizeObserver.observe(containerRef.current);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  const getRingParams = (radiusKey, outerR) => {
+    const step = outerR / 5;
+    switch (radiusKey) {
+      case '1-2':
+        return { rInner: step * 1, rOuter: step * 2 };
+      case '2-3':
+        return { rInner: step * 2, rOuter: step * 3 };
+      case '3-4':
+        return { rInner: step * 3, rOuter: step * 4 };
+      case '4-5':
+        return { rInner: step * 4, rOuter: step * 5 };
+      default:
+        return { rInner: step * 1, rOuter: step * 2 };
+    }
+  };
+
+  const { rInner, rOuter } = getRingParams(selectedRadius, chartRadius);
+  const rMid = (rInner + rOuter) / 2;
+  const strokeWidth = rOuter - rInner;
 
   const getThreatActorName = (category, index) => {
     return threatActorNames[category]?.[index] || 'Unknown Actor';
@@ -145,15 +186,33 @@ export default function Threat() {
 
   return (
     <div className="custom-card shadow-hover h-100">
-      <div className="d-flex justify-content-between align-items-center">
+      <div className="d-flex justify-content-between align-items-center mb-1">
         <div className="chart-title">Threat Actors</div>
-        <button className="expand-btn"><i className="bi bi-arrows-angle-expand"></i></button>
+        <div className="d-flex align-items-center gap-3">
+          <div className="radius-control-wrapper">
+            <label htmlFor="threat-radius-select" className="radius-control-label">
+              Radius:
+            </label>
+            <select
+              id="threat-radius-select"
+              className="radius-control-select"
+              value={selectedRadius}
+              onChange={(e) => setSelectedRadius(e.target.value)}
+            >
+              <option value="1-2">1-2</option>
+              <option value="2-3">2-3</option>
+              <option value="3-4">3-4</option>
+              <option value="4-5">4-5</option>
+            </select>
+          </div>
+          <button className="expand-btn"><i className="bi bi-arrows-angle-expand"></i></button>
+        </div>
       </div>
       <div className="radar-chart-container" ref={containerRef}>
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart cx="50%" cy="50%" outerRadius="75%" data={threatActorsData}>
+          <RadarChart cx="50%" cy="50%" outerRadius="84%" data={threatActorsData}>
             <PolarGrid gridType="circle" stroke="#e2e8f0" />
-            <PolarRadiusAxis angle={30} domain={[0, 150]} ticks={[37.5, 75, 150]} tick={false} axisLine={false} />
+            <PolarRadiusAxis angle={30} domain={[0, 150]} ticks={[30, 60, 90, 120, 150]} tick={false} axisLine={false} />
             <Radar
               name="Around You"
               dataKey="A"
@@ -205,7 +264,7 @@ export default function Threat() {
               activeDot={false}
               isAnimationActive={false}
             />
-            <g>{renderRadarBackground()}</g>
+            <g>{renderRadarBackground({ rMid, strokeWidth })}</g>
           </RadarChart>
         </ResponsiveContainer>
         <div

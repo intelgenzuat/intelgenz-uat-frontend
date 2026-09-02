@@ -91,6 +91,24 @@
       background: #0b0f19 !important;
       color: #f1f5f9 !important;
     }
+
+    .radius-control-wrapper {
+      background: #0b0f19 !important;
+      border-color: #334155 !important;
+
+      .radius-control-label {
+        color: #94a3b8 !important;
+      }
+
+      .radius-control-select {
+        color: #f1f5f9 !important;
+
+        option {
+          background: #1e293b !important;
+          color: #f1f5f9 !important;
+        }
+      }
+    }
   }
 
   .radar-chart-container {
