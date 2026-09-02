@@ -79,7 +79,7 @@ const TTPview = ({ showOverlaps }) => {
     return (
         <>
             {/* Threat Actors Section */}
-            <div className="threat-actors-section">
+            <div className="threat-actors-section mb-4">
                 <div className="d-flex align-items-center">
                     <span className="section-title">THREAT ACTORS :</span>
                     <span className="selected-badge">{selectedActors.length} Selected</span>

@@ -113,6 +113,31 @@ const getLineWidthPx = () => 19;
 const MitigationView = ({ showOverlaps }) => {
     const [columnsData, setColumnsData] = useState(initialColumnsData);
 
+    const threatActors = [
+        { id: 1, name: 'APT28 (Fancy Bear)' },
+        { id: 2, name: 'APT29 (Cozy Bear)' },
+        { id: 3, name: 'APT41 (Double Dragon / Barium)' },
+        { id: 4, name: 'APT45 (Fancy Bear)' },
+    ];
+
+    const [selectedActors, setSelectedActors] = useState([1, 2, 3, 4]);
+
+    const handleToggleActor = (actorId) => {
+        if (selectedActors.includes(actorId)) {
+            setSelectedActors(selectedActors.filter(id => id !== actorId));
+        } else {
+            setSelectedActors([...selectedActors, actorId]);
+        }
+    };
+
+    const handleClearOrSelectAll = () => {
+        if (selectedActors.length > 0) {
+            setSelectedActors([]);
+        } else {
+            setSelectedActors(threatActors.map(a => a.id));
+        }
+    };
+
     const filterOverlaps = (items) => {
         return items
             .map(item => {
@@ -193,52 +218,86 @@ const MitigationView = ({ showOverlaps }) => {
     const columnTitles = ['Asset Inventory', 'Network Mapping', 'Operational Activity Mapping', 'System Mapping'];
 
     return (
-        <div className="mitigation-view-container flex-grow-1 d-flex flex-column overflow-hidden mx-4 mb-4">
-            <div className="mitigation-view-card d-flex flex-column flex-grow-1 bg-white mb-3">
-                <div className="model-header flex-shrink-0">
-                    <i className="bi bi-filter"></i>
-                    <span>Model</span>
+        <>
+            {/* Threat Actors Section */}
+            <div className="threat-actors-section mb-4">
+                <div className="d-flex align-items-center">
+                    <span className="section-title">THREAT ACTORS :</span>
+                    <span className="selected-badge">{selectedActors.length} Selected</span>
+                    <button className="btn clear-all-btn ms-auto d-flex align-items-center gap-1" onClick={handleClearOrSelectAll}>
+                        {selectedActors.length > 0 ? 'Clear all' : 'Select all'} <i className="bi bi-x"></i>
+                    </button>
                 </div>
-                
-                <div className="table-responsive flex-grow-1 m-0 d-flex">
-                    {displayedColumnsData.map((colData, colIndex) => (
-                        <div key={colIndex} className="mitigation-col d-flex flex-column" style={{ flex: 1, minWidth: '250px' }}>
-                            <div className="col-header">
-                                {columnTitles[colIndex]}
-                            </div>
-                            <div className="col-body d-flex flex-column">
-                                {colData.map(item => renderItem(item, 0, null))}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Pagination Footer */}
-            <div className="pagination-footer bg-white d-flex align-items-center justify-content-between px-4 py-3 rounded-4 shadow-sm">
-                <div className="pagination-info text-muted">
-                    01-09 of 120
-                </div>
-
-                <div className="pagination-controls d-flex align-items-center gap-2">
-                    <button className="btn pagination-btn arrow-btn"><i className="bi bi-chevron-left"></i></button>
-                    <button className="btn pagination-btn active">1</button>
-                    <button className="btn pagination-btn">2</button>
-                    <button className="btn pagination-btn">3</button>
-                    <button className="btn pagination-btn">4</button>
-                    <button className="btn pagination-btn">5</button>
-                    <span className="pagination-ellipsis">...</span>
-                    <button className="btn pagination-btn">20</button>
-                    <button className="btn pagination-btn arrow-btn"><i className="bi bi-chevron-right"></i></button>
-                </div>
-
-                <div className="pagination-go-to d-flex align-items-center gap-2">
-                    <span className="text-muted">Page</span>
-                    <input type="text" className="form-control pagination-input text-center" defaultValue="101" style={{ width: '50px' }} />
-                    <button className="btn go-btn fw-bold">Go</button>
+                <div className="d-flex align-items-center justify-content-between gap-3 mt-3">
+                    <div className="pills-container m-0 mt-0">
+                        {threatActors.map((actor, idx) => {
+                            const isSelected = selectedActors.includes(actor.id);
+                            return (
+                                <div 
+                                    key={actor.id} 
+                                    className={`actor-pill cursor-pointer ${isSelected ? 'active' : ''}`}
+                                    onClick={() => handleToggleActor(actor.id)}
+                                >
+                                    <div className="dot" style={{ backgroundColor: idx === 0 || idx === 3 ? '#3b82f6' : '#5200ff' }}></div>
+                                    {actor.name}
+                                    <i className={`bi ${isSelected ? 'bi-check-square-fill' : 'bi-square text-muted'}`}></i>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <button className="btn show-btn text-white px-4 py-2 flex-shrink-0" style={{ backgroundColor: '#5200ff', borderRadius: '10px', fontSize: '13px', fontWeight: 600, border: 'none', boxShadow: '0 2px 6px rgba(82, 0, 255, 0.2)' }}>
+                        Show
+                    </button>
                 </div>
             </div>
-        </div>
+
+            <div className="mitigation-view-container flex-grow-1 d-flex flex-column overflow-hidden mx-4 mb-4">
+                <div className="mitigation-view-card d-flex flex-column flex-grow-1 bg-white mb-3">
+                    <div className="model-header flex-shrink-0">
+                        <i className="bi bi-filter"></i>
+                        <span>Model</span>
+                    </div>
+                    
+                    <div className="table-responsive flex-grow-1 m-0 d-flex">
+                        {displayedColumnsData.map((colData, colIndex) => (
+                            <div key={colIndex} className="mitigation-col d-flex flex-column" style={{ flex: 1, minWidth: '250px' }}>
+                                <div className="col-header">
+                                    {columnTitles[colIndex]}
+                                </div>
+                                <div className="col-body d-flex flex-column">
+                                    {colData.map(item => renderItem(item, 0, null))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Pagination Footer */}
+                <div className="pagination-footer bg-white d-flex align-items-center justify-content-between px-4 py-3 rounded-4 shadow-sm">
+                    <div className="pagination-info text-muted">
+                        01-09 of 120
+                    </div>
+
+                    <div className="pagination-controls d-flex align-items-center gap-2">
+                        <button className="btn pagination-btn arrow-btn"><i className="bi bi-chevron-left"></i></button>
+                        <button className="btn pagination-btn active">1</button>
+                        <button className="btn pagination-btn">2</button>
+                        <button className="btn pagination-btn">3</button>
+                        <button className="btn pagination-btn">4</button>
+                        <button className="btn pagination-btn">5</button>
+                        <span className="pagination-ellipsis">...</span>
+                        <button className="btn pagination-btn">20</button>
+                        <button className="btn pagination-btn arrow-btn"><i className="bi bi-chevron-right"></i></button>
+                    </div>
+
+                    <div className="pagination-go-to d-flex align-items-center gap-2">
+                        <span className="text-muted">Page</span>
+                        <input type="text" className="form-control pagination-input text-center" defaultValue="101" style={{ width: '50px' }} />
+                        <button className="btn go-btn fw-bold">Go</button>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 };
 

@@ -127,43 +127,18 @@ const Mitigationttpview = () => {
                         </div>
 
                         {/* Searchbar */}
-                        {activeViewTab === 'ttp' && (
-                            <div className="d-flex align-items-center justify-content-start mx-4 mb-4 gap-3">
-                                <div className="d-flex flex-column" >
-                                    <span className="text-dark fw-medium" style={{ fontSize: '14.5px' }}>
-                                        Enter Threat Actor Name
-                                    </span>
-                                </div>
-                                <div className="search-wrapper position-relative m-0">
-                                    <i className="bi bi-search position-absolute text-muted" style={{ left: '12px', top: '50%', transform: 'translateY(-50%)' }}></i>
-                                    <input type="text" className="form-control rounded-pill ps-5 pe-5" placeholder="Search threat actors to add" />
-                                    <i className="bi bi-filter position-absolute text-muted" style={{ right: '16px', top: '50%', transform: 'translateY(-50%)' }}></i>
-                                </div>
-
-                                {/* Recent Searches Chips */}
-                                {/* {recentSearches.length > 0 && (
-                                    <div className="recent-searches d-flex align-items-center gap-2 ms-3">
-                                        <span className="text-secondary fw-semibold" style={{ fontSize: '13px' }}>Recent searches:</span>
-                                        <div className="d-flex gap-2">
-                                            {recentSearches.map(techId => (
-                                                <span 
-                                                    key={techId}
-                                                    className="recent-search-chip badge rounded-pill px-3 py-2 border border-1 d-inline-flex align-items-center gap-2"
-                                                    style={{ fontSize: '12px', fontWeight: 500 }}
-                                                >
-                                                    <span>{techId}</span>
-                                                    <i 
-                                                        className="bi bi-x cursor-pointer ms-1 text-muted" 
-                                                        style={{ fontSize: '14px', verticalAlign: 'middle', padding: '0 2px' }}
-                                                        onClick={() => handleRemoveRecentSearch(techId)}
-                                                    ></i>
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )} */}
+                        <div className="d-flex align-items-center justify-content-start mx-4 mb-4 gap-3">
+                            <div className="d-flex flex-column" >
+                                <span className="text-dark fw-medium" style={{ fontSize: '14.5px' }}>
+                                    Enter Threat Actor Name
+                                </span>
                             </div>
-                        )}
+                            <div className="search-wrapper position-relative m-0">
+                                <i className="bi bi-search position-absolute text-muted" style={{ left: '12px', top: '50%', transform: 'translateY(-50%)' }}></i>
+                                <input type="text" className="form-control rounded-pill ps-5 pe-5" placeholder="Search threat actors to add" />
+                                <i className="bi bi-filter position-absolute text-muted" style={{ right: '16px', top: '50%', transform: 'translateY(-50%)' }}></i>
+                            </div>
+                        </div>
 
                         {/* Tab Content Area */}
                         {activeViewTab === 'ttp' && <TTPview showOverlaps={showOverlaps} />}
