@@ -317,6 +317,7 @@ export default function ViewReport() {
               {activeChatMode === 'text' && (
                 <IntelegenzChatSidebar
                   onClose={() => setActiveChatMode(null)}
+                  onEnableVoiceChat={() => setActiveChatMode('voice')}
                 />
               )}
               {activeChatMode === 'voice' && (
@@ -333,10 +334,9 @@ export default function ViewReport() {
 
         </div>
 
-        {/* Floating Chat Buttons — right-edge draggable */}
+        {/* Floating Chat Button (Bottom-Right) */}
         <FloatingChatButtons
           activeChatMode={activeChatMode}
-          onVoiceChatOpen={() => setActiveChatMode('voice')}
           onIntelgenzOpen={() => setActiveChatMode('text')}
         />
       </div>

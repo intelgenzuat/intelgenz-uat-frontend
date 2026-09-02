@@ -28,15 +28,28 @@ export default function ThreatActorProfilingPage() {
           <Outlet />
         </div>
 
-        {/* Floating Chat Drawers */}
+        {/* Floating Chat Button (Bottom-Right) */}
         <FloatingChatButtons
-          onVoiceChatOpen={() => setIsVoicechatDrawerOpen(true)}
           onIntelgenzOpen={() => setIsDrawerOpen(true)}
         />
 
         {/* Drawer components */}
-        <Voicechatdrawer isOpen={isVoicechatDrawerOpen} onClose={() => setIsVoicechatDrawerOpen(false)} />
-        <Intelegenzchatdrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
+        <Voicechatdrawer
+          isOpen={isVoicechatDrawerOpen}
+          onClose={() => setIsVoicechatDrawerOpen(false)}
+          onEnableTextChat={() => {
+            setIsVoicechatDrawerOpen(false);
+            setIsDrawerOpen(true);
+          }}
+        />
+        <Intelegenzchatdrawer
+          isOpen={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          onEnableVoiceChat={() => {
+            setIsDrawerOpen(false);
+            setIsVoicechatDrawerOpen(true);
+          }}
+        />
       </div>
     </div>
   );

@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import './IntelegenzChatSidebar.scss';
 import { BiHelpCircle } from 'react-icons/bi';
 import { FiChevronRight, FiArrowUp } from 'react-icons/fi';
-import { BsLightningChargeFill } from 'react-icons/bs';
+import { BsLightningChargeFill, BsFillMicFill } from 'react-icons/bs';
 import { LuHistory } from 'react-icons/lu';
 import man from '../assets/images/man.jpg';
 
-export default function IntelegenzChatSidebar({ onClose }) {
+export default function IntelegenzChatSidebar({ onClose, onEnableVoiceChat }) {
   const [chatState, setChatState] = useState('idle'); // idle | loading | done
   const [userMessage, setUserMessage] = useState('');
   const [showResponse, setShowResponse] = useState(false);
@@ -48,13 +48,28 @@ export default function IntelegenzChatSidebar({ onClose }) {
           </h6>
           <BiHelpCircle className="text-purple mt-0" style={{ fontSize: '16px', cursor: 'pointer' }} />
         </div>
-        <button
-          className="btn btn-light bg-white border rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-          style={{ width: '38px', height: '38px' }}
-          onClick={onClose}
-        >
-          <FiChevronRight className="text-secondary" style={{ fontSize: '20px' }} />
-        </button>
+        <div className="d-flex align-items-center gap-2">
+          {onEnableVoiceChat && (
+            <button
+              className="btn voice-chat-header-btn d-flex align-items-center gap-2"
+              onClick={onEnableVoiceChat}
+              title="Enable Voice Chat"
+              aria-label="Enable Voice Chat"
+            >
+              <div className="voice-mic-badge d-flex align-items-center justify-content-center">
+                <BsFillMicFill className="voice-mic-icon" />
+              </div>
+              <span className="voice-btn-label">Voice Chat</span>
+            </button>
+          )}
+          <button
+            className="btn btn-light bg-white border rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+            style={{ width: '38px', height: '38px' }}
+            onClick={onClose}
+          >
+            <FiChevronRight className="text-secondary" style={{ fontSize: '20px' }} />
+          </button>
+        </div>
       </div>
 
       {/* ── Body ── */}

@@ -1,56 +1,35 @@
-.draggable-chat-btn {
+/* ── Floating Chat Circular Icon Button (Bottom-Right) ── */
+.floating-chat-icon-btn {
   position: fixed;
-  right: 0;
-  z-index: 1050;
-  width: 42px;
-  border: 1px solid #e2e8f0;
-  border-right: none;
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
+  bottom: 24px;
+  right: 24px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #0066d4;
+  color: #ffffff;
+  border: none;
+  outline: none;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
-  transition: background 0.2s ease, box-shadow 0.2s ease;
-  cursor: grab;
-  outline: none;
-
-  &:active {
-    cursor: grabbing;
-  }
+  box-shadow: 0 4px 16px rgba(0, 102, 212, 0.4), 0 2px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 1050;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background-color 0.2s ease;
 
   &:hover {
-    background-color: #f8fafc !important;
-    box-shadow: -3px 0 12px rgba(0, 0, 0, 0.08) !important;
+    transform: scale(1.08);
+    background: #0052b3;
+    box-shadow: 0 6px 20px rgba(0, 102, 212, 0.5), 0 3px 8px rgba(0, 0, 0, 0.15);
   }
 
-  &__label {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    letter-spacing: 0.5px;
-    font-size: 13px;
-    font-weight: 700;
-    white-space: nowrap;
-    background: linear-gradient(89.96deg,
-        rgba(188, 191, 255, 0.64) -39.71%,
-        rgba(255, 0, 0, 0.64) 22.45%,
-        rgba(0, 13, 255, 0.64) 111.9%,
-        rgba(255, 0, 0, 0.64) 207.41%,
-        rgba(188, 191, 255, 0.64) 275.63%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    pointer-events: none;
+  &:active {
+    transform: scale(0.95);
   }
 
-  &__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
+  .floating-chat-icon {
+    font-size: 26px;
+    color: #ffffff;
   }
 }

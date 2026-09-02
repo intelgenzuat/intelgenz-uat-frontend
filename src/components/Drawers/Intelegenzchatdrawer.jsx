@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './intelegenzchatdrawer.scss';
 import { BiHelpCircle } from 'react-icons/bi';
-import { FiChevronRight, FiPlus, FiArrowUp, FiShield, FiCrosshair, FiGlobe, FiAlertTriangle, FiArrowRight } from 'react-icons/fi';
-import { BsLightningChargeFill } from 'react-icons/bs';
+import { FiChevronDown, FiPlus, FiArrowUp, FiShield, FiCrosshair, FiGlobe, FiAlertTriangle, FiArrowRight } from 'react-icons/fi';
+import { BsLightningChargeFill, BsFillMicFill } from 'react-icons/bs';
 import { LuHistory, LuBoxes } from 'react-icons/lu';
 import ReactMarkdown from 'react-markdown';
 import { chatWsUrl, chatHttpUrl } from '../../Context/chat';
 import man from '../../assets/images/man.jpg';
 
-const Intelegenzchatdrawer = ({ isOpen, onClose }) => {
+const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
     const [chatState, setChatState] = useState('idle'); // idle | loading | done
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
@@ -136,8 +136,6 @@ const Intelegenzchatdrawer = ({ isOpen, onClose }) => {
 
     return (
         <>
-            {isOpen && <div className="intelegenzchat-drawer-overlay" onClick={onClose}></div>}
-
             <div className={`intelegenzchat-drawer ${isOpen ? 'open' : ''}`}>
 
                 {/* ── Header ── */}
@@ -148,13 +146,28 @@ const Intelegenzchatdrawer = ({ isOpen, onClose }) => {
                         </h4>
                         <BiHelpCircle className="help-icon mt-1" />
                     </div>
-                    <button
-                        className="btn btn-light bg-white border rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                        style={{ width: '36px', height: '36px' }}
-                        onClick={onClose}
-                    >
-                        <FiChevronRight className="text-secondary" />
-                    </button>
+                    <div className="d-flex align-items-center gap-2">
+                        <button
+                            className="btn voice-chat-header-btn d-flex align-items-center gap-2"
+                            onClick={onEnableVoiceChat}
+                            title="Enable Voice Chat"
+                            aria-label="Enable Voice Chat"
+                        >
+                            <div className="voice-mic-badge d-flex align-items-center justify-content-center">
+                                <BsFillMicFill className="voice-mic-icon" />
+                            </div>
+                            <span className="voice-btn-label">Voice Chat</span>
+                        </button>
+                        <button
+                            className="btn btn-light bg-white border rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                            style={{ width: '36px', height: '36px' }}
+                            onClick={onClose}
+                            title="Close Chat"
+                            aria-label="Close Chat"
+                        >
+                            <FiChevronDown className="text-secondary" style={{ fontSize: '18px' }} />
+                        </button>
+                    </div>
                 </div>
 
                 {/* ── Body ── */}

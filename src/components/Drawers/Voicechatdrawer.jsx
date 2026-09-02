@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Voicechatdrawer.scss';
 import { BiHelpCircle } from 'react-icons/bi';
-import { FiChevronRight, FiPlus, FiArrowUp, FiRefreshCw } from 'react-icons/fi';
-import { BsLightningChargeFill } from 'react-icons/bs';
+import { FiChevronDown, FiPlus, FiArrowUp, FiRefreshCw } from 'react-icons/fi';
+import { BsLightningChargeFill, BsFillChatRightDotsFill } from 'react-icons/bs';
 
-const Voicechatdrawer = ({ isOpen, onClose }) => {
+const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
   const [isVoiceMode, setIsVoiceMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isAnswering, setIsAnswering] = useState(false);
@@ -45,9 +45,6 @@ const Voicechatdrawer = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* Overlay to dim background when drawer is open (optional, based on design) */}
-      {isOpen && <div className="voice-drawer-overlay" onClick={onClose}></div>}
-
       {/* Sliding Drawer Container */}
       <div className={`voicechat-drawer ${isOpen ? 'open' : ''} ${isVoiceMode ? 'voice-mode' : ''}`}>
 
@@ -60,13 +57,32 @@ const Voicechatdrawer = ({ isOpen, onClose }) => {
             <h4 className="mb-0">Chat</h4>
             <BiHelpCircle className="help-icon mt-1" />
           </div>
-          <button
-            className="btn btn-light bg-white border rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-            style={{ width: '34px', height: '34px' }}
-            onClick={onClose}
-          >
-            <FiChevronRight className="text-secondary" />
-          </button>
+          <div className="d-flex align-items-center gap-2">
+            {onEnableTextChat && (
+              <button
+                className="btn voice-chat-header-btn d-flex align-items-center gap-2"
+                onClick={onEnableTextChat}
+                title="Switch to Text Chat"
+                aria-label="Switch to Text Chat"
+              >
+                <div className="voice-mic-badge d-flex align-items-center justify-content-center" style={{ background: '#0066d4' }}>
+                  <BsFillChatRightDotsFill style={{ fontSize: '10px' }} />
+                </div>
+                <span className="voice-btn-label" style={{ background: '#0066d4', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                  Text Chat
+                </span>
+              </button>
+            )}
+            <button
+              className="btn btn-light bg-white border rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+              style={{ width: '34px', height: '34px' }}
+              onClick={onClose}
+              title="Close Voice Chat"
+              aria-label="Close Voice Chat"
+            >
+              <FiChevronDown className="text-secondary" style={{ fontSize: '18px' }} />
+            </button>
+          </div>
         </div>
 
         {/* Drawer Body Area (Scrollable if needed, currently just centered content) */}

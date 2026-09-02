@@ -1,43 +1,50 @@
-.intelegenzchat-drawer-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(2px);
-    z-index: 1040;
-}
-
 .intelegenzchat-drawer {
     position: fixed;
-    top: 0;
-    right: -600px;
-    width: 100%;
-    max-width: 400px;
-    /* Default for laptop/small desktop */
+    bottom: 24px;
+    right: 24px;
+    width: calc(100vw - 48px);
+    max-width: 440px;
+    height: 640px;
+    max-height: calc(100vh - 100px);
+    background-color: #ffffff;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 2px 10px rgba(0, 0, 0, 0.06);
+    border-radius: 20px;
+    z-index: 1055;
+    transform: translateY(calc(100% + 40px));
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
 
     @media (min-width: 1400px) {
-        max-width: 440px;
-        /* Adjusted per user request in Voicechatdrawer */
+        max-width: 460px;
+        height: 680px;
+        max-height: calc(100vh - 100px);
     }
 
     @media (min-width: 1800px) {
-        max-width: 550px;
-        /* Wide desktop width */
+        max-width: 520px;
+        height: 720px;
+        max-height: calc(100vh - 120px);
     }
 
-    height: 100vh;
-    background-color: #ffffff;
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.04);
-    z-index: 1055;
-    transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    display: flex;
-    flex-direction: column;
-    border-left: 1px solid #f1f5f9;
+    @media (max-width: 576px) {
+        bottom: 12px;
+        right: 12px;
+        width: calc(100vw - 24px);
+        max-width: 100%;
+        height: calc(100vh - 24px);
+        max-height: calc(100vh - 24px);
+        border-radius: 16px;
+    }
 
     &.open {
-        right: 0;
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
     }
 
     .text-purple {
@@ -54,6 +61,59 @@
             font-size: 16px;
             color: #8b5cf6;
             cursor: pointer;
+        }
+
+        .voice-chat-header-btn {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            height: 36px;
+            padding: 0 12px;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+            .voice-mic-badge {
+                width: 22px;
+                height: 22px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #ec4899 0%, #db2777 50%, #7c3aed 100%);
+                color: #ffffff;
+                box-shadow: 0 2px 6px rgba(219, 39, 119, 0.3);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+                .voice-mic-icon {
+                    font-size: 11px;
+                }
+            }
+
+            .voice-btn-label {
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: 0.2px;
+                background: linear-gradient(135deg, #db2777 0%, #7c3aed 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                text-fill-color: transparent;
+            }
+
+            &:hover {
+                background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%);
+                border-color: #e9d5ff;
+                box-shadow: 0 3px 10px rgba(124, 58, 237, 0.15);
+                transform: translateY(-1px);
+
+                .voice-mic-badge {
+                    transform: scale(1.1);
+                    box-shadow: 0 3px 8px rgba(219, 39, 119, 0.45);
+                }
+            }
+
+            &:active {
+                transform: translateY(0);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            }
         }
     }
 
