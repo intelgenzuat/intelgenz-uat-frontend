@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiRadio } from "react-icons/fi";
 import '../../assets/styles/homepage/Homepage.scss'
@@ -12,9 +12,14 @@ import ThreatActorProfiling from './Threat Intelligence/ThreatActorProfiling';
 import LiveThreatMap from './LiveThreatMap';
 import TopReports from './TopReports';
 import BlogsandNews from './BlogsandNews';
+import FloatingChatButtons from '../../components/Buttons/FloatingChatButtons';
+import Voicechatdrawer from '../../components/Drawers/Voicechatdrawer';
+import Intelegenzchatdrawer from '../../components/Drawers/Intelegenzchatdrawer';
 
 export default function Homepage() {
     const navigate = useNavigate();
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isVoicechatDrawerOpen, setIsVoicechatDrawerOpen] = useState(false);
 
     return (
         <>
@@ -96,6 +101,28 @@ export default function Homepage() {
                 </div>
             </div>
 
+            {/* Floating Chat Button (Bottom-Right) */}
+            <FloatingChatButtons
+                onIntelgenzOpen={() => setIsDrawerOpen(true)}
+            />
+
+            {/* Drawer components */}
+            <Voicechatdrawer
+                isOpen={isVoicechatDrawerOpen}
+                onClose={() => setIsVoicechatDrawerOpen(false)}
+                onEnableTextChat={() => {
+                    setIsVoicechatDrawerOpen(false);
+                    setIsDrawerOpen(true);
+                }}
+            />
+            <Intelegenzchatdrawer
+                isOpen={isDrawerOpen}
+                onClose={() => setIsDrawerOpen(false)}
+                onEnableVoiceChat={() => {
+                    setIsDrawerOpen(false);
+                    setIsVoicechatDrawerOpen(true);
+                }}
+            />
         </>
     );
 }
