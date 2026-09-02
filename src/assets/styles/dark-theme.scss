@@ -2407,3 +2407,383 @@
     }
   }
 }
+
+/* =========================================================
+   KNOWLEDGE GRAPH PAGE  —  Dark Mode Overrides
+========================================================= */
+[data-bs-theme='dark'] {
+
+  // ── Base page shell ──────────────────────────────────────
+  .threat-page.malware-kg-page {
+    background: #0b0f19 !important;
+    color: #e2e8f0 !important;
+  }
+
+  // ── Graph header bar ─────────────────────────────────────
+  .graph-header {
+    background: #0f172a !important;
+    border-bottom: 1px solid #1e293b !important;
+
+    // Breadcrumb
+    .breadcrumb-nav {
+      color: #94a3b8 !important;
+
+      .home-icon { color: #64748b !important; }
+
+      .breadcrumb-clickable {
+        color: #94a3b8 !important;
+        &:hover { color: #60a5fa !important; }
+      }
+
+      .text-black-50 { color: #334155 !important; }
+
+      .text-dark.fw-semibold,
+      .fw-semibold { color: #e2e8f0 !important; }
+    }
+
+    // Page heading
+    .view-top-header {
+      .header-icon-wrapper {
+        background-color: rgba(225, 29, 72, 0.12) !important;
+        border-color: rgba(225, 29, 72, 0.25) !important;
+      }
+
+      h2.text-dark, h2 {
+        color: #f1f5f9 !important;
+      }
+
+      .text-muted {
+        color: #64748b !important;
+      }
+
+      // Assessment Focus checkboxes
+      .intelcard-view-checkboxes {
+        .intelcard-checkbox-label {
+          color: #94a3b8 !important;
+        }
+        .intelcard-checkbox-item:hover .intelcard-checkbox-label {
+          color: #e2e8f0 !important;
+        }
+      }
+    }
+
+    // Section labels
+    .section-label { color: #475569 !important; }
+
+    // Radius depth control
+    .radius-section {
+      .radius-select-btn {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: #e2e8f0 !important;
+
+        &:hover { background: #273549 !important; }
+
+        .chevron-icon { color: #64748b !important; }
+      }
+
+      .radius-dropdown-menu {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+
+        .radius-dropdown-item {
+          color: #cbd5e1 !important;
+          &:hover { background: #273549 !important; color: #60a5fa !important; }
+          &.selected { color: #60a5fa !important; background: rgba(37, 99, 235, 0.15) !important; }
+        }
+      }
+    }
+  }
+
+  // ── Entity query / malware selector panel ────────────────
+  .entity-query-section-white {
+    background: #0f172a !important;
+
+    // Picker label
+    .picker-label { color: #94a3b8 !important; }
+
+    // Malware dropdown
+    .malware-dropdown-select {
+      background-color: #1e293b !important;
+      border-color: #334155 !important;
+      color: #e2e8f0 !important;
+
+      &:focus {
+        border-color: #3b82f6 !important;
+        background-color: #1e293b !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+      }
+
+      &:disabled {
+        background-color: #161f2e !important;
+        color: #475569 !important;
+      }
+
+      option {
+        background: #1e293b;
+        color: #e2e8f0;
+      }
+    }
+
+    // Action buttons (Reload / Toggle)
+    .btn-kg-action {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+      color: #cbd5e1 !important;
+
+      &:hover:not(:disabled) {
+        background: #273549 !important;
+        border-color: #475569 !important;
+        color: #f1f5f9 !important;
+      }
+
+      &:disabled { opacity: 0.45 !important; }
+
+      &.btn-toggle-connections.active {
+        background: rgba(37, 99, 235, 0.15) !important;
+        border-color: rgba(59, 130, 246, 0.4) !important;
+        color: #60a5fa !important;
+      }
+    }
+
+    // ── Entity chips ──────────────────────────────────────
+    .malware-chip {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+      color: #94a3b8 !important;
+
+      &:hover { background: #273549 !important; }
+
+      &.active {
+        background: rgba(109, 40, 217, 0.18) !important;
+        border-color: rgba(139, 92, 246, 0.4) !important;
+        color: #a78bfa !important;
+
+        .chip-indicator {
+          box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3) !important;
+        }
+      }
+
+      .chip-close-btn {
+        color: #475569 !important;
+        &:hover {
+          background: rgba(220, 38, 38, 0.15) !important;
+          color: #f87171 !important;
+        }
+      }
+    }
+
+    // ── Connection filters accordion ──────────────────────
+    .connection-filters-card {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+      box-shadow: none !important;
+
+      .connection-filters-header {
+        background: #161f2e !important;
+        border-bottom-color: transparent !important;
+
+        &:hover { background: #1e293b !important; }
+
+        .accordion-arrow { color: #64748b !important; }
+        .filters-title { color: #e2e8f0 !important; }
+        .filters-count-badge {
+          background: #0f172a !important;
+          color: #64748b !important;
+        }
+      }
+
+      .connection-filters-body {
+        background: #1e293b !important;
+        border-top-color: #334155 !important;
+
+        .filters-subtext { color: #64748b !important; }
+
+        .btn-filter-pill {
+          background: #0f172a !important;
+          border-color: #334155 !important;
+          color: #94a3b8 !important;
+
+          &:hover:not(:disabled) {
+            background: #273549 !important;
+            border-color: #475569 !important;
+          }
+          &:disabled { opacity: 0.4 !important; }
+        }
+
+        .connection-options-grid {
+          background: #161f2e !important;
+          border-color: #1e293b !important;
+
+          &::-webkit-scrollbar-thumb { background: #334155 !important; }
+
+          .connection-option-item {
+            color: #64748b !important;
+
+            &:hover { background: #1e293b !important; color: #e2e8f0 !important; }
+            &.checked { color: #e2e8f0 !important; }
+          }
+        }
+      }
+    }
+
+    // ── Status row ────────────────────────────────────────
+    .kg-status-row {
+      .status-text { color: #64748b !important; }
+      .stats-summary { color: #475569 !important; }
+    }
+  }
+
+  // ── Graph workspace + canvas ──────────────────────────────
+  .graph-workspace-layout {
+    background: #0b0f19 !important;
+  }
+
+  .graph-canvas-container {
+    background-color: #0d1120 !important;
+    background-image: radial-gradient(#1e293b 1.2px, transparent 1.2px) !important;
+
+    // Floating zoom controls
+    .graph-floating-controls {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+
+      .control-divider { background: #334155 !important; }
+
+      .tool-icon-btn {
+        color: #64748b !important;
+        &:hover { background: #273549 !important; color: #e2e8f0 !important; }
+      }
+    }
+
+    // Interaction hint
+    .canvas-interaction-hint {
+      color: #64748b !important;
+      background: rgba(15, 23, 42, 0.88) !important;
+      border-color: #1e293b !important;
+    }
+
+    // Node type legend
+    .canvas-type-legend {
+      background: rgba(15, 23, 42, 0.92) !important;
+      border-color: #1e293b !important;
+
+      .legend-item .legend-label { color: #64748b !important; }
+    }
+  }
+
+  // ── SVG graph elements ────────────────────────────────────
+  .edges-layer .edge-group {
+    .svg-edge-line {
+      stroke: #334155 !important;
+
+      &.focused-edge {
+        stroke: #6366f1 !important;
+      }
+    }
+
+    .edge-label-bg {
+      fill: #1e293b !important;
+      stroke: #334155 !important;
+    }
+
+    .svg-edge-text {
+      fill: #475569 !important;
+
+      &.focused-text { fill: #818cf8 !important; }
+    }
+  }
+
+  .nodes-layer .node-group {
+    &:hover {
+      .svg-node-label {
+        fill: #f1f5f9 !important;
+        stroke: #0d1120 !important;
+      }
+    }
+
+    .svg-node-circle {
+      stroke: #0d1120 !important;
+    }
+
+    .svg-node-label {
+      fill: #cbd5e1 !important;
+      stroke: #0d1120 !important;
+    }
+  }
+
+  // Arrow markers are SVG defs — darken the default one
+  .interactive-kg-svg defs marker#kg-arrow path {
+    fill: #475569 !important;
+  }
+
+  // ── Right details / inspection sidebar ───────────────────
+  .kg-details-sidebar {
+    background: #0f172a !important;
+    border-left-color: #1e293b !important;
+
+    .details-header {
+      background: #161f2e !important;
+      border-bottom-color: #1e293b !important;
+
+      .details-header-title { color: #e2e8f0 !important; }
+
+      // Badge: "None" / node type badge
+      .badge.bg-light {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: #94a3b8 !important;
+      }
+    }
+
+    .details-scrollable-body {
+      &::-webkit-scrollbar-thumb { background: #334155 !important; }
+
+      // Entity overview card
+      .entity-overview-box {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+
+        .entity-name { color: #f1f5f9 !important; }
+        .entity-type-tag { color: #64748b !important; }
+      }
+
+      // Section headings
+      .section-heading { color: #475569 !important; }
+
+      // Properties list
+      .prop-row {
+        background: #161f2e !important;
+        border-color: #1e293b !important;
+
+        .prop-key { color: #475569 !important; }
+        .prop-val { color: #e2e8f0 !important; }
+      }
+
+      // Relationship cards
+      .rel-card {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+
+        &:hover {
+          border-color: #3b82f6 !important;
+          background: rgba(37, 99, 235, 0.1) !important;
+        }
+
+        .rel-type-badge { color: #818cf8 !important; }
+        .rel-name { color: #e2e8f0 !important; }
+      }
+
+      // Empty state
+      .empty-details {
+        color: #475569 !important;
+        p { color: #475569 !important; }
+      }
+
+      .text-muted { color: #475569 !important; }
+    }
+  }
+}
+
