@@ -12,22 +12,30 @@
     overflow-x: auto;
     overflow-y: auto;
     width: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: #8b5cf6 #f1f5f9;
     
     &::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 10px;
+      height: 10px;
     }
 
     &::-webkit-scrollbar-track {
-      background: transparent;
+      background: #f1f5f9;
+      border-radius: 8px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: #e2e8f0;
-      border-radius: 10px;
+      background: #8b5cf6;
+      border-radius: 8px;
+      border: 2px solid #f1f5f9;
 
       &:hover {
-        background: #cbd5e1;
+        background: #7c3aed;
+      }
+
+      &:active {
+        background: #6d28d9;
       }
     }
   }

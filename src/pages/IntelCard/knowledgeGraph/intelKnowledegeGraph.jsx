@@ -802,7 +802,7 @@ const intelKnowledegeGraph = () => {
                                 </svg>
                             </div>
                             <h2 className="mb-0 d-flex align-items-center">
-                                <span className="header pe-3" style={{ fontSize: '24px', fontWeight: '500', color: '#1A1B1E' }}>View in Knowledge Graph</span>
+                                <span className="header pe-3" style={{ fontSize: '24px', fontWeight: '500' }}>View in Knowledge Graph</span>
                             </h2>
                         </div>
 

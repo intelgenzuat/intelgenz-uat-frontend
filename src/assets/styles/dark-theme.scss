@@ -482,11 +482,18 @@
 
       .table-responsive-container {
         background-color: #1e293b !important;
+        scrollbar-color: #8b5cf6 #0f172a !important;
+
+        &::-webkit-scrollbar-track {
+          background: #0f172a !important;
+        }
 
         &::-webkit-scrollbar-thumb {
-          background: #334155 !important;
+          background: #8b5cf6 !important;
+          border: 2px solid #0f172a !important;
+
           &:hover {
-            background: #475569 !important;
+            background: #a78bfa !important;
           }
         }
       }
@@ -670,11 +677,18 @@
 
       .table-responsive-container {
         background-color: #1e293b !important;
+        scrollbar-color: #8b5cf6 #0f172a !important;
+
+        &::-webkit-scrollbar-track {
+          background: #0f172a !important;
+        }
 
         &::-webkit-scrollbar-thumb {
-          background: #334155 !important;
+          background: #8b5cf6 !important;
+          border: 2px solid #0f172a !important;
+
           &:hover {
-            background: #475569 !important;
+            background: #a78bfa !important;
           }
         }
       }
@@ -2440,7 +2454,9 @@
       .text-black-50 { color: #334155 !important; }
 
       .text-dark.fw-semibold,
-      .fw-semibold { color: #e2e8f0 !important; }
+      .text-dark.fw-medium,
+      .fw-semibold,
+      .fw-medium { color: #e2e8f0 !important; }
     }
 
     // Page heading
@@ -2452,6 +2468,9 @@
 
       h2.text-dark, h2 {
         color: #f1f5f9 !important;
+        .header {
+          color: #f1f5f9 !important;
+        }
       }
 
       .text-muted {
@@ -2785,6 +2804,35 @@
       }
 
       .text-muted { color: #475569 !important; }
+    }
+  }
+
+  // Intelegenz Chat Drawer
+  .intelegenzchat-drawer {
+    background-color: #0f172a !important;
+    border-color: #1e293b !important;
+
+    .drawer-header {
+      border-bottom-color: #1e293b !important;
+      h4 { color: #f1f5f9 !important; }
+    }
+
+    .drawer-body {
+      .enable-neura-container {
+        .enable-neura-label {
+          background-color: #1e293b !important;
+          border-color: #334155 !important;
+
+          &:hover {
+            background-color: #273549 !important;
+            border-color: #475569 !important;
+          }
+
+          .enable-neura-text {
+            color: #cbd5e1 !important;
+          }
+        }
+      }
     }
   }
 }

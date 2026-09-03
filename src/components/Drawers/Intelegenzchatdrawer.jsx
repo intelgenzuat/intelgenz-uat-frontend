@@ -12,6 +12,7 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
     const [chatState, setChatState] = useState('idle'); // idle | loading | done
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
+    const [enableNeura, setEnableNeura] = useState(false);
     const chatBodyRef = useRef(null);
     const textareaRef = useRef(null);
     const [sessionId, setSessionId] = useState(() => crypto.randomUUID());
@@ -79,7 +80,8 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
         
         const payload = {
             message: textToSend.trim(),
-            session_id: sessionId
+            session_id: sessionId,
+            enable_neura: enableNeura
         };
         
         if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
@@ -180,9 +182,21 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
                         >
                             <BsLightningChargeFill className="text-white" style={{ fontSize: '24px' }} />
                         </div>
-                        <h3 className="mb-3 mt-1 chat-title-gradient">
+                        <h3 className="mb-2 mt-1 chat-title-gradient">
                             Integenz Chat
                         </h3>
+                        <div className="enable-neura-container mb-3 d-flex align-items-center justify-content-center">
+                            <label className="enable-neura-label d-flex align-items-center gap-2" htmlFor="enable-neura-checkbox">
+                                <input
+                                    type="checkbox"
+                                    id="enable-neura-checkbox"
+                                    className="enable-neura-checkbox form-check-input"
+                                    checked={enableNeura}
+                                    onChange={(e) => setEnableNeura(e.target.checked)}
+                                />
+                                <span className="enable-neura-text">enable neura</span>
+                            </label>
+                        </div>
                         <p className="text-secondary text-center px-md-3 mb-5">
                             Ask about emerging threats, vulnerabilities, or attack insights to get real-time intelligence.
                         </p>
