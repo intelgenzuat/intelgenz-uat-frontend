@@ -199,11 +199,11 @@ export default function Threat() {
               value={selectedRadius}
               onChange={(e) => setSelectedRadius(e.target.value)}
             >
-              <option value="0+">0+</option>
-              <option value="1+">1+</option>
-              <option value="2+">2+</option>
-              <option value="3+">3+</option>
-              <option value="4+">4+</option>
+              <option value="0+">Critical</option>
+              <option value="1+">High</option>
+              <option value="2+">Moderate</option>
+              <option value="3+">Low</option>
+              <option value="4+">Minimal</option>
             </select>
           </div>
           <button className="expand-btn"><i className="bi bi-arrows-angle-expand"></i></button>
