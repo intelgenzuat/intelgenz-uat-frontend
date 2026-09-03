@@ -43,6 +43,8 @@ const EmergingThreatReportpage = lazy(() => import('./pages/Viewpages/ReportPage
 const BlogsnewsEditpage = lazy(() => import('./pages/Admindashboard/blogsnews/BlogsnewsEdit'));
 const ViewinKnowledgegrap = lazy(() => import('./pages/ThreatActorProfiling/ViewInKnowledgeGraph/ViewInKnowledegeGraph'));
 const IntelviewinKnowlegdeGraphpage = lazy(() => import('./pages/IntelCard/knowledgeGraph/intelKnowledegeGraph'));
+const IntelcardThreatActorDetailNew = lazy(() => import('./pages/IntelCard/intelcardThreatActorDetailNew'));
+const IntelcardMalwareDetailNew = lazy(() => import('./pages/IntelCard/intelcardMalwareDetailNew'));
 
 
 // Guard: only Admin role can access admin routes
@@ -86,8 +88,8 @@ const Privateroutes = () => {
                             <Route exact path={ThreatActorprofile} element={<ThreatActorProfilingTable noFooter />}></Route>
                             <Route exact path={viewinKnowlegdeGraph} element={<ViewinKnowledgegrap noFooter />}></Route>
                         </Route>
-                        <Route exact path={IntelCardDetails} element={<IntelCardDetailsView noFooter />}></Route>
-                        <Route exact path={IntelCardThreatDetails} element={<IntelCardThreatActorDetail noFooter />}></Route>
+                        <Route exact path={IntelCardDetails} element={<IntelcardMalwareDetailNew noFooter />}></Route>
+                        <Route exact path={IntelCardThreatDetails} element={<IntelcardThreatActorDetailNew noFooter />}></Route>
                         <Route exact path={BlogsandNews} element={<BlogsandNewsPage noFooter />}></Route>
                         <Route exact path={blogsnewslist} element={<AdminRoute><BlogsnewsList noFooter /></AdminRoute>}></Route>
                         <Route exact path={blogsnewsedit} element={<AdminRoute><BlogsnewsEditpage noFooter /></AdminRoute>}></Route>
