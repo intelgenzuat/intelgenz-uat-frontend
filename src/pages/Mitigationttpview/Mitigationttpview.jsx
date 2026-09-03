@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FiHome } from 'react-icons/fi';
 import MitigationSidebar from '../../components/sidebars/MitigationSidebar';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import '../../assets/styles/view/View.scss';
@@ -13,7 +14,7 @@ import Intelegenzchatdrawer from '../../components/Drawers/Intelegenzchatdrawer'
 const Mitigationttpview = () => {
     const [activeTab, setActiveTab] = useState('customized');
     const [activeViewTab, setActiveViewTab] = useState('ttp');
-    const [recentSearches, setRecentSearches] = useState([ 'T1078', 'T1486', 'T1021', 'T1204']);
+    const [recentSearches, setRecentSearches] = useState(['T1078', 'T1486', 'T1021', 'T1204']);
     const [showOverlaps, setShowOverlaps] = useState(false);
     const { isSidebarCollapsed, toggleSidebar } = useOutletContext() || {};
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -45,17 +46,20 @@ const Mitigationttpview = () => {
                     <div className="mitigation-ttp-view d-flex flex-column min-h-100">
 
                         {/* Header */}
-                        <div className="header-actions">
-                            <button className="btn btn-link text-decoration-none p-0 back-btn d-flex align-items-center gap-2" onClick={() => Navigate("/")}>
-                                <i className="bi bi-arrow-left"></i> Back
-                            </button>
+                        <div className="breadcrumb-nav text-muted" style={{ fontSize: '14px' }}>
+                            <FiHome className="home-icon me-2" />
+                            <span onClick={() => Navigate('/')} style={{ cursor: 'pointer' }}>Home</span>
+                            <span className="mx-2 text-black-50">/</span>
+                            <span style={{ cursor: 'pointer' }}>Threat Actor</span>
+                            {/* <span className="mx-2 text-black-50">/</span> */}
+                            <span className="text-dark fw-medium"></span>
                         </div>
 
                         {/* Threat Actors */}
 
 
                         {/* View Controls & Legends Card */}
-                        <div className="view-controls-card flex-shrink-0 mx-4 mb-4 mt-4">
+                        <div className="view-controls-card flex-shrink-0 mx-4 mb-4 mt-2">
                             {/* View Controls */}
                             <div className="view-controls-section">
                                 <div className="title-area">
@@ -108,7 +112,7 @@ const Mitigationttpview = () => {
                             </div>
 
                             {/* Legends */}
-                            {activeViewTab === 'ttp' && (
+                            {/* {activeViewTab === 'ttp' && (
                                 <div className="legends-area">
                                     <span className="legend-title">LEGENDS :</span>
                                     <div className="legend-items">
@@ -123,22 +127,32 @@ const Mitigationttpview = () => {
                                         </div>
                                     </div>
                                 </div>
-                            )}
+                            )} */}
                         </div>
 
                         {/* Searchbar */}
-                        <div className="d-flex align-items-center justify-content-start mx-4 mb-4 gap-3">
-                            <div className="d-flex flex-column" >
-                                <span className="text-dark fw-medium" style={{ fontSize: '14.5px' }}>
-                                    Enter Threat Actor Name
-                                </span>
-                            </div>
-                            <div className="search-wrapper position-relative m-0">
-                                <i className="bi bi-search position-absolute text-muted" style={{ left: '12px', top: '50%', transform: 'translateY(-50%)' }}></i>
-                                <input type="text" className="form-control rounded-pill ps-5 pe-5" placeholder="Search threat actors to add" />
-                                <i className="bi bi-filter position-absolute text-muted" style={{ right: '16px', top: '50%', transform: 'translateY(-50%)' }}></i>
-                            </div>
-                        </div>
+                        {(() => {
+                            const isSearchDisabled = activeViewTab === 'nist' || activeViewTab === 'mitigation';
+                            return (
+                                <div className={`threat-actor-search-section d-flex align-items-center justify-content-start mx-4 mb-4 gap-3 ${isSearchDisabled ? 'disabled' : ''}`}>
+                                    <div className="d-flex flex-column">
+                                        <span className={`fw-medium ${isSearchDisabled ? 'text-muted' : 'text-dark'}`} style={{ fontSize: '14.5px' }}>
+                                            Enter Threat Actor Name
+                                        </span>
+                                    </div>
+                                    <div className="search-wrapper position-relative m-0">
+                                        <i className="bi bi-search position-absolute text-muted" style={{ left: '12px', top: '50%', transform: 'translateY(-50%)' }}></i>
+                                        <input
+                                            type="text"
+                                            className="form-control rounded-pill ps-5 pe-5"
+                                            placeholder="Search threat actors to add"
+                                            disabled={isSearchDisabled}
+                                        />
+                                        <i className="bi bi-filter position-absolute text-muted" style={{ right: '16px', top: '50%', transform: 'translateY(-50%)' }}></i>
+                                    </div>
+                                </div>
+                            );
+                        })()}
 
                         {/* Tab Content Area */}
                         {activeViewTab === 'ttp' && <TTPview showOverlaps={showOverlaps} />}
@@ -152,7 +166,7 @@ const Mitigationttpview = () => {
                     </div>
                 </div>
             </div>
-            
+
             {/* Floating Chat Button (Bottom-Right) */}
             <FloatingChatButtons
                 onIntelgenzOpen={() => setIsDrawerOpen(true)}

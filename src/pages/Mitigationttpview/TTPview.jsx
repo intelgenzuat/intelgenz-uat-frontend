@@ -73,7 +73,7 @@ const TTPview = ({ showOverlaps }) => {
         ...col,
         cells: showOverlaps ? col.cells.filter(cell => cell.overlap !== '') : col.cells
     }));
-    
+
     const maxRows = Math.max(...filteredMappingData.map(col => col.cells.length), 0);
 
     return (
@@ -92,8 +92,8 @@ const TTPview = ({ showOverlaps }) => {
                         {threatActors.map((actor, idx) => {
                             const isSelected = selectedActors.includes(actor.id);
                             return (
-                                <div 
-                                    key={actor.id} 
+                                <div
+                                    key={actor.id}
                                     className={`actor-pill cursor-pointer ${isSelected ? 'active' : ''}`}
                                     onClick={() => handleToggleActor(actor.id)}
                                 >
@@ -114,8 +114,23 @@ const TTPview = ({ showOverlaps }) => {
             <div className="technique-mapping-container flex-grow-1 d-flex flex-column mx-4 mb-4">
                 <div className="technique-mapping-card d-flex flex-column flex-grow-1">
                     <div className="mapping-header flex-shrink-0 bg-white">
+
                         <h4>Technique Mapping</h4>
                         <div className="overlap-legend">
+                        <div className="legends-area">
+                            {/* <span className="legend-title">LEGENDS :</span> */}
+                            <div className="legend-items">
+                                {/* <div className="legend-pill">
+                                    <div className="dot" style={{ backgroundColor: '#3b82f6' }}></div> Denotes threat actors
+                                </div> */}
+                                <div className="legend-pill">
+                                    <div className="dot" style={{ backgroundColor: '#ef4444' }}></div> Denotes overlaps
+                                </div>
+                                <div className="legend-pill">
+                                    <div className="dot" style={{ backgroundColor: '#22c55e' }}></div> Denotes no overlaps
+                                </div>
+                            </div>
+                        </div>
                             <span className="legend-label">OVERLAP % :</span>
                             <div className="overlap-items-container">
                                 <div className="overlap-item"><div className="dot" style={{ backgroundColor: '#ef4444' }}></div> 100%</div>

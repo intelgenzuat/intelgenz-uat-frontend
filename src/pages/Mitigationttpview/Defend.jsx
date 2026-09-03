@@ -259,7 +259,7 @@ const Defend = ({ showOverlaps }) => {
                     
                     <div className="table-responsive flex-grow-1 m-0 d-flex">
                         {displayedColumnsData.map((colData, colIndex) => (
-                            <div key={colIndex} className="mitigation-col d-flex flex-column" style={{ flex: 1, minWidth: '250px' }}>
+                            <div key={colIndex} className="mitigation-col d-flex flex-column">
                                 <div className="col-header">
                                     {columnTitles[colIndex]}
                                 </div>
