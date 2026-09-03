@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import Select from "react-select";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
     FiSearch,
@@ -191,7 +192,7 @@ const intelKnowledegeGraph = () => {
     // Core Data State
     const [malwareList, setMalwareList] = useState([]);
     const [isMalwareLoading, setIsMalwareLoading] = useState(false);
-    const [selectedMalwareValue, setSelectedMalwareValue] = useState("");
+    const [selectedMalwareValues, setSelectedMalwareValues] = useState([]);
     const [graphTags, setGraphTags] = useState([]);
     const [activeTagId, setActiveTagId] = useState(null);
 
@@ -254,6 +255,67 @@ const intelKnowledegeGraph = () => {
         fetchMalwareList();
     }, [fetchMalwareList]);
 
+    // Build react-select options from malwareList
+    const malwareSelectOptions = useMemo(() => {
+        return malwareList.map((item) => ({
+            value: item.malware_id,
+            label: `${item.name} (ID ${item.malware_id})`
+        }));
+    }, [malwareList]);
+
+    // Derive the react-select value from selectedMalwareValues
+    const selectedMalwareSelectValue = useMemo(() => {
+        return malwareSelectOptions.filter((opt) => selectedMalwareValues.includes(opt.value));
+    }, [selectedMalwareValues, malwareSelectOptions]);
+
+    // Custom styles for react-select to match existing design
+    const reactSelectStyles = useMemo(() => ({
+        control: (base, state) => ({
+            ...base,
+            minHeight: '38px',
+            fontSize: '13.5px',
+            borderColor: state.isFocused ? '#8b5cf6' : '#d1d5db',
+            boxShadow: state.isFocused ? '0 0 0 2px rgba(139,92,246,0.13)' : 'none',
+            borderRadius: '8px',
+            backgroundColor: '#fff',
+            '&:hover': { borderColor: '#8b5cf6' }
+        }),
+        multiValue: (base) => ({
+            ...base,
+            backgroundColor: 'rgba(139,92,246,0.10)',
+            borderRadius: '6px'
+        }),
+        multiValueLabel: (base) => ({
+            ...base,
+            color: '#4c1d95',
+            fontSize: '12.5px',
+            fontWeight: 500
+        }),
+        multiValueRemove: (base) => ({
+            ...base,
+            color: '#7c3aed',
+            '&:hover': { backgroundColor: 'rgba(139,92,246,0.2)', color: '#4c1d95' }
+        }),
+        menu: (base) => ({
+            ...base,
+            borderRadius: '8px',
+            zIndex: 20,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.10)'
+        }),
+        option: (base, state) => ({
+            ...base,
+            fontSize: '13px',
+            backgroundColor: state.isSelected ? 'rgba(139,92,246,0.12)' : state.isFocused ? '#f3f0ff' : '#fff',
+            color: '#1a1b1e',
+            '&:active': { backgroundColor: 'rgba(139,92,246,0.18)' }
+        }),
+        placeholder: (base) => ({
+            ...base,
+            color: '#9ca3af',
+            fontSize: '13px'
+        })
+    }), []);
+
     // Automatically select the first malware upon initial list load if none selected
     useEffect(() => {
         if (malwareList.length > 0 && graphTags.length === 0) {
@@ -268,7 +330,7 @@ const intelKnowledegeGraph = () => {
             };
             setGraphTags([initialTag]);
             setActiveTagId(nodeId);
-            setSelectedMalwareValue(first.malware_id);
+            setSelectedMalwareValues([first.malware_id]);
             loadGraphForNode(nodeId, first.malware_id, first.name);
         }
     }, [malwareList]);
@@ -538,31 +600,52 @@ const intelKnowledegeGraph = () => {
         setAnimatedNodes(nodes);
     }, [filteredGraph]);
 
-    // Handle Dropdown Selection of Malware
-    const handleMalwareDropdownChange = (e) => {
-        const malId = e.target.value;
-        if (!malId) return;
+    // Handle react-select multi onChange
+    const handleMalwareSelectChange = (selectedOptions) => {
+        const newValues = (selectedOptions || []).map((opt) => opt.value);
+        const prevValues = selectedMalwareValues;
+        setSelectedMalwareValues(newValues);
 
-        setSelectedMalwareValue(malId);
-        const item = malwareList.find((m) => m.malware_id === malId);
-        const name = item ? item.name : malId;
-        const nodeId = `malware:${malId}`;
+        // Find newly added items
+        const added = newValues.filter((v) => !prevValues.includes(v));
+        // Find removed items
+        const removed = prevValues.filter((v) => !newValues.includes(v));
 
-        let existingTag = graphTags.find((t) => t.nodeId === nodeId);
-        if (!existingTag) {
-            const newTag = {
-                key: nodeId,
-                nodeId,
-                malwareId: malId,
-                name: `Malware: ${name}`,
-                type: "Malware"
-            };
-            setGraphTags((prev) => [...prev, newTag]);
+        // Add graph tags for newly selected items
+        added.forEach((malId) => {
+            const item = malwareList.find((m) => m.malware_id === malId);
+            const name = item ? item.name : malId;
+            const nodeId = `malware:${malId}`;
+
+            const existingTag = graphTags.find((t) => t.nodeId === nodeId);
+            if (!existingTag) {
+                const newTag = {
+                    key: nodeId,
+                    nodeId,
+                    malwareId: malId,
+                    name: `Malware: ${name}`,
+                    type: "Malware"
+                };
+                setGraphTags((prev) => [...prev, newTag]);
+            }
+
+            setActiveTagId(nodeId);
+            setFocusedNodeId(nodeId);
+            loadGraphForNode(nodeId, malId, name);
+        });
+
+        // Remove graph tags for deselected items
+        removed.forEach((malId) => {
+            const nodeId = `malware:${malId}`;
+            handleRemoveTag(nodeId);
+        });
+
+        // If something was added, focus on the last added
+        if (added.length > 0) {
+            const lastAdded = added[added.length - 1];
+            setActiveTagId(`malware:${lastAdded}`);
+            setFocusedNodeId(`malware:${lastAdded}`);
         }
-
-        setActiveTagId(nodeId);
-        setFocusedNodeId(nodeId);
-        loadGraphForNode(nodeId, malId, name);
     };
 
     // Remove tag chip
@@ -571,16 +654,20 @@ const intelKnowledegeGraph = () => {
         const updatedTags = graphTags.filter((t) => t.key !== tagKey);
         setGraphTags(updatedTags);
 
+        // Also remove from selectedMalwareValues if it's a malware tag
+        const removedTag = graphTags.find((t) => t.key === tagKey);
+        if (removedTag && removedTag.malwareId) {
+            setSelectedMalwareValues((prev) => prev.filter((v) => v !== removedTag.malwareId));
+        }
+
         if (tagKey === activeTagId) {
             const nextTag = updatedTags[updatedTags.length - 1];
             if (nextTag) {
                 setActiveTagId(nextTag.key);
                 setFocusedNodeId(nextTag.nodeId);
-                if (nextTag.malwareId) setSelectedMalwareValue(nextTag.malwareId);
             } else {
                 setActiveTagId(null);
                 setFocusedNodeId(null);
-                setSelectedMalwareValue("");
             }
         }
     };
@@ -609,10 +696,10 @@ const intelKnowledegeGraph = () => {
             setGraphTags((prev) => [...prev, newTag]);
         }
 
-        // If malware, update dropdown
+        // If malware, update multi-select values
         if (type === "Malware") {
             const malId = nodeId.replace("malware:", "");
-            setSelectedMalwareValue(malId);
+            setSelectedMalwareValues((prev) => prev.includes(malId) ? prev : [...prev, malId]);
         }
 
         // Load subgraph if not already loaded
@@ -787,22 +874,23 @@ const intelKnowledegeGraph = () => {
                                 Malware in knowledge graph
                             </label>
                             <div className="select-wrapper">
-                                <select
-                                    id="malware-select"
-                                    className="malware-dropdown-select"
-                                    value={selectedMalwareValue}
-                                    onChange={handleMalwareDropdownChange}
-                                    disabled={isMalwareLoading}
-                                >
-                                    <option value="" disabled>
-                                        {isMalwareLoading ? "Loading malware…" : "Choose malware to explore…"}
-                                    </option>
-                                    {malwareList.map((item) => (
-                                        <option key={item.malware_id} value={item.malware_id}>
-                                            {item.name} (ID {item.malware_id})
-                                        </option>
-                                    ))}
-                                </select>
+                                <Select
+                                    inputId="malware-select"
+                                    isMulti
+                                    options={malwareSelectOptions}
+                                    value={selectedMalwareSelectValue}
+                                    onChange={handleMalwareSelectChange}
+                                    isDisabled={isMalwareLoading}
+                                    isLoading={isMalwareLoading}
+                                    placeholder={isMalwareLoading ? "Loading malware…" : "Choose malware to explore…"}
+                                    closeMenuOnSelect={false}
+                                    isClearable
+                                    isSearchable
+                                    styles={reactSelectStyles}
+                                    noOptionsMessage={() => "No malware found"}
+                                    className="malware-react-select"
+                                    classNamePrefix="malware-rs"
+                                />
                             </div>
                         </div>
 
@@ -840,7 +928,6 @@ const intelKnowledegeGraph = () => {
                                         onClick={() => {
                                             setActiveTagId(tag.key);
                                             setFocusedNodeId(tag.nodeId);
-                                            if (tag.malwareId) setSelectedMalwareValue(tag.malwareId);
                                         }}
                                     >
                                         <span className="chip-indicator" style={{ backgroundColor: chipColor }} />

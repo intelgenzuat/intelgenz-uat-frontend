@@ -24,6 +24,7 @@
     "react-markdown": "^10.1.0",
     "react-pro-sidebar": "^1.1.0",
     "react-router-dom": "^7.13.1",
+    "react-select": "^5.10.2",
     "react-tooltip": "^6.0.6",
     "react-zoom-pan-pinch": "^4.0.3",
     "recharts": "^3.8.0",
