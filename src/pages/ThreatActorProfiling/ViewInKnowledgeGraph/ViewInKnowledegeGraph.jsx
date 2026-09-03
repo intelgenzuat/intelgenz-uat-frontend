@@ -697,7 +697,7 @@ const ViewInKnowledgeGraph = () => {
                 {/* Breadcrumb + Heading Group */}
                 <div className="d-flex flex-column w-100" style={{ gap: "1px" }}>
                     {/* Breadcrumb */}
-                    <div className="breadcrumb-nav text-muted" style={{ fontSize: '14px', marginBottom: '6px' }}>
+                    <div className="breadcrumb-nav text-muted" style={{ fontSize: '14px', marginBottom: '7px' }}>
                         <FiHome className="home-icon me-2" />
                         <span onClick={() => navigate("/")} style={{ cursor: 'pointer' }}>Home</span>
                         <span className="mx-2 text-black-50">/</span>
