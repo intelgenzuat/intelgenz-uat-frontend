@@ -36,21 +36,34 @@ export const CustomDotGlobal = (props) => {
   );
 };
 
-export const renderRadarBackground = ({ rMid = 42, strokeWidth = 28 } = {}) => (
+export const renderRadarBackground = ({ radius, rMid = 42, strokeWidth = 28 } = {}) => (
   <svg x="50%" y="50%" style={{ overflow: 'visible' }}>
-    {/* Dynamic pink shaded background band */}
-    <circle
-      cx="0"
-      cy="0"
-      r={rMid}
-      fill="none"
-      stroke="#ffe8eb"
-      strokeWidth={strokeWidth}
-      opacity={0.7}
-      style={{
-        transition: 'r 0.45s cubic-bezier(0.4, 0, 0.2, 1), stroke-width 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
-      }}
-    />
+    {/* Dynamic pink shaded background band / filled radius */}
+    {radius !== undefined ? (
+      <circle
+        cx="0"
+        cy="0"
+        r={radius}
+        fill="#ffe8eb"
+        opacity={radius > 0 ? 0.7 : 0}
+        style={{
+          transition: 'r 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease',
+        }}
+      />
+    ) : (
+      <circle
+        cx="0"
+        cy="0"
+        r={rMid}
+        fill="none"
+        stroke="#ffe8eb"
+        strokeWidth={strokeWidth}
+        opacity={0.7}
+        style={{
+          transition: 'r 0.45s cubic-bezier(0.4, 0, 0.2, 1), stroke-width 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+      />
+    )}
     {/* Center green background */}
     <circle cx="0" cy="0" r="15" fill="#00b85c" />
     

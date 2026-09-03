@@ -64,7 +64,7 @@ export default function Threat() {
   const hoveredNameRef = useRef('');
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
-  const [selectedRadius, setSelectedRadius] = useState('1-2');
+  const [selectedRadius, setSelectedRadius] = useState('0+');
   const [chartRadius, setChartRadius] = useState(145);
 
   useEffect(() => {
@@ -73,8 +73,8 @@ export default function Threat() {
       if (containerRef.current) {
         const { clientWidth, clientHeight } = containerRef.current;
         const minDim = Math.min(clientWidth, clientHeight);
-        // outerRadius="84%" corresponds to (minDim / 2) * 0.84
-        const computedR = (minDim / 2) * 0.84;
+        // outerRadius="95%" corresponds to (minDim / 2) * 0.95
+        const computedR = (minDim / 2) * 0.95;
         if (computedR > 0) {
           setChartRadius(computedR);
         }
@@ -86,25 +86,25 @@ export default function Threat() {
     return () => resizeObserver.disconnect();
   }, []);
 
-  const getRingParams = (radiusKey, outerR) => {
+  const getRadiusValue = (radiusKey, outerR) => {
     const step = outerR / 5;
     switch (radiusKey) {
-      case '1-2':
-        return { rInner: step * 1, rOuter: step * 2 };
-      case '2-3':
-        return { rInner: step * 2, rOuter: step * 3 };
-      case '3-4':
-        return { rInner: step * 3, rOuter: step * 4 };
-      case '4-5':
-        return { rInner: step * 4, rOuter: step * 5 };
+      case '0+':
+        return 0;
+      case '1+':
+        return step * 1;
+      case '2+':
+        return step * 2;
+      case '3+':
+        return step * 3;
+      case '4+':
+        return step * 4;
       default:
-        return { rInner: step * 1, rOuter: step * 2 };
+        return 0;
     }
   };
 
-  const { rInner, rOuter } = getRingParams(selectedRadius, chartRadius);
-  const rMid = (rInner + rOuter) / 2;
-  const strokeWidth = rOuter - rInner;
+  const activeRadius = getRadiusValue(selectedRadius, chartRadius);
 
   const getThreatActorName = (category, index) => {
     return threatActorNames[category]?.[index] || 'Unknown Actor';
@@ -199,10 +199,11 @@ export default function Threat() {
               value={selectedRadius}
               onChange={(e) => setSelectedRadius(e.target.value)}
             >
-              <option value="1-2">1-2</option>
-              <option value="2-3">2-3</option>
-              <option value="3-4">3-4</option>
-              <option value="4-5">4-5</option>
+              <option value="0+">0+</option>
+              <option value="1+">1+</option>
+              <option value="2+">2+</option>
+              <option value="3+">3+</option>
+              <option value="4+">4+</option>
             </select>
           </div>
           <button className="expand-btn"><i className="bi bi-arrows-angle-expand"></i></button>
@@ -210,7 +211,7 @@ export default function Threat() {
       </div>
       <div className="radar-chart-container" ref={containerRef}>
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart cx="50%" cy="50%" outerRadius="84%" data={threatActorsData}>
+          <RadarChart cx="50%" cy="50%" outerRadius="95%" data={threatActorsData}>
             <PolarGrid gridType="circle" stroke="#e2e8f0" />
             <PolarRadiusAxis angle={30} domain={[0, 150]} ticks={[30, 60, 90, 120, 150]} tick={false} axisLine={false} />
             <Radar
@@ -264,7 +265,7 @@ export default function Threat() {
               activeDot={false}
               isAnimationActive={false}
             />
-            <g>{renderRadarBackground({ rMid, strokeWidth })}</g>
+            <g>{renderRadarBackground({ radius: activeRadius })}</g>
           </RadarChart>
         </ResponsiveContainer>
         <div
