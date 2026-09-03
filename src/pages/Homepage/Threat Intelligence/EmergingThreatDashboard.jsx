@@ -50,7 +50,7 @@ export default function EmergingThreatDashboard() {
                     fontWeight: "500",
                 }}
             >
-                Start
+                <i className="bi bi-arrow-right"></i> Start
             </button>
         </div>
     );

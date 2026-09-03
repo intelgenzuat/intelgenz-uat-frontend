@@ -691,7 +691,7 @@ const intelKnowledegeGraph = () => {
     }, [availableRelationshipTypes, filterSearchTerm]);
 
     return (
-        <div className="threat-page malware-kg-page">
+        <div className="threat-page intel-knowledge-graph-page">
             {/* Header Section */}
             <div className="graph-header">
                 {/* Breadcrumb + Heading Group */}

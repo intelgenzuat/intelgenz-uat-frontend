@@ -1,4 +1,4 @@
-.threat-page {
+.intel-knowledge-graph-page {
   width: 100%;
   min-height: 100%;
   background: #ffffff;
@@ -7,12 +7,11 @@
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-}
 
-/* =========================================================
-   HEADER SECTION
-========================================================= */
-.graph-header {
+  /* =========================================================
+     HEADER SECTION
+  ========================================================= */
+  .graph-header {
   width: 100%;
   box-sizing: border-box;
   padding: 16px 32px 12px 32px;
@@ -31,9 +30,9 @@
 
     .home-icon {
       margin-right: 8px;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       font-size: 14.4px;
-      color: #64748b;
+    //   color: #64748b;
     }
 
     .breadcrumb-clickable {
@@ -874,8 +873,21 @@
   }
 }
 
+  @media (max-width: 960px) {
+    .graph-workspace-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .kg-details-sidebar {
+      border-left: none;
+      border-top: 1px solid #e2e8f0;
+      max-height: 280px;
+    }
+  }
+}
+
 /* =========================================================
-   ANIMATIONS & RESPONSIVE
+   ANIMATIONS
 ========================================================= */
 @keyframes spin {
   from {
@@ -903,17 +915,5 @@
   }
   to {
     stroke-dashoffset: 0;
-  }
-}
-
-@media (max-width: 960px) {
-  .graph-workspace-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .kg-details-sidebar {
-    border-left: none;
-    border-top: 1px solid #e2e8f0;
-    max-height: 280px;
   }
 }

@@ -2414,7 +2414,9 @@
 [data-bs-theme='dark'] {
 
   // ── Base page shell ──────────────────────────────────────
-  .threat-page.malware-kg-page {
+  .threat-page.malware-kg-page,
+  .threat-page.threat-actor-kg-page,
+  .threat-page.intel-knowledge-graph-page {
     background: #0b0f19 !important;
     color: #e2e8f0 !important;
   }
