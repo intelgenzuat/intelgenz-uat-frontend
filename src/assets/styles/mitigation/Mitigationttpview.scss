@@ -473,15 +473,17 @@
         display: none;
       }
 
-      .mapping-table {
-        width: 100%;
-        border-collapse: collapse;
-        table-layout: fixed;
+        .mapping-table {
+          width: max-content;
+          min-width: 100%;
+          border-collapse: collapse;
+          table-layout: auto;
 
         th {
-          width: 20%;
-          padding: 12px 16px;
-          font-size: 13px;
+          min-width: 130px;
+          width: auto;
+          padding: 7px 10px;
+          font-size: 11px;
           font-weight: 600;
           color: #475569;
           text-align: center;
@@ -489,6 +491,7 @@
           border-right: 1px solid #e2e8f0;
           background-color: #fff;
           border-top: none;
+          white-space: nowrap;
 
           &:last-child {
             border-right: none;
@@ -498,7 +501,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
 
             .bi-filter {
               color: #8b5cf6;
@@ -507,28 +510,29 @@
         }
 
         td {
-          width: 20%;
+          min-width: 130px;
+          width: auto;
           border-bottom: 1px solid #e2e8f0;
           border-right: 1px solid #e2e8f0;
           padding: 0;
           vertical-align: top;
           background-color: #fff;
-          height: 96px;
+          height: 62px;
 
           &:last-child {
             border-right: none;
           }
 
           .ttp-cell {
-            padding: 16px 16px;
+            padding: 6px 10px;
             height: 100%;
-            min-height: 96px;
+            min-height: 62px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 4px;
             transition: background-color 0.2s;
 
             &.overlap-100 {
@@ -562,23 +566,23 @@
             .ttp-id-wrapper {
               display: flex;
               align-items: center;
-              gap: 6px;
+              gap: 4px;
               background-color: rgba(255, 255, 255, 0.8);
-              padding: 4px 10px;
-              border-radius: 16px;
-              font-size: 12px;
+              padding: 2px 7px;
+              border-radius: 12px;
+              font-size: 10.5px;
               font-weight: 600;
               color: #0f172a;
 
               .dot {
-                width: 6px;
-                height: 6px;
+                width: 5px;
+                height: 5px;
                 border-radius: 50%;
               }
             }
 
             .technique-name {
-              font-size: 12px;
+              font-size: 10.5px;
               text-align: center;
               font-weight: 500;
               color: #1e293b;
