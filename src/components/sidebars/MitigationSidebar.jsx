@@ -5,8 +5,17 @@ import { GrBug } from "react-icons/gr";
 import { BsShieldFillExclamation } from 'react-icons/bs';
 import { MdCrisisAlert } from 'react-icons/md';
 import { Sidebar } from 'react-pro-sidebar';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { mitigationttpview, Malwaremitigationttpview } from '../../Routes/Routes';
 
 export default function MitigationSidebar({ activeTab = 'customized', setActiveTab, collapsed }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const currentTab = location.pathname === Malwaremitigationttpview 
+    ? 'all' 
+    : (location.pathname === mitigationttpview ? 'customized' : activeTab);
+
   return (
     <Sidebar
       collapsed={collapsed}
@@ -31,25 +40,31 @@ export default function MitigationSidebar({ activeTab = 'customized', setActiveT
 
           <ul className="sidebar-nav list-unstyled mb-0 px-2">
             <li
-              className={`nav-item d-flex align-items-center mb-2 px-3 py-2 rounded-3 ${activeTab === 'customized' ? 'active' : ''}`}
-              onClick={() => setActiveTab && setActiveTab('customized')}
-              style={{ overflow: 'hidden', whiteSpace: 'nowrap', justifyContent: collapsed ? 'center' : 'flex-start', paddingLeft: collapsed ? '0' : undefined, paddingRight: collapsed ? '0' : undefined }}
+              className={`nav-item d-flex align-items-center mb-2 px-3 py-2 rounded-3 ${currentTab === 'customized' ? 'active' : ''}`}
+              onClick={() => {
+                if (setActiveTab) setActiveTab('customized');
+                navigate(mitigationttpview);
+              }}
+              style={{ overflow: 'hidden', whiteSpace: 'nowrap', justifyContent: collapsed ? 'center' : 'flex-start', paddingLeft: collapsed ? '0' : undefined, paddingRight: collapsed ? '0' : undefined, cursor: 'pointer' }}
             >
-              <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0" style={activeTab === 'customized' ? { width: '28px', height: '28px', backgroundColor: '#fff', borderRadius: '50%', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { width: '28px', height: '28px', backgroundColor: 'transparent', borderRadius: '50%' }}>
+              <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0" style={currentTab === 'customized' ? { width: '28px', height: '28px', backgroundColor: '#fff', borderRadius: '50%', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { width: '28px', height: '28px', backgroundColor: 'transparent', borderRadius: '50%' }}>
                 <MdCrisisAlert className="text-danger" style={{ fontSize: '16px' }} />
               </div>
-              {!collapsed && <span className={`  ${activeTab === 'customized' ? 'text-dark' : 'text-secondary'}`} style={{ fontSize: '15px', fontWeight: 500 }}>Threat actor</span>}
+              {!collapsed && <span className={`  ${currentTab === 'customized' ? 'text-dark' : 'text-secondary'}`} style={{ fontSize: '15px', fontWeight: 500 }}>Threat actor</span>}
             </li>
 
             <li
-              className={`nav-item d-flex align-items-center mb-2 px-3 py-2 rounded-3 ${activeTab === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveTab && setActiveTab('all')}
-              style={{ overflow: 'hidden', whiteSpace: 'nowrap', justifyContent: collapsed ? 'center' : 'flex-start', paddingLeft: collapsed ? '0' : undefined, paddingRight: collapsed ? '0' : undefined }}
+              className={`nav-item d-flex align-items-center mb-2 px-3 py-2 rounded-3 ${currentTab === 'all' ? 'active' : ''}`}
+              onClick={() => {
+                if (setActiveTab) setActiveTab('all');
+                navigate(Malwaremitigationttpview);
+              }}
+              style={{ overflow: 'hidden', whiteSpace: 'nowrap', justifyContent: collapsed ? 'center' : 'flex-start', paddingLeft: collapsed ? '0' : undefined, paddingRight: collapsed ? '0' : undefined, cursor: 'pointer' }}
             >
-              <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0" style={activeTab === 'all' ? { width: '28px', height: '28px', backgroundColor: '#fff', borderRadius: '50%', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { width: '28px', height: '28px', backgroundColor: 'transparent', borderRadius: '50%' }}>
+              <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0" style={currentTab === 'all' ? { width: '28px', height: '28px', backgroundColor: '#fff', borderRadius: '50%', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { width: '28px', height: '28px', backgroundColor: 'transparent', borderRadius: '50%' }}>
                 <FiStar className="text-danger" style={{ fontSize: '16px' }} />
               </div>
-              {!collapsed && <span className={` ${activeTab === 'all' ? 'text-dark' : 'text-secondary'}`} style={{ fontSize: '15px', fontWeight: 500 }}>Malware</span>}
+              {!collapsed && <span className={` ${currentTab === 'all' ? 'text-dark' : 'text-secondary'}`} style={{ fontSize: '15px', fontWeight: 500 }}>Malware</span>}
             </li>
 
             {/* <li
@@ -81,7 +96,7 @@ export default function MitigationSidebar({ activeTab = 'customized', setActiveT
                   <FiChevronRight className="text-dark" style={{ strokeWidth: '2.5px' }} />
                 </li>
                 <li className="px-2 py-2 d-flex justify-content-between align-items-center cursor-pointer">
-                  <span className="" style={{ fontSize: '14px', color: '#475569' }}>Faq\'s</span>
+                  <span className="" style={{ fontSize: '14px', color: '#475569' }}>Faq's</span>
                   <FiChevronRight className="text-dark" style={{ strokeWidth: '2.5px' }} />
                 </li>
               </ul>

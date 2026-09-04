@@ -11,6 +11,7 @@ export const BlogsandNews = "/blogs-and-news"
 export const EmergingThreatReport = "/emerging-threat-report"
 export const viewinKnowlegdeGraph = "/knowlegde-graph"
 export const IntelviewinKnowlegdeGraph = "/view-knowlegde-graph"
+export const Malwaremitigationttpview = "/malware-ttp-view"
 
 
 

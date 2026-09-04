@@ -134,7 +134,7 @@ const Mitigationttpview = () => {
                         {(() => {
                             const isSearchDisabled = activeViewTab === 'nist' || activeViewTab === 'mitigation';
                             return (
-                                <div className={`threat-actor-search-section d-flex align-items-center justify-content-start mx-4 mb-4 gap-3 ${isSearchDisabled ? 'disabled' : ''}`}>
+                                <div className={`threat-actor-search-section d-flex align-items-center justify-content-start mx-4 mb-2 gap-3 ${isSearchDisabled ? 'disabled' : ''}`}>
                                     <div className="d-flex flex-column">
                                         <span className={`fw-medium ${isSearchDisabled ? 'text-muted' : 'text-dark'}`} style={{ fontSize: '14.5px' }}>
                                             Enter Threat Actor Name

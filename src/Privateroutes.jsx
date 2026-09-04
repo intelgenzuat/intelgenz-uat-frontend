@@ -6,6 +6,7 @@ import {
     View,
     Viewreport,
     mitigationttpview,
+    Malwaremitigationttpview,
     IntelCard,
     IntelCardDetails,
     ThreatActorprofile,
@@ -32,6 +33,7 @@ const Viewreportpage = lazy(() => import('./pages/Viewpages/ViewReport'))
 const Notfoundpage = lazy(() => import('./common/404/Pagenotfound'))
 const IntelCardLayout = lazy(() => import('./pages/IntelCard/IntelCardPage'))
 const Mitigationttpview = lazy(() => import('./pages/Mitigationttpview/Mitigationttpview'));
+const Malwarettpview = lazy(() => import('./pages/Mitigationttpview/malwarettp/Malwarettpview'));
 const IntelCardDetailsView = lazy(() => import('./pages/IntelCard/IntelCardDetailview'));
 const ThreatActorProfilingLayout = lazy(() => import('./pages/ThreatActorProfiling/ThreatActorProfilingPage'));
 const ThreatActorProfilingTable = lazy(() => import('./pages/ThreatActorProfiling/ThreatActorProfilingTable'));
@@ -79,6 +81,7 @@ const Privateroutes = () => {
                         <Route exact path={View} element={<Viewpage noFooter />}></Route>
                         <Route exact path={Viewreport} element={<Viewreportpage noFooter />}></Route>
                         <Route exact path={mitigationttpview} element={<Mitigationttpview noFooter />}></Route>
+                        <Route exact path={Malwaremitigationttpview} element={<Malwarettpview noFooter />}></Route>
                         <Route element={<IntelCardLayout noFooter />}>
                             <Route exact path={IntelCard} element={<IntelCardsGrid noFooter />}></Route>
                             <Route exact path={IntelCardMalware} element={<IntelCardMalwareGrid noFooter />}></Route>
