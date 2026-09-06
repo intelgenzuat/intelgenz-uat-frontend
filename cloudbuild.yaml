@@ -1,3 +1,6 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
+
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     args:
@@ -28,6 +31,3 @@ steps:
 
 images:
   - 'gcr.io/$PROJECT_ID/frontend'
-
-substitutions:
-  _VITE_API_URL: 'https://intelgenz-uat-backend.onrender.com'
