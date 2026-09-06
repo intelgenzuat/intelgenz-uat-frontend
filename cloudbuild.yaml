@@ -18,11 +18,11 @@ steps:
     args:
       - 'run'
       - 'deploy'
-      - 'YOUR_SERVICE_NAME'
+      - 'intelgenz-app'
       - '--image'
       - 'gcr.io/$PROJECT_ID/frontend'
       - '--region'
-      - 'YOUR_REGION'
+      - 'asia-south1'
       - '--platform'
       - 'managed'
 
