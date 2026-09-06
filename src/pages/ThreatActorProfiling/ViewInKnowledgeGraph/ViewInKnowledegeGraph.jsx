@@ -15,6 +15,7 @@ import {
     FiX,
     FiSliders,
     FiLayers,
+    FiKey,
     FiShare2,
     FiActivity
 } from "react-icons/fi";
@@ -203,7 +204,7 @@ const ViewInKnowledgeGraph = () => {
     // Filter & View Options
     const [showAllConnections, setShowAllConnections] = useState(true);
     const [selectedConnectionTypes, setSelectedConnectionTypes] = useState(new Set());
-    const [isConnectionFiltersOpen, setIsConnectionFiltersOpen] = useState(true);
+    const [isConnectionDrawerOpen, setIsConnectionDrawerOpen] = useState(false);
     const [filterSearchTerm, setFilterSearchTerm] = useState("");
 
     // UI Header Controls
@@ -268,11 +269,19 @@ const ViewInKnowledgeGraph = () => {
         return malwareSelectOptions.filter((opt) => selectedMalwareValues.includes(opt.value));
     }, [selectedMalwareValues, malwareSelectOptions]);
 
-    // Custom styles for react-select to match existing design
     const reactSelectStyles = useMemo(() => ({
+        container: (base) => ({
+            ...base,
+            width: '320px',
+            minWidth: '320px',
+            maxWidth: '320px'
+        }),
         control: (base, state) => ({
             ...base,
+            height: '38px',
             minHeight: '38px',
+            flexWrap: 'nowrap',
+            overflow: 'hidden',
             fontSize: '13.5px',
             borderColor: state.isFocused ? '#8b5cf6' : '#d1d5db',
             boxShadow: state.isFocused ? '0 0 0 2px rgba(139,92,246,0.13)' : 'none',
@@ -280,10 +289,27 @@ const ViewInKnowledgeGraph = () => {
             backgroundColor: '#fff',
             '&:hover': { borderColor: '#8b5cf6' }
         }),
+        valueContainer: (base) => ({
+            ...base,
+            height: '38px',
+            flexWrap: 'nowrap',
+            overflowX: 'auto',
+            overflowY: 'hidden',
+            padding: '0 8px',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            '&::-webkit-scrollbar': { display: 'none' }
+        }),
+        indicatorsContainer: (base) => ({
+            ...base,
+            height: '38px',
+            flexShrink: 0
+        }),
         multiValue: (base) => ({
             ...base,
             backgroundColor: 'rgba(139,92,246,0.10)',
-            borderRadius: '6px'
+            borderRadius: '6px',
+            flexShrink: 0
         }),
         multiValueLabel: (base) => ({
             ...base,
@@ -770,6 +796,16 @@ const ViewInKnowledgeGraph = () => {
         setIsDraggingCanvas(false);
     };
 
+    // Sync body class for global CSS targeting (e.g. hide floating chat btn)
+    useEffect(() => {
+        if (isConnectionDrawerOpen) {
+            document.body.classList.add('kg-drawer-open');
+        } else {
+            document.body.classList.remove('kg-drawer-open');
+        }
+        return () => document.body.classList.remove('kg-drawer-open');
+    }, [isConnectionDrawerOpen]);
+
     const filteredConnectionTypes = useMemo(() => {
         if (!filterSearchTerm) return availableRelationshipTypes;
         return availableRelationshipTypes.filter((t) =>
@@ -801,119 +837,51 @@ const ViewInKnowledgeGraph = () => {
                                     <path d="M9.43627 16.4528C9.72418 16.4528 9.96554 16.3555 10.1604 16.1609C10.3552 15.9661 10.4526 15.7247 10.4526 15.4368C10.4526 15.1489 10.3552 14.9075 10.1604 14.7127C9.96554 14.5179 9.72418 14.4205 9.43627 14.4205C9.14836 14.4205 8.907 14.5179 8.7122 14.7127C8.51739 14.9075 8.41999 15.1489 8.41999 15.4368C8.41999 15.7247 8.51739 15.9661 8.7122 16.1609C8.907 16.3555 9.14836 16.4528 9.43627 16.4528ZM8.49265 12.1703H10.3799V6.09741H8.49265V12.1703ZM9.43627 23.8326C6.71506 23.0905 4.4621 21.4887 2.67739 19.0273C0.892462 16.5659 0 13.8141 0 10.7718V3.53263L9.43627 0L18.8725 3.53263V10.7718C18.8725 13.8141 17.9801 16.5659 16.1952 19.0273C14.4104 21.4887 12.1575 23.0905 9.43627 23.8326Z" fill="#E9004A" />
                                 </svg>
                             </div>
-                            <h4>View in Knowledge Graph</h4>
+                            <h4>Neura View</h4>
                         </div>
 
-                        {/* Right: Assessment Focus + Radius */}
-                        <div className="d-flex align-items-center gap-4 flex-wrap">
-                            {/* Assessment Focus */}
-                            <div className="assessment-focus-section">
-                                <label className="section-label">Assessment Focus</label>
-                                <div className="intelcard-view-checkboxes d-flex align-items-center gap-3">
-                                    {["Capability", "Intent", "Opportunity"].map((focus) => (
-                                        <label
-                                            key={focus}
-                                            className="intelcard-checkbox-item d-flex align-items-center gap-2 mb-0"
-                                            htmlFor={`focus-${focus}`}
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                id={`focus-${focus}`}
-                                                className="intelcard-custom-checkbox"
-                                                checked={assessmentFocus === focus}
-                                                onChange={() => setAssessmentFocus(focus)}
-                                            />
-                                            <span className="intelcard-checkbox-label">{focus}</span>
-                                        </label>
-                                    ))}
+                        {/* Right: Picker Row */}
+                        <div className="picker-row d-flex align-items-end gap-3 flex-wrap">
+                            <div className="picker-group">
+                                {/* <label htmlFor="malware-select" className="picker-label">
+                                    Malware in knowledge graph
+                                </label> */}
+                                <div className="select-wrapper">
+                                    <Select
+                                        inputId="malware-select"
+                                        isMulti
+                                        options={malwareSelectOptions}
+                                        value={selectedMalwareSelectValue}
+                                        onChange={handleMalwareSelectChange}
+                                        isDisabled={isMalwareLoading}
+                                        isLoading={isMalwareLoading}
+                                        placeholder={isMalwareLoading ? "Loading malware…" : "Choose malware to explore…"}
+                                        closeMenuOnSelect={false}
+                                        isClearable
+                                        isSearchable
+                                        styles={reactSelectStyles}
+                                        noOptionsMessage={() => "No malware found"}
+                                        className="malware-react-select"
+                                        classNamePrefix="malware-rs"
+                                    />
                                 </div>
                             </div>
 
-                            {/* Radius Section */}
-                            <div className="radius-section">
-                                <label className="section-label">Radius Depth</label>
-                                <div className="radius-control-wrapper">
-                                    <button
-                                        className="radius-select-btn"
-                                        type="button"
-                                        onClick={() => setIsRadiusOpen(!isRadiusOpen)}
-                                    >
-                                        <span>{radius}</span>
-                                        <FiChevronDown className="chevron-icon" />
-                                    </button>
-                                    {isRadiusOpen && (
-                                        <div className="radius-dropdown-menu">
-                                            {["1-3", "1-5", "1-8", "1-10"].map((item) => (
-                                                <div
-                                                    key={item}
-                                                    className={`radius-dropdown-item ${radius === item ? "selected" : ""}`}
-                                                    onClick={() => {
-                                                        setRadius(item);
-                                                        setIsRadiusOpen(false);
-                                                    }}
-                                                >
-                                                    {item}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
+                            <button
+                                id="connection-toggle-btn"
+                                type="button"
+                                className={`btn-kg-action btn-toggle-connections ${isConnectionDrawerOpen ? "active" : ""}`}
+                                onClick={() => setIsConnectionDrawerOpen(true)}
+                            >
+                                <FiKey className="icon-btn" />
+                                Key Connections
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 {/* ================= ENTITY QUERY & MALWARE SELECTOR SECTION ================= */}
                 <div className="entity-query-section-white mt-3">
-                    {/* Top Row: Dropdown, Reload Button, and Show all connections Toggle */}
-                    <div className="picker-row d-flex align-items-end gap-3 flex-wrap">
-                        <div className="picker-group">
-                            <label htmlFor="malware-select" className="picker-label">
-                                Malware in knowledge graph
-                            </label>
-                            <div className="select-wrapper">
-                                <Select
-                                    inputId="malware-select"
-                                    isMulti
-                                    options={malwareSelectOptions}
-                                    value={selectedMalwareSelectValue}
-                                    onChange={handleMalwareSelectChange}
-                                    isDisabled={isMalwareLoading}
-                                    isLoading={isMalwareLoading}
-                                    placeholder={isMalwareLoading ? "Loading malware…" : "Choose malware to explore…"}
-                                    closeMenuOnSelect={false}
-                                    isClearable
-                                    isSearchable
-                                    styles={reactSelectStyles}
-                                    noOptionsMessage={() => "No malware found"}
-                                    className="malware-react-select"
-                                    classNamePrefix="malware-rs"
-                                />
-                            </div>
-                        </div>
-
-                        <button
-                            id="reload-btn"
-                            type="button"
-                            className="btn-kg-action btn-reload"
-                            onClick={fetchMalwareList}
-                            disabled={isMalwareLoading}
-                        >
-                            <FiRefreshCw className={`icon-btn ${isMalwareLoading ? "spin" : ""}`} />
-                            Reload list
-                        </button>
-
-                        <button
-                            id="connection-toggle-btn"
-                            type="button"
-                            className={`btn-kg-action btn-toggle-connections ${showAllConnections ? "active" : ""}`}
-                            onClick={() => setShowAllConnections((prev) => !prev)}
-                        >
-                            <FiLayers className="icon-btn" />
-                            {showAllConnections ? "Show key connections" : "Show all connections"}
-                        </button>
-                    </div>
-
                     {/* Selected Entity Chips / Tags */}
                     {graphTags.length > 0 && (
                         <div className="selected-chips-container" aria-label="Selected entity chips">
@@ -943,78 +911,6 @@ const ViewInKnowledgeGraph = () => {
                             })}
                         </div>
                     )}
-
-                    {/* Connection Filters Collapsible Accordion */}
-                    <div className="connection-filters-card mt-3">
-                        <div
-                            className="connection-filters-header d-flex justify-content-between align-items-center"
-                            onClick={() => setIsConnectionFiltersOpen((prev) => !prev)}
-                        >
-                            <div className="d-flex align-items-center gap-2">
-                                <span className="accordion-arrow">
-                                    {isConnectionFiltersOpen ? <FiChevronDown /> : <FiChevronRight />}
-                                </span>
-                                <span className="filters-title">Connection filters</span>
-                            </div>
-                            <span className="filters-count-badge">
-                                {selectedConnectionTypes.size} of {availableRelationshipTypes.length} active
-                            </span>
-                        </div>
-
-                        {isConnectionFiltersOpen && (
-                            <div className="connection-filters-body">
-                                <div className="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-                                    <p className="filters-subtext mb-0">
-                                        Choose one or more relationship types to display in the graph.
-                                    </p>
-                                    <div className="d-flex align-items-center gap-2">
-                                        <button
-                                            type="button"
-                                            className="btn-filter-pill"
-                                            onClick={handleSelectAllConnections}
-                                            disabled={availableRelationshipTypes.length === 0}
-                                        >
-                                            Select all
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="btn-filter-pill"
-                                            onClick={handleUnselectAllConnections}
-                                            disabled={availableRelationshipTypes.length === 0}
-                                        >
-                                            Unselect all
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Checkbox Options Grid */}
-                                <div className="connection-options-grid">
-                                    {filteredConnectionTypes.length === 0 ? (
-                                        <span className="text-muted small p-2">No relationship types available.</span>
-                                    ) : (
-                                        filteredConnectionTypes.map((relType) => {
-                                            const isChecked = selectedConnectionTypes.has(relType);
-                                            const formattedLabel = relType.replace(/_/g, " ");
-                                            return (
-                                                <label
-                                                    key={relType}
-                                                    className={`connection-option-item ${isChecked ? "checked" : ""}`}
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        value={relType}
-                                                        checked={isChecked}
-                                                        onChange={() => toggleConnectionType(relType)}
-                                                    />
-                                                    <span className="option-label">{formattedLabel}</span>
-                                                </label>
-                                            );
-                                        })
-                                    )}
-                                </div>
-                            </div>
-                        )}
-                    </div>
 
                     {/* Status Feedback Row */}
                     <div className="kg-status-row d-flex align-items-center justify-content-between mt-2">
@@ -1315,6 +1211,97 @@ const ViewInKnowledgeGraph = () => {
                                 <p>Select a node in the graph to view properties and connected intelligence.</p>
                             </div>
                         )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Right-Side Connection Filters Drawer */}
+            <div
+                className={`connection-filters-drawer-overlay ${isConnectionDrawerOpen ? 'open' : ''}`}
+                onClick={() => setIsConnectionDrawerOpen(false)}
+            >
+                <div className="connection-filters-drawer" onClick={(e) => e.stopPropagation()}>
+                    <div className="drawer-header d-flex justify-content-between align-items-center">
+                        <div className="d-flex align-items-center gap-2">
+                            <FiKey className="text-primary" style={{ fontSize: '18px' }} />
+                            <h5 className="drawer-title mb-0">Key Connections</h5>
+                        </div>
+                        <div className="d-flex align-items-center gap-2">
+                            <span className="filters-count-badge">
+                                {selectedConnectionTypes.size} of {availableRelationshipTypes.length} active
+                            </span>
+                            <button
+                                type="button"
+                                className="drawer-close-btn"
+                                onClick={() => setIsConnectionDrawerOpen(false)}
+                            >
+                                <FiX />
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="drawer-body">
+                        <p className="filters-subtext mb-3">
+                            Choose one or more relationship types to display in the knowledge graph.
+                        </p>
+
+                        <div className="d-flex align-items-center gap-2 mb-3">
+                            <button
+                                type="button"
+                                className="btn-filter-pill"
+                                onClick={handleSelectAllConnections}
+                                disabled={availableRelationshipTypes.length === 0}
+                            >
+                                Select all
+                            </button>
+                            <button
+                                type="button"
+                                className="btn-filter-pill"
+                                onClick={handleUnselectAllConnections}
+                                disabled={availableRelationshipTypes.length === 0}
+                            >
+                                Unselect all
+                            </button>
+                        </div>
+
+                        {/* Checkbox Options List */}
+                        <div className="connection-options-list">
+                            {filteredConnectionTypes.length === 0 ? (
+                                <div className="text-muted text-center py-4 small">
+                                    No relationship types available.
+                                </div>
+                            ) : (
+                                filteredConnectionTypes.map((relType) => {
+                                    const isChecked = selectedConnectionTypes.has(relType);
+                                    const formattedLabel = relType.replace(/_/g, " ");
+                                    return (
+                                        <label
+                                            key={relType}
+                                            className={`connection-option-item ${isChecked ? "checked" : ""}`}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                value={relType}
+                                                checked={isChecked}
+                                                onChange={() => toggleConnectionType(relType)}
+                                            />
+                                            <span className="option-label">{formattedLabel}</span>
+                                        </label>
+                                    );
+                                })
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="drawer-footer d-flex justify-content-end gap-2">
+                        <button
+                            type="button"
+                            className="btn text-white btn-sm px-4 py-2"
+                            style={{ borderRadius: '8px', backgroundColor: '#5200ff', border: 'none', fontWeight: '600' }}
+                            onClick={() => setIsConnectionDrawerOpen(false)}
+                        >
+                            Done
+                        </button>
                     </div>
                 </div>
             </div>

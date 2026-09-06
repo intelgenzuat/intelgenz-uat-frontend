@@ -557,9 +557,9 @@ const getLevelClass = (level) => {
     }
 };
 
-const getIndentPx = (indent) => indent * 28 + 16;
-const getLineLeftPx = (indent) => (indent - 1) * 28 + 16 + 9;
-const getLineWidthPx = () => 19;
+const getIndentPx = (indent) => indent * 16 + 6;
+const getLineLeftPx = (indent) => (indent - 1) * 16 + 13;
+const getLineWidthPx = () => 9;
 
 const Defend = ({ showOverlaps }) => {
     const [tacticsData, setTacticsData] = useState(initialTacticsData);
@@ -657,7 +657,7 @@ const Defend = ({ showOverlaps }) => {
                         </div>
                         
                         {item.overlaps > 0 && (
-                            <div className="overlaps-badge-wrapper" style={{ paddingLeft: '28px' }}>
+                            <div className="overlaps-badge-wrapper" style={{ paddingLeft: '19px' }}>
                                 <div className="overlaps-badge">
                                     <span className="label">Overlaps</span>
                                     <span className="value">{item.overlaps.toString().padStart(2, '0')}</span>

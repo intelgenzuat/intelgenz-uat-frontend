@@ -74,7 +74,7 @@ export default function Intelcardsidebar({ collapsed }) {
                   style={{ fontSize: '16px' }}
                 />
               </div>
-              {!collapsed && <span className="nav-label">View in Knowledge Graph</span>}
+              {!collapsed && <span className="nav-label">Neura View</span>}
             </li>
           </ul>
         </div>
