@@ -531,15 +531,8 @@ export default function Threat() {
   return (
     <div className="threat-card-container">
       {/* Header Bar */}
-      <div className="threat-header">
-        <div className="header-left">
-          <div className="chart-title">
-            <i className="bi bi-shield-fill-exclamation"></i> Threat Actors Distribution
-          </div>
-          <div className="threat-stats-pill">
-            <i className="bi bi-crosshair"></i> Shaded Focus: <span className="stats-count">{focusedCount} Actors</span>
-          </div>
-        </div>
+      <div className="threat-header d-flex justify-content-end">
+        <div></div>
 
         <div className="header-right">
           <div className="radius-control-wrapper" title="Select radar shaded focus radius">
@@ -552,11 +545,11 @@ export default function Threat() {
               value={selectedRadius}
               onChange={(e) => setSelectedRadius(e.target.value)}
             >
-              <option value="0+">Critical (Core 0+)</option>
-              <option value="1+">High (Zone 1+)</option>
-              <option value="2+">Moderate (Zone 2+)</option>
-              <option value="3+">Low (Zone 3+)</option>
-              <option value="4+">Minimal (Full Radar)</option>
+              <option value="0+">Critical</option>
+              <option value="1+">High </option>
+              <option value="2+">Moderate</option>
+              <option value="3+">Low</option>
+              <option value="4+">Minimal</option>
             </select>
           </div>
           <button className="expand-btn" title="Expand View">
@@ -631,8 +624,8 @@ export default function Threat() {
                   activeDot={false}
                   isAnimationActive={false}
                 />
-                {/* Dynamic Pink Shaded Focus Ring */}
-                <g>{renderRadarBackground({ radius: activeRadius })}</g>
+                {/* Dynamic White Shaded Focus Ring */}
+                <g>{renderRadarBackground({ radius: activeRadius, outerR: chartRadius })}</g>
               </RadarChart>
             </ResponsiveContainer>
 
@@ -702,16 +695,6 @@ export default function Threat() {
               </button>
             </div>
 
-            <div className="search-box-wrapper">
-              <i className="bi bi-search search-icon"></i>
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search threat or sector..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
           </div>
 
           {/* Scrollable Table View */}
@@ -721,9 +704,6 @@ export default function Threat() {
                 <tr>
                   <th>Threat Actor</th>
                   <th>Proximity</th>
-                  <th>Target Sector</th>
-                  <th>Risk Level</th>
-                  <th className="text-center">Focus</th>
                   <th className="text-center">Action</th>
                 </tr>
               </thead>
@@ -736,16 +716,15 @@ export default function Threat() {
                       actor.category === 'Around You'
                         ? 'around'
                         : actor.category === 'Away'
-                        ? 'away'
-                        : 'global';
+                          ? 'away'
+                          : 'global';
                     const riskClass = `risk-${actor.riskLevel.toLowerCase()}`;
 
                     return (
                       <tr
                         key={actor.id}
-                        className={`actor-row ${inFocus ? 'in-focus-zone' : ''} ${
-                          isHovered ? 'is-hovered' : ''
-                        }`}
+                        className={`actor-row ${inFocus ? 'in-focus-zone' : ''} ${isHovered ? 'is-hovered' : ''
+                          }`}
                         onClick={() => handleRowClick(actor)}
                         onMouseEnter={() => setHoveredActor(actor.name)}
                         onMouseLeave={() => setHoveredActor(null)}
@@ -766,27 +745,6 @@ export default function Threat() {
                             {actor.category}
                           </span>
                         </td>
-                        <td>
-                          <div className="sector-text" title={actor.sector}>
-                            {actor.sector}
-                          </div>
-                        </td>
-                        <td>
-                          <span className={`risk-pill ${riskClass}`}>
-                            {actor.riskLevel}
-                          </span>
-                        </td>
-                        <td className="text-center">
-                          {inFocus ? (
-                            <span className="focus-status-badge status-in-focus" title="Inside shaded focus radius">
-                              <i className="bi bi-record-fill text-danger"></i> In Focus
-                            </span>
-                          ) : (
-                            <span className="focus-status-badge status-outer">
-                              Outer
-                            </span>
-                          )}
-                        </td>
                         <td className="text-center">
                           <button
                             className="view-action-btn"
@@ -804,7 +762,7 @@ export default function Threat() {
                   })
                 ) : (
                   <tr>
-                    <td colSpan="6" className="empty-row">
+                    <td colSpan="3" className="empty-row">
                       <i className="bi bi-info-circle me-1"></i> No threat actors match the current filter.
                     </td>
                   </tr>

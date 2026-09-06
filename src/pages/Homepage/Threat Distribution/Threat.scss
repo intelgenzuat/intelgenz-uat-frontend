@@ -162,9 +162,8 @@
 
     // Left column: Radar chart
     .threat-radar-col {
-      flex: 0 0 340px;
+      flex: 1 1 340px;
       min-width: 300px;
-      max-width: 360px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -275,7 +274,9 @@
 
     // Right column: Threat Actors Table
     .threat-table-col {
-      flex: 1;
+      flex: 0 1 450px;
+      max-width: 480px;
+      width: 100%;
       min-width: 0;
       display: flex;
       flex-direction: column;
