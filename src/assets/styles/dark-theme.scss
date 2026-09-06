@@ -177,6 +177,181 @@
     color: #64748b !important;
   }
 
+  // Threat card split container dark theme
+  .threat-card-container {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+
+    .threat-header {
+      border-bottom-color: #334155 !important;
+
+      .header-left {
+        .chart-title {
+          background: #0f172a !important;
+          color: #f1f5f9 !important;
+          border-color: #334155 !important;
+        }
+
+        .threat-stats-pill {
+          background: #0f172a !important;
+          color: #94a3b8 !important;
+          border-color: #334155 !important;
+        }
+      }
+
+      .header-right {
+        .radius-control-wrapper {
+          background: #0f172a !important;
+          border-color: #334155 !important;
+
+          .radius-control-label {
+            color: #94a3b8 !important;
+          }
+
+          .radius-control-select {
+            color: #f1f5f9 !important;
+
+            option {
+              background: #0f172a !important;
+              color: #f1f5f9 !important;
+            }
+          }
+        }
+
+        .expand-btn {
+          background: #0f172a !important;
+          border-color: #334155 !important;
+          color: #a855f7 !important;
+
+          &:hover {
+            background: #5200ff !important;
+            color: #ffffff !important;
+          }
+        }
+      }
+    }
+
+    .threat-body-split {
+      .threat-radar-col {
+        background: #0f172a !important;
+        border-color: #334155 !important;
+
+        .radar-mini-legend {
+          border-top-color: #334155 !important;
+          color: #94a3b8 !important;
+        }
+      }
+
+      .threat-table-col {
+        .table-toolbar {
+          .filter-tabs {
+            background: #0f172a !important;
+            border-color: #334155 !important;
+
+            .tab-btn {
+              color: #94a3b8 !important;
+
+              &.active {
+                background: #1e293b !important;
+                color: #a855f7 !important;
+              }
+
+              .badge-count {
+                background: #334155 !important;
+                color: #cbd5e1 !important;
+              }
+
+              &.focus-tab.active {
+                background: rgba(239, 68, 68, 0.2) !important;
+                color: #fca5a5 !important;
+              }
+            }
+          }
+
+          .search-box-wrapper .search-input {
+            background: #0f172a !important;
+            border-color: #334155 !important;
+            color: #f1f5f9 !important;
+
+            &::placeholder {
+              color: #64748b !important;
+            }
+          }
+        }
+
+        .table-scroll-container {
+          background: #0f172a !important;
+          border-color: #334155 !important;
+
+          .threat-actors-table {
+            thead {
+              background: #1e293b !important;
+              border-bottom-color: #334155 !important;
+
+              th {
+                color: #94a3b8 !important;
+              }
+            }
+
+            tbody {
+              .actor-row {
+                border-bottom-color: #1e293b !important;
+
+                &:hover {
+                  background-color: #1e293b !important;
+                }
+
+                &.in-focus-zone {
+                  background-color: rgba(239, 68, 68, 0.05) !important;
+
+                  &:hover {
+                    background-color: rgba(239, 68, 68, 0.12) !important;
+                  }
+                }
+
+                &.is-hovered {
+                  background-color: #1e293b !important;
+                }
+
+                .actor-name-cell .name-info {
+                  .name-text {
+                    color: #f1f5f9 !important;
+                  }
+                  .id-text {
+                    color: #64748b !important;
+                  }
+                }
+
+                .sector-text {
+                  color: #94a3b8 !important;
+                }
+
+                .view-action-btn {
+                  background: #1e293b !important;
+                  border-color: #334155 !important;
+                  color: #a855f7 !important;
+
+                  &:hover {
+                    background: #5200ff !important;
+                    color: #ffffff !important;
+                  }
+                }
+              }
+
+              .empty-row {
+                color: #64748b !important;
+              }
+            }
+          }
+        }
+
+        .table-footer-status {
+          color: #94a3b8 !important;
+        }
+      }
+    }
+  }
+
   // Radar detailed modal overrides
   .radar-detailed-modal-overlay {
     background: rgba(0, 0, 0, 0.7) !important;
