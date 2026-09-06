@@ -8,26 +8,29 @@ steps:
       - '--build-arg'
       - 'VITE_API_URL=${_VITE_API_URL}'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/frontend'
+      - '${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/frontend'
       - '.'
 
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'gcr.io/$PROJECT_ID/frontend'
+      - '${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/frontend'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
       - 'run'
       - 'deploy'
-      - 'intelgenz-app'
+      - '${_SERVICE_NAME}'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/frontend'
+      - '${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/frontend'
       - '--region'
-      - 'asia-south1'
+      - '${_DEPLOY_REGION}'
       - '--platform'
-      - 'managed'
+      - '${_PLATFORM}'
 
 images:
-  - 'gcr.io/$PROJECT_ID/frontend'
+  - '${_AR_HOSTNAME}/${_AR_PROJECT_ID}/${_AR_REPOSITORY}/frontend'
+
+substitutions:
+  _VITE_API_URL: 'https://intelgenz-uat-backend.onrender.com'
