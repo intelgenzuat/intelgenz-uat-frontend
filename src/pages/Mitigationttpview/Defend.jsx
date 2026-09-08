@@ -258,27 +258,6 @@ const Defend = ({
                             );
                         })}
                     </div>
-                    <button
-                        type="button"
-                        className="btn show-btn text-white px-4 py-2 flex-shrink-0 d-flex align-items-center gap-2"
-                        style={{
-                            backgroundColor: '#5200ff',
-                            borderRadius: '10px',
-                            fontSize: '13px',
-                            fontWeight: 600,
-                            border: 'none',
-                            boxShadow: '0 2px 6px rgba(82, 0, 255, 0.2)',
-                            cursor: isLoader ? 'not-allowed' : 'pointer',
-                            opacity: isLoader ? 0.75 : 1
-                        }}
-                        onClick={onShow}
-                        disabled={isLoader}
-                    >
-                        {isLoader && (
-                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        )}
-                        <span>Show</span>
-                    </button>
                 </div>
                 {formikError && (
                     <div className="text-danger mt-1 ms-1" style={{ fontSize: '12px' }}>

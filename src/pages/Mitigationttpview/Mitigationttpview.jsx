@@ -374,57 +374,14 @@ const Mitigationttpview = () => {
                             <span style={{ cursor: 'pointer' }}>Threat Actor</span>
                         </div>
 
-                        {/* View Controls Card */}
-                        <div className="view-controls-card flex-shrink-0 mx-4 mb-4 mt-2">
-                            <div className="view-controls-section">
-                                <div className="title-area">
-                                    <h3>
-                                        {activeViewTab === 'nist'
-                                            ? 'NIST'
-                                            : activeViewTab === 'mitigation'
-                                                ? 'D3FEND'
-                                                : 'TTP View'}
-                                    </h3>
-                                    <i className="bi bi-question-circle"></i>
-                                </div>
-                                <div className="controls-right">
-                                    <div className="show-overlaps-btn">
-                                        <input
-                                            type="checkbox"
-                                            id="showOverlapsMalware"
-                                            checked={showOverlaps}
-                                            onChange={(e) => setShowOverlaps(e.target.checked)}
-                                        />
-                                        <label htmlFor="showOverlapsMalware">Show overlaps only</label>
-                                    </div>
-
-                                    <ul className="nav nav-pills segment-control" id="malwareViewTab" role="tablist">
-                                        {viewTabs.map((tab) => (
-                                            <li key={tab.key} className="nav-item" role="presentation">
-                                                <button
-                                                    className={`nav-link${activeViewTab === tab.key ? ' active' : ''}`}
-                                                    onClick={() => setActiveViewTab(tab.key)}
-                                                    type="button"
-                                                    role="tab"
-                                                    aria-selected={activeViewTab === tab.key}
-                                                >
-                                                    {tab.label}
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Search bar */}
+                        {/* Search and Controls Header */}
                         {(() => {
                             const isSearchDisabled = activeViewTab === 'nist' || activeViewTab === 'mitigation';
                             const hasMinChars = searchQuery.trim().length >= 2;
 
                             return (
                                 <div
-                                    className={`threat-actor-search-section d-flex align-items-center justify-content-start mx-4 mb-2 gap-3${isSearchDisabled ? ' disabled' : ''}`}
+                                    className="threat-actor-search-section d-flex align-items-center justify-content-start mx-4 mb-2 mt-2 gap-3"
                                 >
                                     <div className="d-flex flex-column">
                                         <span
@@ -434,7 +391,7 @@ const Mitigationttpview = () => {
                                             Enter Threat Actor Name
                                         </span>
                                     </div>
-                                    <div className="search-wrapper position-relative m-0" ref={searchWrapperRef}>
+                                    <div className={`search-wrapper position-relative m-0${isSearchDisabled ? ' disabled opacity-50' : ''}`} ref={searchWrapperRef}>
                                         <i
                                             className="bi bi-search position-absolute text-muted"
                                             style={{ left: '12px', top: '50%', transform: 'translateY(-50%)' }}
@@ -442,7 +399,7 @@ const Mitigationttpview = () => {
                                         <input
                                             type="text"
                                             className="form-control rounded-pill ps-5 pe-5"
-                                            placeholder="Search malware to add"
+                                            placeholder="Search threat actor to add"
                                             disabled={isSearchDisabled}
                                             autoComplete="off"
                                             value={searchQuery}
@@ -479,8 +436,8 @@ const Mitigationttpview = () => {
                                                         {data.map((item, index) => {
                                                             const itemName = typeof item === 'string'
                                                                 ? item
-                                                                : item?.name || item?.malware_name || item?.label || item?.title || item?.value || (typeof item === 'object' ? Object.values(item)[0] : JSON.stringify(item));
-                                                            const itemKey = item?.id || item?._id || index;
+                                                                : item?.name || item?.threat_name || item?.actor_name || item?.malware_name || item?.label || item?.title || item?.value || (typeof item === 'object' ? Object.values(item)[0] : JSON.stringify(item));
+                                                            const itemKey = item?.id || item?.actor_id || item?._id || index;
 
                                                             return (
                                                                 <li
@@ -503,11 +460,63 @@ const Mitigationttpview = () => {
                                                     </ul>
                                                 ) : (
                                                     <div className="suggestion-empty">
-                                                        <span>No malware found</span>
+                                                        <span>No threat actor found</span>
                                                     </div>
                                                 )}
                                             </div>
                                         )}
+                                    </div>
+
+                                    {/* Show Button right next to searchbar */}
+                                    <button
+                                        type="button"
+                                        className="btn show-btn text-white px-4 py-2 flex-shrink-0 d-flex align-items-center gap-2"
+                                        style={{
+                                            backgroundColor: '#5200ff',
+                                            borderRadius: '10px',
+                                            fontSize: '10px',
+                                            fontWeight: 600,
+                                            border: 'none',
+                                            boxShadow: '0 2px 6px rgba(82, 0, 255, 0.2)',
+                                            cursor: isLoader ? 'not-allowed' : 'pointer',
+                                            opacity: isLoader ? 0.75 : 1
+                                        }}
+                                        onClick={formik.handleSubmit}
+                                        disabled={isLoader}
+                                    >
+                                        {isLoader && (
+                                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        )}
+                                        <span>Show</span>
+                                    </button>
+
+                                    {/* Controls Right Section at the Right End */}
+                                    <div className="controls-right ms-auto d-flex align-items-center gap-3">
+                                        <div className="show-overlaps-btn">
+                                            <input
+                                                type="checkbox"
+                                                id="showOverlapsThreat"
+                                                checked={showOverlaps}
+                                                onChange={(e) => setShowOverlaps(e.target.checked)}
+                                            />
+                                            <label htmlFor="showOverlapsThreat">Show overlaps only</label>
+                                        </div>
+
+                                        <ul className="nav nav-pills segment-control" id="threatViewTab" role="tablist">
+                                            {viewTabs.map((tab) => (
+                                                <li key={tab.key} className="nav-item" role="presentation">
+                                                    <button
+                                                        className={`nav-link${activeViewTab === tab.key ? ' active' : ''}`}
+                                                        onClick={() => setActiveViewTab(tab.key)}
+                                                        type="button"
+                                                        role="tab"
+                                                        aria-selected={activeViewTab === tab.key}
+                                                    >
+                                                        {tab.label}
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
                                     </div>
                                 </div>
                             );
