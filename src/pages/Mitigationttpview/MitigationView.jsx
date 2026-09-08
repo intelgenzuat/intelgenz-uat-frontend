@@ -131,11 +131,7 @@ const MitigationView = ({ showOverlaps }) => {
     };
 
     const handleClearOrSelectAll = () => {
-        if (selectedActors.length > 0) {
-            setSelectedActors([]);
-        } else {
-            setSelectedActors(threatActors.map(a => a.id));
-        }
+        setSelectedActors([]);
     };
 
     const filterOverlaps = (items) => {
@@ -225,7 +221,7 @@ const MitigationView = ({ showOverlaps }) => {
                     <span className="section-title">THREAT ACTORS :</span>
                     <span className="selected-badge">{selectedActors.length} Selected</span>
                     <button className="btn clear-all-btn ms-auto d-flex align-items-center gap-1" onClick={handleClearOrSelectAll}>
-                        {selectedActors.length > 0 ? 'Clear all' : 'Select all'} <i className="bi bi-x"></i>
+                        Clear all <i className="bi bi-x"></i>
                     </button>
                 </div>
                 <div className="d-flex align-items-center justify-content-between gap-3 mt-3">

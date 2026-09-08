@@ -115,11 +115,7 @@ const Defend = ({
         if (onClearOrSelectAll) {
             onClearOrSelectAll();
         } else {
-            if (selectedMalware.length > 0) {
-                setLocalSelectedMalware([]);
-            } else {
-                setLocalSelectedMalware(threatlist.map(m => m.id));
-            }
+            setLocalSelectedMalware([]);
         }
     };
 
@@ -227,7 +223,7 @@ const Defend = ({
                     <span className="section-title">MALWARE :</span>
                     <span className="selected-badge">{selectedMalware.length} Selected</span>
                     <button className="btn clear-all-btn ms-auto d-flex align-items-center gap-1" onClick={handleClearOrSelectAll}>
-                        {selectedMalware.length > 0 ? 'Clear all' : 'Select all'} <i className="bi bi-x"></i>
+                        Clear all <i className="bi bi-x"></i>
                     </button>
                 </div>
                 <div className="d-flex align-items-center justify-content-between gap-3 mt-3">
