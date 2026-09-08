@@ -1,555 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../assets/styles/mitigation/MitigationView.scss';
 
-const initialTacticsData = [
-    {
-        id: 'model',
-        name: 'Model',
-        expanded: true,
-        columns: [
-            // Column 1: Asset Inventory
-            {
-                name: 'Asset Inventory',
-                items: [
-                    {
-                        id: 'model-1-1', title: "Asset Vulnerability Enumeration", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-1-2', title: "Container Image Analysis", subtitle: "2 sub categories", overlaps: 4, level: 3, expanded: false,
-                        children: [
-                            { id: 'model-1-2-1', title: "Image Vulnerability Scan", subtitle: "1 sub category", overlaps: 3, level: 2, expanded: false, children: [
-                                { id: 'model-1-2-1-1', title: "Base Image Scan", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] }
-                            ]},
-                            { id: 'model-1-2-2', title: "Registry Audit", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] }
-                        ]
-                    },
-                    {
-                        id: 'model-1-3', title: "Configuration Inventory", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-1-4', title: "Data Inventory", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-1-5', title: "Hardware Component Inventory", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-1-6', title: "Network Node Inventory", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-1-7', title: "Software Inventory", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: []
-                    }
-                ]
-            },
-            // Column 2: Network Mapping
-            {
-                name: 'Network Mapping',
-                items: [
-                    {
-                        id: 'model-2-1', title: "Logical Link Mapping", subtitle: "2 sub categories", overlaps: 4, level: 3, expanded: false,
-                        children: [
-                            { id: 'model-2-1-1', title: "Active Logical Link Mapping", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                            { id: 'model-2-1-2', title: "Passive Logical Link Mapping", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] }
-                        ]
-                    },
-                    {
-                        id: 'model-2-2', title: "Active Logical Link Mapping", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-2-3', title: "Passive Logical Link Mapping", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-2-4', title: "Network Traffic Policy Mapping", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-2-5', title: "Network Vulnerability Assessment", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-2-6', title: "Physical Link Mapping", subtitle: "2 sub categories", overlaps: 2, level: 1, expanded: false,
-                        children: [
-                            { id: 'model-2-6-1', title: "Active Physical Link Mapping", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                            { id: 'model-2-6-2', title: "Direct Physical Link Mapping", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] }
-                        ]
-                    },
-                    {
-                        id: 'model-2-7', title: "Active Physical Link Mapping", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-2-8', title: "Direct Physical Link Mapping", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: []
-                    }
-                ]
-            },
-            // Column 3: Operational Activity Mapping
-            {
-                name: 'Operational Activity Mapping',
-                items: [
-                    {
-                        id: 'model-3-1', title: "Access Modeling", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-3-2', title: "Operational Dependency Mapping", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-3-3', title: "Operational Risk Assessment", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-3-4', title: "Organization Mapping", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: []
-                    }
-                ]
-            },
-            // Column 4: System Mapping
-            {
-                name: 'System Mapping',
-                items: [
-                    {
-                        id: 'model-4-1', title: "Data Exchange Mapping", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-4-2', title: "Service Dependency Mapping", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-4-3', title: "System Dependency Mapping", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: []
-                    },
-                    {
-                        id: 'model-4-4', title: "System Vulnerability Assessment", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: []
-                    }
-                ]
+const calculateLevel = (overlapPercentage, overlapCount) => {
+    const pct = Number(overlapPercentage) || 0;
+    if (pct >= 75) return 3;
+    if (pct >= 50) return 2;
+    if (pct >= 25) return 1;
+    if (pct > 0) return 1;
+    if (Number(overlapCount) > 1) return 1;
+    return 0;
+};
+
+const transformD3fendTactics = (d3fendTactics) => {
+    if (!Array.isArray(d3fendTactics)) return [];
+
+    return d3fendTactics.map((tactic, tIdx) => {
+        const tacticName = tactic.tactic_name || tactic.name || `Tactic ${tIdx + 1}`;
+        const tacticId = tactic.id || tacticName.toLowerCase().replace(/\s+/g, '-');
+
+        const columnsMap = new Map();
+        (tactic.techniques || []).forEach((tech, techIdx) => {
+            const parentName = tech.parent_technique || 'General';
+            if (!columnsMap.has(parentName)) {
+                columnsMap.set(parentName, []);
             }
-        ]
-    },
-    {
-        id: 'harden',
-        name: 'Harden',
-        expanded: true,
-        columns: [
-            // Column 1: Agent Authentication
-            {
-                name: 'Agent Authentication',
-                items: [
-                    { id: 'harden-1-1', title: "Biometric Authentication", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'harden-1-2', title: "Certificate-based Authentication", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'harden-1-3', title: "Multi-factor Authentication", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'harden-1-4', title: "Password Authentication", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'harden-1-5', title: "Token-based Authentication", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] }
-                ]
-            },
-            // Column 2: Application Hardening
-            {
-                name: 'Application Hardening',
-                items: [
-                    { id: 'harden-2-1', title: "Application Configuration Hardening", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'harden-2-2', title: "Control Flow Integrity", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'harden-2-3', title: "Dead Code Elimination", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] },
-                    { id: 'harden-2-4', title: "Exception Handler Pointer Validation", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'harden-2-5', title: "Pointer Authentication", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'harden-2-6', title: "Process Segment Execution Prevention", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'harden-2-7', title: "Segment Address Offset Randomization", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'harden-2-8', title: "Stack Frame Canary Validation", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] }
-                ]
-            },
-            // Column 3: Credential Hardening
-            {
-                name: 'Credential Hardening',
-                items: [
-                    { id: 'harden-3-1', title: "Certificate Pinning", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    {
-                        id: 'harden-3-2', title: "Credential Rotation", subtitle: "2 sub categories", overlaps: 4, level: 3, expanded: false,
-                        children: [
-                            { id: 'harden-3-2-1', title: "Certificate Rotation", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                            { id: 'harden-3-2-2', title: "Password Rotation", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] }
-                        ]
-                    },
-                    { id: 'harden-3-3', title: "Certificate Rotation", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'harden-3-4', title: "Password Rotation", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'harden-3-5', title: "One-time Password", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'harden-3-6', title: "Strong Password Policy", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'harden-3-7', title: "Change Default Password", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'harden-3-8', title: "Token Binding", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] }
-                ]
-            },
-            // Column 4: Message Hardening
-            {
-                name: 'Message Hardening',
-                items: [
-                    {
-                        id: 'harden-4-1', title: "Message Authentication", subtitle: "1 sub category", overlaps: 3, level: 2, expanded: false,
-                        children: [
-                            { id: 'harden-4-1-1', title: "Bus Message Authentication", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] }
-                        ]
-                    },
-                    { id: 'harden-4-2', title: "Bus Message Authentication", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'harden-4-3', title: "Message Encryption", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'harden-4-4', title: "Transfer Agent Authentication", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] }
-                ]
-            },
-            // Column 5: Platform Hardening
-            {
-                name: 'Platform Hardening',
-                items: [
-                    { id: 'harden-5-1', title: "Bootloader Authentication", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'harden-5-2', title: "Disk Encryption", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'harden-5-3', title: "Driver Load Integrity Checking", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'harden-5-4', title: "File Encryption", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'harden-5-5', title: "Hardware-based Write Protection", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'harden-5-6', title: "Physical Enclosure Hardening", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] },
-                    {
-                        id: 'harden-5-7', title: "Radiation Hardening", subtitle: "2 sub categories", overlaps: 3, level: 2, expanded: false,
-                        children: [
-                            { id: 'harden-5-7-1', title: "Electromagnetic Radiation Hardening", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                            { id: 'harden-5-7-2', title: "RF Shielding", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] }
-                        ]
-                    },
-                    { id: 'harden-5-8', title: "Electromagnetic Radiation Hardening", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'harden-5-9', title: "RF Shielding", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] },
-                    { id: 'harden-5-10', title: "Software Update", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'harden-5-11', title: "System Configuration Permissions", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] }
-                ]
-            },
-            // Column 6: Source Code Hardening
-            {
-                name: 'Source Code Hardening',
-                items: [
-                    { id: 'harden-6-1', title: "Credential Scrubbing", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'harden-6-2', title: "Domain Logic Validation", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'harden-6-3', title: "Operational Logic Validation", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'harden-6-4', title: "Integer Range Validation", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    {
-                        id: 'harden-6-5', title: "Pointer Validation", subtitle: "2 sub categories", overlaps: 3, level: 2, expanded: false,
-                        children: [
-                            { id: 'harden-6-5-1', title: "Memory Block Start Validation", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                            { id: 'harden-6-5-2', title: "Null Pointer Checking", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] }
-                        ]
-                    },
-                    { id: 'harden-6-6', title: "Memory Block Start Validation", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'harden-6-7', title: "Null Pointer Checking", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'harden-6-8', title: "Reference Nullification", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] },
-                    { id: 'harden-6-9', title: "Trusted Library", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'harden-6-10', title: "Variable Initialization", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] }
-                ]
-            }
-        ]
-    },
-    {
-        id: 'detect',
-        name: 'Detect',
-        expanded: true,
-        columns: [
-            // Column 1: File Analysis
-            {
-                name: 'File Analysis',
-                items: [
-                    { id: 'detect-1-1', title: "Dynamic Analysis", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'detect-1-2', title: "Emulated File Analysis", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'detect-1-3', title: "File Content Analysis", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'detect-1-4', title: "File Content Rules", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'detect-1-5', title: "File Hashing", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] }
-                ]
-            },
-            // Column 2: Identifier Analysis
-            {
-                name: 'Identifier Analysis',
-                items: [
-                    { id: 'detect-2-1', title: "Homoglyph Detection", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'detect-2-2', title: "Identifier Activity Analysis", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    {
-                        id: 'detect-2-3', title: "Identifier Reputation Analysis", subtitle: "4 sub categories", overlaps: 4, level: 3, expanded: false,
-                        children: [
-                            { id: 'detect-2-3-1', title: "Domain Name Reputation Analysis", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                            { id: 'detect-2-3-2', title: "File Hash Reputation Analysis", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                            { id: 'detect-2-3-3', title: "IP Reputation Analysis", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                            { id: 'detect-2-3-4', title: "URL Reputation Analysis", subtitle: "1 sub category", overlaps: 4, level: 3, expanded: false, children: [
-                                { id: 'detect-2-3-4-1', title: "URL Analysis", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] }
-                            ]}
-                        ]
-                    },
-                    { id: 'detect-2-4', title: "Domain Name Reputation Analysis", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'detect-2-5', title: "File Hash Reputation Analysis", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'detect-2-6', title: "IP Reputation Analysis", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'detect-2-7', title: "URL Reputation Analysis", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'detect-2-8', title: "URL Analysis", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] }
-                ]
-            },
-            // Column 3: Message Analysis
-            {
-                name: 'Message Analysis',
-                items: [
-                    { id: 'detect-3-1', title: "Sender MTA Reputation Analysis", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'detect-3-2', title: "Sender Reputation Analysis", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] }
-                ]
-            },
-            // Column 4: Network Traffic Analysis
-            {
-                name: 'Network Traffic Analysis',
-                items: [
-                    { id: 'detect-4-1', title: "Administrative Network Activity Analysis", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'detect-4-2', title: "Application Protocol Command Analysis", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'detect-4-3', title: "Remote Firmware Update Monitoring", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'detect-4-4', title: "Byte Sequence Emulation", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    {
-                        id: 'detect-4-5', title: "Certificate Analysis", subtitle: "2 sub categories", overlaps: 4, level: 3, expanded: false,
-                        children: [
-                            { id: 'detect-4-5-1', title: "Active Certificate Analysis", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                            { id: 'detect-4-5-2', title: "Passive Certificate Analysis", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] }
-                        ]
-                    },
-                    { id: 'detect-4-6', title: "Active Certificate Analysis", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'detect-4-7', title: "Passive Certificate Analysis", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] },
-                    { id: 'detect-4-8', title: "Client-server Payload Profiling", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'detect-4-9', title: "Connection Attempt Analysis", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] }
-                ]
-            },
-            // Column 5: Physical Access Monitoring
-            {
-                name: 'Physical Access Monitoring',
-                items: [
-                    { id: 'detect-5-1', title: "Electronic Lock Monitoring", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'detect-5-2', title: "Motion Sensor Monitoring", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'detect-5-3', title: "Proximity Sensor Monitoring", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'detect-5-4', title: "Video Surveillance", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] }
-                ]
-            },
-            // Column 6: Platform Monitoring
-            {
-                name: 'Platform Monitoring',
-                items: [
-                    { id: 'detect-6-1', title: "Application Performance Monitoring", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'detect-6-2', title: "Application Exception Monitoring", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'detect-6-3', title: "File Integrity Monitoring", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'detect-6-4', title: "Firmware Behavior Analysis", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'detect-6-5', title: "Firmware Embedded Monitoring Code", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    {
-                        id: 'detect-6-6', title: "Firmware Verification", subtitle: "2 sub categories", overlaps: 4, level: 3, expanded: false,
-                        children: [
-                            { id: 'detect-6-6-1', title: "Peripheral Firmware Verification", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                            { id: 'detect-6-6-2', title: "System Firmware Verification", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] }
-                        ]
-                    },
-                    { id: 'detect-6-7', title: "Peripheral Firmware Verification", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'detect-6-8', title: "System Firmware Verification", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'detect-6-9', title: "Operating Mode Monitoring", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] }
-                ]
-            },
-            // Column 7: Process Analysis
-            {
-                name: 'Process Analysis',
-                items: [
-                    { id: 'detect-7-1', title: "Database Query String Analysis", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'detect-7-2', title: "File Access Pattern Analysis", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'detect-7-3', title: "Indirect Branch Call Analysis", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'detect-7-4', title: "Process Code Segment Verification", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'detect-7-5', title: "Process Self-Modification Detection", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    {
-                        id: 'detect-7-6', title: "Process Spawn Analysis", subtitle: "1 sub category", overlaps: 4, level: 3, expanded: false,
-                        children: [
-                            { id: 'detect-7-6-1', title: "Process Lineage Analysis", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] }
-                        ]
-                    },
-                    { id: 'detect-7-7', title: "Process Lineage Analysis", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'detect-7-8', title: "Script Execution Analysis", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'detect-7-9', title: "Shadow Process Analysis", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] }
-                ]
-            }
-        ]
-    },
-    {
-        id: 'isolate',
-        name: 'Isolate',
-        expanded: true,
-        columns: [
-            // Column 1: Access Mediation
-            {
-                name: 'Access Mediation',
-                items: [
-                    { id: 'isolate-1-1', title: "Credential Transmission Scoping", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'isolate-1-2', title: "IO Port Restriction", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    {
-                        id: 'isolate-1-3', title: "Network Access Mediation", subtitle: "6 sub categories", overlaps: 4, level: 3, expanded: false,
-                        children: [
-                            { id: 'isolate-1-3-1', title: "LAN Access Mediation", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                            { id: 'isolate-1-3-2', title: "Routing Access Mediation", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                            { id: 'isolate-1-3-3', title: "Network Resource Access Mediation", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                            { id: 'isolate-1-3-4', title: "Remote File Access Mediation", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                            { id: 'isolate-1-3-5', title: "Web Session Access Mediation", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                            { id: 'isolate-1-3-6', title: "Endpoint-based Web Server Access Mediation", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] }
-                        ]
-                    },
-                    { id: 'isolate-1-4', title: "LAN Access Mediation", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'isolate-1-5', title: "Routing Access Mediation", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'isolate-1-6', title: "Network Resource Access Mediation", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'isolate-1-7', title: "Remote File Access Mediation", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'isolate-1-8', title: "Web Session Access Mediation", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] },
-                    { id: 'isolate-1-9', title: "Endpoint-based Web Server Access Mediation", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] }
-                ]
-            },
-            // Column 2: Access Policy Administration
-            {
-                name: 'Access Policy Administration',
-                items: [
-                    { id: 'isolate-2-1', title: "Domain Trust Policy", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'isolate-2-2', title: "Local File Permissions", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'isolate-2-3', title: "User Account Permissions", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'isolate-2-4', title: "User Group Permissions", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] }
-                ]
-            },
-            // Column 3: Content Filtering
-            {
-                name: 'Content Filtering',
-                items: [
-                    {
-                        id: 'isolate-3-1', title: "Content Modification", subtitle: "4 sub categories", overlaps: 4, level: 3, expanded: false,
-                        children: [
-                            { id: 'isolate-3-1-1', title: "Content Excision", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                            { id: 'isolate-3-1-2', title: "Content Format Conversion", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                            { id: 'isolate-3-1-3', title: "Content Rebuild", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                            { id: 'isolate-3-1-4', title: "Content Substitution", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] }
-                        ]
-                    },
-                    { id: 'isolate-3-2', title: "Content Excision", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'isolate-3-3', title: "Content Format Conversion", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'isolate-3-4', title: "Content Rebuild", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] },
-                    { id: 'isolate-3-5', title: "Content Substitution", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'isolate-3-6', title: "Content Quarantine", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    {
-                        id: 'isolate-3-7', title: "Content Validation", subtitle: "4 sub categories", overlaps: 3, level: 2, expanded: false,
-                        children: [
-                            { id: 'isolate-3-7-1', title: "File Format Verification", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                            { id: 'isolate-3-7-2', title: "File Content Decompression Checking", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                            { id: 'isolate-3-7-3', title: "File Internal Structure Verification", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                            { id: 'isolate-3-7-4', title: "File Metadata Consistency Validation", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] }
-                        ]
-                    },
-                    { id: 'isolate-3-8', title: "File Format Verification", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'isolate-3-9', title: "File Content Decompression Checking", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'isolate-3-10', title: "File Internal Structure Verification", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'isolate-3-11', title: "File Metadata Consistency Validation", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] }
-                ]
-            },
-            // Column 4: Execution Isolation
-            {
-                name: 'Execution Isolation',
-                items: [
-                    { id: 'isolate-4-1', title: "Application-based Process Isolation", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'isolate-4-2', title: "Executable Allowlisting", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'isolate-4-3', title: "Executable Denylisting", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'isolate-4-4', title: "Hardware-based Process Isolation", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'isolate-4-5', title: "Kernel-based Process Isolation", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] }
-                ]
-            },
-            // Column 5: Network Isolation
-            {
-                name: 'Network Isolation',
-                items: [
-                    { id: 'isolate-5-1', title: "Broadcast Domain Isolation", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'isolate-5-2', title: "Directional Network Link", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'isolate-5-3', title: "DNS Allowlisting", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    {
-                        id: 'isolate-5-4', title: "DNS Denylisting", subtitle: "5 sub categories", overlaps: 4, level: 3, expanded: false,
-                        children: [
-                            { id: 'isolate-5-4-1', title: "Forward Resolution Domain Denylisting", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                            { id: 'isolate-5-4-2', title: "Hierarchical Domain Denylisting", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                            { id: 'isolate-5-4-3', title: "Homoglyph Denylisting", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                            { id: 'isolate-5-4-4', title: "Forward Resolution IP Denylisting", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                            { id: 'isolate-5-4-5', title: "Reverse Resolution IP Denylisting", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] }
-                        ]
-                    },
-                    { id: 'isolate-5-5', title: "Forward Resolution Domain Denylisting", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'isolate-5-6', title: "Hierarchical Domain Denylisting", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'isolate-5-7', title: "Homoglyph Denylisting", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] },
-                    { id: 'isolate-5-8', title: "Forward Resolution IP Denylisting", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'isolate-5-9', title: "Reverse Resolution IP Denylisting", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] }
-                ]
-            }
-        ]
-    },
-    {
-        id: 'deceive',
-        name: 'Deceive',
-        expanded: true,
-        columns: [
-            // Column 1: Decoy Environment
-            {
-                name: 'Decoy Environment',
-                items: [
-                    { id: 'deceive-1-1', title: "Connected Honeynet", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'deceive-1-2', title: "Integrated Honeynet", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'deceive-1-3', title: "Standalone Honeynet", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] }
-                ]
-            },
-            // Column 2: Decoy Object
-            {
-                name: 'Decoy Object',
-                items: [
-                    { id: 'deceive-2-1', title: "Decoy File", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'deceive-2-2', title: "Decoy Network Resource", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'deceive-2-3', title: "Decoy Persona", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'deceive-2-4', title: "Decoy Public Release", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] },
-                    { id: 'deceive-2-5', title: "Decoy Session Token", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'deceive-2-6', title: "Decoy User Credential", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] }
-                ]
-            }
-        ]
-    },
-    {
-        id: 'evict',
-        name: 'Evict',
-        expanded: true,
-        columns: [
-            // Column 1: Credential Eviction
-            {
-                name: 'Credential Eviction',
-                items: [
-                    { id: 'evict-1-1', title: "Account Locking", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'evict-1-2', title: "Authentication Cache Invalidation", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'evict-1-3', title: "Credential Revocation", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] }
-                ]
-            },
-            // Column 2: Object Eviction
-            {
-                name: 'Object Eviction',
-                items: [
-                    { id: 'evict-2-1', title: "Disk Formatting", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'evict-2-2', title: "Disk Erasure", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'evict-2-3', title: "Disk Partitioning", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] },
-                    { id: 'evict-2-4', title: "DNS Cache Eviction", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'evict-2-5', title: "Domain Registration Takedown", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'evict-2-6', title: "File Eviction", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'evict-2-7', title: "Email Removal", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'evict-2-8', title: "Registry Key Deletion", subtitle: "No sub categories", overlaps: 0, level: 0, expanded: false, children: [] }
-                ]
-            },
-            // Column 3: Process Eviction
-            {
-                name: 'Process Eviction',
-                items: [
-                    { id: 'evict-3-1', title: "Host Shutdown", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'evict-3-2', title: "Host Reboot", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'evict-3-3', title: "Process Suspension", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'evict-3-4', title: "Process Termination", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'evict-3-5', title: "Session Termination", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] }
-                ]
-            }
-        ]
-    },
-    {
-        id: 'restore',
-        name: 'Restore',
-        expanded: true,
-        columns: [
-            // Column 1: Restore Access
-            {
-                name: 'Restore Access',
-                items: [
-                    { id: 'restore-1-1', title: "Reissued Credential", subtitle: "No sub categories", overlaps: 3, level: 2, expanded: false, children: [] },
-                    { id: 'restore-1-2', title: "Restore Network Access", subtitle: "No sub categories", overlaps: 4, level: 3, expanded: false, children: [] },
-                    { id: 'restore-1-3', title: "Restore User Account Access", subtitle: "No sub categories", overlaps: 2, level: 1, expanded: false, children: [] },
-                    { id: 'restore-1-4', title: "Unlock Account", subtitle: "No sub categories", overlaps: 1, level: 0, expanded: false, children: [] }
-                ]
-            }
-        ]
-    }
-];
+
+            const children = Array.isArray(tech.children) ? tech.children : [];
+            const subtitle = children.length > 0
+                ? `${children.length} sub ${children.length === 1 ? 'category' : 'categories'}`
+                : 'No sub categories';
+
+            columnsMap.get(parentName).push({
+                id: tech.d3fend_id || `${tacticId}-${parentName.toLowerCase().replace(/\s+/g, '-')}-${techIdx}`,
+                d3fend_id: tech.d3fend_id,
+                title: tech.name || tech.technique_name || '',
+                subtitle: subtitle,
+                overlaps: Number(tech.overlap_count) || 0,
+                overlap_percentage: Number(tech.overlap_percentage) || 0,
+                has_overlap: Boolean(tech.has_overlap),
+                level: calculateLevel(tech.overlap_percentage, tech.overlap_count),
+                expanded: false,
+                children: children,
+                attack_techniques: tech.attack_techniques || [],
+                malwares: tech.malwares || []
+            });
+        });
+
+        const columns = Array.from(columnsMap.entries()).map(([name, items]) => ({
+            name,
+            items
+        }));
+
+        return {
+            id: tacticId,
+            name: tacticName,
+            expanded: true,
+            columns
+        };
+    });
+};
 
 const getLevelClass = (level) => {
-    switch(level) {
+    switch (level) {
         case 3: return 'level-3';
         case 2: return 'level-2';
         case 1: return 'level-1';
@@ -561,31 +73,53 @@ const getIndentPx = (indent) => indent * 16 + 6;
 const getLineLeftPx = (indent) => (indent - 1) * 16 + 13;
 const getLineWidthPx = () => 9;
 
-const Defend = ({ showOverlaps }) => {
-    const [tacticsData, setTacticsData] = useState(initialTacticsData);
+const Defend = ({
+    showOverlaps,
+    threatlist = [],
+    selectedMalware: propSelectedMalware,
+    onToggleMalware,
+    onClearOrSelectAll,
+    onRemoveMalware,
+    onShow,
+    isLoader = false,
+    formikError,
+    threatData,
+}) => {
+    const d3fendList = Array.isArray(threatData?.d3fend_tactics)
+        ? threatData.d3fend_tactics
+        : Array.isArray(threatData)
+            ? threatData
+            : [];
 
-    const threatActors = [
-        { id: 1, name: 'APT28 (Fancy Bear)' },
-        { id: 2, name: 'APT29 (Cozy Bear)' },
-        { id: 3, name: 'APT41 (Double Dragon / Barium)' },
-        { id: 4, name: 'APT45 (Fancy Bear)' },
-    ];
+    const [tacticsData, setTacticsData] = useState(() => transformD3fendTactics(d3fendList));
+    const [localSelectedMalware, setLocalSelectedMalware] = useState([]);
+    const selectedMalware = propSelectedMalware !== undefined ? propSelectedMalware : localSelectedMalware;
 
-    const [selectedActors, setSelectedActors] = useState([1, 2, 3, 4]);
+    useEffect(() => {
+        setTacticsData(transformD3fendTactics(d3fendList));
+    }, [threatData]);
 
-    const handleToggleActor = (actorId) => {
-        if (selectedActors.includes(actorId)) {
-            setSelectedActors(selectedActors.filter(id => id !== actorId));
+    const handleToggleMalware = (malwareId) => {
+        if (onToggleMalware) {
+            onToggleMalware(malwareId);
         } else {
-            setSelectedActors([...selectedActors, actorId]);
+            if (selectedMalware.includes(malwareId)) {
+                setLocalSelectedMalware(selectedMalware.filter(id => id !== malwareId));
+            } else {
+                setLocalSelectedMalware([...selectedMalware, malwareId]);
+            }
         }
     };
 
     const handleClearOrSelectAll = () => {
-        if (selectedActors.length > 0) {
-            setSelectedActors([]);
+        if (onClearOrSelectAll) {
+            onClearOrSelectAll();
         } else {
-            setSelectedActors(threatActors.map(a => a.id));
+            if (selectedMalware.length > 0) {
+                setLocalSelectedMalware([]);
+            } else {
+                setLocalSelectedMalware(threatlist.map(m => m.id));
+            }
         }
     };
 
@@ -644,18 +178,24 @@ const Defend = ({ showOverlaps }) => {
                         {item.expanded && item.children && item.children.length > 0 && (
                             <div className="tree-line-down" style={{ left: `${getLineLeftPx(indent + 1)}px` }}></div>
                         )}
-                        
+
                         <div className="card-top">
-                            <button className="expand-btn" onClick={() => toggleExpand(item.id)}>
-                                <i className={`bi ${item.expanded ? 'bi-chevron-up' : 'bi-chevron-down'}`}></i>
-                            </button>
+                            {item.children && item.children.length > 0 ? (
+                                <button className="expand-btn" onClick={() => toggleExpand(item.id)}>
+                                    <i className={`bi ${item.expanded ? 'bi-chevron-up' : 'bi-chevron-down'}`}></i>
+                                </button>
+                            ) : (
+                                <button className="expand-btn" style={{ visibility: 'hidden' }}>
+                                    <i className="bi bi-chevron-down"></i>
+                                </button>
+                            )}
                             <div className="text-content">
                                 <div className="title" title={item.title}>{item.title}</div>
                                 <div className="subtitle">{item.subtitle}</div>
                             </div>
                             <i className="bi bi-info-circle info-icon"></i>
                         </div>
-                        
+
                         {item.overlaps > 0 && (
                             <div className="overlaps-badge-wrapper" style={{ paddingLeft: '19px' }}>
                                 <div className="overlaps-badge">
@@ -669,7 +209,7 @@ const Defend = ({ showOverlaps }) => {
                 {item.children && item.children.length > 0 && (
                     <div className={`children-container ${item.expanded ? 'expanded' : ''}`}>
                         <div className="children-inner">
-                            {item.children.map((child, idx) => 
+                            {item.children.map((child, idx) =>
                                 renderItem(child, indent + 1, idx === item.children.length - 1 ? 'L' : 'T')
                             )}
                         </div>
@@ -681,75 +221,121 @@ const Defend = ({ showOverlaps }) => {
 
     return (
         <>
-            {/* Threat Actors Section */}
+            {/* Malware Selector Section */}
             <div className="threat-actors-section mb-4">
                 <div className="d-flex align-items-center">
-                    <span className="section-title">THREAT ACTORS :</span>
-                    <span className="selected-badge">{selectedActors.length} Selected</span>
+                    <span className="section-title">MALWARE :</span>
+                    <span className="selected-badge">{selectedMalware.length} Selected</span>
                     <button className="btn clear-all-btn ms-auto d-flex align-items-center gap-1" onClick={handleClearOrSelectAll}>
-                        {selectedActors.length > 0 ? 'Clear all' : 'Select all'} <i className="bi bi-x"></i>
+                        {selectedMalware.length > 0 ? 'Clear all' : 'Select all'} <i className="bi bi-x"></i>
                     </button>
                 </div>
                 <div className="d-flex align-items-center justify-content-between gap-3 mt-3">
                     <div className="pills-container m-0 mt-0">
-                        {threatActors.map((actor, idx) => {
-                            const isSelected = selectedActors.includes(actor.id);
+                        {threatlist.map((malware, idx) => {
+                            const malwareKey = malware.actor_id ?? malware.id;
+                            const isSelected = selectedMalware.includes(malware.id) || (malware.actor_id !== undefined && selectedMalware.includes(malware.actor_id));
                             return (
-                                <div 
-                                    key={actor.id} 
+                                <div
+                                    key={malware.id ?? malware.actor_id ?? idx}
                                     className={`actor-pill cursor-pointer ${isSelected ? 'active' : ''}`}
-                                    onClick={() => handleToggleActor(actor.id)}
+                                    onClick={() => handleToggleMalware(malwareKey)}
                                 >
-                                    <div className="dot" style={{ backgroundColor: idx === 0 || idx === 3 ? '#3b82f6' : '#5200ff' }}></div>
-                                    {actor.name}
+                                    <div className="dot" style={{ backgroundColor: idx % 2 === 0 ? '#3b82f6' : '#5200ff' }}></div>
+                                    <span>{malware.name}</span>
                                     <i className={`bi ${isSelected ? 'bi-check-square-fill' : 'bi-square text-muted'}`}></i>
-                                </div>
-                            );
-                        })}
-                    </div>
-                    <button className="btn show-btn text-white px-4 py-2 flex-shrink-0" style={{ backgroundColor: '#5200ff', borderRadius: '10px', fontSize: '13px', fontWeight: 600, border: 'none', boxShadow: '0 2px 6px rgba(82, 0, 255, 0.2)' }}>
-                        Show
-                    </button>
-                </div>
-            </div>
-
-            <div className="mitigation-view-container flex-grow-1 d-flex flex-column overflow-hidden mx-4 mb-4">
-                <div className="mitigation-view-card d-flex flex-column flex-grow-1 bg-white mb-3">
-                    <div className="table-responsive flex-grow-1 m-0 d-flex d3fend-matrix-scroll">
-                        {tacticsData.map(tactic => {
-                            return (
-                                <div key={tactic.id} className="tactic-group d-flex flex-column">
-                                    <div className="tactic-group-header" onClick={() => toggleTactic(tactic.id)}>
-                                        <button className="tactic-toggle-btn" type="button">
-                                            <i className={`bi ${tactic.expanded ? 'bi-dash' : 'bi-plus'}`}></i>
-                                        </button>
-                                        <span className="tactic-name">{tactic.name}</span>
-                                    </div>
-
-                                    {tactic.expanded && (
-                                        <div className="tactic-columns d-flex flex-grow-1">
-                                            {tactic.columns.map((col, colIndex) => {
-                                                const displayedItems = showOverlaps ? filterOverlaps(col.items) : col.items;
-                                                return (
-                                                    <div key={colIndex} className="mitigation-col d-flex flex-column">
-                                                        <div className="col-header">
-                                                            {col.name}
-                                                        </div>
-                                                        <div className="col-body d-flex flex-column">
-                                                            {displayedItems.map(item => renderItem(item, 0, null))}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
+                                    {onRemoveMalware && (
+                                        <i
+                                            className="bi bi-x chip-close-icon ms-1"
+                                            title="Remove malware"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onRemoveMalware(malwareKey);
+                                            }}
+                                        ></i>
                                     )}
                                 </div>
                             );
                         })}
                     </div>
+                    <button
+                        type="button"
+                        className="btn show-btn text-white px-4 py-2 flex-shrink-0 d-flex align-items-center gap-2"
+                        style={{
+                            backgroundColor: '#5200ff',
+                            borderRadius: '10px',
+                            fontSize: '13px',
+                            fontWeight: 600,
+                            border: 'none',
+                            boxShadow: '0 2px 6px rgba(82, 0, 255, 0.2)',
+                            cursor: isLoader ? 'not-allowed' : 'pointer',
+                            opacity: isLoader ? 0.75 : 1
+                        }}
+                        onClick={onShow}
+                        disabled={isLoader}
+                    >
+                        {isLoader && (
+                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        )}
+                        <span>Show</span>
+                    </button>
+                </div>
+                {formikError && (
+                    <div className="text-danger mt-1 ms-1" style={{ fontSize: '12px' }}>
+                        {formikError}
+                    </div>
+                )}
+            </div>
+
+            <div className="mitigation-view-container flex-grow-1 d-flex flex-column overflow-hidden mx-4 mb-4">
+                <div className="mitigation-view-card d-flex flex-column flex-grow-1 bg-white mb-3">
+                    <div className="table-responsive flex-grow-1 m-0 d-flex d3fend-matrix-scroll">
+                        {isLoader ? (
+                            <div className="d-flex justify-content-center align-items-center w-100 py-5">
+                                <div className="spinner-border text-primary" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        ) : tacticsData.length === 0 ? (
+                            <div className="d-flex justify-content-center align-items-center w-100 py-5 text-muted">
+                                No D3FEND tactics data available.
+                            </div>
+                        ) : (
+                            tacticsData.map(tactic => {
+                                return (
+                                    <div key={tactic.id} className="tactic-group d-flex flex-column">
+                                        <div className="tactic-group-header" onClick={() => toggleTactic(tactic.id)}>
+                                            <button className="tactic-toggle-btn" type="button">
+                                                <i className={`bi ${tactic.expanded ? 'bi-dash' : 'bi-plus'}`}></i>
+                                            </button>
+                                            <span className="tactic-name">{tactic.name}</span>
+                                        </div>
+
+                                        {tactic.expanded && (
+                                            <div className="tactic-columns d-flex flex-grow-1">
+                                                {tactic.columns.map((col, colIndex) => {
+                                                    const displayedItems = showOverlaps ? filterOverlaps(col.items) : col.items;
+                                                    return (
+                                                        <div key={colIndex} className="mitigation-col d-flex flex-column">
+                                                            <div className="col-header">
+                                                                {col.name}
+                                                            </div>
+                                                            <div className="col-body d-flex flex-column">
+                                                                {displayedItems.map(item => renderItem(item, 0, null))}
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })
+                        )}
+                    </div>
                 </div>
 
-           
+
             </div>
         </>
     );
