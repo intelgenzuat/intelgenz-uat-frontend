@@ -367,11 +367,19 @@ const Mitigationttpview = () => {
                     <div className="mitigation-ttp-view d-flex flex-column">
 
                         {/* Breadcrumb */}
-                        <div className="breadcrumb-nav text-muted" style={{ fontSize: '14px' }}>
+                        <div className="breadcrumb-nav text-muted d-flex align-items-center" style={{ fontSize: '14px' }}>
                             <FiHome className="home-icon me-2" />
                             <span onClick={() => Navigate('/')} style={{ cursor: 'pointer' }}>Home</span>
                             <span className="mx-2 text-black-50">/</span>
                             <span style={{ cursor: 'pointer' }}>Threat Actor</span>
+                            {activeViewTab && (
+                                <>
+                                    <span className="mx-2 text-black-50">/</span>
+                                    <span className="text-dark fw-medium">
+                                        {viewTabs.find(t => t.key === activeViewTab)?.label || activeViewTab}
+                                    </span>
+                                </>
+                            )}
                         </div>
 
                         {/* Search and Controls Header */}
