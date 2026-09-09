@@ -1379,6 +1379,19 @@
         .table-responsive {
           border-color: #334155 !important;
           background-color: #0b0f19 !important;
+          scrollbar-color: #475569 #0f172a;
+
+          &::-webkit-scrollbar-track {
+            background: #0f172a !important;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background: #475569 !important;
+
+            &:hover {
+              background: #64748b !important;
+            }
+          }
 
           .mapping-table {
             th {
@@ -1481,6 +1494,20 @@
       }
 
       .table-responsive {
+        scrollbar-color: #475569 #0f172a;
+
+        &::-webkit-scrollbar-track {
+          background: #0f172a !important;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: #475569 !important;
+
+          &:hover {
+            background: #64748b !important;
+          }
+        }
+
         .mitigation-col {
           border-right-color: #334155 !important;
 

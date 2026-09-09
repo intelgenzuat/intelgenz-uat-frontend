@@ -109,7 +109,7 @@ export default function ThreatActorsidebar({ collapsed }) {
                             </div>
 
                             {!collapsed && (
-                                <span className="nav-label">View in Knowledge Graph</span>
+                                <span className="nav-label">Neura View</span>
                             )}
                         </li>
                     </ul>

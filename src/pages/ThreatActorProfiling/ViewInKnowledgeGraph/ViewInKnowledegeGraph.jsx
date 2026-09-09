@@ -826,7 +826,7 @@ const ViewInKnowledgeGraph = () => {
                         <span className="mx-2 text-black-50">/</span>
                         <span onClick={() => navigate(parentPath)} style={{ cursor: 'pointer' }}>{parentName}</span>
                         <span className="mx-2 text-black-50">/</span>
-                        <span className="text-dark fw-medium">View in Knowledge Graph</span>
+                        <span className="text-dark fw-medium">Neura View</span>
                     </div>
 
                     {/* Page Heading & Top Right Options */}

@@ -207,6 +207,7 @@ const Mitigationttpview = () => {
     const handleClearOrSelectAll = () => {
         setthreatlist([]);
         setSelectedMalware([]);
+        setthreatData([]);
         try {
             localStorage.removeItem('selected_threat');
             localStorage.removeItem('selected_threat_ids');
@@ -220,6 +221,9 @@ const Mitigationttpview = () => {
         const updatedSelected = selectedMalware.filter((id) => id !== threatId);
         setthreatlist(updatedList);
         setSelectedMalware(updatedSelected);
+        if (updatedList.length === 0) {
+            setthreatData([]);
+        }
         try {
             localStorage.setItem('selected_threat', JSON.stringify(updatedList));
             localStorage.setItem('selected_threat_ids', JSON.stringify(updatedSelected));
