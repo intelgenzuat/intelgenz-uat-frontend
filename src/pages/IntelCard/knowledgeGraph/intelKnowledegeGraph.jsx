@@ -194,6 +194,7 @@ const intelKnowledegeGraph = () => {
     const [malwareList, setMalwareList] = useState([]);
     const [isMalwareLoading, setIsMalwareLoading] = useState(false);
     const [selectedMalwareValues, setSelectedMalwareValues] = useState([]);
+    const [selectedEntityType, setSelectedEntityType] = useState("malware");
     const [graphTags, setGraphTags] = useState([]);
     const [activeTagId, setActiveTagId] = useState(null);
 
@@ -202,7 +203,7 @@ const intelKnowledegeGraph = () => {
     const [focusedNodeId, setFocusedNodeId] = useState(null);
 
     // Filter & View Options
-    const [showAllConnections, setShowAllConnections] = useState(true);
+    const [showKeyRelationships, setShowKeyRelationships] = useState(false);
     const [selectedConnectionTypes, setSelectedConnectionTypes] = useState(new Set());
     const [isConnectionDrawerOpen, setIsConnectionDrawerOpen] = useState(false);
     const [filterSearchTerm, setFilterSearchTerm] = useState("");
@@ -512,7 +513,7 @@ const intelKnowledegeGraph = () => {
             (edge) => (edge.source === centerId || edge.target === centerId) && activeTypes.has(edge.type)
         );
 
-        if (!showAllConnections) {
+        if (showKeyRelationships) {
             const important = directEdges.filter((e) => IMPORTANT_RELATIONSHIPS.has(e.type));
             if (important.length > 0) {
                 directEdges = important;
@@ -539,7 +540,7 @@ const intelKnowledegeGraph = () => {
         const visibleNodes = unifiedGraph.nodes.filter((n) => visibleNodeIds.has(n.id));
 
         return { nodes: visibleNodes, edges: visibleEdges, centerId };
-    }, [unifiedGraph, selectedConnectionTypes, showAllConnections, activeTagId, focusedNodeId, graphTags]);
+    }, [unifiedGraph, selectedConnectionTypes, showKeyRelationships, activeTagId, focusedNodeId, graphTags]);
 
     // 6. Force-directed physics layout with smooth animation
     const [animatedNodes, setAnimatedNodes] = useState([]);
@@ -848,27 +849,16 @@ const intelKnowledegeGraph = () => {
                         {/* Right: Picker Row */}
                         <div className="picker-row d-flex align-items-end gap-3 flex-wrap">
                             <div className="picker-group">
-                                {/* <label htmlFor="malware-select" className="picker-label">
-                                    Malware in knowledge graph
-                                </label> */}
                                 <div className="select-wrapper">
-                                    <Select
-                                        inputId="malware-select"
-                                        isMulti
-                                        options={malwareSelectOptions}
-                                        value={selectedMalwareSelectValue}
-                                        onChange={handleMalwareSelectChange}
-                                        isDisabled={isMalwareLoading}
-                                        isLoading={isMalwareLoading}
-                                        placeholder={isMalwareLoading ? "Loading malware…" : "Choose malware to explore…"}
-                                        closeMenuOnSelect={false}
-                                        isClearable
-                                        isSearchable
-                                        styles={reactSelectStyles}
-                                        noOptionsMessage={() => "No malware found"}
-                                        className="malware-react-select"
-                                        classNamePrefix="malware-rs"
-                                    />
+                                    <select
+                                        className="form-select entity-dropdown-select"
+                                        value={selectedEntityType}
+                                        onChange={(e) => setSelectedEntityType(e.target.value)}
+                                    >
+                                        <option value="malware">Malware</option>
+                                        <option value="threatactor">Threat Actor</option>
+                                        <option value="campaign">Campaign</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -878,8 +868,7 @@ const intelKnowledegeGraph = () => {
                                 className={`btn-kg-action btn-toggle-connections ${isConnectionDrawerOpen ? "active" : ""}`}
                                 onClick={() => setIsConnectionDrawerOpen(true)}
                             >
-                                <FiKey className="icon-btn" />
-                                Key Connections
+                                Relationships
                             </button>
                         </div>
                     </div>
@@ -887,6 +876,31 @@ const intelKnowledegeGraph = () => {
 
                 {/* ================= ENTITY QUERY & MALWARE SELECTOR SECTION ================= */}
                 <div className="entity-query-section-white mt-3">
+                    {/* Malware Select Row */}
+                    <div className="picker-row d-flex align-items-center gap-3 flex-wrap mb-2">
+                        <div className="picker-group">
+                            <div className="select-wrapper">
+                                <Select
+                                    inputId="malware-select"
+                                    isMulti
+                                    options={malwareSelectOptions}
+                                    value={selectedMalwareSelectValue}
+                                    onChange={handleMalwareSelectChange}
+                                    isDisabled={isMalwareLoading}
+                                    isLoading={isMalwareLoading}
+                                    placeholder={isMalwareLoading ? "Loading malware…" : "Choose malware to explore…"}
+                                    closeMenuOnSelect={false}
+                                    isClearable
+                                    isSearchable
+                                    styles={reactSelectStyles}
+                                    noOptionsMessage={() => "No malware found"}
+                                    className="malware-react-select"
+                                    classNamePrefix="malware-rs"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Selected Entity Chips / Tags */}
                     {graphTags.length > 0 && (
                         <div className="selected-chips-container" aria-label="Selected entity chips">
@@ -1228,8 +1242,7 @@ const intelKnowledegeGraph = () => {
                 <div className="connection-filters-drawer" onClick={(e) => e.stopPropagation()}>
                     <div className="drawer-header d-flex justify-content-between align-items-center">
                         <div className="d-flex align-items-center gap-2">
-                            <FiKey className="text-primary" style={{ fontSize: '18px' }} />
-                            <h5 className="drawer-title mb-0">Key Connections</h5>
+                            <h5 className="drawer-title mb-0">Relationships</h5>
                         </div>
                         <div className="d-flex align-items-center gap-2">
                             <span className="filters-count-badge">
@@ -1250,23 +1263,35 @@ const intelKnowledegeGraph = () => {
                             Choose one or more relationship types to display in the knowledge graph.
                         </p>
 
-                        <div className="d-flex align-items-center gap-2 mb-3">
-                            <button
-                                type="button"
-                                className="btn-filter-pill"
-                                onClick={handleSelectAllConnections}
-                                disabled={availableRelationshipTypes.length === 0}
-                            >
-                                Select all
-                            </button>
-                            <button
-                                type="button"
-                                className="btn-filter-pill"
-                                onClick={handleUnselectAllConnections}
-                                disabled={availableRelationshipTypes.length === 0}
-                            >
-                                Unselect all
-                            </button>
+                        <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                            <div className="d-flex align-items-center gap-2">
+                                <button
+                                    type="button"
+                                    className="btn-filter-pill"
+                                    onClick={handleSelectAllConnections}
+                                    disabled={availableRelationshipTypes.length === 0}
+                                >
+                                    Select all
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn-filter-pill"
+                                    onClick={handleUnselectAllConnections}
+                                    disabled={availableRelationshipTypes.length === 0}
+                                >
+                                    Unselect all
+                                </button>
+                            </div>
+
+                            <label className="d-flex align-items-center gap-2 mb-0" style={{ cursor: 'pointer', fontSize: '13px', fontWeight: '500', color: '#334155', userSelect: 'none' }}>
+                                <input
+                                    type="checkbox"
+                                    checked={showKeyRelationships}
+                                    onChange={(e) => setShowKeyRelationships(e.target.checked)}
+                                    style={{ cursor: 'pointer', width: '15px', height: '15px', accentColor: '#2563eb' }}
+                                />
+                                <span>Show key relationships</span>
+                            </label>
                         </div>
 
                         {/* Checkbox Options List */}

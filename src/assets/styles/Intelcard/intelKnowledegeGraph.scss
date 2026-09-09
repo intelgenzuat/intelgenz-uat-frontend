@@ -124,6 +124,34 @@
           max-width: 320px;
         }
 
+        .malware-dropdown-select,
+        .entity-dropdown-select {
+          width: 100%;
+          height: 38px;
+          padding: 0 12px;
+          border-radius: 8px;
+          border: 1px solid #cbd5e1;
+          background-color: #f8fafc;
+          color: #0f172a;
+          font-size: 13.5px;
+          font-weight: 500;
+          outline: none;
+          transition: all 0.2s ease;
+          cursor: pointer;
+
+          &:focus {
+            border-color: #3b82f6;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+          }
+
+          &:disabled {
+            background-color: #f1f5f9;
+            color: #94a3b8;
+            cursor: not-allowed;
+          }
+        }
+
         .malware-react-select,
         .malware-react-select.css-b62m3t-container,
         .css-b62m3t-container {
@@ -330,7 +358,8 @@
         margin-bottom: 0;
       }
 
-      .malware-dropdown-select {
+      .malware-dropdown-select,
+      .entity-dropdown-select {
         width: 100%;
         height: 38px;
         padding: 0 12px;
