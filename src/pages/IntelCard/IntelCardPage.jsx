@@ -8,6 +8,7 @@ import FloatingChatButtons from '../../components/Buttons/FloatingChatButtons';
 import { IoFilterSharp } from 'react-icons/io5';
 import { useLocation, useOutletContext, Outlet } from 'react-router-dom';
 import IntelTopcontent from './IntelTopcontent';
+import Pagination from '../../components/pagination/Pagination';
 
 export default function IntelCardPage() {
   const location = useLocation();
@@ -157,29 +158,7 @@ export default function IntelCardPage() {
             </div>
           )}
 
-          {!isKnowledgeGraph && (
-            <div className="intelcard-pagination-wrapper">
-              <div className="intelcard-pagination-container shadow-sm">
-                <span className="intelcard-pagination-info">01-09 of 120</span>
-                <div className="intelcard-pagination-controls">
-                  <button className="intelcard-pagination-btn"><i className="bi bi-chevron-left"></i></button>
-                  <button className="intelcard-pagination-btn active">1</button>
-                  <button className="btn btn-sm btn-light bg-transparent border-0 text-secondary">2</button>
-                  <button className="btn btn-sm btn-light bg-transparent border-0 text-secondary">3</button>
-                  <button className="btn btn-sm btn-light bg-transparent border-0 text-secondary">4</button>
-                  <button className="btn btn-sm btn-light bg-transparent border-0 text-secondary">5</button>
-                  <span className="intelcard-pagination-ellipsis">...</span>
-                  <button className="btn btn-sm btn-light bg-transparent border-0 text-secondary">20</button>
-                  <button className="intelcard-pagination-btn"><i className="bi bi-chevron-right"></i></button>
-                </div>
-                <div className="intelcard-pagination-page-jump">
-                  <span>Page</span>
-                  <input type="text" className="intelcard-pagination-input" defaultValue="101" />
-                  <button className="intelcard-pagination-go-btn">Go</button>
-                </div>
-              </div>
-            </div>
-          )}
+          {!isKnowledgeGraph && <Pagination />}
         </div>
 
         {/* Floating Chat Button (Bottom-Right) */}
