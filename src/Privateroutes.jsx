@@ -92,7 +92,9 @@ const Privateroutes = () => {
                             <Route exact path={viewinKnowlegdeGraph} element={<ViewinKnowledgegrap noFooter />}></Route>
                         </Route>
                         <Route exact path={IntelCardDetails} element={<IntelcardMalwareDetailNew noFooter />}></Route>
+                        <Route exact path="/intel-card-details" element={<IntelcardMalwareDetailNew noFooter />}></Route>
                         <Route exact path={IntelCardThreatDetails} element={<IntelcardThreatActorDetailNew noFooter />}></Route>
+                        <Route exact path="/intel-card-threat-details" element={<IntelcardThreatActorDetailNew noFooter />}></Route>
                         <Route exact path={BlogsandNews} element={<BlogsandNewsPage noFooter />}></Route>
                         <Route exact path={blogsnewslist} element={<AdminRoute><BlogsnewsList noFooter /></AdminRoute>}></Route>
                         <Route exact path={blogsnewsedit} element={<AdminRoute><BlogsnewsEditpage noFooter /></AdminRoute>}></Route>

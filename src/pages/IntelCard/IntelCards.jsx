@@ -267,7 +267,7 @@ function IntelCard({ threatData }) {
         {/* Bottom Section */}
         <div className="mt-auto d-flex justify-content-center position-relative w-100 align-items-center pb-1" style={{ zIndex: 1 }}>
           <button
-            onClick={() => navigate('/intel-card-threat-details')}
+            onClick={() => navigate(`/intel-card-threat-details/${threatData?.actor_id}`)}
             className="btn rounded-pill text-white px-4 py-1 d-flex align-items-center position-relative"
             style={{ background: "linear-gradient(90deg, #4c0a829c 0%, #95051e85 50%, #e60026bb 100%)", fontSize: '12px', fontWeight: '500', transition: 'background-color 0.2s', border: 'none', zIndex: 2 }}
 
@@ -314,46 +314,27 @@ export default function IntelCards() {
   const [threatData, setThreatData] = useState([]);
   const [page, setPage] = useState(1);
 
-  const getThreatCardData = () => {
-    setLoading(true);
-    try {
-      getThreatCard({})(response => {
-        console.log(response, "res");
-        if (response && response.status && response?.data?.data?.results) {
-          setCardData(response?.data);
-          setLoading(false);
-        } else {
-          setCardData({ data: { results: MOCK_CARDS } });
-          setLoading(false);
-        }
-      });
-    } catch (error) {
-      console.error("Error calling getThreatCard API:", error);
-      setCardData({ data: { results: MOCK_CARDS } });
-      setLoading(false);
-    }
-  };
-
   const getThreatIntelCardListData = (pageNo = page) => {
+    setLoading(true);
     getTheatreIntelCardsList({ page: pageNo })((response) => {
       console.log("threatIntelCards", response);
       if (response) {
         setThreatData(response);
       }
+      setLoading(false);
     });
   };
 
   useEffect(() => {
-    // getThreatCardData();
     getThreatIntelCardListData();
   }, []);
 
-  console.log("ThreatData", threatData)
+  console.log("ThreatData", threatData);
   return (
     <div className="intelcard-cards-scroll-area px-3 w-100">
       {loading ? (
-        <div className="intelcard-spinner-container d-flex justify-content-center align-items-center py-5">
-          <div className="intelcard-spinner-border spinner-border text-primary" role="status">
+        <div className="intelcard-spinner-container d-flex justify-content-center align-items-center py-5" style={{ minHeight: '300px' }}>
+          <div className="intelcard-spinner-border spinner-border text-primary" role="status" style={{ width: '2.5rem', height: '2.5rem' }}>
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>

@@ -26,17 +26,9 @@ export const getMalwareIntelCardsList = (props) => onResponse => {
 
 export const getMalwareIntelCardDetailedView = (props) => onResponse => {
     try {
-        let BASE_URL = `${GET_MALWARE_INTEL_CARDS_DETAILS}?`;
-
-        if (props?.query) {
-            BASE_URL += 'query=' + props?.query + '&'
-        }
-        if (props?.limit) {
-            BASE_URL += 'limit=' + props?.limit;
-        }
-        if (props?.page) {
-            BASE_URL += 'page=' + props?.page;
-        }
+        let BASE_URL = props?.id
+            ? `${GET_MALWARE_INTEL_CARDS_DETAILS}/${props?.id}`
+            : `${GET_MALWARE_INTEL_CARDS_DETAILS}`;
 
         axiosInstance.get(BASE_URL)
             .then((response) => {
@@ -81,17 +73,9 @@ export const getTheatreIntelCardsList = (props) => onResponse => {
 
 export const getTheatreIntelCardDetailedView = (props) => onResponse => {
     try {
-        let BASE_URL = `${GET_THEATRE_INTEL_CARDS_DETAILS}?`;
-
-        if (props?.query) {
-            BASE_URL += 'query=' + props?.query + '&'
-        }
-        if (props?.limit) {
-            BASE_URL += 'limit=' + props?.limit;
-        }
-        if (props?.page) {
-            BASE_URL += 'page=' + props?.page;
-        }
+        let BASE_URL = props?.id || props?.actor_id
+            ? `${GET_THEATRE_INTEL_CARDS_DETAILS}/${props?.id || props?.actor_id}`
+            : `${GET_THEATRE_INTEL_CARDS_DETAILS}`;
 
         axiosInstance.get(BASE_URL)
             .then((response) => {

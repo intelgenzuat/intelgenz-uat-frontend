@@ -11,7 +11,7 @@ export default function Layout({ noFooter, showAdminSidebar }) {
 
   const location = useLocation();
   const hideFooterRoutes = [View, Viewreport, mitigationttpview, Malwaremitigationttpview, IntelCard, IntelCardDetails, ThreatActorprofile, IntelCardMalware, IntelCardThreatDetails, viewinKnowlegdeGraph, IntelviewinKnowlegdeGraph];
-  const shouldHideFooter = noFooter || hideFooterRoutes.includes(location.pathname);
+  const shouldHideFooter = noFooter || hideFooterRoutes.includes(location.pathname) || location.pathname.startsWith('/intel-card-threat-details') || location.pathname.startsWith('/intel-card-details');
   
   const isScrollableInner = location.pathname === '/' || location.pathname === BlogsandNews || location.pathname === blogsnewslist;
 
