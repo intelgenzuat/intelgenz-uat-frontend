@@ -5,302 +5,6 @@ import ThreatModal from './ThreatModal';
 import './Threat.scss';
 import { getRadarData } from '../../../Context/Radar';
 
-const threatActorsData = [
-  { subject: '01', A: 60, B: 110, C: 140, fullMark: 150 },
-  { subject: '02', A: 0, B: 120, C: 130, fullMark: 150 },
-  { subject: '03', A: 50, B: 90, C: 115, fullMark: 150 },
-  { subject: '04', A: 0, B: 80, C: 0, fullMark: 150 },
-  { subject: '05', A: 60, B: 0, C: 0, fullMark: 150 },
-  { subject: '06', A: 0, B: 0, C: 0, fullMark: 150 },
-  { subject: '07', A: 0, B: 0, C: 0, fullMark: 150 },
-  { subject: '08', A: 0, B: 0, C: 0, fullMark: 150 },
-  { subject: '09', A: 70, B: 110, C: 130, fullMark: 150 },
-  { subject: '10', A: 50, B: 100, C: 130, fullMark: 150 },
-];
-
-// Complete threat actor dataset with cyber intelligence details
-export const threatActorsList = [
-  // Around You (Critical Proximity)
-  {
-    id: 'TA-DL-01',
-    name: 'DarkLock',
-    category: 'Around You',
-    index: 0,
-    dataKey: 'A',
-    value: 60,
-    focusLevel: 0, // Critical
-    riskLevel: 'Critical',
-    threatScore: '4.9',
-    sector: 'BFSI / Core Banking',
-    origin: 'Eastern Europe / Regional',
-    techFocus: 'Ransomware-as-a-Service, Double Extortion, AD Exploitation',
-    tactics: 'Ransomware / Data Exfiltration',
-    victims: 'Tier-1 Banks, Payment Processors, Regional Retail FinTech',
-    overlapAnalysis: 'Direct targeting of regional banking protocols and SWIFT interfaces.',
-  },
-  {
-    id: 'TA-ST-03',
-    name: 'Shadow Team',
-    category: 'Around You',
-    index: 2,
-    dataKey: 'A',
-    value: 50,
-    focusLevel: 0, // Critical
-    riskLevel: 'Critical',
-    threatScore: '4.8',
-    sector: 'Cloud Services & FinTech',
-    origin: 'Unknown / Distributed',
-    techFocus: 'Cloud API key abuse, OAuth compromise, AWS IAM privilege escalation',
-    tactics: 'Credential Access / Cloud Lateral',
-    victims: 'FinTech start-ups, payment gateway APIs, cloud-hosted ledgers',
-    overlapAnalysis: 'Direct footprint overlap with Meridian Azure/AWS multi-cloud stack.',
-  },
-  {
-    id: 'TA-PN-05',
-    name: 'PhishNet',
-    category: 'Around You',
-    index: 4,
-    dataKey: 'A',
-    value: 60,
-    focusLevel: 0, // Critical
-    riskLevel: 'High',
-    threatScore: '4.4',
-    sector: 'Corporate Banking & HR',
-    origin: 'Southeast Asia',
-    techFocus: 'Adversary-in-the-Middle (AiTM) phishing, session cookie hijacking',
-    tactics: 'Spear Phishing / MFA Bypass',
-    victims: 'Commercial banks, corporate executive offices, wealth advisory',
-    overlapAnalysis: 'Active campaign detected mimicking Meridian internal SSO portal.',
-  },
-  {
-    id: 'TA-SB-09',
-    name: 'StormBreak',
-    category: 'Around You',
-    index: 8,
-    dataKey: 'A',
-    value: 70,
-    focusLevel: 1, // High
-    riskLevel: 'Critical',
-    threatScore: '4.7',
-    sector: 'Gov & Defense BFSI',
-    origin: 'East Asia',
-    techFocus: 'VPN zero-days (Palo Alto, Fortinet), reverse tunneling, living-off-the-land',
-    tactics: 'Edge Device Exploit / Persistence',
-    victims: 'National treasuries, central banks, defense contractors',
-    overlapAnalysis: 'Matching perimeter VPN appliance versions discovered in threat feed.',
-  },
-  {
-    id: 'TA-AT-10',
-    name: 'AppTrap',
-    category: 'Around You',
-    index: 9,
-    dataKey: 'A',
-    value: 50,
-    focusLevel: 0, // Critical
-    riskLevel: 'High',
-    threatScore: '4.3',
-    sector: 'Mobile Banking & Wealth',
-    origin: 'South Asia',
-    techFocus: 'Mobile SDK trojanization, SMS interceptors, malicious mobile apps',
-    tactics: 'Supply Chain / Mobile Banking',
-    victims: 'Retail banking customers, wealth management mobile users',
-    overlapAnalysis: 'Consumer-facing mobile banking app package collision detected.',
-  },
-
-  // Away
-  {
-    id: 'TA-LZ-01',
-    name: 'Lazarus Group',
-    category: 'Away',
-    index: 0,
-    dataKey: 'B',
-    value: 110,
-    focusLevel: 2, // Moderate
-    riskLevel: 'Critical',
-    threatScore: '5.0',
-    sector: 'Cryptocurrency & SWIFT',
-    origin: 'East Asia',
-    techFocus: 'SWIFT Alliance Access malware, smart contract exploiters, AppleJeus',
-    tactics: 'State-Sponsored Cyber Heist',
-    victims: 'Central banks, crypto exchanges, cross-border payment switches',
-    overlapAnalysis: 'Historic targeting of Meridian SWIFT Alliance gateway vendor.',
-  },
-  {
-    id: 'TA-28-02',
-    name: 'APT28',
-    category: 'Away',
-    index: 1,
-    dataKey: 'B',
-    value: 120,
-    focusLevel: 3, // Low
-    riskLevel: 'Critical',
-    threatScore: '4.8',
-    sector: 'Defense, Gov & NATO',
-    origin: 'Eastern Europe',
-    techFocus: 'Microsoft Exchange CVEs, credential harvesting, GooseEgg privilege escalation',
-    tactics: 'Cyber Espionage / Zero-Day',
-    victims: 'Government agencies, European defense, foreign ministries',
-    overlapAnalysis: 'Moderate overlap on hybrid AD and Microsoft Exchange environment.',
-  },
-  {
-    id: 'TA-CG-03',
-    name: 'Cobalt Group',
-    category: 'Away',
-    index: 2,
-    dataKey: 'B',
-    value: 90,
-    focusLevel: 1, // High
-    riskLevel: 'High',
-    threatScore: '4.5',
-    sector: 'Financial & ATM Switches',
-    origin: 'Eastern Europe',
-    techFocus: 'Cobalt Strike customized beacons, ATM jackpotting, card processing switch injection',
-    tactics: 'ATM & Payment Switch Injection',
-    victims: 'Over 100 banks across 40 countries',
-    overlapAnalysis: 'Card switch vendor matches Cobalt Group standard deployment targets.',
-  },
-  {
-    id: 'TA-TR-04',
-    name: 'Turla',
-    category: 'Away',
-    index: 3,
-    dataKey: 'B',
-    value: 80,
-    focusLevel: 1, // High
-    riskLevel: 'High',
-    threatScore: '4.4',
-    sector: 'Diplomatic & Satellite',
-    origin: 'Eastern Europe',
-    techFocus: 'Satellite IP hijacking, Snake rootkit, watering-hole attacks',
-    tactics: 'Stealth C2 / Watering Hole',
-    victims: 'Embassies, international financial standard bodies, energy firms',
-    overlapAnalysis: 'Low geographic overlap; active reconnaissance observed on public ASN.',
-  },
-  {
-    id: 'TA-F7-09',
-    name: 'FIN7',
-    category: 'Away',
-    index: 8,
-    dataKey: 'B',
-    value: 110,
-    focusLevel: 2, // Moderate
-    riskLevel: 'Critical',
-    threatScore: '4.6',
-    sector: 'Payment Processing & BFSI',
-    origin: 'Eastern Europe / Global',
-    techFocus: 'Carbanak malware, BadUSB keystroke injectors, POS memory scrapers',
-    tactics: 'POS Malware / Credit Interception',
-    victims: 'Heartland Payment Systems, 250+ financial institutions, hotel chains',
-    overlapAnalysis: 'Payment-processing technology-family overlap with card-management estate.',
-  },
-  {
-    id: 'TA-41-10',
-    name: 'APT41',
-    category: 'Away',
-    index: 9,
-    dataKey: 'B',
-    value: 100,
-    focusLevel: 2, // Moderate
-    riskLevel: 'Critical',
-    threatScore: '4.7',
-    sector: 'Healthcare, Telecom & Tech',
-    origin: 'East Asia',
-    techFocus: 'Dual espionage/financial, web shells, supply chain backdoors (ShadowPad)',
-    tactics: 'Supply Chain / Dual Operation',
-    victims: 'Telecommunications, major software vendors, healthcare networks',
-    overlapAnalysis: 'Shared third-party software supply chain risk identified.',
-  },
-
-  // Global
-  {
-    id: 'TA-SW-01',
-    name: 'Sandworm',
-    category: 'Global',
-    index: 0,
-    dataKey: 'C',
-    value: 140,
-    focusLevel: 4, // Minimal
-    riskLevel: 'Critical',
-    threatScore: '4.9',
-    sector: 'Energy, Grid & Logistics',
-    origin: 'Eastern Europe',
-    techFocus: 'BlackEnergy, Industroyer2, wipers (CaddyWiper, HermeticWiper)',
-    tactics: 'Critical Infra Sabotage',
-    victims: 'National power grids, railway networks, government ministries',
-    overlapAnalysis: 'Broad infrastructure disruption risk; no direct banking protocol overlap.',
-  },
-  {
-    id: 'TA-KM-02',
-    name: 'Kimsuky',
-    category: 'Global',
-    index: 1,
-    dataKey: 'C',
-    value: 130,
-    focusLevel: 3, // Low
-    riskLevel: 'Moderate',
-    threatScore: '4.0',
-    sector: 'Foreign Policy & Think Tanks',
-    origin: 'East Asia',
-    techFocus: 'BabyShark, GoldDragon, browser extension hijacking, spear phishing',
-    tactics: 'Intelligence Gathering',
-    victims: 'Academic institutes, policy centers, defense analysts',
-    overlapAnalysis: 'Low direct relevance to core banking transactions.',
-  },
-  {
-    id: 'TA-GB-03',
-    name: 'Gh0stBins',
-    category: 'Global',
-    index: 2,
-    dataKey: 'C',
-    value: 115,
-    focusLevel: 2, // Moderate
-    riskLevel: 'Moderate',
-    threatScore: '3.8',
-    sector: 'Telecom & ISP Infrastructure',
-    origin: 'Global / Multi-National',
-    techFocus: 'Gh0st RAT variants, DNS tunneling, paste site C2 communication',
-    tactics: 'Botnet & C2 Hosting',
-    victims: 'Internet Service Providers, enterprise perimeter proxies',
-    overlapAnalysis: 'ISP upstream infrastructure transit monitoring detected.',
-  },
-  {
-    id: 'TA-CK-09',
-    name: 'Charming Kitten',
-    category: 'Global',
-    index: 8,
-    dataKey: 'C',
-    value: 130,
-    focusLevel: 3, // Low
-    riskLevel: 'Moderate',
-    threatScore: '3.7',
-    sector: 'Media, NGO & Dissidents',
-    origin: 'Middle East',
-    techFocus: 'Hyperscrape data extraction, WhatsApp social engineering, password spraying',
-    tactics: 'Account Takeover / Espionage',
-    victims: 'Human rights organizations, media outlets, diplomatic missions',
-    overlapAnalysis: 'Minimal overlap with financial systems; monitored for brand abuse.',
-  },
-  {
-    id: 'TA-MP-10',
-    name: 'Mustang Panda',
-    category: 'Global',
-    index: 9,
-    dataKey: 'C',
-    value: 130,
-    focusLevel: 3, // Low
-    riskLevel: 'Moderate',
-    threatScore: '3.9',
-    sector: 'Gov & Southeast Asia Diplomacy',
-    origin: 'East Asia',
-    techFocus: 'PlugX malware, USB spreading worms, malicious LNK attachments',
-    tactics: 'Regional Espionage',
-    victims: 'ASEAN member state ministries, European foreign affairs',
-    overlapAnalysis: 'Regional operations in Singapore and APAC subsidiaries flagged for monitoring.',
-  },
-];
-const clientName = "CERELYN BIOPHARMA";
-const severitylabel = "high";
-
 const RenderDot = (props) => {
   const { cx, cy, value, index, OriginalDot, category, onHover, onLeave, onClick } = props;
   if (!value) return null;
@@ -324,31 +28,42 @@ export default function Threat() {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [selectedRadius, setSelectedRadius] = useState('0+');
+  const [selectedSeverity, setSelectedSeverity] = useState('Critical');
+  const [clientName, setClientName] = useState('CERELYN BIOPHARMA');
   const [chartRadius, setChartRadius] = useState(130);
   const [hoveredActor, setHoveredActor] = useState(null);
-  const [categoryFilter, setCategoryFilter] = useState('ALL');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [data, setData] = useState('');
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // ResizeObserver for responsive radar sizing
-
-  const getRadarDatalist = (query = clientName, severity = severitylabel) => {
+  // Fetch Radar data from API
+  const getRadarDatalist = (query = clientName, severity = selectedSeverity) => {
     setLoading(true);
-    getRadarData({ client_name: query, severity: severity })((response) => {
-      console.log("radarres", response);
-      // getRadarData already passes response.data (the payload) — not the full axios response
+    const params = { client_name: query };
+    const sevMap = {
+      Critical: 'high',
+      High: 'high',
+      Moderate: 'moderate',
+      Low: 'low',
+      Minimal: 'minimal',
+    };
+    const apiSev = sevMap[severity] || (severity ? severity.toLowerCase() : 'high');
+    if (apiSev) {
+      params.severity = apiSev;
+    }
+    getRadarData(params)((response) => {
+      console.log('radarres', response);
       if (response) {
         setData(response);
       }
       setLoading(false);
     });
   };
-  useEffect(() => {
-    getRadarDatalist()
-  }, [])
-  console.log("radardata : ", data)
 
+  useEffect(() => {
+    getRadarDatalist(clientName, 'Critical');
+  }, []);
+
+  // ResizeObserver for responsive radar sizing
   useEffect(() => {
     if (!containerRef.current) return;
     const updateRadius = () => {
@@ -367,25 +82,61 @@ export default function Threat() {
     return () => resizeObserver.disconnect();
   }, []);
 
-  const getRadiusValue = (radiusKey, outerR) => {
-    const step = outerR / 5;
-    switch (radiusKey) {
-      case '0+':
-        return step * 1.5; // Critical proximity ring
-      case '1+':
-        return step * 2.5; // High ring
-      case '2+':
-        return step * 3.5; // Moderate ring
-      case '3+':
-        return step * 4.4; // Low ring
-      case '4+':
-        return outerR; // Minimal / Full Radar
-      default:
-        return step * 1.5;
+  // Map raw API items to rich Threat Actor objects
+  const allActorsList = useMemo(() => {
+    if (!data || !Array.isArray(data.items) || data.items.length === 0) {
+      return [];
     }
-  };
+    const cName = data.client_name || clientName || 'Client';
 
-  const activeRadius = getRadiusValue(selectedRadius, chartRadius);
+    return data.items.map((item, index) => {
+      const sev = (item.severity || '').toLowerCase();
+      const rad = typeof item.radius === 'number' ? item.radius : parseFloat(item.radius) || 3.0;
+
+      let category = 'Global';
+      let focusLevel = 3;
+      let riskLevel = 'Low';
+
+      if (sev === 'high' || rad < 2.0) {
+        category = 'Around You';
+        focusLevel = rad <= 1.5 ? 0 : 1;
+        riskLevel = rad <= 1.5 ? 'Critical' : 'High';
+      } else if (sev === 'moderate' || (rad >= 2.0 && rad < 3.0)) {
+        category = 'Away';
+        focusLevel = 2;
+        riskLevel = 'Moderate';
+      } else if (sev === 'low' || (rad >= 3.0 && rad < 4.0)) {
+        category = 'Global';
+        focusLevel = 3;
+        riskLevel = 'Low';
+      } else {
+        category = 'Global';
+        focusLevel = 4;
+        riskLevel = 'Minimal';
+      }
+
+      // Threat Score calculated from radius (range 1.0 -> 5.0)
+      const calculatedScore = Math.max(1.0, Math.min(5.0, 5.0 - (rad - 1.0) * 0.85)).toFixed(1);
+
+      return {
+        id: item.actor_id ? `TA-${item.actor_id}` : `TA-${index + 1}`,
+        actor_id: item.actor_id,
+        name: item.name || `Actor_${item.actor_id || index + 1}`,
+        radius: rad,
+        severity: sev || 'low',
+        category: category,
+        focusLevel: focusLevel,
+        riskLevel: riskLevel,
+        threatScore: calculatedScore,
+        sector: item.sector || 'BFSI, Healthcare & Critical Infrastructure',
+        origin: item.origin || 'Global Threat Feeds & Sensor Grid',
+        techFocus: item.techFocus || 'Ransomware-as-a-Service, Credential Theft, Edge Exploitation',
+        tactics: item.tactics || 'Initial Access, Persistence & Exfiltration',
+        victims: item.victims || `${cName} & Global Sector Peers`,
+        overlapAnalysis: item.overlapAnalysis || `Detected threat vectors matching ${cName} perimeter defense telemetry.`,
+      };
+    });
+  }, [data, clientName]);
 
   // Focus level limit based on dropdown
   const focusLevelThreshold = useMemo(() => {
@@ -406,30 +157,120 @@ export default function Threat() {
   }, [selectedRadius]);
 
   const radiusLabel = useMemo(() => {
-    switch (selectedRadius) {
-      case '0+':
+    switch (selectedSeverity) {
+      case 'Critical':
         return 'Critical Zone';
-      case '1+':
+      case 'High':
         return 'High Risk Zone';
-      case '2+':
+      case 'Moderate':
         return 'Moderate Zone';
-      case '3+':
+      case 'Low':
         return 'Low Zone';
-      case '4+':
-        return 'Minimal / All';
+      case 'Minimal':
+        return 'Minimal Zone';
       default:
-        return 'Critical Zone';
+        return `${selectedSeverity} Zone`;
     }
-  }, [selectedRadius]);
+  }, [selectedSeverity]);
 
-  // Check if an actor is inside the shaded focus zone
+  const getRadiusValue = (radiusKey, outerR) => {
+    const step = outerR / 5;
+    switch (radiusKey) {
+      case '0+':
+        return step * 1.5;
+      case '1+':
+        return step * 2.5;
+      case '2+':
+        return step * 3.5;
+      case '3+':
+        return step * 4.4;
+      case '4+':
+        return outerR;
+      default:
+        return step * 1.5;
+    }
+  };
+
+  const activeRadius = getRadiusValue(selectedRadius, chartRadius);
+
   const isActorInFocus = (actor) => {
     return actor.focusLevel <= focusLevelThreshold;
   };
 
-  const getThreatActorObj = (category, index) => {
-    return threatActorsList.find((a) => a.category === category && a.index === index);
-  };
+  // Filtered threat actors for table & radar chart
+  const filteredActors = useMemo(() => {
+    return allActorsList.filter((actor) => {
+      const target = (selectedSeverity || 'Critical').toLowerCase();
+      if (target === 'critical') {
+        return (
+          actor.riskLevel === 'Critical' ||
+          actor.focusLevel === 0 ||
+          actor.radius <= 1.5 ||
+          (actor.severity === 'high' && actor.radius <= 1.5)
+        );
+      }
+      if (target === 'high') {
+        return (
+          actor.severity === 'high' ||
+          actor.category === 'Around You' ||
+          actor.radius < 2.0
+        );
+      }
+      if (target === 'moderate') {
+        return (
+          actor.severity === 'moderate' ||
+          actor.category === 'Away' ||
+          (actor.radius >= 2.0 && actor.radius < 3.0)
+        );
+      }
+      if (target === 'low') {
+        return (
+          actor.severity === 'low' ||
+          (actor.radius >= 3.0 && actor.radius < 4.0)
+        );
+      }
+      if (target === 'minimal') {
+        return (
+          actor.severity === 'minimal' ||
+          actor.radius >= 4.0
+        );
+      }
+      return true;
+    });
+  }, [allActorsList, selectedSeverity]);
+
+  // Selected sample of actors to plot on the radar chart - ONLY matching the selected filter
+  const itemsForRadar = useMemo(() => {
+    if (!filteredActors || filteredActors.length === 0) return [];
+    if (filteredActors.length <= 24) return filteredActors;
+    return filteredActors.slice(0, 24);
+  }, [filteredActors]);
+
+  // Generate Recharts polar dataset
+  const radarChartData = useMemo(() => {
+    if (itemsForRadar.length === 0) {
+      return Array.from({ length: 10 }, (_, i) => ({
+        subject: String(i + 1).padStart(2, '0'),
+        A: 0,
+        B: 0,
+        C: 0,
+        fullMark: 150,
+      }));
+    }
+
+    return itemsForRadar.map((item, index) => {
+      // Map radius (1.0 - 5.0) to radar chart scale (0 - 150)
+      const scaledVal = Math.min(150, Math.max(15, (item.radius / 5.0) * 150));
+      return {
+        subject: String(index + 1).padStart(2, '0'),
+        A: item.category === 'Around You' ? scaledVal : 0,
+        B: item.category === 'Away' ? scaledVal : 0,
+        C: item.category === 'Global' ? scaledVal : 0,
+        fullMark: 150,
+        actor: item,
+      };
+    });
+  }, [itemsForRadar]);
 
   const handleHover = (e, category, index) => {
     if (timeoutRef.current) {
@@ -437,8 +278,8 @@ export default function Threat() {
       timeoutRef.current = null;
     }
 
-    const actorObj = getThreatActorObj(category, index);
-    const name = actorObj?.name || 'Unknown Actor';
+    const actorObj = radarChartData[index]?.actor;
+    const name = actorObj?.name || hoveredNameRef.current || 'Threat Actor';
     hoveredNameRef.current = name;
     setHoveredActor(name);
 
@@ -483,7 +324,7 @@ export default function Threat() {
   };
 
   const handleClick = (category, index) => {
-    const actorObj = getThreatActorObj(category, index);
+    const actorObj = radarChartData[index]?.actor;
     if (actorObj) {
       setModalData(actorObj);
     } else {
@@ -501,11 +342,11 @@ export default function Threat() {
   };
 
   const handlePopupClick = () => {
-    const actorObj = threatActorsList.find((a) => a.name === hoveredNameRef.current);
+    const actorObj = allActorsList.find((a) => a.name === hoveredNameRef.current);
     if (actorObj) {
       setModalData(actorObj);
     } else if (hoveredNameRef.current) {
-      setModalData({ name: hoveredNameRef.current, category: '', index: '', value: 0 });
+      setModalData({ name: hoveredNameRef.current, category: 'Global', index: 0, value: 0 });
     }
     setShowModal(true);
     if (popupRef.current) {
@@ -518,75 +359,80 @@ export default function Threat() {
     setShowModal(true);
   };
 
-  // Filtered threat actors for table
-  const filteredActors = useMemo(() => {
-    return threatActorsList.filter((actor) => {
-      // Category filter
-      if (categoryFilter === 'FOCUS') {
-        if (!isActorInFocus(actor)) return false;
-      } else if (categoryFilter !== 'ALL') {
-        if (actor.category !== categoryFilter) return false;
-      }
+  const handleSeverityChange = (e) => {
+    const newSeverity = e.target.value;
+    setSelectedSeverity(newSeverity);
 
-      // Search filter
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase();
-        const matchesName = actor.name.toLowerCase().includes(query);
-        const matchesId = actor.id.toLowerCase().includes(query);
-        const matchesSector = actor.sector.toLowerCase().includes(query);
-        const matchesCategory = actor.category.toLowerCase().includes(query);
-        const matchesRisk = actor.riskLevel.toLowerCase().includes(query);
-        const matchesTactics = actor.tactics.toLowerCase().includes(query);
-        if (!matchesName && !matchesId && !matchesSector && !matchesCategory && !matchesRisk && !matchesTactics) {
-          return false;
-        }
-      }
+    const val = newSeverity.toLowerCase();
+    let apiSeverity = 'high';
+    if (val === 'critical') {
+      setSelectedRadius('0+');
+      apiSeverity = 'high';
+    } else if (val === 'high') {
+      setSelectedRadius('1+');
+      apiSeverity = 'high';
+    } else if (val === 'moderate') {
+      setSelectedRadius('2+');
+      apiSeverity = 'moderate';
+    } else if (val === 'low') {
+      setSelectedRadius('3+');
+      apiSeverity = 'low';
+    } else if (val === 'minimal') {
+      setSelectedRadius('4+');
+      apiSeverity = 'minimal';
+    }
 
-      return true;
-    });
-  }, [categoryFilter, searchQuery, focusLevelThreshold]);
+    getRadarDatalist(clientName, apiSeverity);
+  };
 
   const focusedCount = useMemo(() => {
-    return threatActorsList.filter(isActorInFocus).length;
-  }, [focusLevelThreshold]);
+    return filteredActors.filter(isActorInFocus).length;
+  }, [filteredActors, focusLevelThreshold]);
 
   return (
     <div className="threat-card-container">
       {/* Header Bar */}
-      <div className="threat-header d-flex justify-content-end">
-        <div></div>
+      <div className="threat-header">
+        <div className="header-left">
+          <span className="chart-title">
+            <i className="bi bi-shield-check"></i> {data?.client_name || clientName}
+          </span>
+          <span className="threat-stats-pill">
+            <span className="stats-count">{data?.total_items || allActorsList.length}</span> Total Threats
+          </span>
+        </div>
 
         <div className="header-right">
-          <div className="radius-control-wrapper" title="Select radar shaded focus radius">
-            <label htmlFor="threat-radius-select" className="radius-control-label">
-              <i className="bi bi-record-circle-fill"></i> Shaded Focus:
+          <div className="radius-control-wrapper" title="Filter by threat severity and proximity">
+            <label htmlFor="threat-severity-select" className="radius-control-label">
+              <i className="bi bi-funnel-fill"></i> Filter:
             </label>
             <select
-              id="threat-radius-select"
+              id="threat-severity-select"
               className="radius-control-select"
-              value={selectedRadius}
-              onChange={(e) => setSelectedRadius(e.target.value)}
+              value={selectedSeverity}
+              onChange={handleSeverityChange}
             >
-              <option value="0+">Critical</option>
-              <option value="1+">High </option>
-              <option value="2+">Moderate</option>
-              <option value="3+">Low</option>
-              <option value="4+">Minimal</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Moderate">Moderate</option>
+              <option value="Low">Low</option>
+              <option value="Minimal">Minimal</option>
             </select>
           </div>
-          <button className="expand-btn" title="Expand View">
-            <i className="bi bi-arrows-angle-expand"></i>
+          <button className="expand-btn" title="Expand View" onClick={() => getRadarDatalist(clientName, selectedSeverity)}>
+            <i className={`bi ${loading ? 'bi-arrow-repeat spin' : 'bi-arrows-angle-expand'}`}></i>
           </button>
         </div>
       </div>
 
-      {/* Main Split View: Left = Smaller Radar Chart, Right = Detailed Table */}
+      {/* Main Split View: Left = Radar Chart, Right = Interactive Table */}
       <div className="threat-body-split">
         {/* Left: Compact Radar Chart */}
         <div className="threat-radar-col">
           <div className="radar-chart-container" ref={containerRef}>
             <ResponsiveContainer width="100%" height={300}>
-              <RadarChart cx="50%" cy="50%" outerRadius="82%" data={threatActorsData}>
+              <RadarChart cx="50%" cy="50%" outerRadius="82%" data={radarChartData}>
                 <PolarGrid gridType="circle" stroke="#e2e8f0" />
                 <PolarRadiusAxis
                   angle={30}
@@ -680,45 +526,6 @@ export default function Threat() {
 
         {/* Right: Interactive Threat Actor Table */}
         <div className="threat-table-col">
-          {/* Table Toolbar */}
-          <div className="table-toolbar">
-            <div className="filter-tabs">
-              <button
-                className={`tab-btn ${categoryFilter === 'ALL' ? 'active' : ''}`}
-                onClick={() => setCategoryFilter('ALL')}
-              >
-                All <span className="badge-count">{threatActorsList.length}</span>
-              </button>
-              <button
-                className={`tab-btn focus-tab ${categoryFilter === 'FOCUS' ? 'active' : ''}`}
-                onClick={() => setCategoryFilter('FOCUS')}
-                title="Filter by actors inside the shaded radar focus zone"
-              >
-                <i className="bi bi-bullseye"></i> Shaded Focus{' '}
-                <span className="badge-count">{focusedCount}</span>
-              </button>
-              <button
-                className={`tab-btn ${categoryFilter === 'Around You' ? 'active' : ''}`}
-                onClick={() => setCategoryFilter('Around You')}
-              >
-                Around You
-              </button>
-              <button
-                className={`tab-btn ${categoryFilter === 'Away' ? 'active' : ''}`}
-                onClick={() => setCategoryFilter('Away')}
-              >
-                Away
-              </button>
-              <button
-                className={`tab-btn ${categoryFilter === 'Global' ? 'active' : ''}`}
-                onClick={() => setCategoryFilter('Global')}
-              >
-                Global
-              </button>
-            </div>
-
-          </div>
-
           {/* Scrollable Table View */}
           <div className="table-scroll-container">
             <table className="threat-actors-table">
@@ -740,13 +547,13 @@ export default function Threat() {
                         : actor.category === 'Away'
                           ? 'away'
                           : 'global';
-                    const riskClass = `risk-${actor.riskLevel.toLowerCase()}`;
 
                     return (
                       <tr
                         key={actor.id}
-                        className={`actor-row ${inFocus ? 'in-focus-zone' : ''} ${isHovered ? 'is-hovered' : ''
-                          }`}
+                        className={`actor-row ${inFocus ? 'in-focus-zone' : ''} ${
+                          isHovered ? 'is-hovered' : ''
+                        }`}
                         onClick={() => handleRowClick(actor)}
                         onMouseEnter={() => setHoveredActor(actor.name)}
                         onMouseLeave={() => setHoveredActor(null)}
@@ -754,7 +561,7 @@ export default function Threat() {
                         <td>
                           <div className="actor-name-cell">
                             <div className={`actor-icon icon-${catClass}`}>
-                              {actor.name.charAt(0)}
+                              {actor.name.charAt(0).toUpperCase()}
                             </div>
                             <div className="name-info">
                               <span className="name-text">{actor.name}</span>
@@ -785,7 +592,7 @@ export default function Threat() {
                 ) : (
                   <tr>
                     <td colSpan="3" className="empty-row">
-                      <i className="bi bi-info-circle me-1"></i> No threat actors match the current filter.
+                      <i className="bi bi-info-circle me-1"></i> {loading ? 'Loading threat data...' : 'No threat actors match the current filter.'}
                     </td>
                   </tr>
                 )}
@@ -798,11 +605,11 @@ export default function Threat() {
             <div className="focus-legend-info">
               <span className="focus-dot"></span>
               <span>
-                Shaded radar zone currently highlighting <strong>{radiusLabel}</strong> ({focusedCount} active threats)
+                Highlighted: <strong>{radiusLabel}</strong> ({focusedCount} active threats)
               </span>
             </div>
             <span className="count-summary">
-              Showing {filteredActors.length} of {threatActorsList.length} actors
+              Showing {filteredActors.length} of {allActorsList.length} actors
             </span>
           </div>
         </div>
@@ -818,3 +625,4 @@ export default function Threat() {
     </div>
   );
 }
+
