@@ -5,6 +5,7 @@ import { FiArrowRight } from 'react-icons/fi';
 import { ImEarth } from 'react-icons/im';
 import { PiBug, PiShieldWarningDuotone } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
+import { getTheatreIntelCardsList } from '../../Context/Intelcard';
 
 const MOCK_CARDS = [
   {
@@ -126,7 +127,7 @@ const MOCK_CARDS = [
   }
 ];
 
-function IntelCard({ cardData }) {
+function IntelCard({ threatData }) {
   const navigate = useNavigate();
 
   // Helper to parse date string "YYYY-MM-DD"
@@ -142,17 +143,23 @@ function IntelCard({ cardData }) {
   };
 
   // Map backend keys to component expectations with fallbacks
+  const summary = threatData?.summary || {};
+  const targeting = summary?.targeting?.[0] || {};
+
   const data = {
-    date: parseDate(cardData?.date),
-    banner_text: cardData?.title || 'Unknown Threat',
-    threat_type: cardData?.threat_type || 'N/A',
-    threat_group: cardData?.threat_group_names?.join(', ') || 'Unknown',
-    malware: cardData?.threat_type || 'N/A',
-    target_region: cardData?.target_regions?.join(', ') || 'Global',
-    target_country: cardData?.target_countries?.join(', ') || 'Global',
-    target_sector: cardData?.industries?.join(', ') || 'General',
-    severity: (cardData?.severity_level || 'Low').charAt(0).toUpperCase() + (cardData?.severity_level || 'Low').slice(1),
-    status: cardData?.status || 'Active'
+    date: parseDate(summary?.last_seen?.date),
+    banner_text: threatData?.name || 'Unknown Threat',
+    threat_type: summary?.actor_types?.[0] || 'N/A',
+    threat_group: summary?.actor_types?.join(', ') || 'Unknown',
+    target_region: targeting?.regions?.join(', ') || 'Global',
+    target_country: summary?.nexus?.map(n => n.country_or_region).join(', ') || 'Global',
+    target_sector: targeting?.sectors?.join(', ') || 'General',
+    severity: summary?.actor_types?.includes('RANSOMWARE_EXTORTION_ACTOR') ? 'Critical'
+      : summary?.actor_types?.includes('NATION_STATE') ? 'High'
+      : 'Medium',
+    status: summary?.status
+      ? summary.status.charAt(0).toUpperCase() + summary.status.slice(1).toLowerCase()
+      : 'Unknown'
   };
 
   return (
@@ -169,22 +176,22 @@ function IntelCard({ cardData }) {
         {/* Top Header with Active Indicator */}
         <div className="d-flex justify-content-end align-items-center mb-2 px-1 position-relative gap-1" style={{ zIndex: 1 }}>
           <div className="d-flex align-items-center gap-1">
-         
+
           </div>
 
-             <span
-              style={{
-                width: '7px',
-                height: '7px',
-                backgroundColor: data.status === 'Active' ? '#ef4444' : '#94a3b8',
-                borderRadius: '50%',
-                display: 'inline-block',
-                boxShadow: data.status === 'Active' ? '0 0 0 2.5px rgba(239, 68, 68, 0.25)' : 'none'
-              }}
-            />
-            <span style={{ fontSize: '11px', fontWeight: '600', color: data.status === 'Active' ? '#ef4444' : '#64748b' }}>
-              {data.status}
-            </span>
+          <span
+            style={{
+              width: '7px',
+              height: '7px',
+              backgroundColor: data.status === 'Active' ? '#ef4444' : '#94a3b8',
+              borderRadius: '50%',
+              display: 'inline-block',
+              boxShadow: data.status === 'Active' ? '0 0 0 2.5px rgba(239, 68, 68, 0.25)' : 'none'
+            }}
+          />
+          <span style={{ fontSize: '11px', fontWeight: '600', color: data.status === 'Active' ? '#ef4444' : '#64748b' }}>
+            {data.status}
+          </span>
         </div>
 
         {/* Title */}
@@ -263,7 +270,7 @@ function IntelCard({ cardData }) {
             onClick={() => navigate('/intel-card-threat-details')}
             className="btn rounded-pill text-white px-4 py-1 d-flex align-items-center position-relative"
             style={{ background: "linear-gradient(90deg, #4c0a829c 0%, #95051e85 50%, #e60026bb 100%)", fontSize: '12px', fontWeight: '500', transition: 'background-color 0.2s', border: 'none', zIndex: 2 }}
-          
+
           >
             <FiArrowRight className="me-2" style={{ strokeWidth: '2.5px', fontSize: '14px' }} /> View Report
           </button>
@@ -304,6 +311,8 @@ function IntelCard({ cardData }) {
 export default function IntelCards() {
   const [cardData, setCardData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [threatData, setThreatData] = useState([]);
+  const [page, setPage] = useState(1);
 
   const getThreatCardData = () => {
     setLoading(true);
@@ -325,10 +334,21 @@ export default function IntelCards() {
     }
   };
 
+  const getThreatIntelCardListData = (pageNo = page) => {
+    getTheatreIntelCardsList({ page: pageNo })((response) => {
+      console.log("threatIntelCards", response);
+      if (response) {
+        setThreatData(response);
+      }
+    });
+  };
+
   useEffect(() => {
-    getThreatCardData();
+    // getThreatCardData();
+    getThreatIntelCardListData();
   }, []);
 
+  console.log("ThreatData", threatData)
   return (
     <div className="intelcard-cards-scroll-area px-3 w-100">
       {loading ? (
@@ -339,9 +359,9 @@ export default function IntelCards() {
         </div>
       ) : (
         <div className="intelcard-cards-row row g-3 mb-2">
-          {cardData?.data?.results?.map(threat => (
-            <div key={threat.id} className="intelcard-card-column col-12 col-xl-4 col-md-6 mb-1">
-              <IntelCard cardData={threat} />
+          {threatData?.items?.map(threat => (
+            <div key={threat.actor_id} className="intelcard-card-column col-12 col-xl-4 col-md-6 mb-1">
+              <IntelCard threatData={threat} />
             </div>
           ))}
         </div>
