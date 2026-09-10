@@ -3,6 +3,7 @@ import { Radar, RadarChart, PolarGrid, PolarRadiusAxis, ResponsiveContainer } fr
 import { CustomDotAround, CustomDotAway, CustomDotGlobal, renderRadarBackground } from '../../../Helpers/RadarHelpers';
 import ThreatModal from './ThreatModal';
 import './Threat.scss';
+import { getRadarData } from '../../../Context/Radar';
 
 const threatActorsData = [
   { subject: '01', A: 60, B: 110, C: 140, fullMark: 150 },
@@ -297,6 +298,8 @@ export const threatActorsList = [
     overlapAnalysis: 'Regional operations in Singapore and APAC subsidiaries flagged for monitoring.',
   },
 ];
+const clientName = "CERELYN BIOPHARMA";
+const severitylabel = "high";
 
 const RenderDot = (props) => {
   const { cx, cy, value, index, OriginalDot, category, onHover, onLeave, onClick } = props;
@@ -325,8 +328,27 @@ export default function Threat() {
   const [hoveredActor, setHoveredActor] = useState(null);
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  const [data, setData] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // ResizeObserver for responsive radar sizing
+
+  const getRadarDatalist = (query = clientName, severity = severitylabel) => {
+    setLoading(true);
+    getRadarData({ client_name: query, severity: severity })((response) => {
+      console.log("radarres", response);
+      // getRadarData already passes response.data (the payload) — not the full axios response
+      if (response) {
+        setData(response);
+      }
+      setLoading(false);
+    });
+  };
+  useEffect(() => {
+    getRadarDatalist()
+  }, [])
+  console.log("radardata : ", data)
+
   useEffect(() => {
     if (!containerRef.current) return;
     const updateRadius = () => {
