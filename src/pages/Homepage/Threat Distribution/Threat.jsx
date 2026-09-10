@@ -26,7 +26,7 @@ export default function Threat() {
   const timeoutRef = useRef(null);
   const hoveredNameRef = useRef('');
   const [showModal, setShowModal] = useState(false);
-  const [modalData, setModalData] = useState(null);
+  const [selectedActorId, setSelectedActorId] = useState(null);
   const [selectedRadius, setSelectedRadius] = useState('0+');
   const [selectedSeverity, setSelectedSeverity] = useState('Critical');
   const [clientName, setClientName] = useState('CERELYN BIOPHARMA');
@@ -36,20 +36,9 @@ export default function Threat() {
   const [loading, setLoading] = useState(false);
 
   // Fetch Radar data from API
-  const getRadarDatalist = (query = clientName, severity = selectedSeverity) => {
+  const getRadarDatalist = (query = clientName) => {
     setLoading(true);
     const params = { client_name: query };
-    const sevMap = {
-      Critical: 'high',
-      High: 'high',
-      Moderate: 'moderate',
-      Low: 'low',
-      Minimal: 'minimal',
-    };
-    const apiSev = sevMap[severity] || (severity ? severity.toLowerCase() : 'high');
-    if (apiSev) {
-      params.severity = apiSev;
-    }
     getRadarData(params)((response) => {
       console.log('radarres', response);
       if (response) {
@@ -60,7 +49,7 @@ export default function Threat() {
   };
 
   useEffect(() => {
-    getRadarDatalist(clientName, 'Critical');
+    getRadarDatalist(clientName);
   }, []);
 
   // ResizeObserver for responsive radar sizing
@@ -326,14 +315,9 @@ export default function Threat() {
   const handleClick = (category, index) => {
     const actorObj = radarChartData[index]?.actor;
     if (actorObj) {
-      setModalData(actorObj);
+      setSelectedActorId(actorObj.actor_id || actorObj.id);
     } else {
-      setModalData({
-        name: hoveredNameRef.current || 'Threat Actor',
-        category,
-        index,
-        value: 0,
-      });
+      setSelectedActorId(null);
     }
     setShowModal(true);
     if (popupRef.current) {
@@ -344,9 +328,9 @@ export default function Threat() {
   const handlePopupClick = () => {
     const actorObj = allActorsList.find((a) => a.name === hoveredNameRef.current);
     if (actorObj) {
-      setModalData(actorObj);
-    } else if (hoveredNameRef.current) {
-      setModalData({ name: hoveredNameRef.current, category: 'Global', index: 0, value: 0 });
+      setSelectedActorId(actorObj.actor_id || actorObj.id);
+    } else {
+      setSelectedActorId(null);
     }
     setShowModal(true);
     if (popupRef.current) {
@@ -355,7 +339,7 @@ export default function Threat() {
   };
 
   const handleRowClick = (actor) => {
-    setModalData(actor);
+    setSelectedActorId(actor?.actor_id || actor?.id);
     setShowModal(true);
   };
 
@@ -364,25 +348,17 @@ export default function Threat() {
     setSelectedSeverity(newSeverity);
 
     const val = newSeverity.toLowerCase();
-    let apiSeverity = 'high';
     if (val === 'critical') {
       setSelectedRadius('0+');
-      apiSeverity = 'high';
     } else if (val === 'high') {
       setSelectedRadius('1+');
-      apiSeverity = 'high';
     } else if (val === 'moderate') {
       setSelectedRadius('2+');
-      apiSeverity = 'moderate';
     } else if (val === 'low') {
       setSelectedRadius('3+');
-      apiSeverity = 'low';
     } else if (val === 'minimal') {
       setSelectedRadius('4+');
-      apiSeverity = 'minimal';
     }
-
-    getRadarDatalist(clientName, apiSeverity);
   };
 
   const focusedCount = useMemo(() => {
@@ -420,7 +396,7 @@ export default function Threat() {
               <option value="Minimal">Minimal</option>
             </select>
           </div>
-          <button className="expand-btn" title="Expand View" onClick={() => getRadarDatalist(clientName, selectedSeverity)}>
+          <button className="expand-btn" title="Expand View" onClick={() => getRadarDatalist(clientName)}>
             <i className={`bi ${loading ? 'bi-arrow-repeat spin' : 'bi-arrows-angle-expand'}`}></i>
           </button>
         </div>
@@ -619,7 +595,8 @@ export default function Threat() {
       <ThreatModal
         showModal={showModal}
         setShowModal={setShowModal}
-        modalData={modalData}
+        actor_id={selectedActorId}
+        client_name={data?.client_name || clientName}
         titlePrefix="Threat Actor:"
       />
     </div>
