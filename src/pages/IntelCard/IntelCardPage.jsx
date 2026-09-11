@@ -8,7 +8,6 @@ import FloatingChatButtons from '../../components/Buttons/FloatingChatButtons';
 import { IoFilterSharp } from 'react-icons/io5';
 import { useLocation, useOutletContext, Outlet } from 'react-router-dom';
 import IntelTopcontent from './IntelTopcontent';
-import Pagination from '../../components/pagination/Pagination';
 
 export default function IntelCardPage() {
   const location = useLocation();
@@ -157,8 +156,6 @@ export default function IntelCardPage() {
 
             </div>
           )}
-
-          {!isKnowledgeGraph && <Pagination />}
         </div>
 
         {/* Floating Chat Button (Bottom-Right) */}

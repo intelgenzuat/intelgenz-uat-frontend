@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 
 export default function Pagination({
   currentPage = 1,
-  totalPages = 20,
-  totalItems = 120,
+  totalPages = 1,
+  totalItems = 0,
   pageSize = 9,
   onPageChange,
 }) {
   const [jumpPage, setJumpPage] = useState('');
 
-  const startItem = String((currentPage - 1) * pageSize + 1).padStart(2, '0');
+  const startItem = totalItems === 0 ? 0 : String((currentPage - 1) * pageSize + 1).padStart(2, '0');
   const endItem = String(Math.min(currentPage * pageSize, totalItems)).padStart(2, '0');
 
   const handlePageClick = (page) => {
@@ -29,6 +29,25 @@ export default function Pagination({
     }
   };
 
+  // Helper to generate page numbers with ellipses
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, 4, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+      }
+    }
+    return pages;
+  };
+
   return (
     <div className="intelcard-pagination-wrapper">
       <div className="intelcard-pagination-container shadow-sm">
@@ -45,39 +64,25 @@ export default function Pagination({
             <i className="bi bi-chevron-left"></i>
           </button>
 
-          <button
-            type="button"
-            className={`intelcard-pagination-btn ${currentPage === 1 ? 'active' : ''}`}
-            onClick={() => handlePageClick(1)}
-          >
-            1
-          </button>
-
-          {[2, 3, 4, 5].map((page) => (
-            page <= totalPages && (
+          {getPageNumbers().map((item, index) => {
+            if (item === '...') {
+              return (
+                <span key={`ellipsis-${index}`} className="intelcard-pagination-ellipsis">
+                  ...
+                </span>
+              );
+            }
+            return (
               <button
-                key={page}
+                key={item}
                 type="button"
-                className={`btn btn-sm btn-light bg-transparent border-0 ${currentPage === page ? 'text-primary fw-bold' : 'text-secondary'}`}
-                onClick={() => handlePageClick(page)}
+                className={`intelcard-pagination-btn ${currentPage === item ? 'active' : ''}`}
+                onClick={() => handlePageClick(item)}
               >
-                {page}
+                {item}
               </button>
-            )
-          ))}
-
-          {totalPages > 5 && (
-            <>
-              <span className="intelcard-pagination-ellipsis">...</span>
-              <button
-                type="button"
-                className={`btn btn-sm btn-light bg-transparent border-0 ${currentPage === totalPages ? 'text-primary fw-bold' : 'text-secondary'}`}
-                onClick={() => handlePageClick(totalPages)}
-              >
-                {totalPages}
-              </button>
-            </>
-          )}
+            );
+          })}
 
           <button
             type="button"
@@ -95,7 +100,7 @@ export default function Pagination({
             type="text"
             className="intelcard-pagination-input"
             value={jumpPage}
-            placeholder="101"
+            placeholder={String(currentPage)}
             onChange={(e) => setJumpPage(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleJump(e);

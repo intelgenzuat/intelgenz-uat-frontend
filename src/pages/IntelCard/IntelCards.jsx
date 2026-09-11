@@ -6,6 +6,7 @@ import { ImEarth } from 'react-icons/im';
 import { PiBug, PiShieldWarningDuotone } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 import { getTheatreIntelCardsList } from '../../Context/Intelcard';
+import Pagination from '../../components/pagination/Pagination';
 
 
 
@@ -208,27 +209,41 @@ export default function IntelCards() {
   };
 
   useEffect(() => {
-    getThreatIntelCardListData();
+    getThreatIntelCardListData(page);
   }, []);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    getThreatIntelCardListData(newPage);
+  };
 
   console.log("ThreatData", threatData);
   return (
-    <div className="intelcard-cards-scroll-area px-3 w-100">
-      {loading ? (
-        <div className="intelcard-spinner-container d-flex justify-content-center align-items-center py-5" style={{ minHeight: '300px' }}>
-          <div className="intelcard-spinner-border spinner-border text-primary" role="status" style={{ width: '2.5rem', height: '2.5rem' }}>
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      ) : (
-        <div className="intelcard-cards-row row g-3 mb-2">
-          {threatData?.items?.map(threat => (
-            <div key={threat.actor_id} className="intelcard-card-column col-12 col-xl-4 col-md-6 mb-1">
-              <IntelCard threatData={threat} />
+    <>
+      <div className="intelcard-cards-scroll-area px-3 w-100">
+        {loading ? (
+          <div className="intelcard-spinner-container d-flex justify-content-center align-items-center py-5" style={{ minHeight: '300px' }}>
+            <div className="intelcard-spinner-border spinner-border text-primary" role="status" style={{ width: '2.5rem', height: '2.5rem' }}>
+              <span className="visually-hidden">Loading...</span>
             </div>
-          ))}
-        </div>
-      )}
-    </div>
+          </div>
+        ) : (
+          <div className="intelcard-cards-row row g-3 mb-2">
+            {threatData?.items?.map(threat => (
+              <div key={threat.actor_id} className="intelcard-card-column col-12 col-xl-4 col-md-6 mb-1">
+                <IntelCard threatData={threat} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <Pagination
+        currentPage={threatData?.pagination?.page || page}
+        totalPages={threatData?.pagination?.total_pages || 1}
+        totalItems={threatData?.pagination?.total_items || 0}
+        pageSize={threatData?.pagination?.page_size || 9}
+        onPageChange={handlePageChange}
+      />
+    </>
   );
 }
