@@ -1,37 +1,36 @@
 export const CustomDotAround = (props) => {
-  const { cx, cy, value, index, ...rest } = props;
+  const { cx, cy, value, index, isHovered, ...rest } = props;
   if (!value) return null;
-  // Use index to give slightly different variations if needed, or just a fixed speed
   const animClass = index % 2 === 0 ? 'dot-rotate-medium' : 'dot-rotate-slow-reverse';
   return (
     <g className={animClass} {...rest} style={{ cursor: 'pointer' }}>
-      <circle cx={cx} cy={cy} r={4} fill="#ff1a5f" />
+      {isHovered && <circle cx={cx} cy={cy} r={8} fill="rgba(255, 26, 95, 0.35)" />}
+      <circle cx={cx} cy={cy} r={isHovered ? 5 : 4} fill="#ff1a5f" />
     </g>
   );
 };
 
 export const CustomDotAway = (props) => {
-  const { cx, cy, value, index, ...rest } = props;
+  const { cx, cy, value, index, isHovered, ...rest } = props;
   if (!value) return null;
   const animClass = index % 2 === 0 ? 'dot-rotate-slow' : 'dot-rotate-medium';
   return (
     <g className={animClass} {...rest} style={{ cursor: 'pointer' }}>
-      <circle cx={cx} cy={cy} r={6} fill="rgba(168, 85, 247, 0.2)" />
-      <circle cx={cx} cy={cy} r={3} fill="#a855f7" />
+      <circle cx={cx} cy={cy} r={isHovered ? 9 : 6} fill={isHovered ? "rgba(168, 85, 247, 0.35)" : "rgba(168, 85, 247, 0.2)"} />
+      <circle cx={cx} cy={cy} r={isHovered ? 4 : 3} fill="#a855f7" />
     </g>
   );
 };
 
 export const CustomDotGlobal = (props) => {
-  const { cx, cy, value, index, ...rest } = props;
+  const { cx, cy, value, index, isHovered, ...rest } = props;
   if (!value) return null;
   const animClass = index % 2 === 0 ? 'dot-rotate-fast' : 'dot-rotate-medium-reverse';
-  // Note: I'll add medium-reverse to SCSS if it's missing, or just use slow-reverse
   return (
     <g className={index % 3 === 0 ? 'dot-rotate-fast' : 'dot-rotate-slow'} {...rest} style={{ cursor: 'pointer' }}>
-      <circle cx={cx} cy={cy} r={8} fill="rgba(245, 158, 11, 0.15)" />
-      <circle cx={cx} cy={cy} r={5} fill="#fff" />
-      <circle cx={cx} cy={cy} r={4} fill="#f59e0b" />
+      <circle cx={cx} cy={cy} r={isHovered ? 10 : 7} fill={isHovered ? "rgba(245, 158, 11, 0.3)" : "rgba(245, 158, 11, 0.15)"} />
+      <circle cx={cx} cy={cy} r={isHovered ? 5.5 : 4.5} fill="#fff" />
+      <circle cx={cx} cy={cy} r={isHovered ? 4.5 : 3.5} fill="#f59e0b" />
     </g>
   );
 };
@@ -52,14 +51,25 @@ export const renderRadarBackground = ({ radius, outerR, rMid = 42, strokeWidth =
 
   return (
     <svg x="50%" y="50%" style={{ overflow: 'visible' }}>
-      {/* Dynamic white shaded background band / filled radius */}
+      <defs>
+        <filter id="radar-disc-shadow" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="6" stdDeviation="12" floodColor="#5200ff" floodOpacity="0.09" />
+          <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#0f172a" floodOpacity="0.06" />
+        </filter>
+        <filter id="center-badge-shadow" x="-60%" y="-60%" width="220%" height="220%">
+          <feDropShadow dx="0" dy="3" stdDeviation="5" floodColor="#00b85c" floodOpacity="0.5" />
+        </filter>
+      </defs>
+
+      {/* Dynamic white shaded background band / filled radius with shadow */}
       {radius !== undefined ? (
         <circle
           cx="0"
           cy="0"
           r={radius}
           fill="#ffffff"
-          opacity={radius > 0 ? 0.9 : 0}
+          opacity={radius > 0 ? 0.95 : 0}
+          filter="url(#radar-disc-shadow)"
           style={{
             transition: 'r 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease',
           }}
@@ -72,7 +82,8 @@ export const renderRadarBackground = ({ radius, outerR, rMid = 42, strokeWidth =
           fill="none"
           stroke="#ffffff"
           strokeWidth={strokeWidth}
-          opacity={0.9}
+          opacity={0.95}
+          filter="url(#radar-disc-shadow)"
           style={{
             transition: 'r 0.45s cubic-bezier(0.4, 0, 0.2, 1), stroke-width 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
@@ -124,8 +135,8 @@ export const renderRadarBackground = ({ radius, outerR, rMid = 42, strokeWidth =
         />
       )}
 
-      {/* Center green background — always on top */}
-      <circle cx="0" cy="0" r="15" fill="#00b85c" />
+      {/* Center green background with shadow */}
+      <circle cx="0" cy="0" r="16" fill="#00b85c" filter="url(#center-badge-shadow)" />
 
       {/* SVG Icon Area */}
       <g transform="translate(-6, -6)">

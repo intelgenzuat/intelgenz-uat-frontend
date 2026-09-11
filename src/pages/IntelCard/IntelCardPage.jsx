@@ -8,16 +8,54 @@ import FloatingChatButtons from '../../components/Buttons/FloatingChatButtons';
 import { IoFilterSharp } from 'react-icons/io5';
 import { useLocation, useOutletContext, Outlet } from 'react-router-dom';
 import IntelTopcontent from './IntelTopcontent';
+import Select from 'react-select';
 
 export default function IntelCardPage() {
   const location = useLocation();
   const [showFilter, setShowFilter] = useState(false);
-  const [selectedView, setSelectedView] = useState('curated'); // 'curated' | 'all'
+  const [selectedView, setSelectedView] = useState({ value: 'Priority Actor', label: 'Priority Actor' });
   const [selectedDateFilter, setSelectedDateFilter] = useState('30 Days');
   const [isDateDropdownOpen, setIsDateDropdownOpen] = useState(false);
   const dateDropdownRef = useRef(null);
 
   const dateOptions = ['7 Days', '30 Days', '90 Days', 'All'];
+
+  const curatedViewOptions = [
+    { value: 'Priority Actor', label: 'Priority Actor' },
+    { value: 'Relevant Actor', label: 'Relevant Actor' },
+    { value: 'Watch Actor',    label: 'Watch Actor' },
+    { value: 'Low Relevance',  label: 'Low Relevance' },
+    { value: 'All View',       label: 'All View' },
+  ];
+
+  const curatedSelectStyles = {
+    container: (base) => ({ ...base, width: '160px' }),
+    control: (base, state) => ({
+      ...base,
+      borderRadius: '50px',
+      border: '1px solid #dee2e6',
+      boxShadow: state.isFocused ? '0 0 0 0.15rem rgba(13,110,253,.2)' : '0 .125rem .25rem rgba(0,0,0,.075)',
+      fontSize: '13px',
+      fontWeight: '500',
+      minHeight: '32px',
+      height: '32px',
+      cursor: 'pointer',
+      backgroundColor: '#fff',
+      '&:hover': { borderColor: '#adb5bd' },
+    }),
+    valueContainer: (base) => ({ ...base, padding: '0 10px' }),
+    singleValue: (base) => ({ ...base, color: '#212529' }),
+    indicatorSeparator: () => ({ display: 'none' }),
+    dropdownIndicator: (base) => ({ ...base, padding: '0 6px', color: '#6c757d' }),
+    menu: (base) => ({ ...base, width: '160px', borderRadius: '12px', fontSize: '13px', zIndex: 9999, overflow: 'hidden' }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isSelected ? '#e7f1ff' : state.isFocused ? '#f8f9fa' : '#fff',
+      color: state.isSelected ? '#0d6efd' : '#212529',
+      fontWeight: state.isSelected ? '600' : '400',
+      cursor: 'pointer',
+    }),
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -59,33 +97,19 @@ export default function IntelCardPage() {
             <IntelTopcontent showHeliosInfo={location.pathname === '/intel-card'}>
               <div className="intelcard-list-header-actions d-flex gap-3 position-relative align-items-center">
 
-                {/* Checkboxes: Curated view & All view */}
-                <div className="intelcard-view-checkboxes d-flex align-items-center gap-3">
-                  <label className="intelcard-checkbox-item d-flex align-items-center gap-2 mb-0" htmlFor="curatedViewCheckbox">
-                    <input
-                      type="checkbox"
-                      id="curatedViewCheckbox"
-                      className="intelcard-custom-checkbox"
-                      checked={selectedView === 'curated'}
-                      onChange={() => setSelectedView('curated')}
-                    />
-                    <span className="intelcard-checkbox-label">Curated view</span>
-                  </label>
-
-                  <label className="intelcard-checkbox-item d-flex align-items-center gap-2 mb-0" htmlFor="allViewCheckbox">
-                    <input
-                      type="checkbox"
-                      id="allViewCheckbox"
-                      className="intelcard-custom-checkbox"
-                      checked={selectedView === 'all'}
-                      onChange={() => setSelectedView('all')}
-                    />
-                    <span className="intelcard-checkbox-label">All view</span>
-                  </label>
-                </div>
+                {/* Curated View — react-select */}
+                <Select
+                  options={curatedViewOptions}
+                  value={selectedView}
+                  onChange={(opt) => setSelectedView(opt)}
+                  styles={curatedSelectStyles}
+                  isSearchable={false}
+                  placeholder="Curated View"
+                  menuPlacement="auto"
+                />
 
                 {/* Date Filter Dropdown */}
-                <div className="intelcard-date-dropdown-wrapper position-relative" ref={dateDropdownRef}>
+                {/* <div className="intelcard-date-dropdown-wrapper position-relative" ref={dateDropdownRef}>
                   <div
                     className="d-flex align-items-center bg-white border rounded-pill px-3 py-1 shadow-sm user-select-none"
                     style={{ cursor: 'pointer', fontSize: '13px' }}
@@ -120,7 +144,7 @@ export default function IntelCardPage() {
                       ))}
                     </div>
                   )}
-                </div>
+                </div> */}
 
                 {/* Filters Button */}
                 <button
@@ -152,7 +176,7 @@ export default function IntelCardPage() {
               </div>
 
               {/* SCROLLABLE GRID CONTAINER */}
-              <Outlet context={{ selectedView, setSelectedView, isCuratedView: selectedView === 'curated', isAllView: selectedView === 'all', selectedDateFilter, setSelectedDateFilter }} />
+              <Outlet context={{ selectedView: selectedView?.value, setSelectedView, selectedDateFilter, setSelectedDateFilter }} />
 
             </div>
           )}

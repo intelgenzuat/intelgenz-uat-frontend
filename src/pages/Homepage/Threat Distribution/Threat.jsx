@@ -5,17 +5,36 @@ import ThreatModal from './ThreatModal';
 import './Threat.scss';
 import { getRadarData } from '../../../Context/Radar';
 
+// Deterministic hash helper for consistent jitter and angle calculation
+const getDeterministicHash = (str) => {
+  if (!str) return 0;
+  const s = String(str);
+  let hash = 0;
+  for (let i = 0; i < s.length; i++) {
+    hash = (hash << 5) - hash + s.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+};
+
 const RenderDot = (props) => {
-  const { cx, cy, value, index, OriginalDot, category, onHover, onLeave, onClick } = props;
+  const { cx, cy, value, index, OriginalDot, category, onHover, onLeave, onClick, hoveredActor, payload } = props;
   if (!value) return null;
+  const actor = payload?.actor;
+  const isHovered = Boolean(hoveredActor && actor && hoveredActor === actor.name);
   return (
     <g
-      onMouseEnter={(e) => onHover(e, category, index)}
+      onMouseEnter={(e) => onHover(e, category, index, actor)}
       onMouseLeave={onLeave}
-      onClick={() => onClick(category, index)}
-      style={{ cursor: 'pointer' }}
+      onClick={() => onClick(category, index, actor)}
+      style={{
+        cursor: 'pointer',
+        transform: isHovered ? 'scale(1.35)' : undefined,
+        transformOrigin: `${cx}px ${cy}px`,
+        transition: 'transform 0.15s ease',
+      }}
     >
-      <OriginalDot cx={cx} cy={cy} value={value} index={index} />
+      <OriginalDot cx={cx} cy={cy} value={value} index={index} isHovered={isHovered} />
     </g>
   );
 };
@@ -58,8 +77,8 @@ export default function Threat() {
     const updateRadius = () => {
       if (containerRef.current) {
         const { clientWidth, clientHeight } = containerRef.current;
-        const minDim = Math.min(clientWidth || 300, clientHeight || 300);
-        const computedR = (minDim / 2) * 0.82;
+        const minDim = Math.min(clientWidth || 360, clientHeight || 360);
+        const computedR = (minDim / 2) * 0.88;
         if (computedR > 0) {
           setChartRadius(computedR);
         }
@@ -231,39 +250,134 @@ export default function Threat() {
     return filteredActors;
   }, [filteredActors]);
 
-  // Generate Recharts polar dataset
+  // Generate Recharts polar dataset with shattered, perfectly balanced distribution
   const radarChartData = useMemo(() => {
-    if (itemsForRadar.length === 0) {
-      return Array.from({ length: 10 }, (_, i) => ({
+    if (!itemsForRadar || itemsForRadar.length === 0) {
+      return Array.from({ length: 24 }, (_, i) => ({
         subject: String(i + 1).padStart(2, '0'),
         A: 0,
         B: 0,
         C: 0,
         fullMark: 150,
+        actor: null,
       }));
     }
 
-    return itemsForRadar.map((item, index) => {
-      // Map radius (1.0 - 5.0) to radar chart scale (0 - 150)
-      const scaledVal = Math.min(150, Math.max(15, (item.radius / 5.0) * 150));
-      return {
-        subject: String(index + 1).padStart(2, '0'),
-        A: item.category === 'Around You' ? scaledVal : 0,
-        B: item.category === 'Away' ? scaledVal : 0,
-        C: item.category === 'Global' ? scaledVal : 0,
-        fullMark: 150,
-        actor: item,
-      };
+    // Group items by category to ensure balanced angular scattering
+    const aroundItems = [];
+    const awayItems = [];
+    const globalItems = [];
+
+    itemsForRadar.forEach((item) => {
+      if (item.category === 'Around You') {
+        aroundItems.push(item);
+      } else if (item.category === 'Away') {
+        awayItems.push(item);
+      } else {
+        globalItems.push(item);
+      }
     });
+
+    // Golden Angle dispersion constant
+    const GOLDEN_ANGLE = 137.507764;
+    const itemsWithAngles = [];
+
+    const assignAngles = (group, baseOffset, category) => {
+      const count = group.length;
+      if (count === 0) return;
+
+      group.forEach((item, idx) => {
+        const hash = getDeterministicHash(item.id || item.name || `item-${idx}`);
+        // Micro-jitter to add organic dispersion
+        const microJitter = ((hash % 1000) / 1000 - 0.5) * (count > 20 ? 12 : 24);
+        const angle = (baseOffset + idx * GOLDEN_ANGLE + microJitter + 3600) % 360;
+
+        // Calculate scaled radius value per zone with subtle radial depth jitter
+        const rad = typeof item.radius === 'number' ? item.radius : parseFloat(item.radius) || 3.0;
+        const radialJitter = ((hash % 100) / 100 - 0.5) * 6; // ±3px
+
+        let scaledVal = 30;
+        if (category === 'Around You') {
+          // Inner zone: ~22 to 46
+          const norm = Math.max(0, Math.min(1, (rad - 1.0) / 0.8));
+          scaledVal = Math.max(20, Math.min(48, 24 + norm * 20 + radialJitter));
+        } else if (category === 'Away') {
+          // Mid zone: ~58 to 88
+          const norm = Math.max(0, Math.min(1, (rad - 2.0) / 0.9));
+          scaledVal = Math.max(54, Math.min(90, 60 + norm * 26 + radialJitter));
+        } else {
+          // Outer global zone: ~98 to 145
+          const norm = Math.max(0, Math.min(1, (rad - 3.0) / 2.0));
+          scaledVal = Math.max(96, Math.min(146, 100 + norm * 42 + radialJitter));
+        }
+
+        itemsWithAngles.push({
+          item,
+          angle,
+          scaledVal,
+          category,
+        });
+      });
+    };
+
+    assignAngles(aroundItems, 18, 'Around You');
+    assignAngles(awayItems, 74, 'Away');
+    assignAngles(globalItems, 142, 'Global');
+
+    // Sort all items by angle ascending so they map evenly around polar coordinates
+    itemsWithAngles.sort((a, b) => a.angle - b.angle);
+
+    const totalSlots = Math.max(24, itemsWithAngles.length);
+
+    // If items count is less than minimum spokes (24), distribute across fixed circular spokes
+    if (itemsWithAngles.length < totalSlots) {
+      const slots = Array.from({ length: totalSlots }, (_, i) => ({
+        subject: String(i + 1).padStart(2, '0'),
+        A: 0,
+        B: 0,
+        C: 0,
+        fullMark: 150,
+        actor: null,
+      }));
+
+      itemsWithAngles.forEach((entry) => {
+        const slotIndex = Math.floor((entry.angle / 360) * totalSlots) % totalSlots;
+        let targetIndex = slotIndex;
+        while (slots[targetIndex].actor !== null) {
+          targetIndex = (targetIndex + 1) % totalSlots;
+        }
+        slots[targetIndex] = {
+          subject: String(targetIndex + 1).padStart(2, '0'),
+          A: entry.category === 'Around You' ? entry.scaledVal : 0,
+          B: entry.category === 'Away' ? entry.scaledVal : 0,
+          C: entry.category === 'Global' ? entry.scaledVal : 0,
+          fullMark: 150,
+          actor: entry.item,
+        };
+      });
+
+      return slots;
+    }
+
+    // When we have enough items, each item occupies its own shattered spoke
+    return itemsWithAngles.map((entry, index) => ({
+      subject: String(index + 1).padStart(2, '0'),
+      A: entry.category === 'Around You' ? entry.scaledVal : 0,
+      B: entry.category === 'Away' ? entry.scaledVal : 0,
+      C: entry.category === 'Global' ? entry.scaledVal : 0,
+      fullMark: 150,
+      actor: entry.item,
+    }));
   }, [itemsForRadar]);
 
-  const handleHover = (e, category, index) => {
+  const handleHover = (e, category, index, payloadActor) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
 
-    const actorObj = radarChartData[index]?.actor;
+    const actorObj = payloadActor || radarChartData[index]?.actor;
+    if (!actorObj) return;
     const name = actorObj?.name || hoveredNameRef.current || 'Threat Actor';
     hoveredNameRef.current = name;
     setHoveredActor(name);
@@ -308,8 +422,8 @@ export default function Threat() {
     setHoveredActor(null);
   };
 
-  const handleClick = (category, index) => {
-    const actorObj = radarChartData[index]?.actor;
+  const handleClick = (category, index, payloadActor) => {
+    const actorObj = payloadActor || radarChartData[index]?.actor;
     if (actorObj) {
       setSelectedActorId(actorObj.actor_id || actorObj.id);
     } else {
@@ -403,8 +517,8 @@ export default function Threat() {
         {/* Left: Compact Radar Chart */}
         <div className="threat-radar-col">
           <div className="radar-chart-container" ref={containerRef}>
-            <ResponsiveContainer width="100%" height={300}>
-              <RadarChart cx="50%" cy="50%" outerRadius="82%" data={radarChartData}>
+            <ResponsiveContainer width="100%" height={360}>
+              <RadarChart cx="50%" cy="50%" outerRadius="88%" data={radarChartData}>
                 <PolarGrid gridType="circle" stroke="#e2e8f0" />
                 <PolarRadiusAxis
                   angle={30}
@@ -425,6 +539,7 @@ export default function Threat() {
                       onHover={handleHover}
                       onLeave={handleLeave}
                       onClick={handleClick}
+                      hoveredActor={hoveredActor}
                     />
                   }
                   activeDot={false}
@@ -442,6 +557,7 @@ export default function Threat() {
                       onHover={handleHover}
                       onLeave={handleLeave}
                       onClick={handleClick}
+                      hoveredActor={hoveredActor}
                     />
                   }
                   activeDot={false}
@@ -459,6 +575,7 @@ export default function Threat() {
                       onHover={handleHover}
                       onLeave={handleLeave}
                       onClick={handleClick}
+                      hoveredActor={hoveredActor}
                     />
                   }
                   activeDot={false}

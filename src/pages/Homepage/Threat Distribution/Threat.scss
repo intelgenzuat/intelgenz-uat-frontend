@@ -162,16 +162,17 @@
 
     // Left column: Radar chart
     .threat-radar-col {
-      flex: 1 1 340px;
-      min-width: 300px;
+      flex: 1 1 380px;
+      min-width: 320px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      background: #fafbff;
-      border: 1px solid #eef0fd;
-      border-radius: 12px;
-      padding: 12px 8px;
+      justify-content: center;
+      background: radial-gradient(circle at center, #ffffff 0%, #f8faff 100%);
+      border: 1px solid #e2e8f8;
+      border-radius: 16px;
+      padding: 16px 12px;
+      box-shadow: 0 4px 20px rgba(82, 0, 255, 0.05), 0 1px 3px rgba(15, 23, 42, 0.03);
 
       @media (max-width: 992px) {
         flex: 1 1 auto;
@@ -180,12 +181,21 @@
       }
 
       .radar-chart-container {
-        height: 300px;
+        height: 360px;
         width: 100%;
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
+        filter: drop-shadow(0 12px 28px rgba(82, 0, 255, 0.07)) drop-shadow(0 4px 12px rgba(15, 23, 42, 0.05));
+
+        .recharts-responsive-container {
+          overflow: visible;
+        }
+
+        .recharts-polar-grid {
+          filter: drop-shadow(0 2px 6px rgba(15, 23, 42, 0.04));
+        }
 
         &:hover {
           .dot-rotate-slow,
