@@ -139,7 +139,7 @@ export default function Threat() {
       case '3+':
         return 3; // Low
       case '4+':
-        return 4; // Minimal / All
+        return 4; // All
       default:
         return 0;
     }
@@ -155,8 +155,8 @@ export default function Threat() {
         return 'Moderate Zone';
       case 'Low':
         return 'Low Zone';
-      case 'Minimal':
-        return 'Minimal Zone';
+      case 'All':
+        return 'All Zones';
       default:
         return `${selectedSeverity} Zone`;
     }
@@ -190,6 +190,9 @@ export default function Threat() {
   const filteredActors = useMemo(() => {
     return allActorsList.filter((actor) => {
       const target = (selectedSeverity || 'Critical').toLowerCase();
+      if (target === 'all') {
+        return true;
+      }
       if (target === 'critical') {
         return (
           actor.riskLevel === 'Critical' ||
@@ -218,12 +221,6 @@ export default function Threat() {
           (actor.radius >= 3.0 && actor.radius < 4.0)
         );
       }
-      if (target === 'minimal') {
-        return (
-          actor.severity === 'minimal' ||
-          actor.radius >= 4.0
-        );
-      }
       return true;
     });
   }, [allActorsList, selectedSeverity]);
@@ -231,8 +228,7 @@ export default function Threat() {
   // Selected sample of actors to plot on the radar chart - ONLY matching the selected filter
   const itemsForRadar = useMemo(() => {
     if (!filteredActors || filteredActors.length === 0) return [];
-    if (filteredActors.length <= 24) return filteredActors;
-    return filteredActors.slice(0, 24);
+    return filteredActors;
   }, [filteredActors]);
 
   // Generate Recharts polar dataset
@@ -356,7 +352,7 @@ export default function Threat() {
       setSelectedRadius('2+');
     } else if (val === 'low') {
       setSelectedRadius('3+');
-    } else if (val === 'minimal') {
+    } else if (val === 'all') {
       setSelectedRadius('4+');
     }
   };
@@ -393,7 +389,7 @@ export default function Threat() {
               <option value="High">High</option>
               <option value="Moderate">Moderate</option>
               <option value="Low">Low</option>
-              <option value="Minimal">Minimal</option>
+              <option value="All">All</option>
             </select>
           </div>
           <button className="expand-btn" title="Expand View" onClick={() => getRadarDatalist(clientName)}>
@@ -487,7 +483,7 @@ export default function Threat() {
           </div>
 
           {/* Mini Proximity Legend underneath radar */}
-          <div className="radar-mini-legend">
+          {/* <div className="radar-mini-legend">
             <span className="mini-legend-item">
               <span className="legend-dot dot-around"></span> Around You
             </span>
@@ -497,7 +493,7 @@ export default function Threat() {
             <span className="mini-legend-item">
               <span className="legend-dot dot-global"></span> Global
             </span>
-          </div>
+          </div> */}
         </div>
 
         {/* Right: Interactive Threat Actor Table */}
@@ -508,7 +504,7 @@ export default function Threat() {
               <thead>
                 <tr>
                   <th>Threat Actor</th>
-                  <th>Proximity</th>
+                  <th>Severity</th>
                   <th className="text-center">Action</th>
                 </tr>
               </thead>
@@ -523,6 +519,12 @@ export default function Threat() {
                         : actor.category === 'Away'
                           ? 'away'
                           : 'global';
+                    const rawRiskLevel = actor.riskLevel || 'Low';
+                    const severityLabel =
+                      selectedSeverity !== 'All'
+                        ? selectedSeverity
+                        : rawRiskLevel === 'Minimal' ? 'All' : rawRiskLevel;
+                    const sevClass = severityLabel.toLowerCase();
 
                     return (
                       <tr
@@ -546,8 +548,8 @@ export default function Threat() {
                           </div>
                         </td>
                         <td>
-                          <span className={`proximity-badge badge-${catClass}`}>
-                            {actor.category}
+                          <span className={`proximity-badge badge-${sevClass}`}>
+                            {severityLabel}
                           </span>
                         </td>
                         <td className="text-center">

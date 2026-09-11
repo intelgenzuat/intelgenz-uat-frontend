@@ -39,7 +39,9 @@ export const CustomDotGlobal = (props) => {
 export const renderRadarBackground = ({ radius, outerR, rMid = 42, strokeWidth = 28 } = {}) => {
   // Build grey donut overlay path (annular ring from activeRadius to outerR)
   // Uses two clockwise full-circle arcs with fill-rule="evenodd" to punch a hole in the centre
-  const greyRingPath = (outerR && radius !== undefined && radius < outerR - 1)
+  const hasGreyRing = outerR && radius !== undefined && radius < outerR - 1;
+
+  const greyRingPath = hasGreyRing
     ? [
         // Outer clockwise full circle
         `M 0 ${-outerR} A ${outerR} ${outerR} 0 1 1 0 ${outerR} A ${outerR} ${outerR} 0 1 1 0 ${-outerR} Z`,
@@ -86,6 +88,38 @@ export const renderRadarBackground = ({ radius, outerR, rMid = 42, strokeWidth =
           pointerEvents="none"
           style={{
             transition: 'all 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        />
+      )}
+
+      {/* Crisp dividing border at the boundary between white area and grey ring */}
+      {hasGreyRing && radius !== undefined && radius > 0 && (
+        <circle
+          cx="0"
+          cy="0"
+          r={radius}
+          fill="none"
+          stroke="rgba(15, 23, 42, 0.18)"
+          strokeWidth={1.5}
+          pointerEvents="none"
+          style={{
+            transition: 'r 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        />
+      )}
+
+      {/* Outer border of the grey ring matching the radar outer circle */}
+      {hasGreyRing && outerR > 0 && (
+        <circle
+          cx="0"
+          cy="0"
+          r={outerR}
+          fill="none"
+          stroke="rgba(15, 23, 42, 0.12)"
+          strokeWidth={1}
+          pointerEvents="none"
+          style={{
+            transition: 'r 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         />
       )}

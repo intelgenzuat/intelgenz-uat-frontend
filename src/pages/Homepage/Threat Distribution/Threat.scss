@@ -390,8 +390,8 @@
 
       .table-scroll-container {
         flex: 1;
-        max-height: 255px;
-        min-height: 240px;
+        max-height: 360px;
+        min-height: 360px;
         overflow-y: auto;
         border: 1px solid #f1f5f9;
         border-radius: 8px;
@@ -486,6 +486,10 @@
                 display: flex;
                 align-items: center;
                 gap: 8px;
+                width: 150px;
+                min-width: 150px;
+                max-width: 150px;
+                overflow: hidden;
 
                 .actor-icon {
                   width: 24px;
@@ -515,12 +519,18 @@
                 .name-info {
                   display: flex;
                   flex-direction: column;
+                  min-width: 0;
+                  flex: 1 1 0;
+                  overflow: hidden;
 
                   .name-text {
                     font-weight: 600;
                     color: #1e293b;
                     font-size: 12px;
                     line-height: 1.2;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                   }
 
                   .id-text {
@@ -528,6 +538,9 @@
                     color: #94a3b8;
                     line-height: 1.2;
                     margin-top: 1px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                   }
                 }
               }
@@ -542,6 +555,26 @@
                 text-transform: uppercase;
                 white-space: nowrap;
 
+                &.badge-critical {
+                  background: rgba(239, 68, 68, 0.12);
+                  color: #dc2626;
+                }
+                &.badge-high {
+                  background: rgba(249, 115, 22, 0.12);
+                  color: #ea580c;
+                }
+                &.badge-moderate {
+                  background: rgba(202, 138, 4, 0.14);
+                  color: #b45309;
+                }
+                &.badge-low {
+                  background: rgba(59, 130, 246, 0.12);
+                  color: #2563eb;
+                }
+                &.badge-minimal {
+                  background: rgba(100, 116, 139, 0.12);
+                  color: #64748b;
+                }
                 &.badge-around {
                   background: rgba(239, 68, 68, 0.1);
                   color: #dc2626;
