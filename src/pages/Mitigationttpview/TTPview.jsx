@@ -91,7 +91,7 @@ const TTPview = ({
             {/* Malware Section */}
             <div className="threat-actors-section mb-4">
                 <div className="d-flex align-items-center">
-                    <span className="section-title">MALWARE :</span>
+                    <span className="section-title">THREAT ACTORS :</span>
                     <span className="selected-badge">{selectedMalware.length} Selected</span>
                     <button className="btn clear-all-btn ms-auto d-flex align-items-center gap-1" onClick={handleClearOrSelectAll}>
                         Clear all <i className="bi bi-x"></i>
