@@ -127,11 +127,33 @@ const ThreatModal = ({
           </div>
           <div className="header-right">
             <div className="score-container">
-              <div className="score-circle">{Math.round(parseFloat(threatScore) || 4)}</div>
-              <div className="score-text">
-                <div className="score-label">THREAT SCORE</div>
-                <div className="score-desc">{riskLevel} ({threatScore}/5.0)</div>
-              </div>
+              {loading && !data ? (
+                <>
+                  <div className="score-circle" style={{ borderColor: '#cbd5e1' }}>
+                    <div
+                      className="spinner-border spinner-border-sm text-primary"
+                      role="status"
+                      style={{ width: '15px', height: '15px', borderWidth: '2px' }}
+                    >
+                      <span className="visually-hidden">Calculating score...</span>
+                    </div>
+                  </div>
+                  <div className="score-text">
+                    <div className="score-label">THREAT SCORE</div>
+                    <div className="score-desc" style={{ color: '#64748b', fontSize: '12px' }}>
+                      Calculating score...
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="score-circle">{Math.round(parseFloat(threatScore) || 4)}</div>
+                  <div className="score-text">
+                    <div className="score-label">THREAT SCORE</div>
+                    <div className="score-desc">{riskLevel} ({threatScore}/5.0)</div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
