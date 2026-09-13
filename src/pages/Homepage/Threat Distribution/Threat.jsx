@@ -480,12 +480,12 @@ export default function Threat() {
       {/* Header Bar */}
       <div className="threat-header">
         <div className="header-left">
-          <span className="chart-title">
+          {/* <span className="chart-title">
             <i className="bi bi-shield-check"></i> {data?.client_name || clientName}
-          </span>
-          <span className="threat-stats-pill">
+          </span> */}
+          {/* <span className="threat-stats-pill">
             <span className="stats-count">{data?.total_items || allActorsList.length}</span> Total Threats
-          </span>
+          </span> */}
         </div>
 
         <div className="header-right">

@@ -14,14 +14,12 @@ const calculateLevel = (overlapPercentage, overlapCount) => {
 const transformNistFamilies = (nistFamilies, selectedMalwareIds = []) => {
     if (!Array.isArray(nistFamilies) || nistFamilies.length === 0) return [];
 
-    // Filter families that have controls
     const validFamilies = nistFamilies.filter(
         family => Array.isArray(family?.controls) && family.controls.length > 0
     );
 
     if (validFamilies.length === 0) return [];
 
-    // Group families by catalog, defaulting to 'NIST SP 800-53 R5'
     const catalogMap = new Map();
 
     validFamilies.forEach((family) => {
@@ -40,7 +38,6 @@ const transformNistFamilies = (nistFamilies, selectedMalwareIds = []) => {
             const familyId = family.family_id || '';
             const colName = familyId ? `${familyName} (${familyId})` : familyName;
 
-            // Filter controls by selectedMalware if selected
             const relevantControls = (family.controls || []).filter((control) => {
                 if (
                     selectedMalwareIds &&
@@ -131,6 +128,10 @@ const getLineWidthPx = () => 9;
 
 const Nist = ({
     showOverlaps,
+    setShowOverlaps,
+    activeViewTab,
+    setActiveViewTab,
+    viewTabs = [],
     threatlist = [],
     selectedMalware: propSelectedMalware,
     onToggleMalware,
@@ -159,26 +160,6 @@ const Nist = ({
     }, [nistList, selectedMalware]);
 
     const [expandedItems, setExpandedItems] = useState(() => new Set());
-
-    const handleToggleMalware = (malwareId) => {
-        if (onToggleMalware) {
-            onToggleMalware(malwareId);
-        } else {
-            if (selectedMalware.includes(malwareId)) {
-                setLocalSelectedMalware(selectedMalware.filter(id => id !== malwareId));
-            } else {
-                setLocalSelectedMalware([...selectedMalware, malwareId]);
-            }
-        }
-    };
-
-    const handleClearOrSelectAll = () => {
-        if (onClearOrSelectAll) {
-            onClearOrSelectAll();
-        } else {
-            setLocalSelectedMalware([]);
-        }
-    };
 
     const filterOverlaps = (items) => {
         return items
@@ -241,7 +222,7 @@ const Nist = ({
                             <div className="overlaps-badge-wrapper" style={{ paddingLeft: '19px' }}>
                                 <div className="overlaps-badge">
                                     <span className="label">Overlaps</span>
-                                    <span className="value">{item.overlaps.toString().padStart(2, '0')}</span>
+                                    <span className="value">{String(item.overlaps).padStart(2, '0')}</span>
                                 </div>
                             </div>
                         )}
@@ -262,74 +243,42 @@ const Nist = ({
 
     return (
         <>
-            {/* Malware Selector Section */}
-            <div className="threat-actors-section mb-4">
-                <div className="d-flex align-items-center">
-                    <span className="section-title">THREAT ACTORS :</span>
-                    <span className="selected-badge">{selectedMalware.length} Selected</span>
-                    <button className="btn clear-all-btn ms-auto d-flex align-items-center gap-1" onClick={handleClearOrSelectAll}>
-                        Clear all <i className="bi bi-x"></i>
-                    </button>
-                </div>
-                <div className="d-flex align-items-center justify-content-between gap-3 mt-3">
-                    <div className="pills-container m-0 mt-0">
-                        {threatlist.map((malware, idx) => {
-                            const malwareKey = malware.actor_id ?? malware.id;
-                            const isSelected = selectedMalware.includes(malware.id) || (malware.actor_id !== undefined && selectedMalware.includes(malware.actor_id));
-                            return (
-                                <div
-                                    key={malware.id ?? malware.actor_id ?? idx}
-                                    className={`actor-pill cursor-pointer ${isSelected ? 'active' : ''}`}
-                                    onClick={() => handleToggleMalware(malwareKey)}
-                                >
-                                    <div className="dot" style={{ backgroundColor: idx % 2 === 0 ? '#3b82f6' : '#5200ff' }}></div>
-                                    <span>{malware.name}</span>
-                                    <i className={`bi ${isSelected ? 'bi-check-square-fill' : 'bi-square text-muted'}`}></i>
-                                    {onRemoveMalware && (
-                                        <i
-                                            className="bi bi-x chip-close-icon ms-1"
-                                            title="Remove malware"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                onRemoveMalware(malwareKey);
-                                            }}
-                                        ></i>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
-                    <button
-                        type="button"
-                        className="btn show-btn text-white px-4 py-2 flex-shrink-0 d-flex align-items-center gap-2"
-                        style={{
-                            backgroundColor: '#5200ff',
-                            borderRadius: '10px',
-                            fontSize: '13px',
-                            fontWeight: 600,
-                            border: 'none',
-                            boxShadow: '0 2px 6px rgba(82, 0, 255, 0.2)',
-                            cursor: isLoader ? 'not-allowed' : 'pointer',
-                            opacity: isLoader ? 0.75 : 1
-                        }}
-                        onClick={onShow}
-                        disabled={isLoader}
-                    >
-                        {isLoader && (
-                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        )}
-                        <span>Show</span>
-                    </button>
-                </div>
-                {formikError && (
-                    <div className="text-danger mt-1 ms-1" style={{ fontSize: '12px' }}>
-                        {formikError}
-                    </div>
-                )}
-            </div>
-
             <div className="mitigation-view-container flex-grow-1 d-flex flex-column overflow-hidden mx-4 mb-4">
                 <div className="mitigation-view-card d-flex flex-column flex-grow-1 bg-white mb-3">
+                    <div className="mapping-header flex-shrink-0 bg-white">
+                        <h4>NIST</h4>
+                        <div className="d-flex align-items-center gap-3">
+                            <div className="controls-right">
+                                <div className="show-overlaps-btn">
+                                    <input
+                                        type="checkbox"
+                                        id="showOverlapsMalware"
+                                        checked={showOverlaps}
+                                        onChange={(e) => setShowOverlaps && setShowOverlaps(e.target.checked)}
+                                    />
+                                    <label htmlFor="showOverlapsMalware">Show overlaps only</label>
+                                </div>
+
+                                {viewTabs && viewTabs.length > 0 && (
+                                    <ul className="nav nav-pills segment-control" id="malwareViewTab" role="tablist">
+                                        {viewTabs.map((tab) => (
+                                            <li key={tab.key} className="nav-item" role="presentation">
+                                                <button
+                                                    className={`nav-link${activeViewTab === tab.key ? ' active' : ''}`}
+                                                    onClick={() => setActiveViewTab && setActiveViewTab(tab.key)}
+                                                    type="button"
+                                                    role="tab"
+                                                    aria-selected={activeViewTab === tab.key}
+                                                >
+                                                    {tab.label}
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                     <div className="table-responsive flex-grow-1 m-0 d-flex d3fend-matrix-scroll">
                         {isLoader ? (
                             <div className="d-flex justify-content-center align-items-center w-100 py-5">

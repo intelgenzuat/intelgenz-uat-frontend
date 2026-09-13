@@ -40,7 +40,7 @@ const Mitigationttpview = () => {
                 }
             }
         } catch (e) {
-            console.error(e);
+            console.error("Error reading selected_threat from localStorage:", e);
         }
         return [];
     });
@@ -55,12 +55,10 @@ const Mitigationttpview = () => {
                 }
             }
         } catch (e) {
-            console.error(e);
+            console.error("Error reading selected_threat_ids from localStorage:", e);
         }
         return [];
     });
-
-    const Navigate = useNavigate();
 
     const viewTabs = [
         { key: 'ttp', label: 'TTP View' },
@@ -84,7 +82,7 @@ const Mitigationttpview = () => {
                 }
             }
         } catch (e) {
-            console.error(e);
+            console.error("Error parsing stored malwares:", e);
         }
 
         try {
@@ -96,53 +94,50 @@ const Mitigationttpview = () => {
                 }
             }
         } catch (e) {
-            console.error(e);
+            console.error("Error parsing stored ids:", e);
         }
 
-        const currentList = savedMalwares.length > 0 ? savedMalwares : threatlist;
-        const currentSelected = savedSelectedIds.length > 0
+        const currentList = Array.isArray(savedMalwares) && savedMalwares.length > 0 ? savedMalwares : (Array.isArray(threatlist) ? threatlist : []);
+        const currentSelected = Array.isArray(savedSelectedIds) && savedSelectedIds.length > 0
             ? savedSelectedIds
-            : (formikValues?.actor_ids && formikValues.actor_ids.length > 0)
+            : (formikValues?.actor_ids && Array.isArray(formikValues.actor_ids) && formikValues.actor_ids.length > 0)
                 ? formikValues.actor_ids
-                : (formikValues?.malware_ids && formikValues.malware_ids.length > 0)
+                : (formikValues?.malware_ids && Array.isArray(formikValues.malware_ids) && formikValues.malware_ids.length > 0)
                     ? formikValues.malware_ids
-                    : selectedMalware;
-
-        // Filter items that match current selection
-        const activeMalwares = currentList.filter((m) => {
-            return (
-                currentSelected.includes(m.id) ||
-                (m.actor_id !== undefined && currentSelected.includes(m.actor_id)) ||
-                (m.malware_id !== undefined && currentSelected.includes(m.malware_id)) ||
-                (m.name && currentSelected.includes(m.name))
-            );
-        });
-
-        const targetObjects = activeMalwares.length > 0 ? activeMalwares : currentList;
+                    : (Array.isArray(selectedMalware) ? selectedMalware : []);
 
         const resultIds = [];
-        targetObjects.forEach((m) => {
-            // Prioritize actor_id, then malware_id, then numeric id
-            const rawId = m?.actor_id !== undefined ? m.actor_id : (m?.malware_id !== undefined ? m.malware_id : m?.id);
-            if (rawId !== undefined && rawId !== null) {
-                const num = Number(rawId);
-                // Ensure it is a valid integer/number and NOT a generated string like "malware-1788683..."
-                if (!isNaN(num) && typeof rawId !== 'boolean' && !String(rawId).startsWith('malware-') && !String(rawId).startsWith('threat-')) {
-                    if (!resultIds.includes(num)) {
-                        resultIds.push(num);
-                    }
+
+        const extractNum = (val) => {
+            if (val === null || val === undefined || typeof val === 'boolean') return null;
+            if (typeof val === 'number') return isNaN(val) ? null : val;
+            if (typeof val === 'string') {
+                if (val.startsWith('threat-') || val.startsWith('malware-')) return null;
+                const num = Number(val);
+                return isNaN(num) ? null : num;
+            }
+            if (typeof val === 'object') {
+                const innerId = val.actor_id ?? val.malware_id ?? val.id;
+                if (innerId !== undefined && innerId !== val) {
+                    return extractNum(innerId);
                 }
+            }
+            return null;
+        };
+
+        currentList.forEach((m) => {
+            if (!m || typeof m !== 'object') return;
+            const num = extractNum(m.actor_id) ?? extractNum(m.malware_id) ?? extractNum(m.id);
+            if (num !== null && !resultIds.includes(num)) {
+                resultIds.push(num);
             }
         });
 
-        // Also check if any numeric IDs were in currentSelected directly
         if (Array.isArray(currentSelected)) {
             currentSelected.forEach((item) => {
-                const num = Number(item);
-                if (!isNaN(num) && typeof item !== 'boolean' && !String(item).startsWith('malware-') && !String(item).startsWith('threat-')) {
-                    if (!resultIds.includes(num)) {
-                        resultIds.push(num);
-                    }
+                const num = extractNum(item);
+                if (num !== null && !resultIds.includes(num)) {
+                    resultIds.push(num);
                 }
             });
         }
@@ -178,16 +173,11 @@ const Mitigationttpview = () => {
             console.log('Sending sendThreatDefend payload:', payload);
 
             setIsLoader(true);
-            const sendFn = typeof sendThreatDefend === 'function' ? sendThreatDefend : sendTTPDefend;
-            if (sendFn) {
-                sendFn(payload)((response) => {
-                    setIsLoader(false);
-                    console.log('sendThreatDefend API response:', response);
-                    setthreatData(response?.data);
-                });
-            } else {
+            sendThreatDefend(payload)((response) => {
                 setIsLoader(false);
-            }
+                console.log('sendThreatDefend API response:', response);
+                setthreatData(response?.data);
+            });
         },
     });
 
@@ -236,14 +226,13 @@ const Mitigationttpview = () => {
     const handleSelectSuggestion = (item) => {
         const itemName = typeof item === 'string'
             ? item
-            : item?.name || item?.threat_name || item?.actor_name || item?.malware_name || item?.label || item?.title || item?.value;
+            : item?.name || item?.threat_name || item?.actor_name || item?.malware_name || item?.label || item?.title || item?.value || '';
 
         if (!itemName) return;
 
-        // Prioritize actor_id, then malware_id, then numeric id
         const rawActorId = item?.actor_id !== undefined && item?.actor_id !== null ? item.actor_id : undefined;
         const rawMalwareId = item?.malware_id !== undefined && item?.malware_id !== null ? item.malware_id : undefined;
-        const rawNumId = typeof item?.id === 'number' ? item.id : (item?.id && !String(item.id).startsWith('malware-') && !String(item.id).startsWith('threat-') && !isNaN(Number(item.id)) ? Number(item.id) : undefined);
+        const rawNumId = typeof item?.id === 'number' ? item.id : (typeof item?.id === 'string' && !item.id.startsWith('malware-') && !item.id.startsWith('threat-') && !isNaN(Number(item.id)) ? Number(item.id) : undefined);
 
         const realActorId = rawActorId !== undefined
             ? (typeof rawActorId === 'number' || !isNaN(Number(rawActorId)) ? Number(rawActorId) : rawActorId)
@@ -253,13 +242,13 @@ const Mitigationttpview = () => {
 
         let targetId;
         const existingMalware = threatlist.find(
-            (m) => (m.name && m.name.toLowerCase() === itemName.toLowerCase()) ||
+            (m) => (m.name && typeof m.name === 'string' && m.name.toLowerCase() === String(itemName).toLowerCase()) ||
                 (realActorId !== undefined && (m.actor_id === realActorId || m.id === realActorId || m.malware_id === realActorId)) ||
-                (item.id && m.id === item.id)
+                (item.id !== undefined && m.id === item.id)
         );
 
         if (existingMalware) {
-            targetId = existingMalware.actor_id !== undefined && !String(existingMalware.actor_id).startsWith('malware-')
+            targetId = existingMalware.actor_id !== undefined && (typeof existingMalware.actor_id === 'number' || !String(existingMalware.actor_id).startsWith('malware-'))
                 ? existingMalware.actor_id
                 : (realActorId ?? existingMalware.id);
         } else {
@@ -268,7 +257,7 @@ const Mitigationttpview = () => {
                 ...(typeof item === 'object' && item !== null ? item : {}),
                 id: targetId,
                 actor_id: realActorId ?? targetId,
-                name: itemName,
+                name: String(itemName),
                 ...(realActorId !== undefined ? { id: realActorId, actor_id: realActorId } : {})
             };
             const updatedList = [...threatlist, newMalware];
@@ -320,13 +309,11 @@ const Mitigationttpview = () => {
     useEffect(() => {
         const trimmedQuery = searchQuery.trim();
 
-        // Do not search and clear suggestions when less than 2 characters
         if (trimmedQuery.length < 2) {
             setData([]);
             return;
         }
 
-        // Trigger debounced API call for 2+ characters
         const handler = setTimeout(() => {
             getThreatTTPData(trimmedQuery);
         }, 400);
@@ -347,9 +334,6 @@ const Mitigationttpview = () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
-
-    console.log("data", data);
-    console.log("threatData", threatData);
 
     return (
         <div className="view-page-container container-fluid p-0 d-flex flex-column h-100 overflow-hidden">
@@ -401,8 +385,8 @@ const Mitigationttpview = () => {
                         </div>
 
                         {/* View Controls Card */}
-                        <div className="view-controls-card flex-shrink-0 mx-4 ">
-                            <div className="view-controls-section">
+                        <div className="view-controls-card flex-shrink-0 mx-4 mb-4">
+                            <div className="view-controls-section d-flex flex-column align-items-stretch gap-3">
                                 {/* Search bar */}
                                 {(() => {
                                     const isSearchDisabled = activeViewTab === 'nist' || activeViewTab === 'mitigation';
@@ -452,7 +436,7 @@ const Mitigationttpview = () => {
                                                     style={{ right: '16px', top: '50%', transform: 'translateY(-50%)' }}
                                                 ></i>
 
-                                                {/* Suggestions Dropdown: Only shown when >= 2 letters are entered */}
+                                                {/* Suggestions Dropdown */}
                                                 {showSuggestions && !isSearchDisabled && hasMinChars && (
                                                     <div className="search-suggestions-dropdown">
                                                         {pending ? (
@@ -465,7 +449,7 @@ const Mitigationttpview = () => {
                                                                 {data.map((item, index) => {
                                                                     const itemName = typeof item === 'string'
                                                                         ? item
-                                                                        : item?.name || item?.malware_name || item?.label || item?.title || item?.value || (typeof item === 'object' ? Object.values(item)[0] : JSON.stringify(item));
+                                                                        : item?.name || item?.malware_name || item?.threat_name || item?.actor_name || item?.label || item?.title || item?.value || '';
                                                                     const itemKey = item?.id || item?._id || index;
 
                                                                     return (
@@ -477,10 +461,10 @@ const Mitigationttpview = () => {
                                                                                 handleSelectSuggestion(item);
                                                                             }}
                                                                         >
-                                                                            <span className="suggestion-text">{itemName}</span>
+                                                                            <span className="suggestion-text">{String(itemName)}</span>
                                                                             {item?.aliases && item.aliases.length > 0 && (
                                                                                 <span className="badge bg-light text-secondary ms-2 text-truncate" style={{ maxWidth: '120px' }}>
-                                                                                    {Array.isArray(item.aliases) ? item.aliases.join(', ') : item.aliases}
+                                                                                    {Array.isArray(item.aliases) ? item.aliases.join(', ') : String(item.aliases)}
                                                                                 </span>
                                                                             )}
                                                                         </li>
@@ -499,32 +483,71 @@ const Mitigationttpview = () => {
                                     );
                                 })()}
 
-                                <div className="controls-right">
-                                    <div className="show-overlaps-btn">
-                                        <input
-                                            type="checkbox"
-                                            id="showOverlapsMalware"
-                                            checked={showOverlaps}
-                                            onChange={(e) => setShowOverlaps(e.target.checked)}
-                                        />
-                                        <label htmlFor="showOverlapsMalware">Show overlaps only</label>
+                                {/* Threat Actors Section */}
+                                <div className="threat-actors-section w-100">
+                                    <div className="d-flex align-items-center">
+                                        <span className="section-title">THREAT ACTORS :</span>
+                                        <span className="selected-badge">{selectedMalware.length} Selected</span>
+                                        <button className="btn clear-all-btn ms-auto d-flex align-items-center gap-1" onClick={handleClearOrSelectAll}>
+                                            Clear all <i className="bi bi-x"></i>
+                                        </button>
                                     </div>
-
-                                    <ul className="nav nav-pills segment-control" id="malwareViewTab" role="tablist">
-                                        {viewTabs.map((tab) => (
-                                            <li key={tab.key} className="nav-item" role="presentation">
-                                                <button
-                                                    className={`nav-link${activeViewTab === tab.key ? ' active' : ''}`}
-                                                    onClick={() => setActiveViewTab(tab.key)}
-                                                    type="button"
-                                                    role="tab"
-                                                    aria-selected={activeViewTab === tab.key}
-                                                >
-                                                    {tab.label}
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    <div className="d-flex align-items-center justify-content-between gap-3 mt-3">
+                                        <div className="pills-container m-0 mt-0">
+                                            {threatlist.map((malware, idx) => {
+                                                const malwareKey = malware.actor_id ?? malware.id;
+                                                const isSelected = selectedMalware.includes(malware.id) || (malware.actor_id !== undefined && selectedMalware.includes(malware.actor_id));
+                                                const displayName = typeof malware.name === 'string' ? malware.name : (malware.name ? String(malware.name) : 'Threat Actor');
+                                                return (
+                                                    <div
+                                                        key={malware.id ?? malware.actor_id ?? idx}
+                                                        className={`actor-pill cursor-pointer ${isSelected ? 'active' : ''}`}
+                                                        onClick={() => handleToggleMalware(malwareKey)}
+                                                    >
+                                                        <div className="dot" style={{ backgroundColor: idx % 2 === 0 ? '#3b82f6' : '#5200ff' }}></div>
+                                                        <span>{displayName}</span>
+                                                        <i className={`bi ${isSelected ? 'bi-check-square-fill' : 'bi-square text-muted'}`}></i>
+                                                        {handleRemoveMalware && (
+                                                            <i
+                                                                className="bi bi-x chip-close-icon ms-1"
+                                                                title="Remove malware"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleRemoveMalware(malwareKey);
+                                                                }}
+                                                            ></i>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                        <button
+                                            type="button"
+                                            className="btn show-btn text-white px-4 py-2 flex-shrink-0 d-flex align-items-center gap-2"
+                                            style={{
+                                                backgroundColor: '#5200ff',
+                                                borderRadius: '10px',
+                                                fontSize: '13px',
+                                                fontWeight: 600,
+                                                border: 'none',
+                                                boxShadow: '0 2px 6px rgba(82, 0, 255, 0.2)',
+                                                cursor: isLoader ? 'not-allowed' : 'pointer',
+                                                opacity: isLoader ? 0.75 : 1
+                                            }}
+                                            onClick={formik.handleSubmit}
+                                            disabled={isLoader}
+                                        >
+                                            {isLoader && (
+                                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            )}
+                                            <span>Show</span>
+                                        </button>
+                                    </div>
+                                    {formik.errors.malware_ids && (
+                                        <div className="text-danger mt-1 ms-1" style={{ fontSize: '12px' }}>
+                                            {formik.errors.malware_ids}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -533,6 +556,10 @@ const Mitigationttpview = () => {
                         {activeViewTab === 'ttp' && (
                             <TTPview
                                 showOverlaps={showOverlaps}
+                                setShowOverlaps={setShowOverlaps}
+                                activeViewTab={activeViewTab}
+                                setActiveViewTab={setActiveViewTab}
+                                viewTabs={viewTabs}
                                 threatlist={threatlist}
                                 selectedMalware={selectedMalware}
                                 onToggleMalware={handleToggleMalware}
@@ -547,6 +574,10 @@ const Mitigationttpview = () => {
                         {activeViewTab === 'mitigation' && (
                             <Defend
                                 showOverlaps={showOverlaps}
+                                setShowOverlaps={setShowOverlaps}
+                                activeViewTab={activeViewTab}
+                                setActiveViewTab={setActiveViewTab}
+                                viewTabs={viewTabs}
                                 threatlist={threatlist}
                                 selectedMalware={selectedMalware}
                                 onToggleMalware={handleToggleMalware}
@@ -561,6 +592,10 @@ const Mitigationttpview = () => {
                         {activeViewTab === 'nist' && (
                             <Nist
                                 showOverlaps={showOverlaps}
+                                setShowOverlaps={setShowOverlaps}
+                                activeViewTab={activeViewTab}
+                                setActiveViewTab={setActiveViewTab}
+                                viewTabs={viewTabs}
                                 threatlist={threatlist}
                                 selectedMalware={selectedMalware}
                                 onToggleMalware={handleToggleMalware}

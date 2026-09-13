@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 
 const TTPview = ({
     showOverlaps,
+    setShowOverlaps,
+    activeViewTab,
+    setActiveViewTab,
+    viewTabs = [],
     threatlist = [],
     selectedMalware: propSelectedMalware,
     onToggleMalware,
@@ -11,30 +15,9 @@ const TTPview = ({
     isLoader = false,
     formikError,
     threatData
-
 }) => {
     const [localSelectedMalware, setLocalSelectedMalware] = useState([]);
     const selectedMalware = propSelectedMalware !== undefined ? propSelectedMalware : localSelectedMalware;
-
-    const handleToggleMalware = (malwareId) => {
-        if (onToggleMalware) {
-            onToggleMalware(malwareId);
-        } else {
-            if (selectedMalware.includes(malwareId)) {
-                setLocalSelectedMalware(selectedMalware.filter(id => id !== malwareId));
-            } else {
-                setLocalSelectedMalware([...selectedMalware, malwareId]);
-            }
-        }
-    };
-
-    const handleClearOrSelectAll = () => {
-        if (onClearOrSelectAll) {
-            onClearOrSelectAll();
-        } else {
-            setLocalSelectedMalware([]);
-        }
-    };
 
     const getOverlapClass = (percentage, hasOverlap) => {
         const p = Number(percentage) || 0;
@@ -88,97 +71,53 @@ const TTPview = ({
 
     return (
         <>
-            {/* Malware Section */}
-            <div className="threat-actors-section mb-4">
-                <div className="d-flex align-items-center">
-                    <span className="section-title">THREAT ACTORS :</span>
-                    <span className="selected-badge">{selectedMalware.length} Selected</span>
-                    <button className="btn clear-all-btn ms-auto d-flex align-items-center gap-1" onClick={handleClearOrSelectAll}>
-                        Clear all <i className="bi bi-x"></i>
-                    </button>
-                </div>
-                <div className="d-flex align-items-center justify-content-between gap-3 mt-3">
-                    <div className="pills-container m-0 mt-0">
-                        {threatlist.map((malware, idx) => {
-                            const malwareKey = malware.actor_id ?? malware.id;
-                            const isSelected = selectedMalware.includes(malware.id) || (malware.actor_id !== undefined && selectedMalware.includes(malware.actor_id));
-                            return (
-                                <div
-                                    key={malware.id ?? malware.actor_id ?? idx}
-                                    className={`actor-pill cursor-pointer ${isSelected ? 'active' : ''}`}
-                                    onClick={() => handleToggleMalware(malwareKey)}
-                                >
-                                    <div className="dot" style={{ backgroundColor: idx % 2 === 0 ? '#3b82f6' : '#5200ff' }}></div>
-                                    <span>{malware.name}</span>
-                                    <i className={`bi ${isSelected ? 'bi-check-square-fill' : 'bi-square text-muted'}`}></i>
-                                    {onRemoveMalware && (
-                                        <i
-                                            className="bi bi-x chip-close-icon ms-1"
-                                            title="Remove malware"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                onRemoveMalware(malwareKey);
-                                            }}
-                                        ></i>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
-                    <button
-                        type="button"
-                        className="btn show-btn text-white px-4 py-2 flex-shrink-0 d-flex align-items-center gap-2"
-                        style={{
-                            backgroundColor: '#5200ff',
-                            borderRadius: '10px',
-                            fontSize: '13px',
-                            fontWeight: 600,
-                            border: 'none',
-                            boxShadow: '0 2px 6px rgba(82, 0, 255, 0.2)',
-                            cursor: isLoader ? 'not-allowed' : 'pointer',
-                            opacity: isLoader ? 0.75 : 1
-                        }}
-                        onClick={onShow}
-                        disabled={isLoader}
-                    >
-                        {isLoader && (
-                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        )}
-                        <span>Show</span>
-                    </button>
-                </div>
-                {formikError && (
-                    <div className="text-danger mt-1 ms-1" style={{ fontSize: '12px' }}>
-                        {formikError}
-                    </div>
-                )}
-            </div>
-
             {/* Technique Mapping Section */}
             <div className="technique-mapping-container flex-grow-1 d-flex flex-column mx-4 mb-4">
                 <div className="technique-mapping-card d-flex flex-column flex-grow-1">
                     <div className="mapping-header flex-shrink-0 bg-white">
                         <h4>Technique Mapping</h4>
-                        <div className="overlap-legend">
-                            <div className="legends-area">
-                                <div className="legend-items">
-                                    <div className="legend-pill">
-                                        <div className="dot" style={{ backgroundColor: '#ef4444' }}></div> Denotes overlaps
-                                    </div>
-                                    <div className="legend-pill">
-                                        <div className="dot" style={{ backgroundColor: '#22c55e' }}></div> Denotes no overlaps
-                                    </div>
+                        <div className="d-flex align-items-center gap-3">
+                            <div className="overlap-legend">
+                                <span className="legend-label">OVERLAP % :</span>
+                                <div className="overlap-items-container">
+                                    <div className="overlap-item"><div className="dot" style={{ backgroundColor: '#ef4444' }}></div> 100%</div>
+                                    <div className="separator"></div>
+                                    <div className="overlap-item"><div className="dot" style={{ backgroundColor: '#fca5a5' }}></div> 75%</div>
+                                    <div className="separator"></div>
+                                    <div className="overlap-item"><div className="dot" style={{ backgroundColor: '#fecaca' }}></div> 50%</div>
+                                    <div className="separator"></div>
+                                    <div className="overlap-item"><div className="dot" style={{ backgroundColor: '#fee2e2' }}></div> 25%</div>
                                 </div>
                             </div>
-                            <span className="legend-label">OVERLAP % :</span>
-                            <div className="overlap-items-container">
-                                <div className="overlap-item"><div className="dot" style={{ backgroundColor: '#ef4444' }}></div> 100%</div>
-                                <div className="separator"></div>
-                                <div className="overlap-item"><div className="dot" style={{ backgroundColor: '#fca5a5' }}></div> 75%</div>
-                                <div className="separator"></div>
-                                <div className="overlap-item"><div className="dot" style={{ backgroundColor: '#fecaca' }}></div> 50%</div>
-                                <div className="separator"></div>
-                                <div className="overlap-item"><div className="dot" style={{ backgroundColor: '#fee2e2' }}></div> 25%</div>
+
+                            <div className="controls-right">
+                                <div className="show-overlaps-btn">
+                                    <input
+                                        type="checkbox"
+                                        id="showOverlapsMalware"
+                                        checked={showOverlaps}
+                                        onChange={(e) => setShowOverlaps && setShowOverlaps(e.target.checked)}
+                                    />
+                                    <label htmlFor="showOverlapsMalware">Show overlaps only</label>
+                                </div>
+
+                                {viewTabs && viewTabs.length > 0 && (
+                                    <ul className="nav nav-pills segment-control" id="malwareViewTab" role="tablist">
+                                        {viewTabs.map((tab) => (
+                                            <li key={tab.key} className="nav-item" role="presentation">
+                                                <button
+                                                    className={`nav-link${activeViewTab === tab.key ? ' active' : ''}`}
+                                                    onClick={() => setActiveViewTab && setActiveViewTab(tab.key)}
+                                                    type="button"
+                                                    role="tab"
+                                                    aria-selected={activeViewTab === tab.key}
+                                                >
+                                                    {tab.label}
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -213,7 +152,7 @@ const TTPview = ({
                                     <tr>
                                         <td colSpan="100%" className="text-center py-5 text-muted">
                                             <i className="bi bi-info-circle me-2"></i>
-                                            {isLoader ? 'Loading technique mapping...' : 'No technique mapping data available. Select malware and click "Show".'}
+                                            {isLoader ? 'Loading technique mapping...' : 'No technique mapping data available. Select threat actor and click "Show".'}
                                         </td>
                                     </tr>
                                 ) : maxRows === 0 && showOverlaps ? (
@@ -255,11 +194,11 @@ const TTPview = ({
                     {/* Footer Pills */}
                     <div className="threat-techniques-footer flex-shrink-0 bg-white">
                         <div className="footer-title">
-                            MALWARE TECHNIQUES : <span>Click pill to see TTP's mapped to selected malware.</span>
+                            MALWARE TECHNIQUES : <span>Click pill to see TTP's mapped to selected threat actor.</span>
                         </div>
                         <div className="footer-pills">
-                            {threatlist.filter(m => selectedMalware.includes(m.id)).map(malware => (
-                                <div key={malware.id} className="footer-pill">
+                            {threatlist.filter(m => selectedMalware.includes(m.id) || (m.actor_id !== undefined && selectedMalware.includes(m.actor_id))).map((malware, idx) => (
+                                <div key={malware.id ?? malware.actor_id ?? idx} className="footer-pill">
                                     <div className="dot" style={{ backgroundColor: '#3b82f6' }}></div> {malware.name} <i className="bi bi-chevron-right"></i>
                                 </div>
                             ))}

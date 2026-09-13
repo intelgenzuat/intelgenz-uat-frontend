@@ -1374,6 +1374,31 @@
               }
             }
           }
+
+          .controls-right {
+            .show-overlaps-btn {
+              background-color: #0b0f19 !important;
+              border-color: #334155 !important;
+              
+              label {
+                color: #cbd5e1 !important;
+              }
+            }
+
+            .segment-control {
+              border-color: #334155 !important;
+
+              .nav-item .nav-link {
+                background-color: #1e293b !important;
+                color: #cbd5e1 !important;
+
+                &.active {
+                  background-color: #5200ff !important;
+                  color: #ffffff !important;
+                }
+              }
+            }
+          }
         }
 
         .table-responsive {
@@ -1487,6 +1512,39 @@
       background-color: #1e293b !important;
       border-color: #334155 !important;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+
+      .mapping-header {
+        background-color: #1e293b !important;
+        
+        h4 {
+          color: #f1f5f9 !important;
+        }
+
+        .controls-right {
+          .show-overlaps-btn {
+            background-color: #0b0f19 !important;
+            border-color: #334155 !important;
+            
+            label {
+              color: #cbd5e1 !important;
+            }
+          }
+
+          .segment-control {
+            border-color: #334155 !important;
+
+            .nav-item .nav-link {
+              background-color: #1e293b !important;
+              color: #cbd5e1 !important;
+
+              &.active {
+                background-color: #5200ff !important;
+                color: #ffffff !important;
+              }
+            }
+          }
+        }
+      }
 
       .model-header {
         border-bottom-color: #334155 !important;

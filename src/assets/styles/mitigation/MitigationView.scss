@@ -2,8 +2,88 @@
   .mitigation-view-card {
     border: 1px solid #e2e8f0;
     border-radius: 8px;
+    background-color: #ffffff;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
+    padding: 16px;
+    gap: 16px;
+
+    .mapping-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h4 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: #1e293b;
+      }
+
+      .controls-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .show-overlaps-btn {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          border: 1px solid #f1f5f9;
+          background-color: #ffffff;
+          padding: 8px 16px;
+          border-radius: 8px;
+
+          input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+            accent-color: #6d28d9;
+            cursor: pointer;
+            margin: 0;
+          }
+
+          label {
+            font-size: 13px;
+            color: #334155;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 0;
+            white-space: nowrap;
+          }
+        }
+
+        .segment-control {
+          display: flex;
+          border: 1px solid #f1f5f9;
+          border-radius: 8px;
+          overflow: hidden;
+          margin: 0;
+
+          .nav-item {
+            margin: 0;
+
+            .nav-link {
+              border: none;
+              background: #ffffff;
+              padding: 8px 16px;
+              font-size: 13px;
+              font-weight: 500;
+              color: #334155;
+              transition: all 0.2s;
+              border-radius: 0;
+              margin: 0;
+              white-space: nowrap;
+
+              &.active {
+                background-color: #ede9fe !important;
+                color: #6d28d9 !important;
+              }
+            }
+          }
+        }
+      }
+    }
 
     .model-header {
       padding: 12px 16px;
@@ -22,6 +102,9 @@
     }
 
     .table-responsive {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin: 0;
       overflow-x: auto;
       overflow-y: auto;
       display: flex;
