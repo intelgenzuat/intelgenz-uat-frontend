@@ -33,7 +33,7 @@ const IntelTopcontent = ({ showHeliosInfo = true, children }) => {
 
                     </div>
                     <h2 className="mb-0 d-flex align-items-center">
-                        <span className="header  pe-3" style={{ fontSize: '24px', fontWeight: '500', color: '1A1B1E' }}>Intel Card Dashboard</span>
+                        <span className="header-title pe-3">Intel Card Dashboard</span>
                     </h2>
                 </div>
                 {children}

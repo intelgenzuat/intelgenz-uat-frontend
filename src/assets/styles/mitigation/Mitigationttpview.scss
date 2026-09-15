@@ -40,10 +40,14 @@
       border-radius: 8px;
     }
 
-    .header {
+    .header, .header-title {
       font-size: 24px;
       font-weight: 500;
-      color: #1a1b1e;
+      background: linear-gradient(90deg, rgba(188, 191, 255, 0.64) -64.12%, rgba(255, 0, 0, 0.64) -28.22%, rgba(0, 13, 255, 0.64) 23.45%, rgba(255, 0, 0, 0.64) 78.61%, rgba(188, 191, 255, 0.64) 118.01%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
     }
   }
 

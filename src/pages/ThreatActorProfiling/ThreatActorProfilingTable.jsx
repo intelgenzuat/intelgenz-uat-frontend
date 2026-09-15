@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiHome } from 'react-icons/fi';
 import { PiDiamondFill } from 'react-icons/pi';
@@ -6,24 +6,51 @@ import { GoFlame } from 'react-icons/go';
 import cube from '../../assets/images/cube.png';
 import logo from '../../assets/images/logo.jpeg';
 import '../../assets/styles/threatactorprofile/threatactorprofilimg.scss';
-
-const MOCK_DATA = [
-  { rank: '01', actor: 'Charming Kitten', capability: true, intent: true, opportunity: true, priority: 'Low' },
-  { rank: '02', actor: 'Lumma Stealer', capability: true, intent: true, opportunity: true, priority: 'Medium' },
-  { rank: '03', actor: 'Gold Sahara', capability: true, intent: true, opportunity: true, priority: 'Critical' },
-  { rank: '04', actor: 'Kim Suky', capability: true, intent: true, opportunity: true, priority: 'Medium' },
-  { rank: '05', actor: 'Charming Kitten', capability: true, intent: true, opportunity: true, priority: 'Medium' },
-  { rank: '06', actor: 'Lumma Stealer', capability: true, intent: true, opportunity: true, priority: 'Critical' },
-  { rank: '07', actor: 'Lumma Stealer', capability: true, intent: true, opportunity: true, priority: 'Low' },
-  { rank: '08', actor: 'Gold Sahara', capability: true, intent: true, opportunity: true, priority: 'Critical' },
-  { rank: '09', actor: 'Kim Suky', capability: true, intent: true, opportunity: true, priority: 'Low' },
-  { rank: '10', actor: 'Charming Kitten', capability: true, intent: true, opportunity: true, priority: 'Critical' },
-  { rank: '11', actor: 'Lumma Stealer', capability: true, intent: true, opportunity: true, priority: 'Medium' }
-];
+import { getThreatActorProfiling } from '../../Context/ThreatActorprofiling';
 
 export default function ThreatActorProfilingTable() {
   const navigate = useNavigate();
   const [techniqueId, setTechniqueId] = useState('');
+  const [error, setError] = useState('');
+  const [data, setdata] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const client = "CERELYN BIOPHARMA";
+
+  const [filters, setFilters] = useState({
+    capability: false,
+    intent: false,
+    opportunity: false
+  });
+
+  const getThreatActorProfilingwData = (technique = techniqueId, clientName = client) => {
+    setLoading(true);
+    getThreatActorProfiling({ technique_ids: technique, client_name: clientName })((response) => {
+      console.log("threatDetail", response);
+      if (response) {
+        setdata(response);
+      }
+      setLoading(false);
+    });
+  };
+
+  const handleSubmit = () => {
+    if (!techniqueId || !techniqueId.trim()) {
+      setError('Please enter MITRE Technique IDs (e.g. T1059.001)');
+      return;
+    }
+    setError('');
+    getThreatActorProfilingwData(techniqueId.trim(), client);
+  };
+
+  console.log(data, "profile data");
+
+  const getActorPriority = (actor) => {
+    if (actor.priority) return actor.priority;
+    const score = (actor.capability ? 1 : 0) + (actor.intent ? 1 : 0) + (actor.opportunity ? 1 : 0);
+    if (score >= 3) return 'Critical';
+    if (score === 2) return 'Medium';
+    return 'Low';
+  };
 
   const getPriorityBadge = (priority) => {
     switch (priority) {
@@ -57,6 +84,35 @@ export default function ThreatActorProfilingTable() {
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4300D2" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="6" y1="12" x2="18" y2="12"></line><line x1="8" y1="18" x2="16" y2="18"></line></svg>
   );
 
+  const processedActors = useMemo(() => {
+    if (!data?.actors || !Array.isArray(data.actors)) return [];
+
+    const isAnyFilterActive = filters.capability || filters.intent || filters.opportunity;
+    if (!isAnyFilterActive) {
+      return data.actors;
+    }
+
+    return [...data.actors].sort((a, b) => {
+      let scoreA = 0;
+      let scoreB = 0;
+
+      if (filters.capability) {
+        if (a.capability) scoreA += 1;
+        if (b.capability) scoreB += 1;
+      }
+      if (filters.intent) {
+        if (a.intent) scoreA += 1;
+        if (b.intent) scoreB += 1;
+      }
+      if (filters.opportunity) {
+        if (a.opportunity) scoreA += 1;
+        if (b.opportunity) scoreB += 1;
+      }
+
+      return scoreB - scoreA;
+    });
+  }, [data?.actors, filters]);
+
   return (
     <div className="threat-actor-detail-page">
       {/* Top Header Section */}
@@ -82,22 +138,35 @@ export default function ThreatActorProfilingTable() {
               </svg>
             </div>
             <h4>Threat Actor Profiling</h4>
-            <div className="title-divider"></div>
-            <span className="title-subtitle">Stay ahead of threat actor profiling</span>
           </div>
 
           {/* Search Input */}
           <div className="tap-search-container">
-            <label>Enter MITRE Technique IDs</label>
-            <div className="input-wrapper">
+            <div className={`input-wrapper ${error ? 'has-error' : ''}`}>
               <input
                 type="text"
                 value={techniqueId}
-                onChange={(e) => setTechniqueId(e.target.value)}
-                placeholder="T1059.001,T1059.002"
+                onChange={(e) => {
+                  setTechniqueId(e.target.value);
+                  if (error) setError('');
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit();
+                  }
+                }}
+                placeholder="Enter MITRE Technique IDs (T1059.001,T1059.002)"
               />
-              <button>Submit</button>
+              <button onClick={handleSubmit} disabled={loading}>
+                {loading ? 'Submitting...' : 'Submit'}
+              </button>
             </div>
+            {error && (
+              <div className="tap-error-message">
+                <i className="bi bi-exclamation-circle me-1"></i>
+                {error}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -115,13 +184,37 @@ export default function ThreatActorProfilingTable() {
                   <div className="header-content">{funnelIcon} Threat Actor</div>
                 </th>
                 <th className="th-cap">
-                  <div className="header-content">{filterLinesIcon} Capability</div>
+                  <div className="header-content">
+                    <input
+                      type="checkbox"
+                      className="tap-header-checkbox"
+                      checked={filters.capability}
+                      onChange={(e) => setFilters(prev => ({ ...prev, capability: e.target.checked }))}
+                    />
+                    {filterLinesIcon} Capability
+                  </div>
                 </th>
                 <th className="th-int">
-                  <div className="header-content">{filterLinesIcon} Intent</div>
+                  <div className="header-content">
+                    <input
+                      type="checkbox"
+                      className="tap-header-checkbox"
+                      checked={filters.intent}
+                      onChange={(e) => setFilters(prev => ({ ...prev, intent: e.target.checked }))}
+                    />
+                    {filterLinesIcon} Intent
+                  </div>
                 </th>
                 <th className="th-opp">
-                  <div className="header-content">{filterLinesIcon} Opportunity</div>
+                  <div className="header-content">
+                    <input
+                      type="checkbox"
+                      className="tap-header-checkbox"
+                      checked={filters.opportunity}
+                      onChange={(e) => setFilters(prev => ({ ...prev, opportunity: e.target.checked }))}
+                    />
+                    {filterLinesIcon} Opportunity
+                  </div>
                 </th>
                 <th className="th-pri">
                   <div className="header-content">{funnelIcon} Priority</div>
@@ -129,16 +222,36 @@ export default function ThreatActorProfilingTable() {
               </tr>
             </thead>
             <tbody>
-              {MOCK_DATA.map((row, idx) => (
-                <tr key={idx}>
-                  <td className="col-rank">{row.rank}</td>
-                  <td className="col-actor">{row.actor}</td>
-                  <td>{renderCheckIcon(row.capability)}</td>
-                  <td>{renderCheckIcon(row.intent)}</td>
-                  <td>{renderCheckIcon(row.opportunity)}</td>
-                  <td>{getPriorityBadge(row.priority)}</td>
+              {loading ? (
+                <tr>
+                  <td colSpan="6" className="text-center py-5 text-muted" style={{ height: '320px', verticalAlign: 'middle' }}>
+                    <div className="d-flex flex-column align-items-center justify-content-center gap-2">
+                      <div className="spinner-border text-primary" role="status" style={{ width: '2rem', height: '2rem' }}></div>
+                      <span>Loading threat actors...</span>
+                    </div>
+                  </td>
                 </tr>
-              ))}
+              ) : processedActors.length > 0 ? (
+                processedActors.map((actor, idx) => {
+                  const priority = getActorPriority(actor);
+                  return (
+                    <tr key={actor.actor_id || idx}>
+                      <td className="col-rank">{String(idx + 1).padStart(2, '0')}</td>
+                      <td className="col-actor">{actor.name}</td>
+                      <td>{renderCheckIcon(actor.capability)}</td>
+                      <td>{renderCheckIcon(actor.intent)}</td>
+                      <td>{renderCheckIcon(actor.opportunity)}</td>
+                      <td>{getPriorityBadge(priority)}</td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center py-5 text-muted" style={{ height: '320px', verticalAlign: 'middle' }}>
+                    No threat actors to display. Enter MITRE Technique IDs above and click Submit.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -146,13 +259,12 @@ export default function ThreatActorProfilingTable() {
         {/* Pagination */}
         <div className="tap-pagination">
           <div className="pagination-info">
-            Showing 1 to 5 of 6 entries
+            Showing {processedActors.length > 0 ? 1 : 0} to {processedActors.length} of {data?.matched_actor_count ?? processedActors.length} entries
           </div>
           <div className="pagination-buttons">
-            <button className="btn-page btn-text">Previous</button>
+            <button className="btn-page btn-text" disabled={processedActors.length === 0}>Previous</button>
             <button className="btn-page active">1</button>
-            <button className="btn-page">2</button>
-            <button className="btn-page btn-text">Next</button>
+            <button className="btn-page btn-text" disabled={processedActors.length === 0}>Next</button>
           </div>
         </div>
       </div>
