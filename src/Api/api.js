@@ -28,3 +28,8 @@ export const GET_THEATRE_INTEL_CARDS_DETAILS = '/api/v1/intel-cards/threat-actor
 //radar-api
 export const GET_RADAR_DATA = '/api/v1/threat-radius-distribution/threat-actors'
 export const GET_RADAR_DATA_LIST = '/api/v1/threat-radius-distribution/threat-actors'
+
+//threat actor profiling
+export const GET_THREAT_ACTOR_PROFILING = '/api/v1/threat-actors/'
+export const GET_THREAT_ACTOR_BY_TECHNIQUES = '/api/v1/threat-actors/by-techniques'
+export const POST_THREAT_MAPPING = '/api/v1/threat-actors/mapping'
