@@ -46,17 +46,24 @@ export const getMalwareIntelCardDetailedView = (props) => onResponse => {
 
 export const getTheatreIntelCardsList = (props) => onResponse => {
     try {
-        let BASE_URL = `${GET_THEATRE_INTEL_CARDS_LIST}?`;
-
+        let params = [];
+        if (props?.page) {
+            params.push('page=' + props?.page);
+        }
+        if (props?.client_name) {
+            params.push('client_name=' + encodeURIComponent(props?.client_name));
+        }
+        if (props?.curation) {
+            params.push('curation=' + encodeURIComponent(props?.curation));
+        }
         if (props?.query) {
-            BASE_URL += 'query=' + props?.query + '&'
+            params.push('query=' + encodeURIComponent(props?.query));
         }
         if (props?.limit) {
-            BASE_URL += 'limit=' + props?.limit;
+            params.push('limit=' + props?.limit);
         }
-        if (props?.page) {
-            BASE_URL += 'page=' + props?.page;
-        }
+
+        let BASE_URL = `${GET_THEATRE_INTEL_CARDS_LIST}?${params.join('&')}`;
 
         axiosInstance.get(BASE_URL)
             .then((response) => {

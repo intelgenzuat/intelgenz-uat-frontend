@@ -13,7 +13,7 @@ import Select from 'react-select';
 export default function IntelCardPage() {
   const location = useLocation();
   const [showFilter, setShowFilter] = useState(false);
-  const [selectedView, setSelectedView] = useState({ value: 'Priority Actor', label: 'Priority Actor' });
+  const [selectedView, setSelectedView] = useState({ value: 'All View', label: 'All View' });
   const [selectedDateFilter, setSelectedDateFilter] = useState('30 Days');
   const [isDateDropdownOpen, setIsDateDropdownOpen] = useState(false);
   const dateDropdownRef = useRef(null);
@@ -21,11 +21,11 @@ export default function IntelCardPage() {
   const dateOptions = ['7 Days', '30 Days', '90 Days', 'All'];
 
   const curatedViewOptions = [
+    { value: 'All View',       label: 'All View' },
     { value: 'Priority Actor', label: 'Priority Actor' },
     { value: 'Relevant Actor', label: 'Relevant Actor' },
     { value: 'Watch Actor',    label: 'Watch Actor' },
     { value: 'Low Relevance',  label: 'Low Relevance' },
-    { value: 'All View',       label: 'All View' },
   ];
 
   const curatedSelectStyles = {
@@ -97,16 +97,18 @@ export default function IntelCardPage() {
             <IntelTopcontent showHeliosInfo={location.pathname === '/intel-card'}>
               <div className="intelcard-list-header-actions d-flex gap-3 position-relative align-items-center">
 
-                {/* Curated View — react-select */}
-                <Select
-                  options={curatedViewOptions}
-                  value={selectedView}
-                  onChange={(opt) => setSelectedView(opt)}
-                  styles={curatedSelectStyles}
-                  isSearchable={false}
-                  placeholder="Curated View"
-                  menuPlacement="auto"
-                />
+                {/* Curated View — react-select (Only in IntelCards) */}
+                {location.pathname === '/intel-card' && (
+                  <Select
+                    options={curatedViewOptions}
+                    value={selectedView}
+                    onChange={(opt) => setSelectedView(opt)}
+                    styles={curatedSelectStyles}
+                    isSearchable={false}
+                    placeholder="Curated View"
+                    menuPlacement="auto"
+                  />
+                )}
 
                 {/* Date Filter Dropdown */}
                 {/* <div className="intelcard-date-dropdown-wrapper position-relative" ref={dateDropdownRef}>

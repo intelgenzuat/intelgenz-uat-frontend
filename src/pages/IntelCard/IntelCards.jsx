@@ -4,7 +4,7 @@ import '../../assets/styles/Intelcard/intelcard.scss';
 import { FiArrowRight } from 'react-icons/fi';
 import { ImEarth } from 'react-icons/im';
 import { PiBug, PiShieldWarningDuotone } from 'react-icons/pi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { getTheatreIntelCardsList } from '../../Context/Intelcard';
 import Pagination from '../../components/pagination/Pagination';
 
@@ -39,7 +39,7 @@ function IntelCard({ threatData }) {
     target_sector: targeting?.sectors?.join(', ') || 'General',
     severity: summary?.actor_types?.includes('RANSOMWARE_EXTORTION_ACTOR') ? 'Critical'
       : summary?.actor_types?.includes('NATION_STATE') ? 'High'
-      : 'Medium',
+        : 'Medium',
     status: summary?.status
       ? summary.status.charAt(0).toUpperCase() + summary.status.slice(1).toLowerCase()
       : 'Unknown'
@@ -192,14 +192,19 @@ function IntelCard({ threatData }) {
 }
 
 export default function IntelCards() {
+  const { selectedView } = useOutletContext() || {};
   const [cardData, setCardData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [threatData, setThreatData] = useState([]);
   const [page, setPage] = useState(1);
 
-  const getThreatIntelCardListData = (pageNo = page) => {
+  const getThreatIntelCardListData = (pageNo = page, curationValue = selectedView) => {
     setLoading(true);
-    getTheatreIntelCardsList({ page: pageNo })((response) => {
+    getTheatreIntelCardsList({
+      page: pageNo,
+      client_name: 'CERELYN BIOPHARMA',
+      curation: curationValue,
+    })((response) => {
       console.log("threatIntelCards", response);
       if (response) {
         setThreatData(response);
@@ -209,12 +214,13 @@ export default function IntelCards() {
   };
 
   useEffect(() => {
-    getThreatIntelCardListData(page);
-  }, []);
+    setPage(1);
+    getThreatIntelCardListData(1, selectedView);
+  }, [selectedView]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
-    getThreatIntelCardListData(newPage);
+    getThreatIntelCardListData(newPage, selectedView);
   };
 
   console.log("ThreatData", threatData);
@@ -227,7 +233,7 @@ export default function IntelCards() {
               <span className="visually-hidden">Loading...</span>
             </div>
           </div>
-        ) : (
+        ) : threatData?.items?.length > 0 ? (
           <div className="intelcard-cards-row row g-3 mb-2">
             {threatData?.items?.map(threat => (
               <div key={threat.actor_id} className="intelcard-card-column col-12 col-xl-4 col-md-6 mb-1">
@@ -235,15 +241,21 @@ export default function IntelCards() {
               </div>
             ))}
           </div>
+        ) : (
+          <div className="d-flex justify-content-center align-items-center py-5 text-muted" style={{ minHeight: '300px' }}>
+            <span className="fs-6 fw-medium">No data available</span>
+          </div>
         )}
       </div>
-      <Pagination
-        currentPage={threatData?.pagination?.page || page}
-        totalPages={threatData?.pagination?.total_pages || 1}
-        totalItems={threatData?.pagination?.total_items || 0}
-        pageSize={threatData?.pagination?.page_size || 9}
-        onPageChange={handlePageChange}
-      />
+      {threatData?.items?.length > 0 && (
+        <Pagination
+          currentPage={threatData?.pagination?.page || page}
+          totalPages={threatData?.pagination?.total_pages || 1}
+          totalItems={threatData?.pagination?.total_items || 0}
+          pageSize={threatData?.pagination?.page_size || 9}
+          onPageChange={handlePageChange}
+        />
+      )}
     </>
   );
 }
