@@ -297,6 +297,49 @@
     margin-left: 8px;
   }
 
+  .tap-filter-checkboxes {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .tap-filter-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #475569;
+    cursor: pointer;
+    user-select: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background-color: #f8fafc;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: #f0ebff;
+      border-color: #c4b5fd;
+      color: #3b0080;
+    }
+
+    .tap-filter-checkbox {
+      width: 14px;
+      height: 14px;
+      accent-color: #5200ff;
+      cursor: pointer;
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    &:has(.tap-filter-checkbox:checked) {
+      background-color: #f0ebff;
+      border-color: #c4b5fd;
+      color: #5200ff;
+      font-weight: 600;
+    }
+  }
+
   .accordion-toggle-icon {
     font-size: 13px;
     color: #64748b;
@@ -377,14 +420,15 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   border: 1px solid #f1f5f9;
   overflow: visible !important;
+  width: 900px;
 
   .view-controls-section {
-    padding: 20px 20px 16px 20px;
+    padding: 10px 20px 16px 20px;
     overflow: visible !important;
 
     .threat-actors-section {
       padding: 0px 0 0 0;
-      border-top: 1px solid #f1f5f9;
+      // border-top: 1px solid #f1f5f9;
       border-bottom: none;
     }
 

@@ -303,7 +303,7 @@ export default function ThreatActorProfilingTable() {
 
       {/* View Controls Card */}
       <div className="view-controls-card flex-shrink-0 mx-4 mb-4">
-        <div className="view-controls-section d-flex flex-column align-items-stretch gap-3" style={{ width: "850px" }}>
+        <div className="view-controls-section d-flex flex-column align-items-stretch gap-3" style={{ width: "880px" }}>
           {/* Search bar */}
           <div className="threat-actor-search-section d-flex align-items-center justify-content-start gap-3">
             <div className="d-flex flex-column">
@@ -444,6 +444,26 @@ export default function ThreatActorProfilingTable() {
                 <span className="section-title">SELECTED TECHNIQUES :</span>
                 <span className="selected-badge">{selectedTechniques.length} Selected</span>
               </div>
+
+              {/* Filter checkboxes */}
+              <div className="tap-filter-checkboxes d-flex align-items-center gap-3" onClick={(e) => e.stopPropagation()}>
+                {[
+                  { label: 'Capability' },
+                  { label: 'Intent' },
+                  { label: 'Opportunity' },
+                ].map(({ label }) => (
+                  <label key={label} className="tap-filter-label" onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      className="tap-filter-checkbox"
+                      defaultChecked={false}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+
               <div className="accordion-toggle-icon d-flex align-items-center gap-1 text-muted" style={{ fontSize: '13px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 500 }}>{isAccordionOpen ? 'Collapse' : 'Expand'}</span>
                 <i className={`bi ${isAccordionOpen ? 'bi-chevron-up' : 'bi-chevron-down'}`}></i>
