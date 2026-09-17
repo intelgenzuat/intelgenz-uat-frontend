@@ -27,6 +27,7 @@ const Mitigationttpview = () => {
     const [pending, setPending] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [isAccordionOpen, setIsAccordionOpen] = useState(true);
     const searchWrapperRef = useRef(null);
 
     // Malwares list and selected IDs synced with localStorage (starts empty until user selects from search)
@@ -479,73 +480,89 @@ const Mitigationttpview = () => {
                                                     </div>
                                                 )}
                                             </div>
+
+                                            {/* Action Buttons Row pushed to end */}
+                                            <div className="ms-auto d-flex align-items-center gap-2">
+                                                <button
+                                                    type="button"
+                                                    className="btn show-btn text-white flex-shrink-0"
+                                                    style={{
+                                                        cursor: isLoader ? 'not-allowed' : 'pointer',
+                                                        opacity: isLoader ? 0.75 : 1
+                                                    }}
+                                                    onClick={formik.handleSubmit}
+                                                    disabled={isLoader}
+                                                >
+                                                    {isLoader && (
+                                                        <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" style={{ width: '12px', height: '12px' }}></span>
+                                                    )}
+                                                    <span>Submit</span>
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className="btn clear-all-btn flex-shrink-0"
+                                                    onClick={handleClearOrSelectAll}
+                                                >
+                                                    Clear all <i className="bi bi-x"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     );
                                 })()}
 
-                                {/* Threat Actors Section */}
+                                {/* Threat Actors Section with Accordion */}
                                 <div className="threat-actors-section w-100">
-                                    <div className="d-flex align-items-center">
-                                        <span className="section-title">THREAT ACTORS :</span>
-                                        <span className="selected-badge">{selectedMalware.length} Selected</span>
-                                        <button className="btn clear-all-btn ms-auto d-flex align-items-center gap-1" onClick={handleClearOrSelectAll}>
-                                            Clear all <i className="bi bi-x"></i>
-                                        </button>
-                                    </div>
-                                    <div className="d-flex align-items-center justify-content-between gap-3 mt-3">
-                                        <div className="pills-container m-0 mt-0">
-                                            {threatlist.map((malware, idx) => {
-                                                const malwareKey = malware.actor_id ?? malware.id;
-                                                const isSelected = selectedMalware.includes(malware.id) || (malware.actor_id !== undefined && selectedMalware.includes(malware.actor_id));
-                                                const displayName = typeof malware.name === 'string' ? malware.name : (malware.name ? String(malware.name) : 'Threat Actor');
-                                                return (
-                                                    <div
-                                                        key={malware.id ?? malware.actor_id ?? idx}
-                                                        className={`actor-pill cursor-pointer ${isSelected ? 'active' : ''}`}
-                                                        onClick={() => handleToggleMalware(malwareKey)}
-                                                    >
-                                                        <div className="dot" style={{ backgroundColor: idx % 2 === 0 ? '#3b82f6' : '#5200ff' }}></div>
-                                                        <span>{displayName}</span>
-                                                        <i className={`bi ${isSelected ? 'bi-check-square-fill' : 'bi-square text-muted'}`}></i>
-                                                        {handleRemoveMalware && (
-                                                            <i
-                                                                className="bi bi-x chip-close-icon ms-1"
-                                                                title="Remove malware"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    handleRemoveMalware(malwareKey);
-                                                                }}
-                                                            ></i>
-                                                        )}
-                                                    </div>
-                                                );
-                                            })}
+                                    <div
+                                        className="d-flex align-items-center justify-content-between cursor-pointer user-select-none"
+                                        onClick={() => setIsAccordionOpen(!isAccordionOpen)}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        <div className="d-flex align-items-center">
+                                            <span className="section-title">THREAT ACTORS :</span>
+                                            <span className="selected-badge">{selectedMalware.length} Selected</span>
                                         </div>
-                                        <button
-                                            type="button"
-                                            className="btn show-btn text-white px-4 py-2 flex-shrink-0 d-flex align-items-center gap-2"
-                                            style={{
-                                                backgroundColor: '#5200ff',
-                                                borderRadius: '10px',
-                                                fontSize: '13px',
-                                                fontWeight: 600,
-                                                border: 'none',
-                                                boxShadow: '0 2px 6px rgba(82, 0, 255, 0.2)',
-                                                cursor: isLoader ? 'not-allowed' : 'pointer',
-                                                opacity: isLoader ? 0.75 : 1
-                                            }}
-                                            onClick={formik.handleSubmit}
-                                            disabled={isLoader}
-                                        >
-                                            {isLoader && (
-                                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                            )}
-                                            <span>Show</span>
-                                        </button>
+                                        <div className="accordion-toggle-icon d-flex align-items-center gap-1 text-muted" style={{ fontSize: '13px' }}>
+                                            <span style={{ fontSize: '12px', fontWeight: 500 }}>{isAccordionOpen ? 'Collapse' : 'Expand'}</span>
+                                            <i className={`bi ${isAccordionOpen ? 'bi-chevron-up' : 'bi-chevron-down'}`}></i>
+                                        </div>
                                     </div>
-                                    {formik.errors.malware_ids && (
-                                        <div className="text-danger mt-1 ms-1" style={{ fontSize: '12px' }}>
-                                            {formik.errors.malware_ids}
+
+                                    {isAccordionOpen && (
+                                        <div className="accordion-content mt-3">
+                                            <div className="pills-container m-0 mt-0">
+                                                {threatlist.map((malware, idx) => {
+                                                    const malwareKey = malware.actor_id ?? malware.id;
+                                                    const isSelected = selectedMalware.includes(malware.id) || (malware.actor_id !== undefined && selectedMalware.includes(malware.actor_id));
+                                                    const displayName = typeof malware.name === 'string' ? malware.name : (malware.name ? String(malware.name) : 'Threat Actor');
+                                                    return (
+                                                        <div
+                                                            key={malware.id ?? malware.actor_id ?? idx}
+                                                            className={`actor-pill cursor-pointer ${isSelected ? 'active' : ''}`}
+                                                            onClick={() => handleToggleMalware(malwareKey)}
+                                                        >
+                                                            <div className="dot" style={{ backgroundColor: idx % 2 === 0 ? '#3b82f6' : '#5200ff' }}></div>
+                                                            <span>{displayName}</span>
+                                                            <i className={`bi ${isSelected ? 'bi-check-square-fill' : 'bi-square text-muted'}`}></i>
+                                                            {handleRemoveMalware && (
+                                                                <i
+                                                                    className="bi bi-x chip-close-icon ms-1"
+                                                                    title="Remove malware"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleRemoveMalware(malwareKey);
+                                                                    }}
+                                                                ></i>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                            {formik.errors.malware_ids && (
+                                                <div className="text-danger mt-2 ms-1" style={{ fontSize: '12px' }}>
+                                                    {formik.errors.malware_ids}
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                 </div>
