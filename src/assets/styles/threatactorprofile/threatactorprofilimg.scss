@@ -14,14 +14,13 @@
   position: relative;
   padding: 16px 32px 12px 32px;
   overflow: visible;
-  min-height: 190px;
 }
 
 .tap-hero-bg {
   position: absolute;
   right: -20px;
   top: 0px;
-  height: 140%;
+  height: 260px;
   width: 45%;
   background-size: contain;
   background-position: right center;
@@ -108,316 +107,289 @@
   }
 }
 
-.tap-search-container {
-  margin-top: 10px;
-  max-width: 580px;
+.threat-actor-search-section {
+  &.disabled {
+    .search-wrapper {
+      opacity: 0.6;
+      cursor: not-allowed;
+
+      .form-control {
+        background-color: #f1f5f9 !important;
+        border-color: #e2e8f0 !important;
+        color: #94a3b8 !important;
+        cursor: not-allowed !important;
+
+        &::placeholder {
+          color: #94a3b8 !important;
+        }
+      }
+
+      i {
+        color: #cbd5e1 !important;
+        cursor: not-allowed !important;
+      }
+    }
+  }
+}
+
+.search-wrapper {
+  width: 420px;
   position: relative;
 
-  label {
-    font-size: 16px;
-    font-weight: 600;
-    color: #6c757d;
-    margin-bottom: 1rem;
-    display: block;
-  }
+  .form-control {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    font-size: 14px;
 
-  .input-wrapper {
-    position: relative;
-    width: 100%;
-
-    .search-input-icon {
-      position: absolute;
-      left: 18px;
-      top: 50%;
-      transform: translateY(-50%);
+    &::placeholder {
       color: #94a3b8;
-      font-size: 16px;
-      pointer-events: none;
-      z-index: 2;
     }
 
-    input {
-      width: 100%;
-      border-radius: 50px;
-      padding: 14px 145px 14px 44px;
-      border: 1px solid #e6e6e6;
-      font-size: 15px;
-      color: #333;
-      background-color: #ffffff;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-
-      &::placeholder {
-        color: #adb5bd;
-      }
-
-      &:focus {
-        outline: none;
-        border-color: #4300D2;
-        box-shadow: 0 0 0 0.2rem rgba(67, 0, 210, 0.15);
-      }
+    &:focus {
+      box-shadow: none;
+      border-color: #cbd5e1;
     }
+  }
+}
 
-    button {
-      position: absolute;
-      right: 6px;
-      top: 6px;
-      bottom: 6px;
-      border-radius: 50px;
-      background-color: #4300D2;
-      padding: 0 28px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #ffffff;
-      border: none;
+.search-suggestions-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  z-index: 9999;
+  max-height: 280px;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+
+  .suggestion-list {
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+
+    .suggestion-item {
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      color: #334155;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2;
-      transition: all 0.2s ease;
-
-      &:hover:not(:disabled) {
-        background-color: color.adjust(#4300D2, $lightness: -10%);
-      }
-
-      &:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-      }
-    }
-
-    &.has-error input {
-      border-color: #dc3545;
-      &:focus {
-        border-color: #dc3545;
-        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.2);
-      }
-    }
-
-    .tap-search-suggestions-dropdown {
-      position: absolute;
-      top: calc(100% + 6px);
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      z-index: 1050;
-      max-height: 280px;
-      overflow-y: auto;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-
-      .tap-suggestion-list {
-        margin: 0;
-        padding: 6px;
-        list-style: none;
-
-        .tap-suggestion-item {
-          padding: 9px 12px;
-          border-radius: 8px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 10px;
-          transition: all 0.15s ease;
-
-          &:hover {
-            background-color: #f5f2ff;
-          }
-
-          &.selected {
-            background-color: #fbf9ff;
-          }
-
-          .tap-suggestion-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 0;
-            flex: 1;
-
-            .tap-technique-badge {
-              font-size: 12px;
-              font-weight: 700;
-              background: #ede8ff;
-              color: #4300D2;
-              padding: 2px 8px;
-              border-radius: 6px;
-              letter-spacing: 0.3px;
-              flex-shrink: 0;
-            }
-
-            .tap-technique-name {
-              font-size: 13px;
-              color: #1e293b;
-              font-weight: 500;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-            }
-          }
-
-          .tap-suggestion-right {
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;
-
-            .tap-tactic-badge {
-              font-size: 11px;
-              color: #64748b;
-              background: #f1f5f9;
-              padding: 2px 7px;
-              border-radius: 4px;
-            }
-          }
-        }
-      }
-
-      .tap-suggestion-loading,
-      .tap-suggestion-empty {
-        padding: 14px 16px;
-        font-size: 13px;
-        color: #64748b;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
-  }
-
-  .tap-error-message {
-    color: #dc3545;
-    font-size: 13px;
-    font-weight: 500;
-    margin-top: 6px;
-    margin-left: 18px;
-    display: flex;
-    align-items: center;
-  }
-
-  /* Chips Section */
-  .tap-chips-section {
-    .tap-chips-header {
-      font-size: 12px;
-
-      .tap-chips-title {
-        color: #475569;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .tap-show-btn {
-        background-color: #4300D2;
-        color: #ffffff;
-        border: none;
-        border-radius: 50px;
-        padding: 5px 16px;
-        font-size: 12.5px;
-        font-weight: 600;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        box-shadow: 0 2px 6px rgba(67, 0, 210, 0.25);
-        transition: all 0.2s ease;
-
-        &:hover:not(:disabled) {
-          background-color: color.adjust(#4300D2, $lightness: -8%);
-          transform: translateY(-1px);
-          box-shadow: 0 4px 10px rgba(67, 0, 210, 0.35);
-        }
-
-        &:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-          transform: none;
-        }
-      }
-
-      .tap-clear-all-btn {
-        background: transparent;
-        border: none;
-        color: #94a3b8;
-        font-size: 12px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 2px;
-        padding: 0;
-        transition: color 0.15s ease;
-
-        &:hover {
-          color: #ef4444;
-        }
-      }
-    }
-
-    .tap-chips-container {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .tap-technique-chip {
-      display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: #f4f0ff;
-      border: 1px solid #d8ccff;
-      border-radius: 50px;
-      padding: 4px 10px;
-      font-size: 12.5px;
-      color: #4300D2;
-      animation: fadeIn 0.2s ease;
-      max-width: 100%;
+      gap: 8px;
+      transition: all 0.15s ease;
 
-      .chip-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background-color: #5200ff;
-        flex-shrink: 0;
+      &:hover {
+        background-color: #f1f5f9;
+        color: #0f172a;
       }
 
-      .chip-id {
+      &.selected {
+        background-color: #f0ebff;
+
+        .suggestion-technique-id {
+          color: #5200ff;
+        }
+      }
+
+      .suggestion-technique-id {
+        font-size: 11px;
         font-weight: 700;
-        letter-spacing: 0.2px;
+        color: #5200ff;
+        background-color: #f0ebff;
+        border: 1px solid #d8c8ff;
+        border-radius: 4px;
+        padding: 1px 6px;
+        white-space: nowrap;
         flex-shrink: 0;
       }
 
-      .chip-name {
-        color: #334155;
+      .suggestion-text {
         font-weight: 500;
-        max-width: 180px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        flex: 1;
+      }
+    }
+  }
+
+  .suggestion-loading,
+  .suggestion-empty {
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.clear-all-btn,
+.show-btn {
+  font-size: 12px;
+  font-weight: 600;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  line-height: 1;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.clear-all-btn {
+  color: #ef4444;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+
+  &:hover {
+    background-color: #fee2e2;
+    border-color: #fca5a5;
+  }
+}
+
+.show-btn {
+  background-color: #5200ff;
+  color: #ffffff;
+  border: 1px solid #5200ff;
+  box-shadow: 0 2px 6px rgba(82, 0, 255, 0.2);
+
+  &:hover:not(:disabled) {
+    background-color: #4300d2;
+    border-color: #4300d2;
+    box-shadow: 0 4px 12px rgba(82, 0, 255, 0.3);
+  }
+
+  &:disabled {
+    background-color: #5200ff !important;
+    color: #ffffff !important;
+    border-color: #5200ff !important;
+    opacity: 0.55;
+    pointer-events: none;
+    box-shadow: none;
+  }
+}
+
+.threat-actors-section {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1e293b;
+    letter-spacing: 0.5px;
+  }
+
+  .selected-badge {
+    background-color: #1e293b;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: 8px;
+  }
+
+  .accordion-toggle-icon {
+    font-size: 13px;
+    color: #64748b;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: #1e293b;
+    }
+  }
+
+  .pills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+
+    .actor-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      font-size: 13px;
+      color: #475569;
+      font-weight: 500;
+      background-color: #fff;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
       }
 
-      .chip-remove-btn {
-        background: transparent;
-        border: none;
-        color: #7c6fd4;
-        cursor: pointer;
-        padding: 0;
-        display: flex;
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: #3b82f6;
+      }
+
+      .bi-check-square-fill {
+        color: #5200ff;
+        font-size: 14px;
+      }
+
+      .bi-square {
+        font-size: 14px;
+        color: #94a3b8;
+      }
+
+      .chip-close-icon {
+        font-size: 14px;
+        color: #94a3b8;
+        border-radius: 50%;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 14px;
-        line-height: 1;
-        margin-left: 2px;
-        border-radius: 50%;
-        width: 16px;
-        height: 16px;
+        padding: 1px;
         transition: all 0.15s ease;
+        cursor: pointer;
 
         &:hover {
+          background-color: #fee2e2;
           color: #ef4444;
-          background: rgba(239, 68, 68, 0.1);
+          transform: scale(1.15);
         }
       }
+    }
+  }
+}
+
+.view-controls-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+  overflow: visible !important;
+
+  .view-controls-section {
+    padding: 20px 20px 16px 20px;
+    overflow: visible !important;
+
+    .threat-actors-section {
+      padding: 0px 0 0 0;
+      border-top: 1px solid #f1f5f9;
+      border-bottom: none;
+    }
+
+    .threat-actor-search-section {
+      overflow: visible !important;
     }
   }
 }
@@ -425,7 +397,7 @@
 
 .tap-table-section {
   padding: 0 1.5rem;
-  margin-top: 4.5rem;
+  margin-top: 0;
   flex-grow: 1;
   padding-bottom: 3rem;
 

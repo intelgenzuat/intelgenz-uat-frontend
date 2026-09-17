@@ -6,7 +6,7 @@ import { GoFlame } from 'react-icons/go';
 import cube from '../../assets/images/cube.png';
 import logo from '../../assets/images/logo.jpeg';
 import '../../assets/styles/threatactorprofile/threatactorprofilimg.scss';
-import { getThreatActorProfiling,getThreatActorByTechniques} from '../../Context/ThreatActorprofiling';
+import { getThreatActorProfiling, getThreatActorByTechniques } from '../../Context/ThreatActorprofiling';
 
 export default function ThreatActorProfilingTable() {
   const navigate = useNavigate();
@@ -53,10 +53,12 @@ export default function ThreatActorProfilingTable() {
     });
   };
 
-  // Fetch suggestions when user types >= 3 characters
+  const [isAccordionOpen, setIsAccordionOpen] = useState(true);
+
+  // Fetch suggestions when user types >= 2 characters
   useEffect(() => {
     const trimmed = techniqueId.trim();
-    if (trimmed.length >= 3) {
+    if (trimmed.length >= 2) {
       setSearchLoading(true);
       setShowSuggestions(true);
       const handler = setTimeout(() => {
@@ -105,14 +107,16 @@ export default function ThreatActorProfilingTable() {
   }, []);
 
   const handleSelectTechnique = (item) => {
-    const exists = selectedTechniques.some(t => t.technique_id === item.technique_id);
+    const techId = item.technique_id || item.actor_id || item.id || item.name;
+    const techName = item.name || item.actor_name || item.threat_name || item.technique_name || item.technique_id || '';
+    const exists = selectedTechniques.some(t => t.technique_id === techId);
     let updated;
     if (exists) {
-      updated = selectedTechniques.filter(t => t.technique_id !== item.technique_id);
+      updated = selectedTechniques.filter(t => t.technique_id !== techId);
     } else {
       updated = [...selectedTechniques, {
-        technique_id: item.technique_id,
-        name: item.name || item.technique_name || ''
+        technique_id: techId,
+        name: techName
       }];
     }
     setSelectedTechniques(updated);
@@ -294,110 +298,183 @@ export default function ThreatActorProfilingTable() {
             </div>
             <h4>Threat Actor Profiling</h4>
           </div>
+        </div>
+      </div>
 
-          {/* Search Input */}
-          <div className="tap-search-container" ref={searchWrapperRef}>
-            <div className={`input-wrapper ${error ? 'has-error' : ''}`}>
+      {/* View Controls Card */}
+      <div className="view-controls-card flex-shrink-0 mx-4 mb-4">
+        <div className="view-controls-section d-flex flex-column align-items-stretch gap-3" style={{ width: "850px" }}>
+          {/* Search bar */}
+          <div className="threat-actor-search-section d-flex align-items-center justify-content-start gap-3">
+            <div className="d-flex flex-column">
+              <span className="fw-medium text-dark" style={{ fontSize: '14.5px' }}>
+                Enter MITRE Technique IDs
+              </span>
+            </div>
+            <div className="search-wrapper position-relative m-0" ref={searchWrapperRef}>
+              <i
+                className="bi bi-search position-absolute text-muted"
+                style={{ left: '12px', top: '50%', transform: 'translateY(-50%)' }}
+              ></i>
               <input
                 type="text"
+                className="form-control rounded-pill ps-5 pe-5"
+                placeholder="(T1059.001,T1059.002)"
+                autoComplete="off"
                 value={techniqueId}
                 onChange={(e) => {
-                  setTechniqueId(e.target.value);
+                  const val = e.target.value;
+                  setTechniqueId(val);
                   if (error) setError('');
+                  if (val.trim().length >= 2) {
+                    setShowSuggestions(true);
+                  } else {
+                    setShowSuggestions(false);
+                  }
                 }}
                 onFocus={() => {
-                  if (suggestions.length > 0) setShowSuggestions(true);
+                  if (techniqueId.trim().length >= 2) {
+                    setShowSuggestions(true);
+                  }
                 }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     handleSearchSubmit();
                   }
                 }}
-                placeholder="Enter MITRE Technique IDs (T1059.001,T1059.002) or search query"
               />
-              <button onClick={handleSearchSubmit} disabled={searchLoading}>
-                {searchLoading ? 'Searching...' : 'Submit'}
-              </button>
+              <i
+                className="bi bi-filter position-absolute text-muted"
+                style={{ right: '16px', top: '50%', transform: 'translateY(-50%)' }}
+              ></i>
 
-              {/* Suggestions Dropdown — inside input-wrapper so it floats below the pill only */}
-              {showSuggestions && techniqueId.trim().length >= 3 && (
-                <div className="tap-search-suggestions-dropdown">
+              {/* Suggestions Dropdown */}
+              {showSuggestions && techniqueId.trim().length >= 2 && (
+                <div className="search-suggestions-dropdown">
                   {searchLoading ? (
-                    <div className="tap-suggestion-loading">
-                      <div className="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
-                      Searching techniques...
+                    <div className="suggestion-loading">
+                      <div className="spinner-border spinner-border-sm me-2 text-primary" role="status"></div>
+                      <span>Loading suggestions...</span>
                     </div>
-                  ) : suggestions.length > 0 ? (
-                    <ul className="tap-suggestion-list">
-                      {suggestions.map((item, idx) => {
-                        const isSelected = selectedTechniques.some(t => t.technique_id === item.technique_id);
+                  ) : suggestions && suggestions.length > 0 ? (
+                    <ul className="suggestion-list">
+                      {suggestions.map((item, index) => {
+                        const itemKey = item?.technique_id || item?.id || item?.actor_id || index;
+                        const isSelected = selectedTechniques.some(t => t.technique_id === (item.technique_id || item.id || item.actor_id || item.name));
+                        const itemName = item?.name || item?.threat_name || item?.actor_name || item?.technique_name || '';
+                        const techId = item?.technique_id || item?.id || item?.actor_id || '';
+
                         return (
                           <li
-                            key={item.technique_id || idx}
-                            className={`tap-suggestion-item ${isSelected ? 'selected' : ''}`}
-                            onClick={() => handleSelectTechnique(item)}
+                            key={itemKey}
+                            className={`suggestion-item ${isSelected ? 'selected' : ''}`}
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              handleSelectTechnique(item);
+                            }}
                           >
-                            <div className="tap-suggestion-left">
-                              <span className="tap-technique-badge">{item.technique_id}</span>
-                              <span className="tap-technique-name">{item.name || item.technique_name}</span>
-                            </div>
-                            {item.tactic && (
-                              <div className="tap-suggestion-right">
-                                <span className="tap-tactic-badge">{item.tactic}</span>
-                              </div>
+                            {techId && (
+                              <span className="suggestion-technique-id">{String(techId)}</span>
+                            )}
+                            <span className="suggestion-text">{String(itemName || techId)}</span>
+                            {item?.tactic && (
+                              <span className="badge bg-light text-secondary text-truncate" style={{ maxWidth: '100px', fontSize: '10px' }}>
+                                {String(item.tactic)}
+                              </span>
+                            )}
+                            {isSelected && (
+                              <i className="bi bi-check-circle-fill ms-auto" style={{ color: '#5200ff', fontSize: '13px', flexShrink: 0 }}></i>
                             )}
                           </li>
                         );
                       })}
                     </ul>
                   ) : (
-                    <div className="tap-suggestion-empty">No techniques found</div>
+                    <div className="suggestion-empty">
+                      <span>No MITRE Technique found</span>
+                    </div>
                   )}
                 </div>
               )}
             </div>
 
-            {error && (
-              <div className="tap-error-message">
-                <i className="bi bi-exclamation-circle me-1"></i>
-                {error}
-              </div>
-            )}
+            {/* Action Buttons Row pushed to end */}
+            <div className="ms-auto d-flex align-items-center gap-2">
+              <button
+                type="button"
+                className="btn show-btn text-white flex-shrink-0"
+                style={{
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  opacity: loading ? 0.75 : 1
+                }}
+                onClick={handleShowThreatActors}
+                disabled={loading || selectedTechniques.length === 0}
+              >
+                {loading && (
+                  <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" style={{ width: '12px', height: '12px' }}></span>
+                )}
+                <span>Submit</span>
+              </button>
 
-            {/* Selected Chips */}
-            {selectedTechniques.length > 0 && (
-              <div className="tap-chips-section mt-3">
-                <div className="tap-chips-header d-flex justify-content-between align-items-center mb-2">
-                  <span className="tap-chips-title">Selected Techniques ({selectedTechniques.length})</span>
-                  <div className="d-flex align-items-center gap-2">
-                    <button
-                      className="tap-show-btn"
-                      onClick={handleShowThreatActors}
-                      disabled={loading || selectedTechniques.length === 0}
-                    >
-                      {loading ? 'Showing...' : 'Show'}
-                    </button>
-                    <button className="tap-clear-all-btn" onClick={handleClearAllTechniques}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                      Clear all
-                    </button>
-                  </div>
-                </div>
-                <div className="tap-chips-container">
-                  {selectedTechniques.map((tech) => (
-                    <div key={tech.technique_id} className="tap-technique-chip">
-                      <span className="chip-dot"></span>
-                      <span className="chip-id">{tech.technique_id}</span>
-                      {tech.name && <span className="chip-name">{tech.name}</span>}
-                      <button
-                        className="chip-remove-btn"
+              <button
+                type="button"
+                className="btn clear-all-btn flex-shrink-0"
+                onClick={handleClearAllTechniques}
+              >
+                Clear all <i className="bi bi-x"></i>
+              </button>
+            </div>
+          </div>
+
+          {error && (
+            <div className="text-danger small ps-2">
+              <i className="bi bi-exclamation-circle me-1"></i>
+              {error}
+            </div>
+          )}
+
+          {/* Threat Actors Section with Accordion */}
+          <div className="threat-actors-section w-100">
+            <div
+              className="d-flex align-items-center justify-content-between cursor-pointer user-select-none"
+              onClick={() => setIsAccordionOpen(!isAccordionOpen)}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="d-flex align-items-center">
+                <span className="section-title">SELECTED TECHNIQUES :</span>
+                <span className="selected-badge">{selectedTechniques.length} Selected</span>
+              </div>
+              <div className="accordion-toggle-icon d-flex align-items-center gap-1 text-muted" style={{ fontSize: '13px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 500 }}>{isAccordionOpen ? 'Collapse' : 'Expand'}</span>
+                <i className={`bi ${isAccordionOpen ? 'bi-chevron-up' : 'bi-chevron-down'}`}></i>
+              </div>
+            </div>
+
+            {isAccordionOpen && (
+              <div className="accordion-content mt-3">
+                <div className="pills-container m-0 mt-0">
+                  {selectedTechniques.map((tech, idx) => {
+                    const techKey = tech.technique_id || idx;
+                    const displayName = tech.technique_id;
+                    return (
+                      <div
+                        key={techKey}
+                        className="actor-pill cursor-pointer active"
                         onClick={() => handleRemoveTechnique(tech.technique_id)}
-                        title="Remove"
                       >
-                        &times;
-                      </button>
-                    </div>
-                  ))}
+                        <div className="dot" style={{ backgroundColor: idx % 2 === 0 ? '#3b82f6' : '#5200ff' }}></div>
+                        <span>{displayName}</span>
+                        <i
+                          className="bi bi-x chip-close-icon ms-1"
+                          title="Remove threat actor"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveTechnique(tech.technique_id);
+                          }}
+                        ></i>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
