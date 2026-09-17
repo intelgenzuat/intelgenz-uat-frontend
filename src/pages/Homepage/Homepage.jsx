@@ -67,7 +67,7 @@ export default function Homepage() {
                                     <h5 className="section-title mb-0 d-flex align-items-center" style={{ color: '#0f172a', fontWeight: '600', fontSize: '20px' }}>
                                         Threat Distribution <i className="bi bi-question-circle ms-2" style={{ color: '#5200ff', fontSize: '19.2px' }}></i>
                                     </h5>
-                                    <div className="legend-indicators d-flex align-items-center">
+                                    {/* <div className="legend-indicators d-flex align-items-center">
                                         <span className="legend-label d-flex align-items-center gap-2 me-2">
                                             <FiRadio className="text-dark" />
                                             <span style={{ color: '#334155', fontWeight: '500' }}>Client:</span>
@@ -83,7 +83,7 @@ export default function Homepage() {
                                         <span className="indicator around me-3" style={{ color: '#1e293b', fontWeight: '700' }}>AROUND YOU</span>
                                         <span className="indicator away me-3" style={{ color: '#1e293b', fontWeight: '700' }}>AWAY</span>
                                         <span className="indicator global" style={{ color: '#1e293b', fontWeight: '700' }}>GLOBAL</span>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 <div className="threat-data-grid mt-4">

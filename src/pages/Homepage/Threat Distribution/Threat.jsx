@@ -48,7 +48,7 @@ export default function Threat() {
   const [selectedActorId, setSelectedActorId] = useState(null);
   const [selectedRadius, setSelectedRadius] = useState('0+');
   const [selectedSeverity, setSelectedSeverity] = useState('Critical');
-  const [clientName, setClientName] = useState('CERELYN BIOPHARMA');
+  const [clientName, setClientName] = useState('HALDEN INDUSTRIAL SYSTEMS');
   const [chartRadius, setChartRadius] = useState(130);
   const [hoveredActor, setHoveredActor] = useState(null);
   const [data, setData] = useState(null);
@@ -70,6 +70,7 @@ export default function Threat() {
   useEffect(() => {
     getRadarDatalist(clientName);
   }, []);
+  console.log(data,"radar")
 
   // ResizeObserver for responsive radar sizing
   useEffect(() => {
@@ -104,23 +105,61 @@ export default function Threat() {
       let category = 'Global';
       let focusLevel = 3;
       let riskLevel = 'Low';
+      let normalizedSeverity = sev;
 
-      if (sev === 'high' || rad < 2.0) {
+      if (sev === 'critical') {
         category = 'Around You';
-        focusLevel = rad <= 1.5 ? 0 : 1;
-        riskLevel = rad <= 1.5 ? 'Critical' : 'High';
-      } else if (sev === 'moderate' || (rad >= 2.0 && rad < 3.0)) {
+        focusLevel = 0;
+        riskLevel = 'Critical';
+        normalizedSeverity = 'critical';
+      } else if (sev === 'high') {
+        category = 'Around You';
+        focusLevel = 1;
+        riskLevel = 'High';
+        normalizedSeverity = 'high';
+      } else if (sev === 'moderate') {
         category = 'Away';
         focusLevel = 2;
         riskLevel = 'Moderate';
-      } else if (sev === 'low' || (rad >= 3.0 && rad < 4.0)) {
+        normalizedSeverity = 'moderate';
+      } else if (sev === 'low') {
         category = 'Global';
         focusLevel = 3;
         riskLevel = 'Low';
-      } else {
+        normalizedSeverity = 'low';
+      } else if (sev === 'minimal') {
         category = 'Global';
         focusLevel = 4;
         riskLevel = 'Minimal';
+        normalizedSeverity = 'minimal';
+      } else {
+        // Fallback based on radius if severity is not explicitly provided
+        if (rad < 1.0) {
+          category = 'Around You';
+          focusLevel = 0;
+          riskLevel = 'Critical';
+          normalizedSeverity = 'critical';
+        } else if (rad < 2.0) {
+          category = 'Around You';
+          focusLevel = 1;
+          riskLevel = 'High';
+          normalizedSeverity = 'high';
+        } else if (rad < 3.0) {
+          category = 'Away';
+          focusLevel = 2;
+          riskLevel = 'Moderate';
+          normalizedSeverity = 'moderate';
+        } else if (rad < 4.0) {
+          category = 'Global';
+          focusLevel = 3;
+          riskLevel = 'Low';
+          normalizedSeverity = 'low';
+        } else {
+          category = 'Global';
+          focusLevel = 4;
+          riskLevel = 'Minimal';
+          normalizedSeverity = 'minimal';
+        }
       }
 
       // Threat Score calculated from radius (range 1.0 -> 5.0)
@@ -131,7 +170,7 @@ export default function Threat() {
         actor_id: item.actor_id,
         name: item.name || `Actor_${item.actor_id || index + 1}`,
         radius: rad,
-        severity: sev || 'low',
+        severity: normalizedSeverity || 'low',
         category: category,
         focusLevel: focusLevel,
         riskLevel: riskLevel,
@@ -213,32 +252,16 @@ export default function Threat() {
         return true;
       }
       if (target === 'critical') {
-        return (
-          actor.riskLevel === 'Critical' ||
-          actor.focusLevel === 0 ||
-          actor.radius <= 1.5 ||
-          (actor.severity === 'high' && actor.radius <= 1.5)
-        );
+        return actor.severity === 'critical' || actor.riskLevel === 'Critical';
       }
       if (target === 'high') {
-        return (
-          actor.severity === 'high' ||
-          actor.category === 'Around You' ||
-          actor.radius < 2.0
-        );
+        return actor.severity === 'high' || actor.riskLevel === 'High';
       }
       if (target === 'moderate') {
-        return (
-          actor.severity === 'moderate' ||
-          actor.category === 'Away' ||
-          (actor.radius >= 2.0 && actor.radius < 3.0)
-        );
+        return actor.severity === 'moderate' || actor.riskLevel === 'Moderate';
       }
       if (target === 'low') {
-        return (
-          actor.severity === 'low' ||
-          (actor.radius >= 3.0 && actor.radius < 4.0)
-        );
+        return actor.severity === 'low' || actor.riskLevel === 'Low';
       }
       return true;
     });
@@ -638,10 +661,9 @@ export default function Threat() {
                           : 'global';
                     const rawRiskLevel = actor.riskLevel || 'Low';
                     const severityLabel =
-                      selectedSeverity !== 'All'
-                        ? selectedSeverity
-                        : rawRiskLevel === 'Minimal' ? 'All' : rawRiskLevel;
-                    const sevClass = severityLabel.toLowerCase();
+                      actor.riskLevel ||
+                      (actor.severity ? actor.severity.charAt(0).toUpperCase() + actor.severity.slice(1) : 'Low');
+                    const sevClass = (actor.severity || rawRiskLevel).toLowerCase();
 
                     return (
                       <tr

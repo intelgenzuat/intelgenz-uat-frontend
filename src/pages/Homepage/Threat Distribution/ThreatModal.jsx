@@ -50,7 +50,10 @@ const ThreatModal = ({
 
   let category = 'Global';
   let riskLevel = 'Low Risk Profile';
-  if (severity === 'high' || radius < 2.0) {
+  if (severity === 'critical') {
+    category = 'Around You';
+    riskLevel = 'Critical Risk Profile';
+  } else if (severity === 'high' || radius < 2.0) {
     category = 'Around You';
     riskLevel = radius <= 1.5 ? 'Critical Risk Profile' : 'High Risk Profile';
   } else if (severity === 'moderate' || (radius >= 2.0 && radius < 3.0)) {
