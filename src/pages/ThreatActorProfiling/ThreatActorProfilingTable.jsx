@@ -302,7 +302,7 @@ export default function ThreatActorProfilingTable() {
       </div>
 
       {/* View Controls Card */}
-      <div className="view-controls-card flex-shrink-0 mx-4 mb-4">
+      <div className="view-controls-card flex-shrink-0 mx-4 mb-4" style={{ width: "900px" }}>
         <div className="view-controls-section d-flex flex-column align-items-stretch gap-3" style={{ width: "880px" }}>
           {/* Search bar */}
           <div className="threat-actor-search-section d-flex align-items-center justify-content-start gap-3">
