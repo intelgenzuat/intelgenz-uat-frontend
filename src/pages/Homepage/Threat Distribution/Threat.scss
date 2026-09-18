@@ -516,11 +516,21 @@
                     background: #ffe8eb;
                     color: #e11d48;
                   }
-                  &.icon-away {
+                  &.icon-critical {
+                    background: #ffe8eb;
+                    color: #e11d48;
+                  }
+                  &.icon-high {
+                    background: #ffedd5;
+                    color: #ea580c;
+                  }
+                  &.icon-away,
+                  &.icon-moderate {
                     background: #f3e8ff;
                     color: #9333ea;
                   }
-                  &.icon-global {
+                  &.icon-global,
+                  &.icon-low {
                     background: #fef3c7;
                     color: #d97706;
                   }

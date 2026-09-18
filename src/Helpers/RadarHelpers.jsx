@@ -1,11 +1,42 @@
-export const CustomDotAround = (props) => {
+export const CustomDotCritical = (props) => {
   const { cx, cy, value, index, isHovered, ...rest } = props;
   if (!value) return null;
   const animClass = index % 2 === 0 ? 'dot-rotate-medium' : 'dot-rotate-slow-reverse';
   return (
     <g className={animClass} {...rest} style={{ cursor: 'pointer' }}>
-      {isHovered && <circle cx={cx} cy={cy} r={8} fill="rgba(255, 26, 95, 0.35)" />}
-      <circle cx={cx} cy={cy} r={isHovered ? 5 : 4} fill="#ff1a5f" />
+      {isHovered && <circle cx={cx} cy={cy} r={8} fill="rgba(225, 29, 72, 0.35)" />}
+      <circle cx={cx} cy={cy} r={isHovered ? 5 : 4} fill="#e11d48" />
+    </g>
+  );
+};
+
+export const CustomDotHigh = (props) => {
+  const { cx, cy, value, index, isHovered, ...rest } = props;
+  if (!value) return null;
+  const animClass = index % 2 === 0 ? 'dot-rotate-slow' : 'dot-rotate-medium';
+  return (
+    <g className={animClass} {...rest} style={{ cursor: 'pointer' }}>
+      {isHovered && <circle cx={cx} cy={cy} r={8} fill="rgba(249, 115, 22, 0.35)" />}
+      <circle cx={cx} cy={cy} r={isHovered ? 5 : 4} fill="#f97316" />
+    </g>
+  );
+};
+
+export const CustomDotAround = (props) => {
+  const { cx, cy, value, index, isHovered, actor, payload, ...rest } = props;
+  if (!value) return null;
+  const currentActor = actor || payload?.actor;
+  const sev = (currentActor?.severity || currentActor?.riskLevel || '').toLowerCase();
+  const isHigh = sev === 'high';
+
+  const animClass = index % 2 === 0 ? 'dot-rotate-medium' : 'dot-rotate-slow-reverse';
+  const dotColor = isHigh ? '#f97316' : '#e11d48';
+  const hoverGlow = isHigh ? 'rgba(249, 115, 22, 0.35)' : 'rgba(225, 29, 72, 0.35)';
+
+  return (
+    <g className={animClass} {...rest} style={{ cursor: 'pointer' }}>
+      {isHovered && <circle cx={cx} cy={cy} r={8} fill={hoverGlow} />}
+      <circle cx={cx} cy={cy} r={isHovered ? 5 : 4} fill={dotColor} />
     </g>
   );
 };
@@ -28,9 +59,9 @@ export const CustomDotGlobal = (props) => {
   const animClass = index % 2 === 0 ? 'dot-rotate-fast' : 'dot-rotate-medium-reverse';
   return (
     <g className={index % 3 === 0 ? 'dot-rotate-fast' : 'dot-rotate-slow'} {...rest} style={{ cursor: 'pointer' }}>
-      <circle cx={cx} cy={cy} r={isHovered ? 10 : 7} fill={isHovered ? "rgba(245, 158, 11, 0.3)" : "rgba(245, 158, 11, 0.15)"} />
-      <circle cx={cx} cy={cy} r={isHovered ? 5.5 : 4.5} fill="#fff" />
-      <circle cx={cx} cy={cy} r={isHovered ? 4.5 : 3.5} fill="#f59e0b" />
+      <circle cx={cx} cy={cy} r={isHovered ? 10 : 7} fill={isHovered ? "rgba(11, 245, 206, 0.3)" : "rgba(11, 245, 175, 0.15)"} />
+      <circle cx={cx} cy={cy} r={isHovered ? 5.5 : 4.5} fill="#f1f1f1ff" />
+      <circle cx={cx} cy={cy} r={isHovered ? 4.5 : 3.5} fill="#01bb0eff" />
     </g>
   );
 };

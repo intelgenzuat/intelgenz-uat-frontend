@@ -34,7 +34,7 @@ const RenderDot = (props) => {
         transition: 'transform 0.15s ease',
       }}
     >
-      <OriginalDot cx={cx} cy={cy} value={value} index={index} isHovered={isHovered} />
+      <OriginalDot cx={cx} cy={cy} value={value} index={index} isHovered={isHovered} actor={actor} payload={payload} />
     </g>
   );
 };
@@ -677,7 +677,7 @@ export default function Threat() {
                       >
                         <td>
                           <div className="actor-name-cell">
-                            <div className={`actor-icon icon-${catClass}`}>
+                            <div className={`actor-icon icon-${sevClass} icon-${catClass}`}>
                               {actor.name.charAt(0).toUpperCase()}
                             </div>
                             <div className="name-info">
