@@ -153,7 +153,20 @@ const Nist = ({
     }, [threatData]);
 
     const [localSelectedMalware, setLocalSelectedMalware] = useState([]);
+    const [collapsedCols, setCollapsedCols] = useState(() => new Set());
     const selectedMalware = propSelectedMalware !== undefined ? propSelectedMalware : localSelectedMalware;
+
+    const toggleCol = (colId) => {
+        setCollapsedCols((prev) => {
+            const next = new Set(prev);
+            if (next.has(colId)) {
+                next.delete(colId);
+            } else {
+                next.add(colId);
+            }
+            return next;
+        });
+    };
 
     const tacticsData = useMemo(() => {
         return transformNistFamilies(nistList, selectedMalware);
@@ -248,6 +261,19 @@ const Nist = ({
                     <div className="mapping-header flex-shrink-0 bg-white">
                         <h4>NIST</h4>
                         <div className="d-flex align-items-center gap-3">
+                            <div className="overlap-legend">
+                                <span className="legend-label">OVERLAP % :</span>
+                                <div className="overlap-items-container">
+                                    <div className="overlap-item"><div className="dot" style={{ backgroundColor: '#ef4444' }}></div> 100%</div>
+                                    <div className="separator"></div>
+                                    <div className="overlap-item"><div className="dot" style={{ backgroundColor: '#fca5a5' }}></div> 75%</div>
+                                    <div className="separator"></div>
+                                    <div className="overlap-item"><div className="dot" style={{ backgroundColor: '#fecaca' }}></div> 50%</div>
+                                    <div className="separator"></div>
+                                    <div className="overlap-item"><div className="dot" style={{ backgroundColor: '#fee2e2' }}></div> 25%</div>
+                                </div>
+                            </div>
+
                             <div className="controls-right">
                                 <div className="show-overlaps-btn">
                                     <input
@@ -295,15 +321,30 @@ const Nist = ({
                                 return (
                                     <div key={tactic.id} className="tactic-columns d-flex flex-grow-1">
                                         {tactic.columns.map((col, colIndex) => {
+                                            const colId = col.id || col.name || colIndex;
+                                            const isColCollapsed = collapsedCols.has(colId);
                                             const displayedItems = showOverlaps ? filterOverlaps(col.items) : col.items;
                                             return (
-                                                <div key={colIndex} className="mitigation-col d-flex flex-column">
+                                                <div key={colIndex} className={`mitigation-col d-flex flex-column ${isColCollapsed ? 'col-collapsed' : ''}`}>
                                                     <div className="col-header" style={{ top: 0 }}>
-                                                        {col.name}
+                                                        <span className="col-header-name" title={col.name}>{col.name}</span>
+                                                        <button
+                                                            className="col-toggle-btn"
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                toggleCol(colId);
+                                                            }}
+                                                            title={isColCollapsed ? 'Expand column' : 'Collapse column'}
+                                                        >
+                                                            <i className={`bi ${isColCollapsed ? 'bi-plus' : 'bi-dash'}`}></i>
+                                                        </button>
                                                     </div>
-                                                    <div className="col-body d-flex flex-column">
-                                                        {displayedItems.map(item => renderItem(item, 0, null))}
-                                                    </div>
+                                                    {!isColCollapsed && (
+                                                        <div className="col-body d-flex flex-column">
+                                                            {displayedItems.map(item => renderItem(item, 0, null))}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             );
                                         })}

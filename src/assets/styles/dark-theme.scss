@@ -1423,11 +1423,31 @@
               background-color: #0f172a !important;
               border-color: #334155 !important;
               color: #f1f5f9 !important;
+
+              &.col-collapsed {
+                background-color: #0b0f19 !important;
+              }
+
+              .header-content {
+                .header-toggle-btn {
+                  border-color: #475569 !important;
+                  color: #cbd5e1 !important;
+
+                  &:hover {
+                    background-color: #334155 !important;
+                    color: #ffffff !important;
+                  }
+                }
+              }
             }
 
             td {
               background-color: #1e293b !important;
               border-color: #334155 !important;
+
+              &.col-collapsed {
+                background-color: #0b0f19 !important;
+              }
 
               .ttp-cell {
                 &.overlap-100 {
@@ -1520,6 +1540,23 @@
           color: #f1f5f9 !important;
         }
 
+        .overlap-legend {
+          color: #cbd5e1 !important;
+
+          .overlap-items-container {
+            background-color: #0b0f19 !important;
+            border-color: #334155 !important;
+
+            .separator {
+              background-color: #334155 !important;
+            }
+
+            .overlap-item {
+              color: #cbd5e1 !important;
+            }
+          }
+        }
+
         .controls-right {
           .show-overlaps-btn {
             background-color: #0b0f19 !important;
@@ -1566,13 +1603,47 @@
           }
         }
 
+        .tactic-group {
+          border-right-color: #334155 !important;
+
+          .tactic-group-header {
+            background-color: #1e293b !important;
+            border-bottom-color: #334155 !important;
+            color: #f1f5f9 !important;
+
+            &:hover {
+              background-color: #334155 !important;
+            }
+
+            .tactic-toggle-btn {
+              color: #cbd5e1 !important;
+            }
+          }
+        }
+
         .mitigation-col {
           border-right-color: #334155 !important;
+
+          &.col-collapsed {
+            .col-header {
+              background-color: #0f172a !important;
+            }
+          }
 
           .col-header {
             color: #f1f5f9 !important;
             border-bottom-color: #334155 !important;
             background-color: #0f172a !important;
+
+            .col-toggle-btn {
+              border-color: #475569 !important;
+              color: #cbd5e1 !important;
+
+              &:hover {
+                background-color: #334155 !important;
+                color: #ffffff !important;
+              }
+            }
           }
 
           .col-body {

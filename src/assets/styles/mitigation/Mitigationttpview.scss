@@ -702,9 +702,39 @@
           background-color: #fff;
           border-top: none;
           white-space: nowrap;
+          transition: width 0.2s, min-width 0.2s, max-width 0.2s;
 
           &:last-child {
             border-right: none;
+          }
+
+          &.col-collapsed {
+            width: 44px !important;
+            min-width: 44px !important;
+            max-width: 44px !important;
+            padding: 8px 4px !important;
+
+            .header-content {
+              flex-direction: column;
+              justify-content: flex-start;
+              gap: 8px;
+              min-height: 120px;
+
+              .bi-filter {
+                display: none;
+              }
+
+              .header-col-title {
+                writing-mode: vertical-rl;
+                transform: rotate(180deg);
+                font-size: 11px;
+                letter-spacing: 0.5px;
+                white-space: nowrap;
+                max-height: 110px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+            }
           }
 
           .header-content {
@@ -715,6 +745,34 @@
 
             .bi-filter {
               color: #8b5cf6;
+            }
+
+            .header-col-title {
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            .header-toggle-btn {
+              background: transparent;
+              border: 1px solid #cbd5e1;
+              border-radius: 4px;
+              width: 18px;
+              height: 18px;
+              padding: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              cursor: pointer;
+              color: #475569;
+              font-size: 12px;
+              flex-shrink: 0;
+              transition: all 0.2s;
+
+              &:hover {
+                background-color: #f1f5f9;
+                border-color: #94a3b8;
+                color: #0f172a;
+              }
             }
           }
         }
@@ -728,9 +786,18 @@
           vertical-align: top;
           background-color: #fff;
           height: 62px;
+          transition: width 0.2s, min-width 0.2s, max-width 0.2s;
 
           &:last-child {
             border-right: none;
+          }
+
+          &.col-collapsed {
+            width: 44px !important;
+            min-width: 44px !important;
+            max-width: 44px !important;
+            background-color: #f8fafc;
+            padding: 0 !important;
           }
 
           .ttp-cell {

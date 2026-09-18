@@ -445,24 +445,7 @@ export default function ThreatActorProfilingTable() {
                 <span className="selected-badge">{selectedTechniques.length} Selected</span>
               </div>
 
-              {/* Filter checkboxes */}
-              <div className="tap-filter-checkboxes d-flex align-items-center gap-3" onClick={(e) => e.stopPropagation()}>
-                {[
-                  { label: 'Capability' },
-                  { label: 'Intent' },
-                  { label: 'Opportunity' },
-                ].map(({ label }) => (
-                  <label key={label} className="tap-filter-label" onClick={(e) => e.stopPropagation()}>
-                    <input
-                      type="checkbox"
-                      className="tap-filter-checkbox"
-                      defaultChecked={false}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                    <span>{label}</span>
-                  </label>
-                ))}
-              </div>
+          
 
               <div className="accordion-toggle-icon d-flex align-items-center gap-1 text-muted" style={{ fontSize: '13px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 500 }}>{isAccordionOpen ? 'Collapse' : 'Expand'}</span>
