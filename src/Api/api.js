@@ -30,5 +30,6 @@ export const GET_RADAR_DATA = '/api/v1/threat-radius-distribution/threat-actors'
 export const GET_RADAR_DATA_LIST = '/api/v1/threat-radius-distribution/threat-actors'
 
 //threat actor profiling
+export const GET_THREAT_PROFILING_TABLE ='/api/v1/threat-actors/by-assessment'
 export const GET_THREAT_ACTOR_BY_SEARCH = '/api/v1/threat-actors/techniques'
 export const GET_THREAT_ACTOR_BY_TECHNIQUES = '/api/v1/threat-actors/by-techniques'

@@ -1,5 +1,37 @@
-import { GET_THREAT_ACTOR_BY_SEARCH,GET_THREAT_ACTOR_BY_TECHNIQUES, } from "../../Api/api";
+import { GET_THREAT_PROFILING_TABLE, GET_THREAT_ACTOR_BY_SEARCH,GET_THREAT_ACTOR_BY_TECHNIQUES } from "../../Api/api";
 import axiosInstance from "../../Api/Axiosinstance/Axiosinstance";
+
+
+export const getThreatActorProfilingtable = (props) => (onResponse) => {
+    try {
+        let BASE_URL = `${GET_THREAT_PROFILING_TABLE}?`;
+
+
+        if (props?.client_name) {
+            BASE_URL += 'client_name=' + encodeURIComponent(props?.client_name) + '&'
+        }
+        if (props?.capability !== undefined) {
+            BASE_URL += 'capability=' + props?.capability + '&';
+        }
+        if (props?.intent !== undefined) {
+            BASE_URL += 'intent=' + props?.intent + '&';
+        }
+        if (props?.opportunity !== undefined) {
+            BASE_URL += 'opportunity=' + props?.opportunity + '&';
+        }
+        BASE_URL = BASE_URL.replace(/[&?]$/, '');
+
+        axiosInstance.get(BASE_URL)
+            .then((response) => {
+                onResponse(response?.data);
+            }).catch((error) => {
+                onResponse(error?.response?.data || error?.data || null);
+            });
+
+    } catch (error) {
+        console.error("getThreatActorProfilingtable error", error);
+    }
+};
 
 export const getThreatActorProfiling = (props) => (onResponse) => {
     try {
@@ -51,6 +83,16 @@ export const getThreatActorByTechniques = (props) => (onResponse) => {
         const clientName = props?.client_name || props?.client;
         if (clientName) {
             BASE_URL += 'client_name=' + encodeURIComponent(clientName) + '&';
+        }
+
+        if (props?.capability !== undefined) {
+            BASE_URL += 'capability=' + props.capability + '&';
+        }
+        if (props?.intent !== undefined) {
+            BASE_URL += 'intent=' + props.intent + '&';
+        }
+        if (props?.opportunity !== undefined) {
+            BASE_URL += 'opportunity=' + props.opportunity + '&';
         }
 
         BASE_URL = BASE_URL.replace(/[&?]$/, '');

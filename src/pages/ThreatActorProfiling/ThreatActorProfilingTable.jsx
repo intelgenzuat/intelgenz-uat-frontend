@@ -6,7 +6,7 @@ import { GoFlame } from 'react-icons/go';
 import cube from '../../assets/images/cube.png';
 import logo from '../../assets/images/logo.jpeg';
 import '../../assets/styles/threatactorprofile/threatactorprofilimg.scss';
-import { getThreatActorProfiling, getThreatActorByTechniques } from '../../Context/ThreatActorprofiling';
+import { getThreatActorProfiling, getThreatActorByTechniques, getThreatActorProfilingtable } from '../../Context/ThreatActorprofiling';
 
 export default function ThreatActorProfilingTable() {
   const navigate = useNavigate();
@@ -14,11 +14,15 @@ export default function ThreatActorProfilingTable() {
   const [error, setError] = useState('');
   const [data, setdata] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const searchWrapperRef = useRef(null);
+  const [tabledata, setTableData] = useState([]);
   const client = "MERIDIAN FINANCIAL GROUP";
+  const ITEMS_PER_PAGE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [selectedTechniques, setSelectedTechniques] = useState(() => {
     try {
@@ -36,21 +40,84 @@ export default function ThreatActorProfilingTable() {
   });
 
   const [filters, setFilters] = useState({
-    capability: false,
-    intent: false,
-    opportunity: false
+    capability: true,
+    intent: true,
+    opportunity: true
   });
 
-  const fetchThreatActorsByTechniques = (techniqueIds, clientName = client) => {
-    if (!techniqueIds || (Array.isArray(techniqueIds) && techniqueIds.length === 0)) return;
+  const getThreatActorProfilingtableData = (clientName = client) => {
     setLoading(true);
-    getThreatActorByTechniques({ technique_ids: techniqueIds, client_name: clientName })((response) => {
+    getThreatActorProfilingtable({
+      client_name: clientName,
+      capability: true,
+      intent: true,
+      opportunity: true
+    })((response) => {
+      console.log("ThreatActorProfilingtable", response);
+      if (response) {
+        // Normalize the response into a flat array
+        let actors = [];
+        if (Array.isArray(response)) actors = response;
+        else if (Array.isArray(response?.actors)) actors = response.actors;
+        else if (Array.isArray(response?.items)) actors = response.items;
+        else if (Array.isArray(response?.data?.items)) actors = response.data.items;
+        else if (Array.isArray(response?.data)) actors = response.data;
+        else if (Array.isArray(response?.results)) actors = response.results;
+        setTableData(actors);
+      }
+      setLoading(false);
+    });
+  };
+
+  useEffect(() => {
+    // If techniques were saved in localStorage, use the by-techniques API on load;
+    // otherwise fall back to the default by-assessment table
+    if (selectedTechniques.length > 0) {
+      const ids = selectedTechniques.map(t => t.technique_id);
+      fetchThreatActorsByTechniques(ids, client, filters);
+    } else {
+      getThreatActorProfilingtableData();
+    }
+  }, []);
+  console.log(tabledata, 'tabledata')
+
+  // filtersOverride lets callers pass the latest filter values before React state has updated
+  // setLoadingFn controls which loading state to update (table spinner vs submit button)
+  const fetchThreatActorsByTechniques = (techniqueIds, clientName = client, filtersOverride = filters, setLoadingFn = setLoading) => {
+    if (!techniqueIds || (Array.isArray(techniqueIds) && techniqueIds.length === 0)) return;
+    setLoadingFn(true);
+    getThreatActorByTechniques({
+      technique_ids: techniqueIds,
+      client_name: clientName,
+      capability: filtersOverride?.capability,
+      intent: filtersOverride?.intent,
+      opportunity: filtersOverride?.opportunity,
+    })((response) => {
       console.log("threatDetail", response);
       if (response) {
         setdata(response);
       }
-      setLoading(false);
+      setLoadingFn(false);
     });
+  };
+
+  // Central decision: use by-techniques API when techniques are selected, else fall back to by-assessment
+  const refreshTable = (updatedTechniques = selectedTechniques, updatedFilters = filters) => {
+    if (updatedTechniques.length > 0) {
+      const ids = updatedTechniques.map(t => t.technique_id);
+      fetchThreatActorsByTechniques(ids, client, updatedFilters);
+    } else {
+      // No techniques selected — reset to the initial assessment table
+      setdata(null);
+      getThreatActorProfilingtableData();
+    }
+  };
+
+  // Called by each checkbox — updates filters state and immediately re-fetches with correct API
+  const handleFilterChange = (key, value) => {
+    const updatedFilters = { ...filters, [key]: value };
+    setFilters(updatedFilters);
+    refreshTable(selectedTechniques, updatedFilters);
   };
 
   const [isAccordionOpen, setIsAccordionOpen] = useState(true);
@@ -137,15 +204,20 @@ export default function ThreatActorProfilingTable() {
     } catch (e) {
       console.error("Error saving selected_techniques to localStorage:", e);
     }
+    // Switch API based on remaining techniques
+    refreshTable(updated, filters);
   };
 
   const handleClearAllTechniques = () => {
     setSelectedTechniques([]);
+    setdata(null);
     try {
       localStorage.removeItem('selected_techniques');
     } catch (e) {
       console.error("Error removing selected_techniques from localStorage:", e);
     }
+    // No techniques left — fall back to assessment table
+    getThreatActorProfilingtableData();
   };
 
   const handleSearchSubmit = () => {
@@ -187,7 +259,8 @@ export default function ThreatActorProfilingTable() {
       return;
     }
     setError('');
-    fetchThreatActorsByTechniques(idsFromSelected, client);
+    // Use submitLoading so only the Submit button shows a spinner
+    fetchThreatActorsByTechniques(idsFromSelected, client, filters, setSubmitLoading);
   };
 
   console.log(data, "profile data");
@@ -232,26 +305,30 @@ export default function ThreatActorProfilingTable() {
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4300D2" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="6" y1="12" x2="18" y2="12"></line><line x1="8" y1="18" x2="16" y2="18"></line></svg>
   );
 
+  // Actors from techniques search (submitted via the search bar)
   const actorsList = useMemo(() => {
-    if (!data) return [];
+    if (!data) return null;
     if (Array.isArray(data)) return data;
     if (Array.isArray(data.items)) return data.items;
     if (Array.isArray(data.actors)) return data.actors;
     if (Array.isArray(data.data?.items)) return data.data.items;
     if (Array.isArray(data.data)) return data.data;
     if (Array.isArray(data.results)) return data.results;
-    return [];
+    return null;
   }, [data]);
 
+  // Use techniques-search result when available, otherwise fall back to initial table data
+  const baseActors = actorsList ?? tabledata;
+
   const processedActors = useMemo(() => {
-    if (!actorsList || !Array.isArray(actorsList)) return [];
+    if (!baseActors || !Array.isArray(baseActors)) return [];
 
     const isAnyFilterActive = filters.capability || filters.intent || filters.opportunity;
     if (!isAnyFilterActive) {
-      return actorsList;
+      return baseActors;
     }
 
-    return [...actorsList].sort((a, b) => {
+    return [...baseActors].sort((a, b) => {
       let scoreA = 0;
       let scoreB = 0;
 
@@ -270,15 +347,28 @@ export default function ThreatActorProfilingTable() {
 
       return scoreB - scoreA;
     });
-  }, [actorsList, filters]);
+  }, [baseActors, filters]);
+
+  // Reset to page 1 whenever the filtered list changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [processedActors]);
+
+  const totalPages = Math.max(1, Math.ceil(processedActors.length / ITEMS_PER_PAGE));
+  const paginatedActors = processedActors.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+  const startEntry = processedActors.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1;
+  const endEntry = Math.min(currentPage * ITEMS_PER_PAGE, processedActors.length);
 
   return (
     <div className="threat-actor-detail-page">
       {/* Top Header Section */}
       <div className="tap-header-section">
         {/* Background Image/Abstract Graphic */}
-        <div className="tap-hero-bg d-none d-md-block" style={{ backgroundImage: `url(${cube})` }}>
-        </div>
+        {/* <div className="tap-hero-bg d-none d-md-block" style={{ backgroundImage: `url(${cube})` }}>
+        </div> */}
 
         <div className="tap-header-content">
           {/* Breadcrumbs */}
@@ -302,8 +392,8 @@ export default function ThreatActorProfilingTable() {
       </div>
 
       {/* View Controls Card */}
-      <div className="view-controls-card flex-shrink-0 mx-4 mb-4" style={{ width: "900px" }}>
-        <div className="view-controls-section d-flex flex-column align-items-stretch gap-3" style={{ width: "880px" }}>
+      <div className="view-controls-card flex-shrink-0 mx-4 mb-4">
+        <div className="view-controls-section d-flex flex-column align-items-stretch gap-3">
           {/* Search bar */}
           <div className="threat-actor-search-section d-flex align-items-center justify-content-start gap-3">
             <div className="d-flex flex-column">
@@ -404,13 +494,13 @@ export default function ThreatActorProfilingTable() {
                 type="button"
                 className="btn show-btn text-white flex-shrink-0"
                 style={{
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  opacity: loading ? 0.75 : 1
+                  cursor: submitLoading ? 'not-allowed' : 'pointer',
+                  opacity: submitLoading ? 0.75 : 1
                 }}
                 onClick={handleShowThreatActors}
-                disabled={loading || selectedTechniques.length === 0}
+                disabled={submitLoading || selectedTechniques.length === 0}
               >
-                {loading && (
+                {submitLoading && (
                   <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" style={{ width: '12px', height: '12px' }}></span>
                 )}
                 <span>Submit</span>
@@ -445,7 +535,7 @@ export default function ThreatActorProfilingTable() {
                 <span className="selected-badge">{selectedTechniques.length} Selected</span>
               </div>
 
-          
+
 
               <div className="accordion-toggle-icon d-flex align-items-center gap-1 text-muted" style={{ fontSize: '13px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 500 }}>{isAccordionOpen ? 'Collapse' : 'Expand'}</span>
@@ -503,7 +593,7 @@ export default function ThreatActorProfilingTable() {
                       type="checkbox"
                       className="tap-header-checkbox"
                       checked={filters.capability}
-                      onChange={(e) => setFilters(prev => ({ ...prev, capability: e.target.checked }))}
+                      onChange={(e) => handleFilterChange('capability', e.target.checked)}
                     />
                     {filterLinesIcon} Capability
                   </div>
@@ -514,7 +604,7 @@ export default function ThreatActorProfilingTable() {
                       type="checkbox"
                       className="tap-header-checkbox"
                       checked={filters.intent}
-                      onChange={(e) => setFilters(prev => ({ ...prev, intent: e.target.checked }))}
+                      onChange={(e) => handleFilterChange('intent', e.target.checked)}
                     />
                     {filterLinesIcon} Intent
                   </div>
@@ -525,7 +615,7 @@ export default function ThreatActorProfilingTable() {
                       type="checkbox"
                       className="tap-header-checkbox"
                       checked={filters.opportunity}
-                      onChange={(e) => setFilters(prev => ({ ...prev, opportunity: e.target.checked }))}
+                      onChange={(e) => handleFilterChange('opportunity', e.target.checked)}
                     />
                     {filterLinesIcon} Opportunity
                   </div>
@@ -545,12 +635,13 @@ export default function ThreatActorProfilingTable() {
                     </div>
                   </td>
                 </tr>
-              ) : processedActors.length > 0 ? (
-                processedActors.map((actor, idx) => {
+              ) : paginatedActors.length > 0 ? (
+                paginatedActors.map((actor, idx) => {
+                  const globalIdx = (currentPage - 1) * ITEMS_PER_PAGE + idx;
                   const priority = getActorPriority(actor);
                   return (
-                    <tr key={actor.actor_id || idx}>
-                      <td className="col-rank">{String(idx + 1).padStart(2, '0')}</td>
+                    <tr key={actor.actor_id || globalIdx}>
+                      <td className="col-rank">{String(globalIdx + 1).padStart(2, '0')}</td>
                       <td className="col-actor">{actor.name}</td>
                       <td>{renderCheckIcon(actor.capability)}</td>
                       <td>{renderCheckIcon(actor.intent)}</td>
@@ -562,7 +653,7 @@ export default function ThreatActorProfilingTable() {
               ) : (
                 <tr>
                   <td colSpan="6" className="text-center py-5 text-muted" style={{ height: '320px', verticalAlign: 'middle' }}>
-                    No threat actors to display. Enter a search query above (at least 3 characters).
+                    No threat actors to display.
                   </td>
                 </tr>
               )}
@@ -573,12 +664,34 @@ export default function ThreatActorProfilingTable() {
         {/* Pagination */}
         <div className="tap-pagination">
           <div className="pagination-info">
-            Showing {processedActors.length > 0 ? 1 : 0} to {processedActors.length} of {data?.matched_actor_count ?? processedActors.length} entries
+            Showing {startEntry} to {endEntry} of {processedActors.length} entries
           </div>
           <div className="pagination-buttons">
-            <button className="btn-page btn-text" disabled={processedActors.length === 0}>Previous</button>
-            <button className="btn-page active">1</button>
-            <button className="btn-page btn-text" disabled={processedActors.length === 0}>Next</button>
+            <button
+              className="btn-page btn-text"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            >
+              Previous
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+              <button
+                key={page}
+                className={`btn-page ${currentPage === page ? 'active' : ''}`}
+                onClick={() => setCurrentPage(page)}
+              >
+                {page}
+              </button>
+            ))}
+
+            <button
+              className="btn-page btn-text"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
