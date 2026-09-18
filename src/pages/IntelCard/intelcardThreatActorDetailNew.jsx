@@ -80,7 +80,7 @@ export default function IntelcardThreatActorDetailNew() {
         </header>
 
         <div className="title">
-          <b>1</b>Summary
+          Summary
         </div>
         <div className="grid4">
           <div className="card">
@@ -171,7 +171,7 @@ export default function IntelcardThreatActorDetailNew() {
         </div>
 
         <div className="title">
-          <b>2</b>Description
+          Description
         </div>
         <div className="desc">
           {threatData?.description ? (
@@ -184,7 +184,7 @@ export default function IntelcardThreatActorDetailNew() {
         </div>
 
         <div className="title">
-          <b>3</b>Activity timeline
+          Activity timeline
         </div>
         <div className="timeline">
           {threatData?.activity_timeline?.length > 0 ? (
@@ -203,7 +203,7 @@ export default function IntelcardThreatActorDetailNew() {
         </div>
 
         <div className="title">
-          <b>4</b>Diamond model
+          Diamond model
         </div>
         <div className="diamond-wrap">
           <svg viewBox="0 0 1000 430" preserveAspectRatio="none" aria-hidden="true">
@@ -268,14 +268,14 @@ export default function IntelcardThreatActorDetailNew() {
       <section className="page">
         <header className="pagehead">
           <div>
-            <div className="over">Operational profile</div>
-            <h2>Execution &amp; observables</h2>
+            {/* <div className="over">Operational profile</div>
+            <h2>Execution &amp; observables</h2> */}
           </div>
           <div className="label">{threatData?.name || 'Threat Actor'} / 02</div>
         </header>
 
         <div className="title" style={{ marginTop: 0 }}>
-          <b>5</b>Execution path
+          Execution path
         </div>
         <div className="steps">
           {executionSteps.length > 0 ? (
@@ -307,7 +307,7 @@ export default function IntelcardThreatActorDetailNew() {
         <div className="grid2">
           <div>
             <div className="title">
-              <b>6</b>Infrastructure
+              Infrastructure
             </div>
             <table>
               <thead>
@@ -337,7 +337,7 @@ export default function IntelcardThreatActorDetailNew() {
 
           <div>
             <div className="title">
-              <b>7</b>Targeted Assets &amp; Capabilities
+              Targeted Assets &amp; Capabilities
             </div>
             <table>
               <thead>
@@ -372,7 +372,7 @@ export default function IntelcardThreatActorDetailNew() {
         </div>
 
         <div className="title">
-          <b>8</b>MITRE ATT&amp;CK TTPs
+          MITRE ATT&amp;CK TTPs
         </div>
         <table>
           <thead>
@@ -402,7 +402,7 @@ export default function IntelcardThreatActorDetailNew() {
         </table>
 
         <div className="title">
-          <b>9</b>Indicators of compromise
+          Indicators of compromise
         </div>
         <table>
           <thead>
