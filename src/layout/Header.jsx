@@ -5,6 +5,7 @@ import { Dropdown } from 'antd';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { MdLockReset, MdLogout } from 'react-icons/md';
 import LogOutSweetAlert from '../common/sweetalert/logoutSweetAlert';
+import Heliosheadersection from '../components/HeliosInfoSection/Heliosheadersection';
 
 
 const Header = ({ toggleSidebar, showHamburger }) => {
@@ -103,6 +104,7 @@ const Header = ({ toggleSidebar, showHamburger }) => {
           </button>
           <button className="nav-icon-btn"><i className="bi bi-question-circle"></i></button>
           <button className="nav-icon-btn"><i className="bi bi-bell"></i></button>
+          <Heliosheadersection />
           <Dropdown
             menu={{
               items: [

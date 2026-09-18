@@ -1,0 +1,168 @@
+@keyframes heliosGradientFlow {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.helios-header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(90deg, #ffffff 0%, #fff3ea 25%, #feaaf3 50%, #edeaff 75%, #ffffff 100%);
+  background-size: 250% 100%;
+  background-position: 100% 50%;
+  border: 1px solid #dce4ec;
+  border-radius: 12px;
+  padding: 10px 7px;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+
+  &:hover {
+    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.16);
+    animation: heliosGradientFlow 2s linear infinite;
+
+    .helios-chevron path {
+      stroke: #ea580c;
+    }
+  }
+
+  .helios-icon-box {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #ff9f1c 0%, #f77f00 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(247, 127, 0, 0.25);
+  }
+
+  .helios-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #081528;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  .helios-chevron {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    
+    path {
+      transition: stroke 0.2s ease;
+    }
+  }
+}
+
+// Dark theme support
+[data-bs-theme='dark'],
+[data-theme='dark'] {
+  .helios-header-btn {
+    background: linear-gradient(90deg, #1e293b 0%, #2d1f1b 25%, #3d261a 50%, #2d1f1b 75%, #1e293b 100%);
+    background-size: 250% 100%;
+    background-position: 100% 50%;
+    border-color: #334155;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      border-color: #ea580c;
+      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.25);
+      animation: heliosGradientFlow 2s linear infinite;
+
+      .helios-chevron path {
+        stroke: #fb923c;
+      }
+    }
+
+    .helios-title {
+      color: #f1f5f9;
+    }
+
+    .helios-chevron path {
+      stroke: #94a3b8;
+    }
+  }
+}
+
+// Dropdown Content styling
+.helios-dropdown-content {
+  min-width: 250px;
+  padding: 6px;
+
+  .helios-dropdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+
+    .helios-badge-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #0f172a;
+
+      .helios-status-indicator {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+      }
+    }
+
+    .helios-target-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: #ea580c;
+      background: #fff7ed;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+  }
+
+  .helios-dropdown-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .helios-info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+
+      .row-icon {
+        font-size: 15px;
+        margin-top: 1px;
+        flex-shrink: 0;
+      }
+
+      .row-text {
+        display: flex;
+        gap: 6px;
+
+        .label {
+          color: #64748b;
+          font-weight: 500;
+        }
+
+        .value {
+          color: #1e293b;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}

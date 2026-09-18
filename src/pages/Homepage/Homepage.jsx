@@ -29,7 +29,7 @@ export default function Homepage() {
                     {/* Top Full Width Content */}
                     <div className="main-content" style={{ paddingBottom: 0 }}>
                         {/* Helios Info Section */}
-                        <HeliosInfoSection />
+                        {/* <HeliosInfoSection /> */}
 
                         {/* Threat Intelligence / Emerging Threat Dashboard */}
                         <div className="d-flex" style={{ flexDirection: "column", gap: "24px" }}>
