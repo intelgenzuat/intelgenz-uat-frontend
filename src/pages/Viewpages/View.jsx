@@ -104,7 +104,14 @@ export default function View() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  // Sorting state
+  const [sortBy, setSortBy] = useState('New');
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
+  const sortDropdownRef = useRef(null);
+
   const navigate = useNavigate();
+
+  const sortOptions = ['New', 'Older', 'Severity'];
 
   const dropdownOptions = [
     'Threat Actor',
@@ -120,6 +127,9 @@ export default function View() {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
+        setIsSortDropdownOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
@@ -127,32 +137,57 @@ export default function View() {
     };
   }, []);
 
+  const severityRank = {
+    'critical': 4,
+    'high': 3,
+    'medium': 2,
+    'low': 1,
+    'info': 0
+  };
+
   const getFilteredCards = () => {
     const results = cardData?.data?.results || [];
-    if (selectedType === 'All') return results;
-    
-    const lowerType = selectedType.toLowerCase();
-    return results.filter(threat => {
-      const threatType = (threat.threat_type || '').toLowerCase();
-      const groupNames = (threat.threat_group_names || []).map(g => g.toLowerCase());
-      const title = (threat.title || '').toLowerCase();
+    let filtered = results;
 
-      if (lowerType === 'threat actor') {
-        return threatType.includes('actor') || threatType.includes('insider') || (groupNames.length > 0 && !groupNames.includes('unknown') && !groupNames.includes('internal actor'));
+    if (selectedType !== 'All') {
+      const lowerType = selectedType.toLowerCase();
+      filtered = results.filter(threat => {
+        const threatType = (threat.threat_type || '').toLowerCase();
+        const groupNames = (threat.threat_group_names || []).map(g => g.toLowerCase());
+        const title = (threat.title || '').toLowerCase();
+
+        if (lowerType === 'threat actor') {
+          return threatType.includes('actor') || threatType.includes('insider') || (groupNames.length > 0 && !groupNames.includes('unknown') && !groupNames.includes('internal actor'));
+        }
+        if (lowerType === 'malware') {
+          return threatType.includes('malware') || threatType.includes('ransomware');
+        }
+        if (lowerType === 'campaign') {
+          return threatType.includes('campaign') || threatType.includes('phishing');
+        }
+        if (lowerType === 'situation') {
+          return threatType.includes('ddos') || threatType.includes('situation') || threatType.includes('zero-day');
+        }
+        if (lowerType === 'trends') {
+          return title.includes('campaign') || title.includes('spread') || threatType.includes('supply chain');
+        }
+        return true;
+      });
+    }
+
+    return [...filtered].sort((a, b) => {
+      if (sortBy === 'New') {
+        return new Date(b.date || 0) - new Date(a.date || 0);
       }
-      if (lowerType === 'malware') {
-        return threatType.includes('malware') || threatType.includes('ransomware');
+      if (sortBy === 'Older') {
+        return new Date(a.date || 0) - new Date(b.date || 0);
       }
-      if (lowerType === 'campaign') {
-        return threatType.includes('campaign') || threatType.includes('phishing');
+      if (sortBy === 'Severity') {
+        const rankA = severityRank[(a.severity_level || '').toLowerCase()] || 0;
+        const rankB = severityRank[(b.severity_level || '').toLowerCase()] || 0;
+        return rankB - rankA;
       }
-      if (lowerType === 'situation') {
-        return threatType.includes('ddos') || threatType.includes('situation') || threatType.includes('zero-day');
-      }
-      if (lowerType === 'trends') {
-        return title.includes('campaign') || title.includes('spread') || threatType.includes('supply chain');
-      }
-      return true;
+      return 0;
     });
   };
 
@@ -214,12 +249,76 @@ export default function View() {
 
           <Topcontent showHeliosInfo={activeTab === 'customized'}>
             <div className="list-header-actions d-flex gap-3 position-relative align-items-center">
-              <button className="refresh-btn shadow-sm">
+              {/* View Mode Checkboxes: Curated / All View (1 selectable at a time) */}
+              <div className="view-mode-checkboxes d-flex align-items-center gap-3 me-2">
+                <div className="form-check d-flex align-items-center gap-2 mb-0">
+                  <input
+                    className="form-check-input mt-0 cursor-pointer"
+                    type="checkbox"
+                    id="curatedViewCheck"
+                    checked={activeTab === 'customized'}
+                    onChange={() => setActiveTab('customized')}
+                  />
+                  <label
+                    className="form-check-label user-select-none cursor-pointer"
+                    htmlFor="curatedViewCheck"
+                  >
+                    Curated View
+                  </label>
+                </div>
+                <div className="form-check d-flex align-items-center gap-2 mb-0">
+                  <input
+                    className="form-check-input mt-0 cursor-pointer"
+                    type="checkbox"
+                    id="allViewCheck"
+                    checked={activeTab === 'all'}
+                    onChange={() => setActiveTab('all')}
+                  />
+                  <label
+                    className="form-check-label user-select-none cursor-pointer"
+                    htmlFor="allViewCheck"
+                  >
+                    All View
+                  </label>
+                </div>
+              </div>
+
+              {/* Sort Dropdown */}
+              <div className="threat-type-dropdown-wrapper position-relative" ref={sortDropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
+                  className={`dropdown-toggle-btn shadow-sm ${isSortDropdownOpen ? 'active' : ''}`}
+                >
+                  <span className="dropdown-selected-text">Sort: {sortBy}</span>
+                  <LuChevronDown className="ms-2 dropdown-chevron" />
+                </button>
+                <div className={`dropdown-menu-custom shadow-lg ${isSortDropdownOpen ? 'show' : ''}`}>
+                  {sortOptions.map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      className={`dropdown-item-custom ${sortBy === option ? 'active' : ''}`}
+                      onClick={() => {
+                        setSortBy(option);
+                        setIsSortDropdownOpen(false);
+                      }}
+                    >
+                      <span className="dropdown-item-text">{option}</span>
+                      {sortBy === option && (
+                        <LuCheck className="dropdown-check-icon ms-2" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button className="refresh-btn shadow-sm" onClick={getThreatCardData}>
                 <LuRefreshCw />
               </button>
 
               {/* Threat Type Category Dropdown */}
-              {activeTab !== 'customized' && (
+              {/* {activeTab !== 'customized' && (
                 <div className="threat-type-dropdown-wrapper position-relative" ref={dropdownRef}>
                   <button
                     type="button"
@@ -248,7 +347,7 @@ export default function View() {
                     ))}
                   </div>
                 </div>
-              )}
+              )} */}
 
               <button
                 onClick={() => setShowFilter(!showFilter)}
@@ -274,40 +373,36 @@ export default function View() {
             </div>
 
             {/* SCROLLABLE GRID CONTAINER */}
-            {activeTab === 'customized' ? (
-              <div className="cards-scroll-area px-3 w-100">
-                {loading ? (
-                  <div className="d-flex justify-content-center align-items-center py-5">
-                    <div className="spinner-border text-primary" role="status">
-                      <span className="visually-hidden">Loading...</span>
+            <div className="cards-scroll-area px-3 w-100">
+              {loading ? (
+                <div className="d-flex justify-content-center align-items-center py-5">
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              ) : getFilteredCards().length === 0 ? (
+                <div className="d-flex flex-column justify-content-center align-items-center py-5 w-100">
+                  <div className="text-muted mb-2 fw-medium" style={{ fontSize: '15px' }}>
+                    No reports found for "{selectedType}"
+                  </div>
+                  <button 
+                    onClick={() => setSelectedType('All')}
+                    className="btn btn-sm text-decoration-none fw-semibold"
+                    style={{ color: '#4300d2', backgroundColor: '#f1f0fe', borderRadius: '8px', padding: '6px 16px' }}
+                  >
+                    Reset filter
+                  </button>
+                </div>
+              ) : (
+                <div className="row g-3 mb-2">
+                  {getFilteredCards().map(threat => (
+                    <div key={threat.id} className="col-12 col-xl-4 col-md-6 mb-1">
+                      <ThreatCard cardData={threat} />
                     </div>
-                  </div>
-                ) : getFilteredCards().length === 0 ? (
-                  <div className="d-flex flex-column justify-content-center align-items-center py-5 w-100">
-                    <div className="text-muted mb-2 fw-medium" style={{ fontSize: '15px' }}>
-                      No reports found for "{selectedType}"
-                    </div>
-                    <button 
-                      onClick={() => setSelectedType('All')}
-                      className="btn btn-sm text-decoration-none fw-semibold"
-                      style={{ color: '#4300d2', backgroundColor: '#f1f0fe', borderRadius: '8px', padding: '6px 16px' }}
-                    >
-                      Reset filter
-                    </button>
-                  </div>
-                ) : (
-                  <div className="row g-3 mb-2">
-                    {getFilteredCards().map(threat => (
-                      <div key={threat.id} className="col-12 col-xl-4 col-md-6 mb-1">
-                        <ThreatCard cardData={threat} />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <AllViewList selectedType={selectedType} />
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
 
             {/* Pagination (Fixed at bottom) */}
 

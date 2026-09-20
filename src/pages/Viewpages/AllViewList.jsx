@@ -83,8 +83,15 @@ const severityColor = (level) => {
   return { bg: '#22c55e', text: '#fff' };
 };
 
-export default function AllViewList({ selectedType }) {
+export default function AllViewList({ selectedType, sortBy = 'New' }) {
   const navigate = useNavigate();
+
+  const severityRank = {
+    'Critical': 4,
+    'High': 3,
+    'Medium': 2,
+    'Low': 1
+  };
 
   const filteredList = listData.filter(item => {
     if (!selectedType || selectedType === 'All') return true;
@@ -109,6 +116,21 @@ export default function AllViewList({ selectedType }) {
       return itemTitle.includes('actively') || itemTitle.includes('new');
     }
     return true;
+  });
+
+  const sortedList = [...filteredList].sort((a, b) => {
+    if (sortBy === 'New') {
+      return (b.id || 0) - (a.id || 0);
+    }
+    if (sortBy === 'Older') {
+      return (a.id || 0) - (b.id || 0);
+    }
+    if (sortBy === 'Severity') {
+      const rankA = severityRank[a.severity] || 0;
+      const rankB = severityRank[b.severity] || 0;
+      return rankB - rankA;
+    }
+    return 0;
   });
 
   return (
@@ -147,14 +169,14 @@ export default function AllViewList({ selectedType }) {
             </tr>
           </thead>
           <tbody>
-            {filteredList.length === 0 ? (
+            {sortedList.length === 0 ? (
               <tr>
                 <td colSpan="9" className="text-center py-5 text-muted fw-medium" style={{ fontSize: '15px' }}>
                   No reports found for "{selectedType}"
                 </td>
               </tr>
             ) : (
-              filteredList.map((item) => (
+              sortedList.map((item) => (
                 <tr key={item.id}>
                 <td className="px-4 py-3 text-center" style={{ background: "#eeeeeeff" }}>
                   <div className="d-inline-flex flex-column align-items-center justify-content-center bg-white border rounded" style={{ width: '60px', height: '64px', borderColor: '#e2e8f0' }}>

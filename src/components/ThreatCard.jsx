@@ -61,7 +61,7 @@ export default function ThreatCard({ cardData }) {
       <div className="card-body-content flex-grow-1">
 
         <div className="info-list">
-          <div className="info-row d-flex align-items-center">
+          {/* <div className="info-row d-flex align-items-center">
             <PiShieldWarningDuotone className="text-danger flex-shrink-0 me-2 tc-icon" />
             <span className="tc-label me-1">Threat Type:</span>
             <span className="tc-value">{data.threat_type}</span>
@@ -77,7 +77,7 @@ export default function ThreatCard({ cardData }) {
             <PiBug className="text-danger flex-shrink-0 me-2 tc-icon" />
             <span className="tc-label me-1">Malware Name:</span>
             <span className="tc-value">{data.malware}</span>
-          </div>
+          </div> */}
           <div className="info-row d-flex align-items-center">
             <ImEarth className="text-danger flex-shrink-0 me-2 tc-icon" style={{ strokeWidth: 0 }} />
             <span className="tc-label me-2">Target Region :</span>
