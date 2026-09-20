@@ -26,7 +26,7 @@ const LogOutSweetAlert = ({ logoutUser, isSwal, setIsSwal }) => {
                     cancelBtnText="Cancel"
                     confirmBtnCssClass=" custom-confirm-button-class"
                     cancelBtnCssClass="custom-cancel-button-class"
-                    title={<span className="custom-swal-title">Are you sure want to logout?</span>}
+                    title={<span className="custom-swal-title">Confirm logout?</span>}
                     onConfirm={() => { logoutUser() }}
                     onCancel={() => { setIsSwal({ ...isSwal, show: false }) }}
                     focusCancelBtn

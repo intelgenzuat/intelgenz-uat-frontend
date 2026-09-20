@@ -94,7 +94,7 @@ export default function LiveThreatMap() {
                     color: '#1a0e2a',
                     fontFamily: 'Inter, system-ui, sans-serif'
                 }}>
-                    Live Threat Map
+                    Atlas
                     <div style={{ 
                         width: '16px', 
                         height: '16px', 

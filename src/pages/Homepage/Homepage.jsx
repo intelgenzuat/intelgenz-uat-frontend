@@ -33,9 +33,9 @@ export default function Homepage() {
 
                         {/* Threat Intelligence / Emerging Threat Dashboard */}
                         <div className="d-flex" style={{ flexDirection: "column", gap: "24px" }}>
-                            <h5 className="section-title">
+                            {/* <h5 className="section-title">
                                 Threat Intelligence <i className="bi bi-question-circle"></i>
-                            </h5>
+                            </h5> */}
                             <div className="d-flex flex-wrap gap-4 w-100">
                                 <EmergingThreatDashboard />
                                 <KnowledgeGraph />
@@ -55,7 +55,7 @@ export default function Homepage() {
                         </main>
 
                         <aside className="sidebar-content" style={{ paddingTop: 0, marginTop: 0 }}>
-                            <BlogsandNews />
+                            <TopReports />
                         </aside>
                     </div>
 
@@ -65,7 +65,8 @@ export default function Homepage() {
                             <div className="threat-distribution-section">
                                 <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
                                     <h5 className="section-title mb-0 d-flex align-items-center" style={{ color: '#0f172a', fontWeight: '600', fontSize: '20px' }}>
-                                        Threat Distribution <i className="bi bi-question-circle ms-2" style={{ color: '#5200ff', fontSize: '19.2px' }}></i>
+                                        Radius 
+                                        <i className="bi bi-question-circle ms-2" style={{ color: '#5200ff', fontSize: '19.2px' }}></i>
                                     </h5>
                                     {/* <div className="legend-indicators d-flex align-items-center">
                                         <span className="legend-label d-flex align-items-center gap-2 me-2">
@@ -95,7 +96,9 @@ export default function Homepage() {
                         </main>
 
                         <aside className="sidebar-content">
-                            <TopReports />
+                            
+                            <BlogsandNews />
+
                         </aside>
                     </div>
                 </div>

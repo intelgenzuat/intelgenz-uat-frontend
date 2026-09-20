@@ -158,7 +158,7 @@ const Login = () => {
               {error && <div className="error-message" style={{ color: '#ff4d4d', fontSize: '12px', marginTop: '10px', textAlign: 'center' }}>{error}</div>}
 
               <div className="forgot-password">
-                Forgot password? <Link to="/reset">Request reset</Link>
+                <Link to="/reset">Forgot password?</Link>
               </div>
 
               <button

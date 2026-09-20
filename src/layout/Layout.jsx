@@ -22,7 +22,7 @@ export default function Layout({ noFooter, showAdminSidebar }) {
         {showAdminSidebar && <AdminSidebar collapsed={isSidebarCollapsed} />}
         <div className={`flex-grow-1 d-flex flex-column ${shouldHideFooter ? 'overflow-hidden' : ''} ${isScrollableInner ? 'overflow-y-auto' : ''}`} style={shouldHideFooter ? { minHeight: 0 } : {}}>
           <Outlet context={{ isSidebarCollapsed, toggleSidebar }} />
-          {isScrollableInner && !shouldHideFooter && <Footer />}
+          {/* {isScrollableInner && !shouldHideFooter && <Footer />} */}
         </div>
       </div>
       {!shouldHideFooter && !isScrollableInner && <Footer />}

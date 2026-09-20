@@ -40,7 +40,7 @@ export default function ViewSidebar({ activeTab = 'customized', setActiveTab, co
               {!collapsed && <span className={`  ${activeTab === 'customized' ? 'text-dark' : 'text-secondary'}`} style={{ fontSize: '15px', fontWeight: 500 }}>Curated View</span>}
             </li>
 
-            <li
+            {/* <li
               className={`nav-item d-flex align-items-center px-3 py-2 rounded-3 ${activeTab === 'all' ? 'active' : ''}`}
               onClick={() => setActiveTab && setActiveTab('all')}
               style={{ overflow: 'hidden', whiteSpace: 'nowrap', justifyContent: collapsed ? 'center' : 'flex-start', paddingLeft: collapsed ? '0' : undefined, paddingRight: collapsed ? '0' : undefined }}
@@ -49,7 +49,7 @@ export default function ViewSidebar({ activeTab = 'customized', setActiveTab, co
                 <FiStar className="text-danger" style={{ fontSize: '16px' }} />
               </div>
               {!collapsed && <span className={` ${activeTab === 'all' ? 'text-dark' : 'text-secondary'}`} style={{ fontSize: '15px', fontWeight: 500 }}>All View</span>}
-            </li>
+            </li> */}
           </ul>
         </div>
 
