@@ -50,7 +50,7 @@ const MenuOptionsHeader = () => {
 
     const dropdownMenu = (
         <div className="menu-options-dropdown-container">
-           
+
             <div className="menu-options-grid">
                 {menuOptions.map((item) => {
                     const isActive = location.pathname === item.path;
@@ -75,9 +75,7 @@ const MenuOptionsHeader = () => {
                                 <span className="option-title">{item.title}</span>
                                 <p className="option-subtitle mb-0">{item.subtitle}</p>
                             </div>
-                            <div className="action-arrow">
-                                <i className="bi bi-chevron-right"></i>
-                            </div>
+
                         </div>
                     );
                 })}
