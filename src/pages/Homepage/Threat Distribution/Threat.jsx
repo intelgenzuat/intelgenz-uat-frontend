@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
-import { CustomDotAround, CustomDotAway, CustomDotGlobal, renderRadarBackground } from '../../../Helpers/RadarHelpers';
+import { CustomDotCritical, CustomDotHigh, CustomDotAway, renderRadarBackground } from '../../../Helpers/RadarHelpers';
 import ThreatModal from './ThreatModal';
 import './Threat.scss';
 import { getRadarData } from '../../../Context/Radar';
@@ -91,98 +91,60 @@ export default function Threat() {
     return () => resizeObserver.disconnect();
   }, []);
 
-  // Map raw API items to rich Threat Actor objects
+  // Map raw API items using the original severity field from the API.
+  // Only Critical, High, and Moderate are included — Low and Minimal are excluded.
   const allActorsList = useMemo(() => {
     if (!data || !Array.isArray(data.items) || data.items.length === 0) {
       return [];
     }
     const cName = data.client_name || clientName || 'Client';
 
-    return data.items.map((item, index) => {
-      const sev = (item.severity || '').toLowerCase();
-      const rad = typeof item.radius === 'number' ? item.radius : parseFloat(item.radius) || 3.0;
+    return data.items
+      .filter((item) => {
+        // Use the raw API severity to decide inclusion — skip low / minimal
+        const sev = (item.severity || '').toLowerCase();
+        return ['critical', 'high', 'moderate'].includes(sev);
+      })
+      .map((item, index) => {
+        // Use the original API severity directly — no radius-based re-mapping
+        const sev = (item.severity || '').toLowerCase();
+        const rad = typeof item.radius === 'number' ? item.radius : parseFloat(item.radius) || 2.0;
 
-      let category = 'Global';
-      let focusLevel = 3;
-      let riskLevel = 'Low';
-      let normalizedSeverity = sev;
+        let category = 'Moderate';
+        let focusLevel = 2;
+        let riskLevel = 'Moderate';
 
-      if (sev === 'critical') {
-        category = 'Around You';
-        focusLevel = 0;
-        riskLevel = 'Critical';
-        normalizedSeverity = 'critical';
-      } else if (sev === 'high') {
-        category = 'Around You';
-        focusLevel = 1;
-        riskLevel = 'High';
-        normalizedSeverity = 'high';
-      } else if (sev === 'moderate') {
-        category = 'Away';
-        focusLevel = 2;
-        riskLevel = 'Moderate';
-        normalizedSeverity = 'moderate';
-      } else if (sev === 'low') {
-        category = 'Global';
-        focusLevel = 3;
-        riskLevel = 'Low';
-        normalizedSeverity = 'low';
-      } else if (sev === 'minimal') {
-        category = 'Global';
-        focusLevel = 4;
-        riskLevel = 'Minimal';
-        normalizedSeverity = 'minimal';
-      } else {
-        // Fallback based on radius if severity is not explicitly provided
-        if (rad < 1.0) {
-          category = 'Around You';
+        if (sev === 'critical') {
+          category = 'Critical';
           focusLevel = 0;
           riskLevel = 'Critical';
-          normalizedSeverity = 'critical';
-        } else if (rad < 2.0) {
-          category = 'Around You';
+        } else if (sev === 'high') {
+          category = 'High';
           focusLevel = 1;
           riskLevel = 'High';
-          normalizedSeverity = 'high';
-        } else if (rad < 3.0) {
-          category = 'Away';
-          focusLevel = 2;
-          riskLevel = 'Moderate';
-          normalizedSeverity = 'moderate';
-        } else if (rad < 4.0) {
-          category = 'Global';
-          focusLevel = 3;
-          riskLevel = 'Low';
-          normalizedSeverity = 'low';
-        } else {
-          category = 'Global';
-          focusLevel = 4;
-          riskLevel = 'Minimal';
-          normalizedSeverity = 'minimal';
         }
-      }
 
-      // Threat Score calculated from radius (range 1.0 -> 5.0)
-      const calculatedScore = Math.max(1.0, Math.min(5.0, 5.0 - (rad - 1.0) * 0.85)).toFixed(1);
+        // Threat Score calculated from radius (range 1.0 -> 5.0)
+        const calculatedScore = Math.max(1.0, Math.min(5.0, 5.0 - (rad - 1.0) * 0.85)).toFixed(1);
 
-      return {
-        id: item.actor_id ? `TA-${item.actor_id}` : `TA-${index + 1}`,
-        actor_id: item.actor_id,
-        name: item.name || `Actor_${item.actor_id || index + 1}`,
-        radius: rad,
-        severity: normalizedSeverity || 'low',
-        category: category,
-        focusLevel: focusLevel,
-        riskLevel: riskLevel,
-        threatScore: calculatedScore,
-        sector: item.sector || 'BFSI, Healthcare & Critical Infrastructure',
-        origin: item.origin || 'Global Threat Feeds & Sensor Grid',
-        techFocus: item.techFocus || 'Ransomware-as-a-Service, Credential Theft, Edge Exploitation',
-        tactics: item.tactics || 'Initial Access, Persistence & Exfiltration',
-        victims: item.victims || `${cName} & Global Sector Peers`,
-        overlapAnalysis: item.overlapAnalysis || `Detected threat vectors matching ${cName} perimeter defense telemetry.`,
-      };
-    });
+        return {
+          id: item.actor_id ? `TA-${item.actor_id}` : `TA-${index + 1}`,
+          actor_id: item.actor_id,
+          name: item.name || `Actor_${item.actor_id || index + 1}`,
+          radius: rad,
+          severity: sev,           // original API value
+          category: category,
+          focusLevel: focusLevel,
+          riskLevel: riskLevel,
+          threatScore: calculatedScore,
+          sector: item.sector || 'BFSI, Healthcare & Critical Infrastructure',
+          origin: item.origin || 'Global Threat Feeds & Sensor Grid',
+          techFocus: item.techFocus || 'Ransomware-as-a-Service, Credential Theft, Edge Exploitation',
+          tactics: item.tactics || 'Initial Access, Persistence & Exfiltration',
+          victims: item.victims || `${cName} & Global Sector Peers`,
+          overlapAnalysis: item.overlapAnalysis || `Detected threat vectors matching ${cName} perimeter defense telemetry.`,
+        };
+      });
   }, [data, clientName]);
 
   // Focus level limit based on dropdown
@@ -194,10 +156,6 @@ export default function Threat() {
         return 1; // High
       case '2+':
         return 2; // Moderate
-      case '3+':
-        return 3; // Low
-      case '4+':
-        return 4; // All
       default:
         return 0;
     }
@@ -211,30 +169,22 @@ export default function Threat() {
         return 'High Risk Zone';
       case 'Moderate':
         return 'Moderate Zone';
-      case 'Low':
-        return 'Low Zone';
-      case 'All':
-        return 'All Zones';
       default:
         return `${selectedSeverity} Zone`;
     }
   }, [selectedSeverity]);
 
   const getRadiusValue = (radiusKey, outerR) => {
-    const step = outerR / 5;
+    const step = outerR / 3;
     switch (radiusKey) {
       case '0+':
-        return step * 1.5;
+        return step * 1;
       case '1+':
-        return step * 2.5;
+        return step * 2;
       case '2+':
-        return step * 3.5;
-      case '3+':
-        return step * 4.4;
-      case '4+':
         return outerR;
       default:
-        return step * 1.5;
+        return step * 1;
     }
   };
 
@@ -248,9 +198,6 @@ export default function Threat() {
   const filteredActors = useMemo(() => {
     return allActorsList.filter((actor) => {
       const target = (selectedSeverity || 'Critical').toLowerCase();
-      if (target === 'all') {
-        return true;
-      }
       if (target === 'critical') {
         return actor.severity === 'critical' || actor.riskLevel === 'Critical';
       }
@@ -259,9 +206,6 @@ export default function Threat() {
       }
       if (target === 'moderate') {
         return actor.severity === 'moderate' || actor.riskLevel === 'Moderate';
-      }
-      if (target === 'low') {
-        return actor.severity === 'low' || actor.riskLevel === 'Low';
       }
       return true;
     });
@@ -273,7 +217,7 @@ export default function Threat() {
     return filteredActors;
   }, [filteredActors]);
 
-  // Generate Recharts polar dataset with shattered, perfectly balanced distribution
+  // Generate Recharts polar dataset with shattered, perfectly balanced distribution for Critical, High, and Moderate
   const radarChartData = useMemo(() => {
     if (!itemsForRadar || itemsForRadar.length === 0) {
       return Array.from({ length: 24 }, (_, i) => ({
@@ -287,17 +231,17 @@ export default function Threat() {
     }
 
     // Group items by category to ensure balanced angular scattering
-    const aroundItems = [];
-    const awayItems = [];
-    const globalItems = [];
+    const criticalItems = [];
+    const highItems = [];
+    const moderateItems = [];
 
     itemsForRadar.forEach((item) => {
-      if (item.category === 'Around You') {
-        aroundItems.push(item);
-      } else if (item.category === 'Away') {
-        awayItems.push(item);
+      if (item.category === 'Critical' || item.severity === 'critical') {
+        criticalItems.push(item);
+      } else if (item.category === 'High' || item.severity === 'high') {
+        highItems.push(item);
       } else {
-        globalItems.push(item);
+        moderateItems.push(item);
       }
     });
 
@@ -316,22 +260,22 @@ export default function Threat() {
         const angle = (baseOffset + idx * GOLDEN_ANGLE + microJitter + 3600) % 360;
 
         // Calculate scaled radius value per zone with subtle radial depth jitter
-        const rad = typeof item.radius === 'number' ? item.radius : parseFloat(item.radius) || 3.0;
+        const rad = typeof item.radius === 'number' ? item.radius : parseFloat(item.radius) || 2.0;
         const radialJitter = ((hash % 100) / 100 - 0.5) * 6; // ±3px
 
         let scaledVal = 30;
-        if (category === 'Around You') {
-          // Inner zone: ~22 to 46
-          const norm = Math.max(0, Math.min(1, (rad - 1.0) / 0.8));
-          scaledVal = Math.max(20, Math.min(48, 24 + norm * 20 + radialJitter));
-        } else if (category === 'Away') {
-          // Mid zone: ~58 to 88
-          const norm = Math.max(0, Math.min(1, (rad - 2.0) / 0.9));
-          scaledVal = Math.max(54, Math.min(90, 60 + norm * 26 + radialJitter));
+        if (category === 'Critical') {
+          // Inner zone: ~20 to 45 (Grid circle at 50)
+          const norm = Math.max(0, Math.min(1, (rad - 0.5) / 0.8));
+          scaledVal = Math.max(20, Math.min(46, 22 + norm * 20 + radialJitter));
+        } else if (category === 'High') {
+          // Mid zone: ~65 to 92 (Grid circle at 100)
+          const norm = Math.max(0, Math.min(1, (rad - 1.2) / 0.9));
+          scaledVal = Math.max(62, Math.min(94, 68 + norm * 22 + radialJitter));
         } else {
-          // Outer global zone: ~98 to 145
-          const norm = Math.max(0, Math.min(1, (rad - 3.0) / 2.0));
-          scaledVal = Math.max(96, Math.min(146, 100 + norm * 42 + radialJitter));
+          // Outer zone: ~110 to 144 (Grid circle at 150)
+          const norm = Math.max(0, Math.min(1, (rad - 2.2) / 1.5));
+          scaledVal = Math.max(108, Math.min(145, 114 + norm * 26 + radialJitter));
         }
 
         itemsWithAngles.push({
@@ -343,9 +287,9 @@ export default function Threat() {
       });
     };
 
-    assignAngles(aroundItems, 18, 'Around You');
-    assignAngles(awayItems, 74, 'Away');
-    assignAngles(globalItems, 142, 'Global');
+    assignAngles(criticalItems, 18, 'Critical');
+    assignAngles(highItems, 74, 'High');
+    assignAngles(moderateItems, 142, 'Moderate');
 
     // Sort all items by angle ascending so they map evenly around polar coordinates
     itemsWithAngles.sort((a, b) => a.angle - b.angle);
@@ -371,9 +315,9 @@ export default function Threat() {
         }
         slots[targetIndex] = {
           subject: String(targetIndex + 1).padStart(2, '0'),
-          A: entry.category === 'Around You' ? entry.scaledVal : 0,
-          B: entry.category === 'Away' ? entry.scaledVal : 0,
-          C: entry.category === 'Global' ? entry.scaledVal : 0,
+          A: entry.category === 'Critical' ? entry.scaledVal : 0,
+          B: entry.category === 'High' ? entry.scaledVal : 0,
+          C: entry.category === 'Moderate' ? entry.scaledVal : 0,
           fullMark: 150,
           actor: entry.item,
         };
@@ -385,9 +329,9 @@ export default function Threat() {
     // When we have enough items, each item occupies its own shattered spoke
     return itemsWithAngles.map((entry, index) => ({
       subject: String(index + 1).padStart(2, '0'),
-      A: entry.category === 'Around You' ? entry.scaledVal : 0,
-      B: entry.category === 'Away' ? entry.scaledVal : 0,
-      C: entry.category === 'Global' ? entry.scaledVal : 0,
+      A: entry.category === 'Critical' ? entry.scaledVal : 0,
+      B: entry.category === 'High' ? entry.scaledVal : 0,
+      C: entry.category === 'Moderate' ? entry.scaledVal : 0,
       fullMark: 150,
       actor: entry.item,
     }));
@@ -487,10 +431,6 @@ export default function Threat() {
       setSelectedRadius('1+');
     } else if (val === 'moderate') {
       setSelectedRadius('2+');
-    } else if (val === 'low') {
-      setSelectedRadius('3+');
-    } else if (val === 'all') {
-      setSelectedRadius('4+');
     }
   };
 
@@ -512,7 +452,7 @@ export default function Threat() {
         </div>
 
         <div className="header-right">
-          <div className="radius-control-wrapper" title="Filter by threat severity and proximity">
+          <div className="radius-control-wrapper" title="Filter by threat severity">
             <label htmlFor="threat-severity-select" className="radius-control-label">
               <i className="bi bi-funnel-fill"></i> Filter:
             </label>
@@ -525,8 +465,6 @@ export default function Threat() {
               <option value="Critical">Critical</option>
               <option value="High">High</option>
               <option value="Moderate">Moderate</option>
-              <option value="Low">Low</option>
-              <option value="All">All</option>
             </select>
           </div>
           <button className="expand-btn" title="Expand View" onClick={() => getRadarDatalist(clientName)}>
@@ -546,19 +484,19 @@ export default function Threat() {
                 <PolarRadiusAxis
                   angle={30}
                   domain={[0, 150]}
-                  ticks={[30, 60, 90, 120, 150]}
+                  ticks={[50, 100, 150]}
                   tick={false}
                   axisLine={false}
                 />
                 <Radar
-                  name="Around You"
+                  name="Critical"
                   dataKey="A"
                   stroke="none"
                   fill="none"
                   dot={
                     <RenderDot
-                      OriginalDot={CustomDotAround}
-                      category="Around You"
+                      OriginalDot={CustomDotCritical}
+                      category="Critical"
                       onHover={handleHover}
                       onLeave={handleLeave}
                       onClick={handleClick}
@@ -569,14 +507,14 @@ export default function Threat() {
                   isAnimationActive={false}
                 />
                 <Radar
-                  name="Away"
+                  name="High"
                   dataKey="B"
                   stroke="none"
                   fill="none"
                   dot={
                     <RenderDot
-                      OriginalDot={CustomDotAway}
-                      category="Away"
+                      OriginalDot={CustomDotHigh}
+                      category="High"
                       onHover={handleHover}
                       onLeave={handleLeave}
                       onClick={handleClick}
@@ -587,14 +525,14 @@ export default function Threat() {
                   isAnimationActive={false}
                 />
                 <Radar
-                  name="Global"
+                  name="Moderate"
                   dataKey="C"
                   stroke="none"
                   fill="none"
                   dot={
                     <RenderDot
-                      OriginalDot={CustomDotGlobal}
-                      category="Global"
+                      OriginalDot={CustomDotAway}
+                      category="Moderate"
                       onHover={handleHover}
                       onLeave={handleLeave}
                       onClick={handleClick}
@@ -653,17 +591,10 @@ export default function Threat() {
                   filteredActors.map((actor) => {
                     const inFocus = isActorInFocus(actor);
                     const isHovered = hoveredActor === actor.name;
-                    const catClass =
-                      actor.category === 'Around You'
-                        ? 'around'
-                        : actor.category === 'Away'
-                          ? 'away'
-                          : 'global';
-                    const rawRiskLevel = actor.riskLevel || 'Low';
+                    const sevClass = (actor.severity || 'moderate').toLowerCase();
                     const severityLabel =
                       actor.riskLevel ||
-                      (actor.severity ? actor.severity.charAt(0).toUpperCase() + actor.severity.slice(1) : 'Low');
-                    const sevClass = (actor.severity || rawRiskLevel).toLowerCase();
+                      (actor.severity ? actor.severity.charAt(0).toUpperCase() + actor.severity.slice(1) : 'Moderate');
 
                     return (
                       <tr
@@ -677,7 +608,7 @@ export default function Threat() {
                       >
                         <td>
                           <div className="actor-name-cell">
-                            <div className={`actor-icon icon-${sevClass} icon-${catClass}`}>
+                            <div className={`actor-icon icon-${sevClass}`}>
                               {actor.name.charAt(0).toUpperCase()}
                             </div>
                             <div className="name-info">

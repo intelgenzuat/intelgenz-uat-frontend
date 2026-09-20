@@ -71,10 +71,12 @@ export const renderRadarBackground = ({ radius, outerR, rMid = 42, strokeWidth =
   // Uses two clockwise full-circle arcs with fill-rule="evenodd" to punch a hole in the centre
   const hasGreyRing = outerR && radius !== undefined && radius < outerR - 1;
 
+  // Grey ring outer boundary is 2px inside outerR so it sits fully within the last radar border
+  const greyOuter = outerR ? outerR - 4 : outerR;
   const greyRingPath = hasGreyRing
     ? [
-        // Outer clockwise full circle
-        `M 0 ${-outerR} A ${outerR} ${outerR} 0 1 1 0 ${outerR} A ${outerR} ${outerR} 0 1 1 0 ${-outerR} Z`,
+        // Outer clockwise full circle (2px inside the border so grey stays contained)
+        `M 0 ${-greyOuter} A ${greyOuter} ${greyOuter} 0 1 1 0 ${greyOuter} A ${greyOuter} ${greyOuter} 0 1 1 0 ${-greyOuter} Z`,
         // Inner clockwise full circle (creates the hole via evenodd)
         `M 0 ${-radius} A ${radius} ${radius} 0 1 1 0 ${radius} A ${radius} ${radius} 0 1 1 0 ${-radius} Z`,
       ].join(' ')
@@ -90,6 +92,12 @@ export const renderRadarBackground = ({ radius, outerR, rMid = 42, strokeWidth =
         <filter id="center-badge-shadow" x="-60%" y="-60%" width="220%" height="220%">
           <feDropShadow dx="0" dy="3" stdDeviation="5" floodColor="#00b85c" floodOpacity="0.5" />
         </filter>
+        {/* Clip path — 2px inside outerR so grey shading never touches the border */}
+        {outerR && (
+          <clipPath id="radar-outer-clip">
+            <circle cx="0" cy="0" r={outerR - 2} />
+          </clipPath>
+        )}
       </defs>
 
       {/* Dynamic white shaded background band / filled radius with shadow */}
@@ -121,13 +129,14 @@ export const renderRadarBackground = ({ radius, outerR, rMid = 42, strokeWidth =
         />
       )}
 
-      {/* Grey overlay ring for inactive outer rings */}
+      {/* Grey overlay ring for inactive outer rings — clipped to outerR so it never bleeds outside */}
       {greyRingPath && (
         <path
           d={greyRingPath}
           fill="rgba(15, 23, 42, 0.22)"
           fillRule="evenodd"
           pointerEvents="none"
+          clipPath={outerR ? 'url(#radar-outer-clip)' : undefined}
           style={{
             transition: 'all 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
@@ -143,22 +152,6 @@ export const renderRadarBackground = ({ radius, outerR, rMid = 42, strokeWidth =
           fill="none"
           stroke="rgba(15, 23, 42, 0.18)"
           strokeWidth={1.5}
-          pointerEvents="none"
-          style={{
-            transition: 'r 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
-          }}
-        />
-      )}
-
-      {/* Outer border of the grey ring matching the radar outer circle */}
-      {hasGreyRing && outerR > 0 && (
-        <circle
-          cx="0"
-          cy="0"
-          r={outerR}
-          fill="none"
-          stroke="rgba(15, 23, 42, 0.12)"
-          strokeWidth={1}
           pointerEvents="none"
           style={{
             transition: 'r 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
