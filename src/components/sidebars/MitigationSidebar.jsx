@@ -31,7 +31,7 @@ export default function MitigationSidebar({ activeTab = 'customized', setActiveT
             {!collapsed && (
               <>
                 <span className="text-dark" style={{ fontSize: '15.2px' }}>
-                  Threat TTP / Mitigation
+                  Defense Convergence
                 </span>
                 <i className="bi bi-chevron-up ms-auto text-muted" style={{ fontSize: '12px' }}></i>
               </>

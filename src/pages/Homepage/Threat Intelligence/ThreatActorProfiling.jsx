@@ -19,7 +19,7 @@ export default function ThreatActorProfiling() {
                     </svg>
                 </div>
                 <div className="d-flex flex-column align-items-start gap-1">
-                    <h5 className="mb-0" style={{ fontSize: "16px", fontWeight: "600" }}>Threat Actor Profiling</h5>
+                    <h5 className="mb-0" style={{ fontSize: "16px", fontWeight: "600" }}>Adversary Triage</h5>
                     {/* <p className="text-muted mb-0" style={{ fontSize: "13px", color: "#64748b" }}>Stay ahead of emerging threats</p> */}
                 </div>
             </div>

@@ -20,7 +20,7 @@ export default function ThreatTTPMitigation() {
 
                 </div>
                 <div className="d-flex flex-column align-items-start gap-1">
-                    <h5 className="mb-0" style={{ fontSize: "16px", fontWeight: "600" }}>Threat TTP / Mitigation</h5>
+                    <h5 className="mb-0" style={{ fontSize: "16px", fontWeight: "600" }}>Defense Convergence</h5>
                     {/* <p className="text-muted mb-0" style={{ fontSize: "13px", color: "#64748b" }}>Stay ahead of emerging threats</p> */}
                 </div>
             </div>

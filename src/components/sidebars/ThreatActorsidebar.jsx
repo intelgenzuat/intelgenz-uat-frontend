@@ -50,7 +50,7 @@ export default function ThreatActorsidebar({ collapsed }) {
                                     className="text-dark"
                                     style={{ fontSize: '15.2px' }}
                                 >
-                                    Threat Actor Profiling
+                                    Adversary Triage
                                 </span>
 
                                 <i
@@ -84,7 +84,7 @@ export default function ThreatActorsidebar({ collapsed }) {
                             </div>
 
                             {!collapsed && (
-                                <span className="nav-label">Threat Actor Profiling</span>
+                                <span className="nav-label">Adversary Triage</span>
                             )}
                         </li>
 

@@ -380,7 +380,7 @@ const Mitigationttpview = () => {
                                     </svg>
                                 </div>
                                 <h2 className="mb-0 d-flex align-items-center">
-                                    <span className="header pe-3">Threat TTP / Mitigation</span>
+                                    <span className="header pe-3">Defense Convergence</span>
                                 </h2>
                             </div>
                         </div>
