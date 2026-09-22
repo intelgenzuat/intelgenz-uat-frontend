@@ -445,13 +445,137 @@ $card-cap-bg: transparent;
     }
 
     .custom-card-intel {
-      border-radius: $card-border-radius;
-      padding: 15px 16px;
-      background: linear-gradient(to right, #ffffff, #fbfaff);
-      border: 2px solid rgba(82, 0, 255, 0.05);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+      --intel-card-bg: #ffffff;
+      --intel-card-cutout-bg: #f8f9fb;
+      --intel-card-title-color: #0f172a;
+      --intel-card-badge-bg: #f4f4f6;
+      --intel-card-badge-border: rgba(0, 0, 0, 0.04);
+      --intel-card-btn-bg: #18181b;
+      --intel-card-btn-color: #ffffff;
+      --intel-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      --intel-card-border: 1px solid rgba(0, 0, 0, 0.06);
+
+      position: relative;
+      background-color: var(--intel-card-bg);
+      border: var(--intel-card-border);
+      border-radius: 28px;
+      box-shadow: var(--intel-card-shadow);
+      padding: 24px 24px 20px 24px;
       flex: 1 1 0px !important;
-      min-width: 280px;
+      min-width: 250px;
+      min-height: 150px;
+      gap:10px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:hover {
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+
+        .intel-card-btn {
+          background-color: #000000;
+
+        }
+      }
+
+      .intel-card-icon-badge {
+        width: 54px;
+        height: 54px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        svg, img {
+          width: 34px;
+          height: 34px;
+          display: block;
+        }
+
+        i {
+          font-size: 20px;
+          line-height: 1;
+          display: block;
+        }
+      }
+
+      .intel-card-content {
+
+        .intel-card-title {
+          font-size: 19px;
+          font-weight: 700;
+          color: var(--intel-card-title-color);
+          line-height: 1.3;
+          letter-spacing: -0.2px;
+          margin-bottom: 0px;
+        }
+
+        .intel-card-accent-line {
+          width: 32px;
+          height: 3px;
+          border-radius: 3px;
+          background-color: var(--intel-card-accent-line);
+        }
+      }
+
+      .intel-card-cutout {
+        position: absolute;
+        bottom: -1px;
+        right: -1px;
+        width: 66px;
+        height: 66px;
+        background-color: var(--intel-card-cutout-bg);
+        border-top-left-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+
+        // Top inverted corner connector
+        &::before {
+          content: "";
+          position: absolute;
+          top: -20px;
+          right: 0;
+          width: 20px;
+          height: 20px;
+          background: radial-gradient(circle at 100% 100%, transparent 19.5px, var(--intel-card-bg) 20px);
+          pointer-events: none;
+        }
+
+        // Left inverted corner connector
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: -20px;
+          width: 20px;
+          height: 20px;
+          background: radial-gradient(circle at 100% 100%, transparent 19.5px, var(--intel-card-bg) 20px);
+          pointer-events: none;
+        }
+
+        .intel-card-btn {
+          width: 46px;
+          height: 46px;
+          border-radius: 50%;
+          background-color: var(--intel-card-btn-bg);
+          color: var(--intel-card-btn-color);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 18px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+          transition: transform 0.2s ease, background-color 0.2s ease;
+          pointer-events: auto;
+
+          i {
+            transition: transform 0.2s ease;
+            display: inline-flex;
+          }
+        }
+      }
     }
 
     .threat-icon-wrapper {

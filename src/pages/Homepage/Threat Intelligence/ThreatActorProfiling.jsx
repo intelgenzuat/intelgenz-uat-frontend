@@ -5,10 +5,15 @@ export default function ThreatActorProfiling() {
     const navigate = useNavigate();
 
     return (
-        <div className="custom-card-intel d-flex flex-column justify-content-between flex-fill" style={{ gap: '24px', padding: '24px' }}>
-            <div className='d-flex flex-row justify-start align-items-center gap-3'>
-                <div className="threat-icon-wrapper" style={{ borderRadius: '16px' }}>
-                     <svg width="35" height="36" viewBox="0 0 47 48" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <div
+            className="custom-card-intel"
+            onClick={() => navigate('/threat-actor-profiling')}
+            role="button"
+            tabIndex={0}
+        >
+            <div className='d-flex gap-2 align-items-center'>
+                <div className="intel-card-icon-badge">
+                    <svg width="35" height="36" viewBox="0 0 47 48" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                         <rect width="46.4951" height="47.6113" fill="url(#pattern0_166_738)" />
                         <defs>
                             <pattern id="pattern0_166_738" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -18,15 +23,16 @@ export default function ThreatActorProfiling() {
                         </defs>
                     </svg>
                 </div>
-                <div className="d-flex flex-column align-items-start gap-1">
-                    <h5 className="mb-0" style={{ fontSize: "16px", fontWeight: "600" }}>Adversary Triage</h5>
-                    {/* <p className="text-muted mb-0" style={{ fontSize: "13px", color: "#64748b" }}>Stay ahead of emerging threats</p> */}
+                <div className="intel-card-content">
+                    <h5 className="intel-card-title">Adversary Triage</h5>
+                    <div className="intel-card-accent-line"></div>
                 </div>
             </div>
-            <button className="start-btn w-100" onClick={() => navigate('/threat-actor-profiling')} style={{ 
-                background: "linear-gradient(90deg, #4c0a829c 0%, #a0005585 50%, #e60026bb 100%)", border: 'none', borderRadius: "50px", padding: "10px 0", color: "#fff", display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", fontSize: "15px", fontWeight: "500" }}>
-                <i className="bi bi-arrow-right"></i> Start
-            </button>
+            <div className="intel-card-cutout">
+                <div className="intel-card-btn">
+                    <i className="bi bi-arrow-right"></i>
+                </div>
+            </div>
         </div>
     );
 }

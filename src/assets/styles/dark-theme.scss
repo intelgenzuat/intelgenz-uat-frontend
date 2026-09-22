@@ -68,7 +68,7 @@
   }
 
   // Main custom card overrides
-  .custom-card, .custom-card-intel {
+  .custom-card {
     background: #1e293b !important;
     border: 1px solid #334155 !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
@@ -108,6 +108,36 @@
           color: #f1f5f9 !important;
         }
       }
+    }
+  }
+
+  .custom-card-intel {
+    --intel-card-bg: #1e293b;
+    --intel-card-cutout-bg: #0b0f19;
+    --intel-card-title-color: #f8fafc;
+    --intel-card-accent-line: #334155;
+    --intel-card-badge-bg: #0f172a;
+    --intel-card-badge-border: rgba(255, 255, 255, 0.08);
+    --intel-card-btn-bg: #0f172a;
+    --intel-card-btn-color: #ffffff;
+    --intel-card-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    --intel-card-border: 1px solid #334155;
+
+    background-color: var(--intel-card-bg) !important;
+    border: var(--intel-card-border) !important;
+    box-shadow: var(--intel-card-shadow) !important;
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+
+      .intel-card-btn {
+        background-color: #000000 !important;
+      }
+    }
+
+    .intel-card-btn {
+      background-color: #0f172a !important;
+      border: 1px solid #334155 !important;
     }
   }
 
