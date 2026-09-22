@@ -17,6 +17,9 @@ const getDeterministicHash = (str) => {
   return Math.abs(hash);
 };
 
+// Fixed 24 radial lines (15° apart) so background grid line count never changes
+const RADAR_POLAR_ANGLES = Array.from({ length: 24 }, (_, i) => i * 15);
+
 const RenderDot = (props) => {
   const { cx, cy, value, index, OriginalDot, category, onHover, onLeave, onClick, hoveredActor, payload } = props;
   if (!value) return null;
@@ -294,39 +297,7 @@ export default function Threat() {
     // Sort all items by angle ascending so they map evenly around polar coordinates
     itemsWithAngles.sort((a, b) => a.angle - b.angle);
 
-    const totalSlots = Math.max(24, itemsWithAngles.length);
-
-    // If items count is less than minimum spokes (24), distribute across fixed circular spokes
-    if (itemsWithAngles.length < totalSlots) {
-      const slots = Array.from({ length: totalSlots }, (_, i) => ({
-        subject: String(i + 1).padStart(2, '0'),
-        A: 0,
-        B: 0,
-        C: 0,
-        fullMark: 150,
-        actor: null,
-      }));
-
-      itemsWithAngles.forEach((entry) => {
-        const slotIndex = Math.floor((entry.angle / 360) * totalSlots) % totalSlots;
-        let targetIndex = slotIndex;
-        while (slots[targetIndex].actor !== null) {
-          targetIndex = (targetIndex + 1) % totalSlots;
-        }
-        slots[targetIndex] = {
-          subject: String(targetIndex + 1).padStart(2, '0'),
-          A: entry.category === 'Critical' ? entry.scaledVal : 0,
-          B: entry.category === 'High' ? entry.scaledVal : 0,
-          C: entry.category === 'Moderate' ? entry.scaledVal : 0,
-          fullMark: 150,
-          actor: entry.item,
-        };
-      });
-
-      return slots;
-    }
-
-    // When we have enough items, each item occupies its own shattered spoke
+    // Map ALL threat actors so all items (e.g. 115 moderate actors) are visible on the radar
     return itemsWithAngles.map((entry, index) => ({
       subject: String(index + 1).padStart(2, '0'),
       A: entry.category === 'Critical' ? entry.scaledVal : 0,
@@ -467,9 +438,9 @@ export default function Threat() {
               <option value="Moderate">Moderate</option>
             </select>
           </div>
-          <button className="expand-btn" title="Expand View" onClick={() => getRadarDatalist(clientName)}>
+          {/* <button className="expand-btn" title="Expand View" onClick={() => getRadarDatalist(clientName)}>
             <i className={`bi ${loading ? 'bi-arrow-repeat spin' : 'bi-arrows-angle-expand'}`}></i>
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -478,9 +449,9 @@ export default function Threat() {
         {/* Left: Compact Radar Chart */}
         <div className="threat-radar-col">
           <div className="radar-chart-container" ref={containerRef}>
-            <ResponsiveContainer width="100%" height={360}>
+            <ResponsiveContainer width="100%" height={420}>
               <RadarChart cx="50%" cy="50%" outerRadius="88%" data={radarChartData}>
-                <PolarGrid gridType="circle" stroke="#e2e8f0" />
+                <PolarGrid gridType="circle" stroke="#e2e8f0" polarAngles={RADAR_POLAR_ANGLES} />
                 <PolarRadiusAxis
                   angle={30}
                   domain={[0, 150]}

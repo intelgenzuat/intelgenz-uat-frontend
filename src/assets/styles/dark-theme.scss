@@ -111,33 +111,45 @@
     }
   }
 
-  .custom-card-intel {
+  .custom-card-intel,
+  .dashboard-container .custom-card-intel,
+  .dashboard-container .homepage-content .custom-card-intel {
     --intel-card-bg: #1e293b;
     --intel-card-cutout-bg: #0b0f19;
     --intel-card-title-color: #f8fafc;
-    --intel-card-accent-line: #334155;
     --intel-card-badge-bg: #0f172a;
     --intel-card-badge-border: rgba(255, 255, 255, 0.08);
     --intel-card-btn-bg: #0f172a;
     --intel-card-btn-color: #ffffff;
-    --intel-card-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    --intel-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
     --intel-card-border: 1px solid #334155;
 
     background-color: var(--intel-card-bg) !important;
     border: var(--intel-card-border) !important;
     box-shadow: var(--intel-card-shadow) !important;
 
-    &:hover {
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+  
 
-      .intel-card-btn {
-        background-color: #000000 !important;
-      }
+    .intel-card-title {
+      color: #f8fafc !important;
+    }
+
+    .intel-card-cutout {
+      border: none !important;
+      border-left: none !important;
+      border-top: none !important;
+    }
+
+    .intel-card-icon-badge {
+      background-color: #0f172a !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
     }
 
     .intel-card-btn {
       background-color: #0f172a !important;
       border: 1px solid #334155 !important;
+      color: #ffffff !important;
     }
   }
 
@@ -148,12 +160,7 @@
       border-color: #334155 !important;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
 
-      &:hover {
-        background: #5200ff !important;
-        border-color: #5200ff !important;
-        color: #ffffff !important;
-        box-shadow: 0 8px 20px rgba(82, 0, 255, 0.4) !important;
-      }
+   
     }
   }
 
@@ -270,6 +277,27 @@
           border-top-color: #334155 !important;
           color: #94a3b8 !important;
         }
+           .header-right {
+      .score-container {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+
+        .score-circle {
+          border-color: #ef4444 !important;
+          color: #f1f5f9 !important;
+        }
+
+        .score-text {
+          .score-label {
+            color: #94a3b8 !important;
+          }
+          .score-desc {
+            color: #f1f5f9 !important;
+          }
+        }
+      }
+    }
+        
       }
 
       .threat-table-col {
@@ -1804,9 +1832,7 @@
           background-color: #0b0f19 !important;
           color: #f1f5f9 !important;
 
-          &:focus {
-            border-color: #5200ff !important;
-          }
+        
         }
 
         .go-btn {

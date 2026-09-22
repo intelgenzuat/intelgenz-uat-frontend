@@ -25,7 +25,6 @@ export default function EmergingThreatDashboard() {
                 </div>
                 <div className="intel-card-content">
                     <h5 className="intel-card-title">Emerging Threat Dashboard</h5>
-                    <div className="intel-card-accent-line"></div>
                 </div>
             </div>
             <div className="intel-card-cutout">

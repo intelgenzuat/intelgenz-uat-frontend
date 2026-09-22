@@ -25,7 +25,6 @@ export default function ThreatActorProfiling() {
                 </div>
                 <div className="intel-card-content">
                     <h5 className="intel-card-title">Adversary Triage</h5>
-                    <div className="intel-card-accent-line"></div>
                 </div>
             </div>
             <div className="intel-card-cutout">

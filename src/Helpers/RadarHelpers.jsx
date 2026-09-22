@@ -66,98 +66,14 @@ export const CustomDotGlobal = (props) => {
   );
 };
 
-export const renderRadarBackground = ({ radius, outerR, rMid = 42, strokeWidth = 28 } = {}) => {
-  // Build grey donut overlay path (annular ring from activeRadius to outerR)
-  // Uses two clockwise full-circle arcs with fill-rule="evenodd" to punch a hole in the centre
-  const hasGreyRing = outerR && radius !== undefined && radius < outerR - 1;
-
-  // Grey ring outer boundary is 2px inside outerR so it sits fully within the last radar border
-  const greyOuter = outerR ? outerR - 4 : outerR;
-  const greyRingPath = hasGreyRing
-    ? [
-        // Outer clockwise full circle (2px inside the border so grey stays contained)
-        `M 0 ${-greyOuter} A ${greyOuter} ${greyOuter} 0 1 1 0 ${greyOuter} A ${greyOuter} ${greyOuter} 0 1 1 0 ${-greyOuter} Z`,
-        // Inner clockwise full circle (creates the hole via evenodd)
-        `M 0 ${-radius} A ${radius} ${radius} 0 1 1 0 ${radius} A ${radius} ${radius} 0 1 1 0 ${-radius} Z`,
-      ].join(' ')
-    : null;
-
+export const renderRadarBackground = () => {
   return (
     <svg x="50%" y="50%" style={{ overflow: 'visible' }}>
       <defs>
-        <filter id="radar-disc-shadow" x="-30%" y="-30%" width="160%" height="160%">
-          <feDropShadow dx="0" dy="6" stdDeviation="12" floodColor="#5200ff" floodOpacity="0.09" />
-          <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#0f172a" floodOpacity="0.06" />
-        </filter>
         <filter id="center-badge-shadow" x="-60%" y="-60%" width="220%" height="220%">
           <feDropShadow dx="0" dy="3" stdDeviation="5" floodColor="#00b85c" floodOpacity="0.5" />
         </filter>
-        {/* Clip path — 2px inside outerR so grey shading never touches the border */}
-        {outerR && (
-          <clipPath id="radar-outer-clip">
-            <circle cx="0" cy="0" r={outerR - 2} />
-          </clipPath>
-        )}
       </defs>
-
-      {/* Dynamic white shaded background band / filled radius with shadow */}
-      {radius !== undefined ? (
-        <circle
-          cx="0"
-          cy="0"
-          r={radius}
-          fill="#ffffff"
-          opacity={radius > 0 ? 0.95 : 0}
-          filter="url(#radar-disc-shadow)"
-          style={{
-            transition: 'r 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease',
-          }}
-        />
-      ) : (
-        <circle
-          cx="0"
-          cy="0"
-          r={rMid}
-          fill="none"
-          stroke="#ffffff"
-          strokeWidth={strokeWidth}
-          opacity={0.95}
-          filter="url(#radar-disc-shadow)"
-          style={{
-            transition: 'r 0.45s cubic-bezier(0.4, 0, 0.2, 1), stroke-width 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
-          }}
-        />
-      )}
-
-      {/* Grey overlay ring for inactive outer rings — clipped to outerR so it never bleeds outside */}
-      {greyRingPath && (
-        <path
-          d={greyRingPath}
-          fill="rgba(15, 23, 42, 0.22)"
-          fillRule="evenodd"
-          pointerEvents="none"
-          clipPath={outerR ? 'url(#radar-outer-clip)' : undefined}
-          style={{
-            transition: 'all 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
-          }}
-        />
-      )}
-
-      {/* Crisp dividing border at the boundary between white area and grey ring */}
-      {hasGreyRing && radius !== undefined && radius > 0 && (
-        <circle
-          cx="0"
-          cy="0"
-          r={radius}
-          fill="none"
-          stroke="rgba(15, 23, 42, 0.18)"
-          strokeWidth={1.5}
-          pointerEvents="none"
-          style={{
-            transition: 'r 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
-          }}
-        />
-      )}
 
       {/* Center green background with shadow */}
       <circle cx="0" cy="0" r="16" fill="#00b85c" filter="url(#center-badge-shadow)" />
