@@ -31,7 +31,7 @@ const AdversaryTriageTopcontent = ({ title, breadcrumbTitle, children }) => {
         <div className="tap-title-row d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-2">
             <div className="shield-icon-wrapper">
-              <svg width="35" height="36" viewBox="0 0 47 48" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+              <svg width="30" height="30" viewBox="0 0 47 48" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                 <rect width="46.4951" height="47.6113" fill="url(#pattern0_166_738)" />
                 <defs>
                   <pattern id="pattern0_166_738" patternContentUnits="objectBoundingBox" width="1" height="1">

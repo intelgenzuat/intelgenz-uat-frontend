@@ -375,7 +375,7 @@ const Mitigationttpview = () => {
                         <div className="view-top-header d-flex justify-content-between align-items-center">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="header-icon-wrapper rounded-3 d-flex align-items-center justify-content-center subtle text-danger">
-                                    <svg width="35" height="36" viewBox="0 0 50 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                                    <svg width="30" height="30" viewBox="0 0 50 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                                         <rect width="50" height="52" fill="url(#pattern0_163_244)" />
                                         <defs>
                                             <pattern id="pattern0_163_244" patternContentUnits="objectBoundingBox" width="1" height="1">
