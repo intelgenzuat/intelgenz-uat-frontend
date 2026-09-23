@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import logo from '../assets/images/logo.png';
+import logodarkmode from '../assets/images/logodarkmode.png';
 import { SiGooglehome } from 'react-icons/si';
 import { Dropdown } from 'antd';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -75,14 +76,12 @@ const Header = ({ toggleSidebar, showHamburger }) => {
       <nav className="top-navbar d-flex justify-content-between align-items-center">
         <div className="brand-logo d-flex align-items-center">
           <img
-            src={logo}
+            src={theme === 'dark' ? logodarkmode : logo}
             alt="Logo"
             height={50}
             width={150}
             style={{
-              objectFit: "contain",
-              filter: theme === 'dark' ? 'invert(1) hue-rotate(180deg)' : 'none',
-              mixBlendMode: theme === 'dark' ? 'screen' : 'normal'
+              objectFit: "contain"
             }}
           />
           {showHamburger && (

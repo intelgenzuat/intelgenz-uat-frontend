@@ -71,7 +71,7 @@ export default function LiveThreatMap() {
         borderRadius: '16px',
         overflow: 'hidden',
         border: 'none',
-        marginBottom: '32px'
+        marginBottom: '0'
     };
 
     return (

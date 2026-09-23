@@ -182,13 +182,24 @@ $card-cap-bg: transparent;
       }
 
       &.upper-row {
+        align-items: stretch;
+
         .main-content {
-          padding-bottom: 12px;
+          padding-top: 0;
+          padding-bottom: 0;
+          display: flex;
+          flex-direction: column;
         }
 
         .sidebar-content {
-          padding-bottom: 12px;
-          margin-top: 10px;
+          padding-top: 0;
+          padding-bottom: 0;
+          margin-top: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          justify-content: stretch;
+          gap: 0;
         }
       }
 

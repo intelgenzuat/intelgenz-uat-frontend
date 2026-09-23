@@ -47,14 +47,12 @@ export default function Homepage() {
 
                     {/* Middle Row: Live Threat Map & Sidebar */}
                     <div className="homepage-row upper-row">
-                        <main className="main-content" style={{ paddingTop: 0 }}>
+                        <main className="main-content" style={{ paddingTop: 0, paddingBottom: 0 }}>
                             {/* Live Threat Map 3D Globe */}
-                            <div>
-                                <LiveThreatMap />
-                            </div>
+                            <LiveThreatMap />
                         </main>
 
-                        <aside className="sidebar-content" style={{ paddingTop: 0, marginTop: 0 }}>
+                        <aside className="sidebar-content" style={{ paddingTop: 0, paddingBottom: 0, marginTop: 0 }}>
                             <TopReports />
                         </aside>
                     </div>

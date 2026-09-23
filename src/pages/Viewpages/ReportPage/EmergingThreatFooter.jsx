@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaInstagram, FaWhatsapp, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import logo from '../../../assets/images/logo.png';
+import logodarkmode from '../../../assets/images/logodarkmode.png';
 import '../../../assets/styles/ReportPage/EmergingThreatFooter.scss';
 
 export default function EmergingThreatFooter() {
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    const handleStorage = () => setTheme(localStorage.getItem('theme') || 'light');
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
   return (
     <footer className="emerging-threat-footer">
       {/* Subtle watermark in the background */}
@@ -12,7 +21,7 @@ export default function EmergingThreatFooter() {
       <div className="footer-content">
         {/* Brand section */}
         <div className="footer-brand">
-          <img src={logo} alt="INTELGENZ Logo" className="footer-logo-img" />
+          <img src={theme === 'dark' ? logodarkmode : logo} alt="INTELGENZ Logo" className="footer-logo-img" />
           <p className="footer-tagline">Illuminating The Dark Side Of The Web</p>
         </div>
 

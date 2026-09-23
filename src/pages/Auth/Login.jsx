@@ -5,6 +5,7 @@ import { IoKeyOutline, IoChevronDownOutline, IoEye, IoEyeOff, IoHardwareChipOutl
 import { BsArrowRight } from 'react-icons/bs';
 import './login.scss';
 import logo from '../../assets/images/logo.png';
+import logodarkmode from '../../assets/images/logodarkmode.png';
 import { BiMobileVibration } from 'react-icons/bi';
 import { BsKey } from "react-icons/bs";
 
@@ -93,7 +94,7 @@ const Login = () => {
       {/* Header */}
       <header className="login-header">
         <div className="logo-section">
-          <img src={logo} alt="Threati Logo" className="logo-img" />
+          <img src={localStorage.getItem('theme') === 'dark' ? logodarkmode : logo} alt="Threati Logo" className="logo-img" />
         </div>
         <div className="language-selector">
           <span className="lang-icon">EN</span>
