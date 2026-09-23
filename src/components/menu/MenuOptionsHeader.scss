@@ -74,22 +74,18 @@
       transition: transform 0.18s ease;
 
       &.gradient-threat-dashboard {
-        background: linear-gradient(135deg, #7928ca 0%, #ff0080 100%);
         box-shadow: 0 2px 8px rgba(255, 0, 128, 0.2);
       }
 
       &.gradient-knowledge-graph {
-        background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
         box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
       }
 
       &.gradient-ttp-mitigation {
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
         box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
       }
 
       &.gradient-actor-profiling {
-        background: linear-gradient(135deg, #ea580c 0%, #e11d48 100%);
         box-shadow: 0 2px 8px rgba(225, 29, 72, 0.2);
       }
     }
