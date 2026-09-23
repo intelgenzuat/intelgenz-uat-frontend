@@ -53,10 +53,9 @@ export default function IntelcardThreatActorDetailNew() {
       <section className="page">
         <header className="hero">
           <div className="top">
-            <div className="brand">Threat Actor Intelligence</div>
-            <div>
+            {/* <div>
               Profile {threatData?.actor_id ? String(threatData.actor_id).padStart(2, '0') : '01'} / {summary?.last_seen?.date?.slice(0, 4) || new Date().getFullYear()}
-            </div>
+            </div> */}
           </div>
           <div className="heroGrid">
             <div>
@@ -83,62 +82,70 @@ export default function IntelcardThreatActorDetailNew() {
           Summary
         </div>
         <div className="grid4">
-          <div className="card">
-            <div className="label">Nexus</div>
-            <div className="value">
-              {summary?.nexus?.length > 0
-                ? summary.nexus.map(n => n.country_or_region || n.country || n.name || n).join(', ')
-                : 'Unknown nexus'}
+          {summary?.nexus?.length > 0 && (
+            <div className="card">
+              <div className="label">Nexus</div>
+              <div className="value">
+                {summary.nexus.map(n => n.country_or_region || n.country || n.name || n).join(', ')}
+              </div>
             </div>
-          </div>
-          <div className="card">
-            <div className="label">Actor type</div>
-            <div className="value">
-              {summary?.actor_types?.length > 0
-                ? summary.actor_types.map(t => t.replace(/_/g, ' ').toLowerCase()).map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')
-                : 'Unknown'}
+          )}
+          {summary?.actor_types?.length > 0 && (
+            <div className="card">
+              <div className="label">Actor type</div>
+              <div className="value">
+                {summary.actor_types.map(t => t.replace(/_/g, ' ').toLowerCase()).map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}
+              </div>
             </div>
-          </div>
-          <div className="card">
-            <div className="label">Role</div>
-            <div className="value">
-              {summary?.roles?.length > 0
-                ? summary.roles.map(r => r.replace(/_/g, ' ').toLowerCase()).map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')
-                : 'Unknown'}
+          )}
+          {summary?.roles?.length > 0 && (
+            <div className="card">
+              <div className="label">Role</div>
+              <div className="value">
+                {summary.roles.map(r => r.replace(/_/g, ' ').toLowerCase()).map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}
+              </div>
             </div>
-          </div>
-          <div className="card">
-            <div className="label">Primary motivation</div>
-            <div className="value">
-              {summary?.primary_motivation?.type
-                ? summary.primary_motivation.type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())
-                : 'Unknown'}
+          )}
+          {summary?.primary_motivation?.type && summary.primary_motivation.type.toLowerCase() !== 'unknown' && (
+            <div className="card">
+              <div className="label">Primary motivation</div>
+              <div className="value">
+                {summary.primary_motivation.type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
+              </div>
             </div>
-          </div>
-          <div className="card">
-            <div className="label">Goal</div>
-            <div className="value" title={summary?.goals?.join('; ') || ''}>
-              {summary?.goals?.[0] || 'Unknown'}
+          )}
+          {summary?.goals?.length > 0 && summary.goals[0] && summary.goals[0].toLowerCase() !== 'unknown' && (
+            <div className="card">
+              <div className="label">Goal</div>
+              <div className="value" title={summary.goals.join('; ')}>
+                {summary.goals[0]}
+              </div>
             </div>
-          </div>
-          <div className="card">
-            <div className="label">Resource level</div>
-            <div className="value">
-              {summary?.resource_level ? summary.resource_level.replace(/_/g, ' ') : 'Unknown'}
+          )}
+          {summary?.resource_level && summary.resource_level.toLowerCase() !== 'unknown' && (
+            <div className="card">
+              <div className="label">Resource level</div>
+              <div className="value">
+                {summary.resource_level.replace(/_/g, ' ')}
+              </div>
             </div>
-          </div>
-          <div className="card">
-            <div className="label">Sophistication</div>
-            <div className="value">
-              {summary?.sophistication ? summary.sophistication.replace(/_/g, ' ') : 'Unknown'}
+          )}
+          {summary?.sophistication && summary.sophistication.toLowerCase() !== 'unknown' && (
+            <div className="card">
+              <div className="label">Sophistication</div>
+              <div className="value">
+                {summary.sophistication.replace(/_/g, ' ')}
+              </div>
             </div>
-          </div>
-          <div className="card">
-            <div className="label">Observed activity</div>
-            <div className="value">
-              {summary?.first_seen?.date || 'Unknown'} · {summary?.last_seen?.date || 'Present'}
+          )}
+          {(summary?.first_seen?.date || summary?.last_seen?.date) && (
+            <div className="card">
+              <div className="label">Observed activity</div>
+              <div className="value">
+                {summary?.first_seen?.date || 'Unknown'} · {summary?.last_seen?.date || 'Present'}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="grid2" style={{ marginTop: '2.3mm' }}>
@@ -229,10 +236,21 @@ export default function IntelcardThreatActorDetailNew() {
           </div>
           <div className="diamond-node infra">
             <strong>INFRASTRUCTURE</strong>
-            <small>
-              {threatData?.infrastructure?.length > 0
-                ? threatData.infrastructure.slice(0, 4).map(i => i.value).join(' · ')
-                : 'No infrastructure documented'}
+            <small className="infra-list">
+              {threatData?.infrastructure?.length > 0 ? (
+                threatData.infrastructure.slice(0, 3).map((item, idx) => {
+                  const val = typeof item === 'string' ? item : item?.value || item?.domain || item?.ip || '';
+                  const cleanVal = val.replace(/^https?:\/\//i, '');
+                  const truncated = cleanVal.length > 25 ? `${cleanVal.slice(0, 22)}...` : cleanVal;
+                  return (
+                    <span key={idx} className="infra-item" title={val}>
+                      {truncated}
+                    </span>
+                  );
+                })
+              ) : (
+                'No infrastructure documented'
+              )}
             </small>
           </div>
           <div className="diamond-node victim">
@@ -260,7 +278,6 @@ export default function IntelcardThreatActorDetailNew() {
 
         <footer className="foot">
           <span>{threatData?.name || 'Threat Actor'} · Threat actor profile</span>
-          <span>01 / 02</span>
         </footer>
       </section>
 
@@ -431,13 +448,10 @@ export default function IntelcardThreatActorDetailNew() {
           </tbody>
         </table>
 
-        <div className="callout">
-          <strong>Analytic note:</strong> {summary?.last_seen?.raw_value ? `The actor ${summary.last_seen.raw_value}.` : `The actor's last observed activity was on ${summary?.last_seen?.date || 'unknown date'}.`}
-        </div>
+      
 
         <footer className="foot">
           <span>{threatData?.name || 'Threat Actor'} · Threat actor profile</span>
-          <span>02 / 02</span>
         </footer>
       </section>
     </div>

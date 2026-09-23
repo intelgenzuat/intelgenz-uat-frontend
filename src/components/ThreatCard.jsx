@@ -1,9 +1,8 @@
 import React from 'react';
 import './ThreatCard.scss';
 import { FiArrowRight } from 'react-icons/fi';
-import { LuTriangleAlert } from 'react-icons/lu';
 import { ImEarth } from 'react-icons/im';
-import { PiBug, PiMapPinAreaFill, PiShieldWarningDuotone, PiUsersFourDuotone } from 'react-icons/pi';
+import { PiBug, PiMapPinAreaFill, PiShieldWarningDuotone, PiUsersFourDuotone, PiWarningFill } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 import { LiaIndustrySolid } from 'react-icons/lia';
 
@@ -61,48 +60,30 @@ export default function ThreatCard({ cardData }) {
       <div className="card-body-content flex-grow-1">
 
         <div className="info-list">
-          {/* <div className="info-row d-flex align-items-center">
-            <PiShieldWarningDuotone className="text-danger flex-shrink-0 me-2 tc-icon" />
-            <span className="tc-label me-1">Threat Type:</span>
-            <span className="tc-value">{data.threat_type}</span>
-          </div>
-          <div className="info-row d-flex align-items-start">
-            <PiUsersFourDuotone className="text-danger flex-shrink-0 me-2 mt-1 tc-icon" />
-            <div>
-              <span className="tc-label me-1">Threat Group Name:</span>
-              <span className="tc-value">{data.threat_group}</span>
-            </div>
-          </div>
-          <div className="info-row d-flex align-items-center">
-            <PiBug className="text-danger flex-shrink-0 me-2 tc-icon" />
-            <span className="tc-label me-1">Malware Name:</span>
-            <span className="tc-value">{data.malware}</span>
-          </div> */}
           <div className="info-row d-flex align-items-center">
             <ImEarth className="text-danger flex-shrink-0 me-2 tc-icon" style={{ strokeWidth: 0 }} />
             <span className="tc-label me-2">Target Region :</span>
             <span className="badge rounded-pill px-3 border tc-badge-region">{data.target_region}</span>
           </div>
-        </div>
-        <div className="info-row d-flex align-items-center">
-          <PiMapPinAreaFill className="text-danger flex-shrink-0 me-2 tc-icon" style={{ strokeWidth: 0 }} />
-          <span className="tc-label me-2">Target Country :</span>
-          <span className="badge rounded-pill px-3 border tc-badge-region">{data.target_country}</span>
-        </div>
 
-        <div className="info-row d-flex align-items-center">
-          <LiaIndustrySolid className="text-danger flex-shrink-0 me-2 tc-icon" style={{ strokeWidth: 0 }} />
-          <span className="tc-label me-2">Target sector :</span>
-          <span className="badge rounded-pill px-3 border tc-badge-region">{data.target_sector}</span>
-        </div>
-
-        {/* Severity */}
-        <div className="severity-row border px-3 py-2 mt-auto mb-2 d-flex justify-content-between align-items-center shadow-sm" style={{ borderColor: '#e2e8f0', borderRadius: '10px', backgroundColor: '#f8fafc' }}>
-          <div className="d-flex align-items-center">
-            <LuTriangleAlert className="text-danger me-2 tc-icon" />
-            <span className="tc-label-dark">Severity level:</span>
+          <div className="info-row d-flex align-items-center">
+            <PiMapPinAreaFill className="text-danger flex-shrink-0 me-2 tc-icon" style={{ strokeWidth: 0 }} />
+            <span className="tc-label me-2">Target Country :</span>
+            <span className="badge rounded-pill px-3 border tc-badge-region">{data.target_country}</span>
           </div>
-          <span className="badge tc-badge-severity" style={getSeverityStyle(data.severity)}>{data.severity}</span>
+
+          <div className="info-row d-flex align-items-center">
+            <LiaIndustrySolid className="text-danger flex-shrink-0 me-2 tc-icon" style={{ strokeWidth: 0 }} />
+            <span className="tc-label me-2">Target sector :</span>
+            <span className="badge rounded-pill px-3 border tc-badge-region">{data.target_sector}</span>
+          </div>
+
+          {/* Severity */}
+          <div className="info-row severity-row d-flex align-items-center">
+            <PiWarningFill className="text-danger flex-shrink-0 me-2 tc-icon" style={{ strokeWidth: 0 }} />
+            <span className="tc-label me-2">Severity level :</span>
+            <span className="badge rounded-pill px-3 tc-badge-severity" style={getSeverityStyle(data.severity)}>{data.severity}</span>
+          </div>
         </div>
 
         <button onClick={() => navigate('/emerging-threat-report')} className="view-report-btn w-100 py-2 d-flex justify-content-center align-items-center view-report-btn">

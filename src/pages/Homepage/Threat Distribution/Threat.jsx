@@ -411,43 +411,27 @@ export default function Threat() {
 
   return (
     <div className="threat-card-container">
-      {/* Header Bar */}
-      <div className="threat-header">
-        <div className="header-left">
-          {/* <span className="chart-title">
-            <i className="bi bi-shield-check"></i> {data?.client_name || clientName}
-          </span> */}
-          {/* <span className="threat-stats-pill">
-            <span className="stats-count">{data?.total_items || allActorsList.length}</span> Total Threats
-          </span> */}
-        </div>
-
-        <div className="header-right">
-          <div className="radius-control-wrapper" title="Filter by threat severity">
-            <label htmlFor="threat-severity-select" className="radius-control-label">
-              <i className="bi bi-funnel-fill"></i> Filter:
-            </label>
-            <select
-              id="threat-severity-select"
-              className="radius-control-select"
-              value={selectedSeverity}
-              onChange={handleSeverityChange}
-            >
-              <option value="Critical">Critical</option>
-              <option value="High">High</option>
-              <option value="Moderate">Moderate</option>
-            </select>
-          </div>
-          {/* <button className="expand-btn" title="Expand View" onClick={() => getRadarDatalist(clientName)}>
-            <i className={`bi ${loading ? 'bi-arrow-repeat spin' : 'bi-arrows-angle-expand'}`}></i>
-          </button> */}
-        </div>
-      </div>
-
       {/* Main Split View: Left = Radar Chart, Right = Interactive Table */}
       <div className="threat-body-split">
         {/* Left: Compact Radar Chart */}
         <div className="threat-radar-col">
+          <div className="radar-header-right">
+            <div className="radius-control-wrapper" title="Filter by threat severity">
+              <label htmlFor="threat-severity-select" className="radius-control-label">
+                <i className="bi bi-funnel-fill"></i> Filter:
+              </label>
+              <select
+                id="threat-severity-select"
+                className="radius-control-select"
+                value={selectedSeverity}
+                onChange={handleSeverityChange}
+              >
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Moderate">Moderate</option>
+              </select>
+            </div>
+          </div>
           <div className="radar-chart-container" ref={containerRef}>
             <ResponsiveContainer width="100%" height={420}>
               <RadarChart cx="50%" cy="50%" outerRadius="88%" data={radarChartData}>
