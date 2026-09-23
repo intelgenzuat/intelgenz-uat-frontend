@@ -73,7 +73,7 @@ export default function IntelCardPage() {
   const [isVoicechatDrawerOpen, setIsVoicechatDrawerOpen] = useState(false);
   const { isSidebarCollapsed, toggleSidebar } = useOutletContext() || {};
 
-  const isKnowledgeGraph = location.pathname === '/view-knowlegde-graph';
+  const isKnowledgeGraph = location.pathname === '/intel-neura-view';
 
   return (
     <div className="intelcard-page-container container-fluid p-0 d-flex flex-column h-100 overflow-hidden">

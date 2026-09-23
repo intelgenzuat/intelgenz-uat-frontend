@@ -130,19 +130,33 @@
             margin-bottom: 0;
           }
 
-          .select-wrapper {
+          .select-wrapper,
+          .search-wrapper {
             width: 320px;
             min-width: 320px;
             max-width: 320px;
+          }
+
+          &.entity-picker-group {
+            flex: 0 0 180px;
+            width: 180px;
+            min-width: 180px;
+            max-width: 180px;
+
+            .select-wrapper {
+              width: 180px;
+              min-width: 180px;
+              max-width: 180px;
+            }
           }
 
           .malware-dropdown-select,
           .entity-dropdown-select {
             width: 100%;
             height: 38px;
-            padding: 0 12px;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
+            padding: 0 16px;
+            border-radius: 50px;
+            border: 1px solid #e2e8f0;
             background-color: #f8fafc;
             color: #0f172a;
             font-size: 13.5px;
@@ -152,9 +166,9 @@
             cursor: pointer;
 
             &:focus {
-              border-color: #3b82f6;
+              border-color: #cbd5e1;
               background-color: #ffffff;
-              box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+              box-shadow: none;
             }
 
             &:disabled {
@@ -178,6 +192,15 @@
               min-height: 38px;
               flex-wrap: nowrap;
               overflow: hidden;
+              border-color: #e2e8f0;
+              border-radius: 50px;
+              background-color: #f8fafc;
+              box-shadow: none;
+
+              &:hover {
+                border-color: #cbd5e1;
+                background-color: #f8fafc;
+              }
             }
 
             .malware-rs__value-container {
@@ -337,14 +360,54 @@
     }
   }
 
-  /* =========================================================
-   WHITE-THEMED ENTITY QUERY & MALWARE EXPLORER CONTROLS
-========================================================= */
+  .view-controls-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
+    overflow: visible !important;
+
+    .view-controls-section {
+      padding: 10px 20px 16px 20px;
+      overflow: visible !important;
+    }
+  }
+
   .entity-query-section-white {
-    background: #ffffff;
-    border-radius: 12px;
     display: flex;
     flex-direction: column;
+
+    /* Threat Actors / Selected Entities Accordion */
+    .threat-actors-section {
+      padding: 0;
+      border-bottom: none;
+
+      .section-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: #1e293b;
+        letter-spacing: 0.5px;
+      }
+
+      .selected-badge {
+        background-color: #1e293b;
+        color: #fff;
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 12px;
+        margin-left: 8px;
+      }
+
+      .accordion-toggle-icon {
+        cursor: pointer;
+        user-select: none;
+        transition: color 0.15s ease;
+
+        &:hover {
+          color: #1e293b;
+        }
+      }
+    }
 
     /* Selected Tags / Chips */
     .selected-chips-container {
@@ -586,8 +649,6 @@
     height: 100%;
     min-height: 560px;
     background-color: #fafbfc;
-    background-image: radial-gradient(#d1d5db 1.2px, transparent 1.2px);
-    background-size: 24px 24px;
     overflow: hidden;
     cursor: grab;
 
@@ -955,6 +1016,88 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+              }
+            }
+          }
+        }
+
+        &.relationships-filter-section {
+          .btn-filter-pill {
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #334155;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+
+            &:hover:not(:disabled) {
+              background: #f1f5f9;
+              border-color: #94a3b8;
+            }
+
+            &:disabled {
+              opacity: 0.5;
+              cursor: not-allowed;
+            }
+          }
+
+          .connection-options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            &::-webkit-scrollbar {
+              width: 4px;
+            }
+            &::-webkit-scrollbar-thumb {
+              background: #cbd5e1;
+              border-radius: 4px;
+            }
+
+            .connection-option-item {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 6px 10px;
+              border-radius: 6px;
+              border: 1px solid #f1f5f9;
+              font-size: 12px;
+              color: #475569;
+              cursor: pointer;
+              user-select: none;
+              transition: all 0.12s ease;
+              background: #f8fafc;
+
+              &:hover {
+                background: #f1f5f9;
+                border-color: #e2e8f0;
+                color: #0f172a;
+              }
+
+              &.checked {
+                background: #eff6ff;
+                border-color: #bfdbfe;
+                color: #1d4ed8;
+                font-weight: 600;
+              }
+
+              input[type="checkbox"] {
+                width: 14px;
+                height: 14px;
+                accent-color: #2563eb;
+                cursor: pointer;
+                margin: 0;
+                flex-shrink: 0;
+              }
+
+              .option-label {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                text-transform: capitalize;
               }
             }
           }

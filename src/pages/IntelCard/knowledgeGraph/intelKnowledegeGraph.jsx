@@ -1,6 +1,32 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import Select from "react-select";
+import Select, { components } from "react-select";
 import { useNavigate, useLocation } from "react-router-dom";
+
+// Custom sub-components for pill-styled search select (matching UI design)
+const CustomValueContainer = ({ children, ...props }) => (
+    <components.ValueContainer {...props}>
+        <i
+            className="bi bi-search text-muted"
+            style={{
+                fontSize: "13.5px",
+                marginLeft: "8px",
+                marginRight: "6px",
+                flexShrink: 0
+            }}
+        />
+        {children}
+    </components.ValueContainer>
+);
+
+const CustomDropdownIndicator = (props) => (
+    <components.DropdownIndicator {...props}>
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color: "#64748b" }}>
+            <line x1="2" y1="4.5" x2="14" y2="4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="4.5" y1="8" x2="11.5" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="7" y1="11.5" x2="9" y2="11.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+    </components.DropdownIndicator>
+);
 import {
     FiSearch,
     FiZoomIn,
@@ -205,8 +231,8 @@ const intelKnowledegeGraph = () => {
     // Filter & View Options
     const [showKeyRelationships, setShowKeyRelationships] = useState(false);
     const [selectedConnectionTypes, setSelectedConnectionTypes] = useState(new Set());
-    const [isConnectionDrawerOpen, setIsConnectionDrawerOpen] = useState(false);
     const [filterSearchTerm, setFilterSearchTerm] = useState("");
+    const [isOverviewAccordionOpen, setIsOverviewAccordionOpen] = useState(true);
 
     // UI Header Controls
     const [assessmentFocus, setAssessmentFocus] = useState("Capability");
@@ -224,7 +250,7 @@ const intelKnowledegeGraph = () => {
     const nodePositionsRef = useRef(new Map());
     const svgRef = useRef(null);
 
-    const isIntelCard = location.pathname.includes("intel") || location.pathname === "/view-knowlegde-graph";
+    const isIntelCard = location.pathname.includes("intel") || location.pathname === "/intel-neura-view";
     const parentPath = isIntelCard ? "/intel-card" : "/threat-actor-profiling";
     const parentName = isIntelCard ? "Intel Card" : "Threat Actor Profile";
 
@@ -261,7 +287,7 @@ const intelKnowledegeGraph = () => {
     const malwareSelectOptions = useMemo(() => {
         return malwareList.map((item) => ({
             value: item.malware_id,
-            label: `${item.name} (ID ${item.malware_id})`
+            label: item.name
         }));
     }, [malwareList]);
 
@@ -270,7 +296,7 @@ const intelKnowledegeGraph = () => {
         return malwareSelectOptions.filter((opt) => selectedMalwareValues.includes(opt.value));
     }, [selectedMalwareValues, malwareSelectOptions]);
 
-    // Custom styles for react-select to match existing design
+    // Custom styles for react-select to match capsule pill search design
     const reactSelectStyles = useMemo(() => ({
         container: (base) => ({
             ...base,
@@ -285,11 +311,15 @@ const intelKnowledegeGraph = () => {
             flexWrap: 'nowrap',
             overflow: 'hidden',
             fontSize: '13.5px',
-            borderColor: state.isFocused ? '#8b5cf6' : '#d1d5db',
-            boxShadow: state.isFocused ? '0 0 0 2px rgba(139,92,246,0.13)' : 'none',
-            borderRadius: '8px',
-            backgroundColor: '#fff',
-            '&:hover': { borderColor: '#8b5cf6' }
+            borderColor: state.isFocused ? '#cbd5e1' : '#e2e8f0',
+            boxShadow: 'none',
+            borderRadius: '50px',
+            backgroundColor: '#f8fafc',
+            paddingLeft: '4px',
+            paddingRight: '6px',
+            cursor: 'text',
+            transition: 'all 0.2s ease',
+            '&:hover': { borderColor: '#cbd5e1', backgroundColor: '#f8fafc' }
         }),
         valueContainer: (base) => ({
             ...base,
@@ -297,51 +327,85 @@ const intelKnowledegeGraph = () => {
             flexWrap: 'nowrap',
             overflowX: 'auto',
             overflowY: 'hidden',
-            padding: '0 8px',
+            padding: '0 4px',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
+            display: 'flex',
+            alignItems: 'center',
             '&::-webkit-scrollbar': { display: 'none' }
+        }),
+        input: (base) => ({
+            ...base,
+            color: '#1e293b',
+            margin: 0,
+            padding: 0
         }),
         indicatorsContainer: (base) => ({
             ...base,
             height: '38px',
             flexShrink: 0
         }),
+        dropdownIndicator: (base) => ({
+            ...base,
+            padding: '0 6px',
+            color: '#64748b',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            '&:hover': { color: '#334155' }
+        }),
+        clearIndicator: (base) => ({
+            ...base,
+            padding: '0 4px',
+            color: '#94a3b8',
+            cursor: 'pointer',
+            '&:hover': { color: '#64748b' }
+        }),
+        indicatorSeparator: () => ({ display: 'none' }),
         multiValue: (base) => ({
             ...base,
-            backgroundColor: 'rgba(139,92,246,0.10)',
-            borderRadius: '6px',
-            flexShrink: 0
+            backgroundColor: '#E2ECF6',
+            borderRadius: '20px',
+            flexShrink: 0,
+            padding: '1px 3px'
         }),
         multiValueLabel: (base) => ({
             ...base,
-            color: '#4c1d95',
-            fontSize: '12.5px',
-            fontWeight: 500
+            color: '#334155',
+            fontSize: '12px',
+            fontWeight: 500,
+            paddingLeft: '6px'
         }),
         multiValueRemove: (base) => ({
             ...base,
-            color: '#7c3aed',
-            '&:hover': { backgroundColor: 'rgba(139,92,246,0.2)', color: '#4c1d95' }
+            color: '#64748b',
+            borderRadius: '50%',
+            '&:hover': { backgroundColor: 'rgba(239, 68, 68, 0.15)', color: '#ef4444' }
         }),
         menu: (base) => ({
             ...base,
-            borderRadius: '8px',
-            zIndex: 20,
-            boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
+            borderRadius: '12px',
+            zIndex: 30,
+            boxShadow: '0 8px 24px rgba(15, 23, 42, 0.12)',
+            border: '1px solid #e2e8f0',
+            overflow: 'hidden',
+            marginTop: '6px',
             width: '320px'
         }),
         option: (base, state) => ({
             ...base,
             fontSize: '13px',
-            backgroundColor: state.isSelected ? 'rgba(139,92,246,0.12)' : state.isFocused ? '#f3f0ff' : '#fff',
-            color: '#1a1b1e',
-            '&:active': { backgroundColor: 'rgba(139,92,246,0.18)' }
+            backgroundColor: state.isSelected ? '#eff6ff' : state.isFocused ? '#f8fafc' : '#fff',
+            color: state.isSelected ? '#1d4ed8' : '#1e293b',
+            fontWeight: state.isSelected ? 600 : 400,
+            cursor: 'pointer',
+            '&:active': { backgroundColor: '#dbeafe' }
         }),
         placeholder: (base) => ({
             ...base,
-            color: '#9ca3af',
-            fontSize: '13px',
+            color: '#7B96B2',
+            fontSize: '13.5px',
+            fontWeight: 400,
             whiteSpace: 'nowrap'
         })
     }), []);
@@ -800,15 +864,7 @@ const intelKnowledegeGraph = () => {
         setIsDraggingCanvas(false);
     };
 
-    // Sync body class for global CSS targeting (e.g. hide floating chat btn)
-    useEffect(() => {
-        if (isConnectionDrawerOpen) {
-            document.body.classList.add('kg-drawer-open');
-        } else {
-            document.body.classList.remove('kg-drawer-open');
-        }
-        return () => document.body.classList.remove('kg-drawer-open');
-    }, [isConnectionDrawerOpen]);
+    
 
     const filteredConnectionTypes = useMemo(() => {
         if (!filterSearchTerm) return availableRelationshipTypes;
@@ -845,13 +901,18 @@ const intelKnowledegeGraph = () => {
                                 <span className="header pe-3" style={{ fontSize: '24px', fontWeight: '500' }}>Neura View</span>
                             </h2>
                         </div>
+                    </div>
+                </div>
 
-                        {/* Right: Picker Row */}
-                        <div className="picker-row d-flex align-items-end gap-3 flex-wrap">
-                            <div className="picker-group">
-                                <div className="select-wrapper">
+                {/* ================= ENTITY QUERY & MALWARE SELECTOR SECTION ================= */}
+                <div className="view-controls-card shadow-sm mt-3">
+                    <div className="view-controls-section entity-query-section-white d-flex flex-column align-items-stretch gap-3">
+                        {/* Malware Select Row */}
+                        <div className="picker-row d-flex align-items-center gap-3 flex-wrap mb-0">
+                            <div className="picker-group entity-picker-group" style={{ flex: '0 0 200px', width: '200px', minWidth: '200px', maxWidth: '200px' }}>
+                                <div className="select-wrapper" style={{ width: '100%', minWidth: 'unset', maxWidth: 'unset' }}>
                                     <select
-                                        className="form-select entity-dropdown-select"
+                                        className="form-select entity-dropdown-select rounded-pill"
                                         value={selectedEntityType}
                                         onChange={(e) => setSelectedEntityType(e.target.value)}
                                     >
@@ -862,84 +923,105 @@ const intelKnowledegeGraph = () => {
                                 </div>
                             </div>
 
-                            <button
-                                id="connection-toggle-btn"
-                                type="button"
-                                className={`btn-kg-action btn-toggle-connections ${isConnectionDrawerOpen ? "active" : ""}`}
-                                onClick={() => setIsConnectionDrawerOpen(true)}
-                            >
-                                Relationships
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* ================= ENTITY QUERY & MALWARE SELECTOR SECTION ================= */}
-                <div className="entity-query-section-white mt-3">
-                    {/* Malware Select Row */}
-                    <div className="picker-row d-flex align-items-center gap-3 flex-wrap mb-2">
-                        <div className="picker-group">
-                            <div className="select-wrapper">
-                                <Select
-                                    inputId="malware-select"
-                                    isMulti
-                                    options={malwareSelectOptions}
-                                    value={selectedMalwareSelectValue}
-                                    onChange={handleMalwareSelectChange}
-                                    isDisabled={isMalwareLoading}
-                                    isLoading={isMalwareLoading}
-                                    placeholder={isMalwareLoading ? "Loading malware…" : "Choose malware to explore…"}
-                                    closeMenuOnSelect={false}
-                                    isClearable
-                                    isSearchable
-                                    styles={reactSelectStyles}
-                                    noOptionsMessage={() => "No malware found"}
-                                    className="malware-react-select"
-                                    classNamePrefix="malware-rs"
-                                />
+                            <div className="picker-group">
+                                <div className="search-wrapper position-relative m-0">
+                                    <Select
+                                        inputId="malware-select"
+                                        isMulti
+                                        options={malwareSelectOptions}
+                                        value={selectedMalwareSelectValue}
+                                        onChange={handleMalwareSelectChange}
+                                        isDisabled={isMalwareLoading}
+                                        isLoading={isMalwareLoading}
+                                        placeholder={
+                                            isMalwareLoading
+                                                ? "Loading…"
+                                                : selectedEntityType === "threatactor"
+                                                ? "Search Threat Actor to add"
+                                                : selectedEntityType === "malware"
+                                                ? "Search Malware to add"
+                                                : "Search Campaign to add"
+                                        }
+                                        closeMenuOnSelect={false}
+                                        isClearable
+                                        isSearchable
+                                        styles={reactSelectStyles}
+                                        components={{
+                                            ValueContainer: CustomValueContainer,
+                                            DropdownIndicator: CustomDropdownIndicator,
+                                            IndicatorSeparator: () => null
+                                        }}
+                                        noOptionsMessage={() => "No results found"}
+                                        className="malware-react-select"
+                                        classNamePrefix="malware-rs"
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Selected Entity Chips / Tags */}
-                    {graphTags.length > 0 && (
-                        <div className="selected-chips-container" aria-label="Selected entity chips">
-                            {graphTags.map((tag) => {
-                                const chipColor = getColourFor(tag.type || "Malware");
-                                return (
-                                    <div
-                                        key={tag.key}
-                                        className={`malware-chip ${tag.key === activeTagId ? "active" : ""}`}
-                                        onClick={() => {
-                                            setActiveTagId(tag.key);
-                                            setFocusedNodeId(tag.nodeId);
-                                        }}
-                                    >
-                                        <span className="chip-indicator" style={{ backgroundColor: chipColor }} />
-                                        <span className="chip-text">{tag.name}</span>
-                                        <button
-                                            type="button"
-                                            className="chip-close-btn"
-                                            title={`Remove ${tag.name}`}
-                                            onClick={(e) => handleRemoveTag(tag.key, e)}
-                                        >
-                                            <FiX />
-                                        </button>
+                        {/* Threat Actors / Entities Section with Accordion */}
+                        <div className="threat-actors-section w-100">
+                            <div
+                                className="d-flex align-items-center justify-content-between cursor-pointer user-select-none"
+                                onClick={() => setIsOverviewAccordionOpen(!isOverviewAccordionOpen)}
+                                style={{ cursor: "pointer" }}
+                            >
+                                <div className="d-flex align-items-center">
+                                    <span className="section-title">SELECTED ENTITIES :</span>
+                                    <span className="selected-badge">{graphTags.length} Selected</span>
+                                </div>
+
+                                <div className="accordion-toggle-icon d-flex align-items-center gap-1 text-muted" style={{ fontSize: "13px" }}>
+                                    <span style={{ fontSize: "12px", fontWeight: 500 }}>{isOverviewAccordionOpen ? "Collapse" : "Expand"}</span>
+                                    <i className={`bi ${isOverviewAccordionOpen ? "bi-chevron-up" : "bi-chevron-down"}`}></i>
+                                </div>
+                            </div>
+
+                            {isOverviewAccordionOpen && (
+                                <div className="accordion-content mt-3">
+                                    {/* Selected Entity Chips / Tags */}
+                                    {graphTags.length > 0 && (
+                                        <div className="selected-chips-container" aria-label="Selected entity chips">
+                                            {graphTags.map((tag) => {
+                                                const chipColor = getColourFor(tag.type || "Malware");
+                                                return (
+                                                    <div
+                                                        key={tag.key}
+                                                        className={`malware-chip ${tag.key === activeTagId ? "active" : ""}`}
+                                                        onClick={() => {
+                                                            setActiveTagId(tag.key);
+                                                            setFocusedNodeId(tag.nodeId);
+                                                        }}
+                                                    >
+                                                        <span className="chip-indicator" style={{ backgroundColor: chipColor }} />
+                                                        <span className="chip-text">{tag.name}</span>
+                                                        <button
+                                                            type="button"
+                                                            className="chip-close-btn"
+                                                            title={`Remove ${tag.name}`}
+                                                            onClick={(e) => handleRemoveTag(tag.key, e)}
+                                                        >
+                                                            <FiX />
+                                                        </button>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+
+                                    {/* Status Feedback Row */}
+                                    <div className="kg-status-row d-flex align-items-center justify-content-between mt-2">
+                                        <span className={`status-text ${isStatusError ? "text-danger" : "text-muted"}`}>
+                                            <FiActivity className="me-1" />
+                                            {statusMessage}
+                                        </span>
+                                        <span className="stats-summary text-muted">
+                                            Showing {filteredGraph.nodes.length} related nodes &middot; {filteredGraph.edges.length} relationships
+                                        </span>
                                     </div>
-                                );
-                            })}
+                                </div>
+                            )}
                         </div>
-                    )}
-
-                    {/* Status Feedback Row */}
-                    <div className="kg-status-row d-flex align-items-center justify-content-between mt-2">
-                        <span className={`status-text ${isStatusError ? "text-danger" : "text-muted"}`}>
-                            <FiActivity className="me-1" />
-                            {statusMessage}
-                        </span>
-                        <span className="stats-summary text-muted">
-                            Showing {filteredGraph.nodes.length} related nodes &middot; {filteredGraph.edges.length} relationships
-                        </span>
                     </div>
                 </div>
             </div>
@@ -1145,193 +1227,110 @@ const intelKnowledegeGraph = () => {
                     <div className="details-header">
                         <div className="d-flex align-items-center justify-content-between">
                             <span className="details-header-title">Node Inspection</span>
-                            <span className="badge bg-light text-secondary border">
-                                {focusedNode ? getNodeType(focusedNode) : "None"}
-                            </span>
+                            {focusedNode && (
+                                <span className="badge bg-light text-secondary border">
+                                    {getNodeType(focusedNode)}
+                                </span>
+                            )}
                         </div>
                     </div>
 
                     <div className="details-scrollable-body">
                         {focusedNode ? (
-                            <>
-                                {/* Entity Profile Card */}
-                                <div className="entity-overview-box">
-                                    <div
-                                        className="entity-avatar"
-                                        style={{ backgroundColor: getColourFor(getNodeType(focusedNode)) }}
-                                    >
-                                        {getNodeType(focusedNode).slice(0, 3).toUpperCase()}
-                                    </div>
-                                    <div className="entity-info-block">
-                                        <h4 className="entity-name">{getNodeTitle(focusedNode)}</h4>
-                                        <span className="entity-type-tag">{getNodeType(focusedNode)} Entity</span>
-                                    </div>
+                            /* Entity Profile Card */
+                            <div className="entity-overview-box mb-3">
+                                <div
+                                    className="entity-avatar"
+                                    style={{ backgroundColor: getColourFor(getNodeType(focusedNode)) }}
+                                >
+                                    {getNodeType(focusedNode).slice(0, 3).toUpperCase()}
                                 </div>
-
-                                {/* Properties Table */}
-                                <div className="details-section mt-3">
-                                    <h5 className="section-heading">Properties</h5>
-                                    <div className="props-list">
-                                        {Object.entries(focusedNode.properties || {})
-                                            .filter(([k]) => k !== "node_key")
-                                            .map(([key, value]) => (
-                                                <div key={key} className="prop-row">
-                                                    <span className="prop-key">{key.replace(/_/g, " ")}</span>
-                                                    <span className="prop-val" title={String(value)}>
-                                                        {String(value)}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                    </div>
+                                <div className="entity-info-block">
+                                    <h4 className="entity-name">{getNodeTitle(focusedNode)}</h4>
+                                    <span className="entity-type-tag">
+                                        {focusedNode.properties?.type || `${getNodeType(focusedNode)} Entity`}
+                                    </span>
                                 </div>
-
-                                {/* Connected Relationships */}
-                                <div className="details-section mt-3">
-                                    <h5 className="section-heading">
-                                        Connected Relationships ({connectedEdgesForFocused.length})
-                                    </h5>
-                                    {connectedEdgesForFocused.length === 0 ? (
-                                        <p className="text-muted small">No connected relationships matching active filters.</p>
-                                    ) : (
-                                        <div className="relationships-list">
-                                            {connectedEdgesForFocused.map((edge, idx) => {
-                                                const otherNodeId = edge.source === focusedNode.id ? edge.target : edge.source;
-                                                const otherNode = unifiedGraph.nodes.find((n) => n.id === otherNodeId);
-                                                const isOutgoing = edge.source === focusedNode.id;
-
-                                                return (
-                                                    <div
-                                                        key={`rel-${idx}`}
-                                                        className="rel-card"
-                                                        onClick={() => otherNode && handleNodeClick(otherNode.id)}
-                                                    >
-                                                        <div className="rel-header">
-                                                            <span className="rel-type-badge">
-                                                                {isOutgoing ? "→" : "←"} {edge.type.replace(/_/g, " ")}
-                                                            </span>
-                                                        </div>
-                                                        <div className="rel-target">
-                                                            <span
-                                                                className="rel-dot"
-                                                                style={{ backgroundColor: getColourFor(getNodeType(otherNode)) }}
-                                                            />
-                                                            <span className="rel-name">{getNodeTitle(otherNode)}</span>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
-                                </div>
-                            </>
+                            </div>
                         ) : (
-                            <div className="empty-details text-center text-muted p-4">
-                                <FiInfo style={{ fontSize: "28px", opacity: 0.5, marginBottom: "8px" }} />
-                                <p>Select a node in the graph to view properties and connected intelligence.</p>
+                            <div className="empty-details text-center text-muted p-3 mb-2">
+                                <FiInfo style={{ fontSize: "24px", opacity: 0.5, marginBottom: "4px" }} />
+                                <p className="small mb-0">Select a node in the graph to inspect details.</p>
                             </div>
                         )}
-                    </div>
-                </div>
-            </div>
 
-            {/* Right-Side Connection Filters Drawer */}
-            <div
-                className={`connection-filters-drawer-overlay ${isConnectionDrawerOpen ? 'open' : ''}`}
-                onClick={() => setIsConnectionDrawerOpen(false)}
-            >
-                <div className="connection-filters-drawer" onClick={(e) => e.stopPropagation()}>
-                    <div className="drawer-header d-flex justify-content-between align-items-center">
-                        <div className="d-flex align-items-center gap-2">
-                            <h5 className="drawer-title mb-0">Relationships</h5>
-                        </div>
-                        <div className="d-flex align-items-center gap-2">
-                            <span className="filters-count-badge">
-                                {selectedConnectionTypes.size} of {availableRelationshipTypes.length} active
-                            </span>
-                            <button
-                                type="button"
-                                className="drawer-close-btn"
-                                onClick={() => setIsConnectionDrawerOpen(false)}
-                            >
-                                <FiX />
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="drawer-body">
-                        <p className="filters-subtext mb-3">
-                            Choose one or more relationship types to display in the knowledge graph.
-                        </p>
-
-                        <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
-                            <div className="d-flex align-items-center gap-2">
-                                <button
-                                    type="button"
-                                    className="btn-filter-pill"
-                                    onClick={handleSelectAllConnections}
-                                    disabled={availableRelationshipTypes.length === 0}
-                                >
-                                    Select all
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn-filter-pill"
-                                    onClick={handleUnselectAllConnections}
-                                    disabled={availableRelationshipTypes.length === 0}
-                                >
-                                    Unselect all
-                                </button>
+                        {/* Relationship Filters Section */}
+                        <div className="details-section relationships-filter-section pt-3 border-top">
+                            <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 className="section-heading mb-0" style={{ fontSize: '14px', fontWeight: '700', color: '#0f172a' }}>Relationships</h5>
+                                <span className="filters-count-badge" style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '12px', background: '#eff6ff', color: '#1d4ed8', fontWeight: '600' }}>
+                                    {selectedConnectionTypes.size} of {availableRelationshipTypes.length} active
+                                </span>
                             </div>
 
-                            <label className="d-flex align-items-center gap-2 mb-0" style={{ cursor: 'pointer', fontSize: '13px', fontWeight: '500', color: '#334155', userSelect: 'none' }}>
-                                <input
-                                    type="checkbox"
-                                    checked={showKeyRelationships}
-                                    onChange={(e) => setShowKeyRelationships(e.target.checked)}
-                                    style={{ cursor: 'pointer', width: '15px', height: '15px', accentColor: '#2563eb' }}
-                                />
-                                <span>Show key relationships</span>
-                            </label>
-                        </div>
+                            <p className="filters-subtext mb-2 text-muted" style={{ fontSize: '12px', lineHeight: '1.4' }}>
+                                Choose relationship types to display in the graph:
+                            </p>
 
-                        {/* Checkbox Options List */}
-                        <div className="connection-options-list">
-                            {filteredConnectionTypes.length === 0 ? (
-                                <div className="text-muted text-center py-4 small">
-                                    No relationship types available.
+                            <div className="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+                                <div className="d-flex align-items-center gap-1">
+                                    <button
+                                        type="button"
+                                        className="btn-filter-pill"
+                                        onClick={handleSelectAllConnections}
+                                        disabled={availableRelationshipTypes.length === 0}
+                                    >
+                                        Select all
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn-filter-pill"
+                                        onClick={handleUnselectAllConnections}
+                                        disabled={availableRelationshipTypes.length === 0}
+                                    >
+                                        Unselect all
+                                    </button>
                                 </div>
-                            ) : (
-                                filteredConnectionTypes.map((relType) => {
-                                    const isChecked = selectedConnectionTypes.has(relType);
-                                    const formattedLabel = relType.replace(/_/g, " ");
-                                    return (
-                                        <label
-                                            key={relType}
-                                            className={`connection-option-item ${isChecked ? "checked" : ""}`}
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                value={relType}
-                                                checked={isChecked}
-                                                onChange={() => toggleConnectionType(relType)}
-                                            />
-                                            <span className="option-label">{formattedLabel}</span>
-                                        </label>
-                                    );
-                                })
-                            )}
-                        </div>
-                    </div>
 
-                    <div className="drawer-footer d-flex justify-content-end gap-2">
-                        <button
-                            type="button"
-                            className="btn text-white btn-sm px-4 py-2"
-                            style={{ borderRadius: '8px', backgroundColor: '#5200ff', border: 'none', fontWeight: '600' }}
-                            onClick={() => setIsConnectionDrawerOpen(false)}
-                        >
-                            Done
-                        </button>
+                                <label className="d-flex align-items-center gap-1 mb-0" style={{ cursor: 'pointer', fontSize: '12px', fontWeight: '500', color: '#334155', userSelect: 'none' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={showKeyRelationships}
+                                        onChange={(e) => setShowKeyRelationships(e.target.checked)}
+                                        style={{ cursor: 'pointer', width: '14px', height: '14px', accentColor: '#2563eb' }}
+                                    />
+                                    <span>Key only</span>
+                                </label>
+                            </div>
+
+                            {/* Checkbox Options List */}
+                            <div className="connection-options-list" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                                {filteredConnectionTypes.length === 0 ? (
+                                    <div className="text-muted text-center py-3 small">
+                                        No relationship types available.
+                                    </div>
+                                ) : (
+                                    filteredConnectionTypes.map((relType) => {
+                                        const isChecked = selectedConnectionTypes.has(relType);
+                                        const formattedLabel = relType.replace(/_/g, " ");
+                                        return (
+                                            <label
+                                                key={relType}
+                                                className={`connection-option-item ${isChecked ? "checked" : ""}`}
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    value={relType}
+                                                    checked={isChecked}
+                                                    onChange={() => toggleConnectionType(relType)}
+                                                />
+                                                <span className="option-label">{formattedLabel}</span>
+                                            </label>
+                                        );
+                                    })
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

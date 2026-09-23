@@ -1278,7 +1278,9 @@
       }
     }
 
-    .search-wrapper .form-control {
+    .search-wrapper .form-control,
+    .search-wrapper .malware-rs__control,
+    .entity-dropdown-select {
       background-color: #1e293b !important;
       border-color: #334155 !important;
       color: #f1f5f9 !important;
@@ -1387,6 +1389,25 @@
                 color: #ffffff !important;
               }
             }
+          }
+        }
+      }
+
+      .threat-actors-section {
+        .section-title {
+          color: #cbd5e1 !important;
+        }
+
+        .selected-badge {
+          background-color: #334155 !important;
+          color: #f1f5f9 !important;
+        }
+
+        .accordion-toggle-icon {
+          color: #94a3b8 !important;
+
+          &:hover {
+            color: #f1f5f9 !important;
           }
         }
       }
@@ -1973,7 +1994,6 @@
 
     .severity-row {
       border-color: #334155 !important;
-      background-color: #0b0f19 !important;
     }
 
     .tc-month, .tc-year {
@@ -3050,7 +3070,7 @@
 
   .graph-canvas-container {
     background-color: #0d1120 !important;
-    background-image: radial-gradient(#1e293b 1.2px, transparent 1.2px) !important;
+    background-image: none !important;
 
     // Floating zoom controls
     .graph-floating-controls {
