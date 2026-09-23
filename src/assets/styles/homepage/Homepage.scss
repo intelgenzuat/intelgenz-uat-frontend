@@ -503,7 +503,7 @@ $card-cap-bg: transparent;
 
         .intel-card-btn {
           transform: scale(1.08);
-          box-shadow: 0 6px 18px rgba(82, 54, 236, 0.4), 0 2px 8px rgba(234, 42, 79, 0.3);
+          box-shadow: 0 6px 18px rgba(124, 58, 237, 0.4), 0 2px 8px rgba(234, 42, 79, 0.3);
           filter: brightness(1.1);
 
           i {
@@ -657,14 +657,14 @@ $card-cap-bg: transparent;
           width: 46px;
           height: 46px;
           border-radius: 50%;
-          background: linear-gradient(135deg, #3b50df 0%, #5236ec 30%, #a229a8 68%, #ea2a4f 100%);
+          background: linear-gradient(135deg, rgba(67, 85, 238, 0.65) 0%, #7c3aed 25%, #9333ea 52%, #a229a8 70%, #ea2a4f 100%);
           color: #ffffff;
           border: 1px solid rgba(255, 255, 255, 0.35);
           display: flex;
           align-items: center;
           justify-content: center;
           font-size: 18px;
-          box-shadow: 0 4px 14px rgba(82, 54, 236, 0.3), 0 2px 6px rgba(234, 42, 79, 0.2);
+          box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3), 0 2px 6px rgba(234, 42, 79, 0.2);
           transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, filter 0.25s ease;
           pointer-events: auto;
 
