@@ -23,9 +23,9 @@ const DefenseConvergenceTopContent = ({
     };
 
     return (
-        <div className="defense-convergence-top-content">
+        <div className="defense-convergence-top-content flex-shrink-0">
             {/* Breadcrumb */}
-            <div className="breadcrumb-nav text-muted" style={{ fontSize: '14px' }}>
+            <div className="breadcrumb-nav text-muted" style={{ fontSize: '14px', marginBottom: '16px' }}>
                 <FiHome className="home-icon me-2" />
                 <span onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Home</span>
                 <span className="mx-2 text-black-50">/</span>

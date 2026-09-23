@@ -135,9 +135,8 @@
     }
 
     .intel-card-cutout {
-      border: none !important;
-      border-left: none !important;
-      border-top: none !important;
+      border-left: 1px solid #334155 !important;
+      border-top: 1px solid #334155 !important;
     }
 
     .intel-card-icon-badge {
@@ -147,8 +146,6 @@
     }
 
     .intel-card-btn {
-      background-color: #0f172a !important;
-      border: 1px solid #334155 !important;
       color: #ffffff !important;
     }
   }
@@ -2249,7 +2246,9 @@
       }
     }
 
-    .top-content-wrapper {
+    .top-content-wrapper,
+    .tap-header-section,
+    .defense-convergence-top-content {
       .breadcrumb-nav {
         color: #94a3b8 !important;
 
