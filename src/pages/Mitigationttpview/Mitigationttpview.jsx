@@ -528,9 +528,8 @@ const Mitigationttpview = () => {
                                             <span className="section-title">THREAT ACTORS :</span>
                                             <span className="selected-badge">{selectedMalware.length} Selected</span>
                                         </div>
-                                        <div className="accordion-toggle-icon d-flex align-items-center gap-1 text-muted" style={{ fontSize: '13px' }}>
-                                            <span style={{ fontSize: '12px', fontWeight: 500 }}>{isAccordionOpen ? 'Collapse' : 'Expand'}</span>
-                                            <i className={`bi ${isAccordionOpen ? 'bi-chevron-up' : 'bi-chevron-down'}`}></i>
+                                        <div className="accordion-toggle-icon d-flex align-items-center text-muted" style={{ fontSize: '16px' }}>
+                                            <i className={`bi ${isAccordionOpen ? 'bi-dash' : 'bi-plus'}`}></i>
                                         </div>
                                     </div>
 
