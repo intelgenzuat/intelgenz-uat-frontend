@@ -69,92 +69,89 @@ const Mitigationttpview = () => {
 
     const [isLoader, setIsLoader] = useState(false);
 
-    // Helper to extract only valid numeric actor_ids / malware_ids from localStorage / selected malwares
-    const getSavedMalwareNumericIds = (formikValues = null) => {
-        let savedMalwares = [];
-        let savedSelectedIds = [];
-
-        try {
-            const storedMalwares = localStorage.getItem('selected_threat');
-            if (storedMalwares) {
-                const parsed = JSON.parse(storedMalwares);
-                if (Array.isArray(parsed)) {
-                    savedMalwares = parsed;
-                }
-            }
-        } catch (e) {
-            console.error("Error parsing stored malwares:", e);
+    // Helper to extract numeric ID
+    const extractNum = (val) => {
+        if (val === null || val === undefined || typeof val === 'boolean') return null;
+        if (typeof val === 'number') return isNaN(val) ? null : val;
+        if (typeof val === 'string') {
+            if (val.startsWith('threat-') || val.startsWith('malware-')) return null;
+            const num = Number(val);
+            return isNaN(num) ? null : num;
         }
-
-        try {
-            const storedIds = localStorage.getItem('selected_threat_ids');
-            if (storedIds) {
-                const parsed = JSON.parse(storedIds);
-                if (Array.isArray(parsed)) {
-                    savedSelectedIds = parsed;
-                }
+        if (typeof val === 'object') {
+            const innerId = val.actor_id ?? val.malware_id ?? val.id;
+            if (innerId !== undefined && innerId !== val) {
+                return extractNum(innerId);
             }
-        } catch (e) {
-            console.error("Error parsing stored ids:", e);
         }
+        return null;
+    };
 
-        const currentList = Array.isArray(savedMalwares) && savedMalwares.length > 0 ? savedMalwares : (Array.isArray(threatlist) ? threatlist : []);
-        const currentSelected = Array.isArray(savedSelectedIds) && savedSelectedIds.length > 0
-            ? savedSelectedIds
-            : (formikValues?.actor_ids && Array.isArray(formikValues.actor_ids) && formikValues.actor_ids.length > 0)
-                ? formikValues.actor_ids
-                : (formikValues?.malware_ids && Array.isArray(formikValues.malware_ids) && formikValues.malware_ids.length > 0)
-                    ? formikValues.malware_ids
-                    : (Array.isArray(selectedMalware) ? selectedMalware : []);
-
+    // Helper to extract only valid numeric actor_ids / malware_ids for checked malwares
+    const getCheckedNumericIds = (selectedIds = selectedMalware, currentThreatList = threatlist) => {
         const resultIds = [];
+        const list = Array.isArray(currentThreatList) ? currentThreatList : [];
+        const selected = Array.isArray(selectedIds) ? selectedIds : [];
 
-        const extractNum = (val) => {
-            if (val === null || val === undefined || typeof val === 'boolean') return null;
-            if (typeof val === 'number') return isNaN(val) ? null : val;
-            if (typeof val === 'string') {
-                if (val.startsWith('threat-') || val.startsWith('malware-')) return null;
-                const num = Number(val);
-                return isNaN(num) ? null : num;
-            }
-            if (typeof val === 'object') {
-                const innerId = val.actor_id ?? val.malware_id ?? val.id;
-                if (innerId !== undefined && innerId !== val) {
-                    return extractNum(innerId);
+        list.forEach((m) => {
+            if (!m || typeof m !== 'object') return;
+            const isChecked =
+                (m.id !== undefined && selected.includes(m.id)) ||
+                (m.actor_id !== undefined && selected.includes(m.actor_id)) ||
+                (m.malware_id !== undefined && selected.includes(m.malware_id)) ||
+                (m.name && selected.includes(m.name));
+
+            if (isChecked) {
+                const num = extractNum(m.actor_id) ?? extractNum(m.malware_id) ?? extractNum(m.id);
+                if (num !== null && !resultIds.includes(num)) {
+                    resultIds.push(num);
                 }
             }
-            return null;
-        };
+        });
 
-        currentList.forEach((m) => {
-            if (!m || typeof m !== 'object') return;
-            const num = extractNum(m.actor_id) ?? extractNum(m.malware_id) ?? extractNum(m.id);
+        selected.forEach((item) => {
+            const num = extractNum(item);
             if (num !== null && !resultIds.includes(num)) {
                 resultIds.push(num);
             }
         });
 
-        if (Array.isArray(currentSelected)) {
-            currentSelected.forEach((item) => {
-                const num = extractNum(item);
-                if (num !== null && !resultIds.includes(num)) {
-                    resultIds.push(num);
-                }
-            });
+        return resultIds;
+    };
+
+    const fetchThreatDefendData = (selectedIds = selectedMalware, currentThreatList = threatlist) => {
+        const numericIds = getCheckedNumericIds(selectedIds, currentThreatList);
+
+        if (!numericIds || numericIds.length === 0) {
+            setthreatData([]);
+            setIsLoader(false);
+            return;
         }
 
-        return resultIds;
+        const payload = {
+            actor_ids: numericIds,
+            malware_ids: numericIds,
+        };
+
+        console.log('Sending sendThreatDefend payload:', payload);
+
+        setIsLoader(true);
+        sendThreatDefend(payload)((response) => {
+            setIsLoader(false);
+            console.log('sendThreatDefend API response:', response);
+            setthreatData(response?.data);
+        });
     };
 
     const formik = useFormik({
         initialValues: {
-            malware_ids: getSavedMalwareNumericIds(),
-            actor_ids: getSavedMalwareNumericIds(),
+            malware_ids: getCheckedNumericIds(),
+            actor_ids: getCheckedNumericIds(),
         },
         enableReinitialize: true,
-        validate: (values) => {
+        validate: () => {
             let errors = {};
-            const numericIds = getSavedMalwareNumericIds(values);
+            const numericIds = getCheckedNumericIds(selectedMalware, threatlist);
 
             if (!numericIds || numericIds.length === 0) {
                 errors.malware_ids = 'Please select at least one valid threat actor';
@@ -163,22 +160,8 @@ const Mitigationttpview = () => {
             return errors;
         },
 
-        onSubmit: (values) => {
-            const numericIds = getSavedMalwareNumericIds(values);
-
-            const payload = {
-                actor_ids: numericIds,
-                malware_ids: numericIds,
-            };
-
-            console.log('Sending sendThreatDefend payload:', payload);
-
-            setIsLoader(true);
-            sendThreatDefend(payload)((response) => {
-                setIsLoader(false);
-                console.log('sendThreatDefend API response:', response);
-                setthreatData(response?.data);
-            });
+        onSubmit: () => {
+            fetchThreatDefendData(selectedMalware, threatlist);
         },
     });
 
@@ -192,6 +175,7 @@ const Mitigationttpview = () => {
             } catch (e) {
                 console.error(e);
             }
+            fetchThreatDefendData(updated, threatlist);
             return updated;
         });
     };
@@ -222,6 +206,7 @@ const Mitigationttpview = () => {
         } catch (e) {
             console.error(e);
         }
+        fetchThreatDefendData(updatedSelected, updatedList);
     };
 
     const handleSelectSuggestion = (item) => {
@@ -248,12 +233,13 @@ const Mitigationttpview = () => {
                 (item.id !== undefined && m.id === item.id)
         );
 
+        let updatedList = threatlist;
         if (existingMalware) {
             targetId = existingMalware.actor_id !== undefined && (typeof existingMalware.actor_id === 'number' || !String(existingMalware.actor_id).startsWith('malware-'))
                 ? existingMalware.actor_id
                 : (realActorId ?? existingMalware.id);
         } else {
-            targetId = realActorId ?? (typeof item?.id === 'number' ? item.id : undefined) ?? `threat-${Date.now()}`;
+            targetId = realActorId ?? (typeof item?.id === 'number' ? item.id : undefined) ?? `threat-${threatlist.length + 1}`;
             const newMalware = {
                 ...(typeof item === 'object' && item !== null ? item : {}),
                 id: targetId,
@@ -261,7 +247,7 @@ const Mitigationttpview = () => {
                 name: String(itemName),
                 ...(realActorId !== undefined ? { id: realActorId, actor_id: realActorId } : {})
             };
-            const updatedList = [...threatlist, newMalware];
+            updatedList = [...threatlist, newMalware];
             setthreatlist(updatedList);
             try {
                 localStorage.setItem('selected_threat', JSON.stringify(updatedList));
@@ -271,20 +257,27 @@ const Mitigationttpview = () => {
         }
 
         // Save real actor_id / targetId into selected_threat_ids in localStorage
-        setSelectedMalware((prev) => {
-            const updated = prev.includes(targetId) ? prev : [...prev, targetId];
-            try {
-                localStorage.setItem('selected_threat_ids', JSON.stringify(updated));
-            } catch (e) {
-                console.error(e);
-            }
-            return updated;
-        });
+        const updatedSelected = selectedMalware.includes(targetId) ? selectedMalware : [...selectedMalware, targetId];
+        setSelectedMalware(updatedSelected);
+        try {
+            localStorage.setItem('selected_threat_ids', JSON.stringify(updatedSelected));
+        } catch (e) {
+            console.error(e);
+        }
 
         setSearchQuery('');
         setData([]);
         setShowSuggestions(false);
+
+        fetchThreatDefendData(updatedSelected, updatedList);
     };
+
+    useEffect(() => {
+        const initialNumericIds = getCheckedNumericIds(selectedMalware, threatlist);
+        if (initialNumericIds.length > 0) {
+            fetchThreatDefendData(selectedMalware, threatlist);
+        }
+    }, []);
 
     const getThreatTTPData = (query = '') => {
         setPending(true);
@@ -455,7 +448,7 @@ const Mitigationttpview = () => {
 
                                             {/* Action Buttons Row pushed to end */}
                                             <div className="ms-auto d-flex align-items-center gap-2">
-                                                <button
+                                                {/* <button
                                                     type="button"
                                                     className="btn show-btn text-white flex-shrink-0"
                                                     style={{
@@ -469,7 +462,7 @@ const Mitigationttpview = () => {
                                                         <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" style={{ width: '12px', height: '12px' }}></span>
                                                     )}
                                                     <span>Submit</span>
-                                                </button>
+                                                </button> */}
 
                                                 <button
                                                     type="button"

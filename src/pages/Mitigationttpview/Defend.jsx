@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import '../../assets/styles/mitigation/MitigationView.scss';
 
 const calculateLevel = (overlapPercentage, overlapCount) => {
@@ -25,23 +25,70 @@ const transformD3fendTactics = (d3fendTactics) => {
                 columnsMap.set(parentName, []);
             }
 
-            const children = Array.isArray(tech.children) ? tech.children : [];
+            const rawAttackTechs = Array.isArray(tech.attack_techniques)
+                ? tech.attack_techniques
+                : (Array.isArray(tech.techniques) ? tech.techniques : []);
+
+            // Map attack_techniques to children sub-items so overlaps can be expanded and viewed
+            const children = (Array.isArray(tech.children) && tech.children.length > 0)
+                ? tech.children
+                : rawAttackTechs.map((att, attIdx) => {
+                    const techId = att.technique_id || att.id || '';
+                    const techName = att.technique_name || att.name || techId || '';
+                    const subName = att.subtechnique_name ? ` (${att.subtechnique_name})` : '';
+                    const attActors = Array.isArray(att.actors) ? att.actors : (Array.isArray(att.malwares) ? att.malwares : []);
+                    const actorNames = attActors.map(a => a.name || a.actor_name || a.malware_name || a.id).filter(Boolean).join(', ');
+                    const tacticsStr = Array.isArray(att.tactics) ? att.tactics.join(', ') : (att.tactic || '');
+
+                    let subtitle = techId;
+                    if (tacticsStr) {
+                        subtitle = `${subtitle ? `${subtitle} • ` : ''}${tacticsStr}`;
+                    }
+                    if (actorNames) {
+                        subtitle = `${subtitle ? `${subtitle} • ` : ''}${actorNames}`;
+                    }
+
+                    const overlapCount = attActors.length || Number(att.overlap_count) || 0;
+                    const hasOverlap = Boolean(att.has_overlap || overlapCount > 1 || (Number(att.overlap_percentage) > 0));
+
+                    return {
+                        id: `${tacticId}-${tech.d3fend_id || techIdx}-${techId || attIdx}-${attIdx}`,
+                        technique_id: techId,
+                        title: `${techId ? `${techId} - ` : ''}${techName}${subName}`,
+                        subtitle: subtitle || 'No details',
+                        overlaps: overlapCount,
+                        overlap_percentage: Number(att.overlap_percentage) || 0,
+                        has_overlap: hasOverlap,
+                        level: calculateLevel(att.overlap_percentage, overlapCount),
+                        expanded: false,
+                        children: [],
+                        attack_technique: att,
+                        actors: attActors,
+                        malwares: attActors
+                    };
+                });
+
             const subtitle = children.length > 0
                 ? `${children.length} sub ${children.length === 1 ? 'category' : 'categories'}`
                 : 'No sub categories';
 
+            const overlapCount = Number(tech.overlap_count) || 0;
+            const overlapPct = Number(tech.overlap_percentage) || 0;
+            const hasOverlap = Boolean(tech.has_overlap || overlapCount > 1 || overlapPct > 0);
+
             columnsMap.get(parentName).push({
                 id: tech.d3fend_id || `${tacticId}-${parentName.toLowerCase().replace(/\s+/g, '-')}-${techIdx}`,
                 d3fend_id: tech.d3fend_id,
-                title: tech.name || tech.technique_name || '',
+                title: tech.name || tech.technique_name || tech.d3fend_id || '',
                 subtitle: subtitle,
-                overlaps: Number(tech.overlap_count) || 0,
-                overlap_percentage: Number(tech.overlap_percentage) || 0,
-                has_overlap: Boolean(tech.has_overlap),
+                overlaps: overlapCount,
+                overlap_percentage: overlapPct,
+                has_overlap: hasOverlap,
                 level: calculateLevel(tech.overlap_percentage, tech.overlap_count),
                 expanded: false,
                 children: children,
-                attack_techniques: tech.attack_techniques || [],
+                attack_techniques: rawAttackTechs,
+                actors: tech.actors || [],
                 malwares: tech.malwares || []
             });
         });
@@ -79,43 +126,57 @@ const Defend = ({
     activeViewTab,
     setActiveViewTab,
     viewTabs = [],
-    threatlist = [],
-    selectedMalware: propSelectedMalware,
-    onToggleMalware,
-    onClearOrSelectAll,
-    onRemoveMalware,
-    onShow,
+    selectedMalware = [],
     isLoader = false,
-    formikError,
     threatData,
 }) => {
-    const d3fendList = Array.isArray(threatData?.d3fend_tactics)
-        ? threatData.d3fend_tactics
-        : Array.isArray(threatData)
-            ? threatData
-            : [];
-
-    const [tacticsData, setTacticsData] = useState(() => transformD3fendTactics(d3fendList));
-    const [localSelectedMalware, setLocalSelectedMalware] = useState([]);
-    const selectedMalware = propSelectedMalware !== undefined ? propSelectedMalware : localSelectedMalware;
-
-    useEffect(() => {
-        setTacticsData(transformD3fendTactics(d3fendList));
+    const d3fendList = useMemo(() => {
+        if (Array.isArray(threatData?.d3fend_tactics)) {
+            return threatData.d3fend_tactics;
+        }
+        if (Array.isArray(threatData)) {
+            return threatData;
+        }
+        return [];
     }, [threatData]);
 
+    const tacticsData = useMemo(() => {
+        return transformD3fendTactics(d3fendList, selectedMalware);
+    }, [d3fendList, selectedMalware]);
+
+    const [collapsedTactics, setCollapsedTactics] = useState(() => new Set());
+    const [expandedItems, setExpandedItems] = useState(() => new Set());
+
     const toggleTactic = (tacticId) => {
-        setTacticsData(prevTactics =>
-            prevTactics.map(tactic =>
-                tactic.id === tacticId ? { ...tactic, expanded: !tactic.expanded } : tactic
-            )
-        );
+        setCollapsedTactics(prev => {
+            const next = new Set(prev);
+            if (next.has(tacticId)) {
+                next.delete(tacticId);
+            } else {
+                next.add(tacticId);
+            }
+            return next;
+        });
+    };
+
+    const toggleExpand = (idToToggle) => {
+        setExpandedItems(prev => {
+            const next = new Set(prev);
+            if (next.has(idToToggle)) {
+                next.delete(idToToggle);
+            } else {
+                next.add(idToToggle);
+            }
+            return next;
+        });
     };
 
     const filterOverlaps = (items) => {
         return items
             .map(item => {
                 const filteredChildren = item.children ? filterOverlaps(item.children) : [];
-                if (item.overlaps > 0 || filteredChildren.length > 0) {
+                const hasOverlap = Boolean(item.has_overlap || item.overlaps > 1 || item.overlap_percentage > 0);
+                if (hasOverlap || filteredChildren.length > 0) {
                     return { ...item, children: filteredChildren };
                 }
                 return null;
@@ -123,31 +184,10 @@ const Defend = ({
             .filter(item => item !== null);
     };
 
-    const toggleExpand = (idToToggle) => {
-        const toggleRecursive = (items) => {
-            return items.map(item => {
-                if (item.id === idToToggle) {
-                    return { ...item, expanded: !item.expanded };
-                }
-                if (item.children && item.children.length > 0) {
-                    return { ...item, children: toggleRecursive(item.children) };
-                }
-                return item;
-            });
-        };
-
-        setTacticsData(prevTactics =>
-            prevTactics.map(tactic => ({
-                ...tactic,
-                columns: tactic.columns.map(col => ({
-                    ...col,
-                    items: toggleRecursive(col.items)
-                }))
-            }))
-        );
-    };
-
     const renderItem = (item, indent, treeLineType) => {
+        const hasOverlap = Boolean(item.has_overlap || item.overlaps > 1 || item.overlap_percentage > 0);
+        const isExpanded = expandedItems.has(item.id);
+
         return (
             <React.Fragment key={item.id}>
                 <div className={`cell-wrapper ${getLevelClass(item.level)}`}>
@@ -155,17 +195,17 @@ const Defend = ({
                         {treeLineType && (
                             <div className={`tree-line line-${treeLineType}`} style={{ left: `${getLineLeftPx(indent)}px`, width: `${getLineWidthPx()}px` }}></div>
                         )}
-                        {item.expanded && item.children && item.children.length > 0 && (
+                        {isExpanded && item.children && item.children.length > 0 && (
                             <div className="tree-line-down" style={{ left: `${getLineLeftPx(indent + 1)}px` }}></div>
                         )}
 
                         <div className="card-top">
                             {item.children && item.children.length > 0 ? (
-                                <button className="expand-btn" onClick={() => toggleExpand(item.id)}>
-                                    <i className={`bi ${item.expanded ? 'bi-chevron-up' : 'bi-chevron-down'}`}></i>
+                                <button className="expand-btn" type="button" onClick={() => toggleExpand(item.id)}>
+                                    <i className={`bi ${isExpanded ? 'bi-chevron-up' : 'bi-chevron-down'}`}></i>
                                 </button>
                             ) : (
-                                <button className="expand-btn" style={{ visibility: 'hidden' }}>
+                                <button className="expand-btn" type="button" style={{ visibility: 'hidden' }}>
                                     <i className="bi bi-chevron-down"></i>
                                 </button>
                             )}
@@ -176,7 +216,7 @@ const Defend = ({
                             <i className="bi bi-info-circle info-icon"></i>
                         </div>
 
-                        {item.overlaps > 0 && (
+                        {hasOverlap && (
                             <div className="overlaps-badge-wrapper" style={{ paddingLeft: '19px' }}>
                                 <div className="overlaps-badge">
                                     <span className="label">Overlaps</span>
@@ -187,7 +227,7 @@ const Defend = ({
                     </div>
                 </div>
                 {item.children && item.children.length > 0 && (
-                    <div className={`children-container ${item.expanded ? 'expanded' : ''}`}>
+                    <div className={`children-container ${isExpanded ? 'expanded' : ''}`}>
                         <div className="children-inner">
                             {item.children.map((child, idx) =>
                                 renderItem(child, indent + 1, idx === item.children.length - 1 ? 'L' : 'T')
@@ -229,7 +269,7 @@ const Defend = ({
                                 {viewTabs && viewTabs.length > 0 && (
                                     <ul className="nav nav-pills segment-control" id="malwareViewTab" role="tablist">
                                         {viewTabs.map((tab) => (
-                                            <li key={tab.key} className="nav-item" role="presentation">
+                                             <li key={tab.key} className="nav-item" role="presentation">
                                                 <button
                                                     className={`nav-link${activeViewTab === tab.key ? ' active' : ''}`}
                                                     onClick={() => setActiveViewTab && setActiveViewTab(tab.key)}
@@ -259,16 +299,17 @@ const Defend = ({
                             </div>
                         ) : (
                             tacticsData.map(tactic => {
+                                const isTacticExpanded = !collapsedTactics.has(tactic.id);
                                 return (
                                     <div key={tactic.id} className="tactic-group d-flex flex-column">
                                         <div className="tactic-group-header" onClick={() => toggleTactic(tactic.id)}>
                                             <button className="tactic-toggle-btn" type="button">
-                                                <i className={`bi ${tactic.expanded ? 'bi-dash' : 'bi-plus'}`}></i>
+                                                <i className={`bi ${isTacticExpanded ? 'bi-dash' : 'bi-plus'}`}></i>
                                             </button>
                                             <span className="tactic-name">{tactic.name}</span>
                                         </div>
 
-                                        {tactic.expanded && (
+                                        {isTacticExpanded && (
                                             <div className="tactic-columns d-flex flex-grow-1">
                                                 {tactic.columns.map((col, colIndex) => {
                                                     const displayedItems = showOverlaps ? filterOverlaps(col.items) : col.items;
