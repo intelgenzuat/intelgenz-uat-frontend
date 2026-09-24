@@ -117,6 +117,7 @@
     --intel-card-bg: #1e293b;
     --intel-card-cutout-bg: #0b0f19;
     --intel-card-title-color: #f8fafc;
+    --intel-card-desc-color: #94a3b8;
     --intel-card-badge-bg: #0f172a;
     --intel-card-badge-border: rgba(255, 255, 255, 0.08);
     --intel-card-btn-bg: #0f172a;
@@ -128,10 +129,12 @@
     border: var(--intel-card-border) !important;
     box-shadow: var(--intel-card-shadow) !important;
 
-  
-
     .intel-card-title {
       color: #f8fafc !important;
+    }
+
+    .intel-card-description {
+      color: #94a3b8 !important;
     }
 
     .intel-card-cutout {
@@ -140,13 +143,23 @@
     }
 
     .intel-card-icon-badge {
-      background-color: #0f172a !important;
+      background: #0f172a !important;
       border: 1px solid rgba(255, 255, 255, 0.08) !important;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
     }
 
+    .intel-card-btn-halo {
+      background: rgba(30, 41, 59, 0.8) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
     .intel-card-btn {
       color: #ffffff !important;
+    }
+
+    .intel-card-wave-bg {
+      opacity: 0.35 !important;
+      filter: brightness(1.2) contrast(1.1) !important;
     }
   }
 

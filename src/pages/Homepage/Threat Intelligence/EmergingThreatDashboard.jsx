@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import deswave from '../../../assets/images/deswave.png';
 
 export default function EmergingThreatDashboard() {
     const navigate = useNavigate();
@@ -11,7 +12,8 @@ export default function EmergingThreatDashboard() {
             role="button"
             tabIndex={0}
         >
-            <div className='d-flex gap-2 align-items-center'>
+            <img src={deswave} alt="" className="intel-card-wave-bg" />
+            <div className="intel-card-top-row">
                 <div className="intel-card-icon-badge">
                     <svg width="36" height="35" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                         <rect width="53.6113" height="53.6113" fill="url(#pattern0_159_161)" />
@@ -24,12 +26,17 @@ export default function EmergingThreatDashboard() {
                     </svg>
                 </div>
                 <div className="intel-card-content">
-                    <h5 className="intel-card-title">Emerging Threat Reports</h5>
+                    <h5 className="intel-card-title">Threat Pulse</h5>
+                    <p className="intel-card-description">
+                        Curated Emerging Threat Reports
+                    </p>
                 </div>
             </div>
             <div className="intel-card-cutout">
-                <div className="intel-card-btn">
-                    <i className="bi bi-arrow-right"></i>
+                <div className="intel-card-btn-halo">
+                    <div className="intel-card-btn">
+                        <i className="bi bi-arrow-right"></i>
+                    </div>
                 </div>
             </div>
         </div>

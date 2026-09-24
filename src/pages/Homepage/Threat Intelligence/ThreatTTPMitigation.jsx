@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import deswave from '../../../assets/images/deswave.png';
 
 export default function ThreatTTPMitigation() {
     const navigate = useNavigate();
@@ -11,7 +12,8 @@ export default function ThreatTTPMitigation() {
             role="button"
             tabIndex={0}
         >
-            <div className='d-flex gap-2 align-items-center'>
+            <img src={deswave} alt="" className="intel-card-wave-bg" />
+            <div className="intel-card-top-row">
                 <div className="intel-card-icon-badge">
                     <svg width="35" height="36" viewBox="0 0 50 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                         <rect width="50" height="52" fill="url(#pattern0_163_244)" />
@@ -25,11 +27,16 @@ export default function ThreatTTPMitigation() {
                 </div>
                 <div className="intel-card-content">
                     <h5 className="intel-card-title">Defense Convergence</h5>
+                    <p className="intel-card-description">
+                        Connect Adversary Tactics to Defenses
+                    </p>
                 </div>
             </div>
             <div className="intel-card-cutout">
-                <div className="intel-card-btn">
-                    <i className="bi bi-arrow-right"></i>
+                <div className="intel-card-btn-halo">
+                    <div className="intel-card-btn">
+                        <i className="bi bi-arrow-right"></i>
+                    </div>
                 </div>
             </div>
         </div>
