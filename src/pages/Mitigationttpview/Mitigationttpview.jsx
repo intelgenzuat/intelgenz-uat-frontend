@@ -19,7 +19,7 @@ const Mitigationttpview = () => {
     const [activeTab, setActiveTab] = useState('all');
     const [activeViewTab, setActiveViewTab] = useState('ttp');
     const [showOverlaps, setShowOverlaps] = useState(false);
-    const { isSidebarCollapsed } = useOutletContext() || {};
+    const { isSidebarCollapsed, toggleSidebar } = useOutletContext() || {};
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isVoicechatDrawerOpen, setIsVoicechatDrawerOpen] = useState(false);
     const [data, setData] = useState([]);
@@ -345,6 +345,7 @@ const Mitigationttpview = () => {
                         activeTab={activeTab}
                         setActiveTab={setActiveTab}
                         collapsed={isSidebarCollapsed}
+                        toggleSidebar={toggleSidebar}
                     />
                 </div>
 

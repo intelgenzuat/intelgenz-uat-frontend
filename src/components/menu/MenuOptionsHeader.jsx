@@ -6,7 +6,7 @@ import './MenuOptionsHeader.scss';
 const menuOptions = [
     {
         key: 'emerging-threat-dashboard',
-        title: 'Emerging Threat Reports',
+        title: 'Threat Pulse',
         subtitle: 'Stay ahead of emerging threats & active feeds',
         path: '/emerging-threats',
         customIcon: (

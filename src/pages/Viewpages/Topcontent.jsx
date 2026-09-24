@@ -17,7 +17,7 @@ const Topcontent = ({ showHeliosInfo = true, children }) => {
                 <FiHome className="home-icon me-2" />
                 <span onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Home</span>
                 <span className="mx-2 text-black-50">/</span>
-                <span className="text-dark fw-medium">Emerging Threats</span>
+                <span className="text-dark fw-medium">Threat Pulse</span>
             </div>
 
             {/* Top Header specific to View Page */}
@@ -35,7 +35,7 @@ const Topcontent = ({ showHeliosInfo = true, children }) => {
                         </svg>
                     </div>
                     <h2 className="mb-0 d-flex align-items-center">
-                        <span className="header-title gradient-text pe-3">Emerging Threat Reports</span>
+                        <span className="header-title gradient-text pe-3">Threat Pulse</span>
                         {/* <span className="header-subtitle ps-3 d-none d-md-inline">Stay ahead of emerging threats</span> */}
                     </h2>
                 </div>

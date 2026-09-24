@@ -239,6 +239,7 @@ export default function View() {
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             collapsed={isSidebarCollapsed}
+            toggleSidebar={toggleSidebar}
             toggled={!isSidebarCollapsed && window.innerWidth < 992}
             onBackdropClick={toggleSidebar}
           />

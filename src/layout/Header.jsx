@@ -84,11 +84,6 @@ const Header = ({ toggleSidebar, showHamburger }) => {
               objectFit: "contain"
             }}
           />
-          {showHamburger && (
-            <button onClick={toggleSidebar} className="btn btn-link text-dark ms-3 p-0">
-              <i className="bi bi-list fs-2"></i>
-            </button>
-          )}
         </div>
         <div className="d-flex align-items-center gap-3">
           <button className={`nav-icon-btn ${location.pathname === '/' ? 'active' : ''}`} onClick={() => navigate('/')}>

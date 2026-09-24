@@ -85,6 +85,7 @@ export default function IntelCardPage() {
         <div className="intelcard-sidebar-container flex-shrink-0 h-100 overflow-hidden">
           <Intelcardsidebar
             collapsed={isSidebarCollapsed}
+            toggleSidebar={toggleSidebar}
             toggled={!isSidebarCollapsed && window.innerWidth < 992}
             onBackdropClick={toggleSidebar}
           />

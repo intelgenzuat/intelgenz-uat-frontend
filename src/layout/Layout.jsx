@@ -17,7 +17,7 @@ export default function Layout({ noFooter, showAdminSidebar }) {
 
   return (
     <div className={`d-flex flex-column ${shouldHideFooter || isScrollableInner ? 'vh-100 overflow-hidden' : 'min-vh-100'} bg-body`}>
-      <Header toggleSidebar={toggleSidebar} showHamburger={showAdminSidebar || location.pathname === View || location.pathname === mitigationttpview || location.pathname === Malwaremitigationttpview || location.pathname === IntelCard || location.pathname === IntelCardMalware || location.pathname === ThreatActorprofile || location.pathname === viewinKnowlegdeGraph || location.pathname === IntelviewinKnowlegdeGraph} />
+      <Header />
       <div className="d-flex flex-grow-1 overflow-hidden">
         {showAdminSidebar && <AdminSidebar collapsed={isSidebarCollapsed} />}
         <div className={`flex-grow-1 d-flex flex-column ${shouldHideFooter ? 'overflow-hidden' : ''} ${isScrollableInner ? 'overflow-y-auto' : ''}`} style={shouldHideFooter ? { minHeight: 0 } : {}}>

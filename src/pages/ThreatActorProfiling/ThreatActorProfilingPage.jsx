@@ -18,6 +18,7 @@ export default function ThreatActorProfilingPage() {
         <div className="flex-shrink-0 h-100 overflow-hidden">
           <ThreatActorsidebar
             collapsed={isSidebarCollapsed}
+            toggleSidebar={toggleSidebar}
             toggled={!isSidebarCollapsed && window.innerWidth < 992}
             onBackdropClick={toggleSidebar}
           />
