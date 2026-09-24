@@ -46,13 +46,13 @@ export default function ThreatActorProfilingTable() {
     opportunity: true
   });
 
-  const getThreatActorProfilingtableData = (clientName = client) => {
+  const getThreatActorProfilingtableData = (clientName = client, filtersOverride = filters) => {
     setLoading(true);
     getThreatActorProfilingtable({
       client_name: clientName,
-      capability: true,
-      intent: true,
-      opportunity: true
+      capability: filtersOverride?.capability,
+      intent: filtersOverride?.intent,
+      opportunity: filtersOverride?.opportunity
     })((response) => {
       console.log("ThreatActorProfilingtable", response);
       if (response) {
@@ -77,7 +77,7 @@ export default function ThreatActorProfilingTable() {
       const ids = selectedTechniques.map(t => t.technique_id);
       fetchThreatActorsByTechniques(ids, client, filters);
     } else {
-      getThreatActorProfilingtableData();
+      getThreatActorProfilingtableData(client, filters);
     }
   }, []);
   console.log(tabledata, 'tabledata')
@@ -110,7 +110,7 @@ export default function ThreatActorProfilingTable() {
     } else {
       // No techniques selected — reset to the initial assessment table
       setdata(null);
-      getThreatActorProfilingtableData();
+      getThreatActorProfilingtableData(client, updatedFilters);
     }
   };
 
@@ -218,7 +218,7 @@ export default function ThreatActorProfilingTable() {
       console.error("Error removing selected_techniques from localStorage:", e);
     }
     // No techniques left — fall back to assessment table
-    getThreatActorProfilingtableData();
+    getThreatActorProfilingtableData(client, filters);
   };
 
   const handleSearchSubmit = () => {
