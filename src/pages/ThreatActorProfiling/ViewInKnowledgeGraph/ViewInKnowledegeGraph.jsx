@@ -1201,16 +1201,7 @@ const ViewInKnowledgeGraph = () => {
 
                 {/* ================= RIGHT DETAIL & RELATIONSHIPS PANEL ================= */}
                 <div className="kg-details-sidebar">
-                    <div className="details-header">
-                        <div className="d-flex align-items-center justify-content-between">
-                            <span className="details-header-title">Node Inspection</span>
-                            {focusedNode && (
-                                <span className="badge bg-light text-secondary border">
-                                    {getNodeType(focusedNode)}
-                                </span>
-                            )}
-                        </div>
-                    </div>
+                  
 
                     <div className="details-scrollable-body">
                         {focusedNode ? (
