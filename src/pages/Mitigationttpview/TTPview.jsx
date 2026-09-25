@@ -171,11 +171,22 @@ const TTPview = ({
                                 </tr>
                             </thead>
                             <tbody>
-                                {mappingData.length === 0 ? (
+                                {isLoader ? (
+                                    <tr>
+                                        <td colSpan="100%" className="text-center py-5 text-muted">
+                                            <div className="d-flex justify-content-center align-items-center gap-2">
+                                                <div className="spinner-border spinner-border-sm text-primary" role="status">
+                                                    <span className="visually-hidden">Loading...</span>
+                                                </div>
+                                                <span className="fw-medium">Loading technique mapping...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ) : mappingData.length === 0 ? (
                                     <tr>
                                         <td colSpan="100%" className="text-center py-5 text-muted">
                                             <i className="bi bi-info-circle me-2"></i>
-                                            {isLoader ? 'Loading technique mapping...' : 'No technique mapping data available. Select threat actor and click "Show".'}
+                                            No technique mapping data available. Select threat actor and click "Show".
                                         </td>
                                     </tr>
                                 ) : maxRows === 0 && showOverlaps ? (
