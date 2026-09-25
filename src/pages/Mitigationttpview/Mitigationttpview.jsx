@@ -575,95 +575,55 @@ const Mitigationttpview = () => {
                 >
                     <div className="mitigation-ttp-view d-flex flex-column">
 
-                        <DefenseConvergenceTopContent category="Threat Actor" activeViewTab={activeViewTab} />
+                        <DefenseConvergenceTopContent category="Threat Actor" activeViewTab={activeViewTab}>
+                            {(() => {
+                                const isSearchDisabled = activeViewTab === 'nist' || activeViewTab === 'mitigation';
+
+                                return (
+                                    <div className="search-wrapper position-relative m-0" ref={searchWrapperRef}>
+                                        <Select
+                                            inputId="threat-actor-select"
+                                            options={selectOptions}
+                                            value={null}
+                                            inputValue={searchQuery}
+                                            onInputChange={(val, { action }) => {
+                                                if (action === 'input-change') {
+                                                    setSearchQuery(val);
+                                                }
+                                            }}
+                                            onChange={(selected) => {
+                                                if (selected?.rawItem) {
+                                                    handleSelectSuggestion(selected.rawItem);
+                                                }
+                                            }}
+                                            isDisabled={isSearchDisabled}
+                                            isLoading={pending}
+                                            placeholder="Search Threat Actor to add"
+                                            isSearchable
+                                            styles={reactSelectStyles}
+                                            components={{
+                                                ValueContainer: CustomValueContainer,
+                                                DropdownIndicator: CustomDropdownIndicator,
+                                                IndicatorSeparator: () => null,
+                                                Option: CustomOption
+                                            }}
+                                            noOptionsMessage={() =>
+                                                searchQuery.trim().length < 2
+                                                    ? 'Type at least 2 characters to search...'
+                                                    : pending
+                                                    ? 'Searching...'
+                                                    : 'No threat actor found'
+                                            }
+                                            className="malware-react-select"
+                                            classNamePrefix="malware-rs"
+                                        />
+                                    </div>
+                                );
+                            })()}
+                        </DefenseConvergenceTopContent>
 
                         <div className="view-controls-card flex-shrink-0 mx-4 mb-4">
                             <div className="view-controls-section d-flex flex-column align-items-stretch gap-3">
-                                {/* Search bar */}
-                                {(() => {
-                                    const isSearchDisabled = activeViewTab === 'nist' || activeViewTab === 'mitigation';
-
-                                    return (
-                                        <div
-                                            className={`threat-actor-search-section d-flex align-items-center justify-content-start gap-3${isSearchDisabled ? ' disabled' : ''}`}
-                                        >
-                                            <div className="d-flex flex-column">
-                                                <span
-                                                    className={`fw-medium ${isSearchDisabled ? 'text-muted' : 'text-dark'}`}
-                                                    style={{ fontSize: '14.5px' }}
-                                                >
-                                                    Enter Threat Actor Name
-                                                </span>
-                                            </div>
-                                            <div className="search-wrapper position-relative m-0" ref={searchWrapperRef}>
-                                                <Select
-                                                    inputId="threat-actor-select"
-                                                    options={selectOptions}
-                                                    value={null}
-                                                    inputValue={searchQuery}
-                                                    onInputChange={(val, { action }) => {
-                                                        if (action === 'input-change') {
-                                                            setSearchQuery(val);
-                                                        }
-                                                    }}
-                                                    onChange={(selected) => {
-                                                        if (selected?.rawItem) {
-                                                            handleSelectSuggestion(selected.rawItem);
-                                                        }
-                                                    }}
-                                                    isDisabled={isSearchDisabled}
-                                                    isLoading={pending}
-                                                    placeholder="Search Threat Actor to add"
-                                                    isSearchable
-                                                    styles={reactSelectStyles}
-                                                    components={{
-                                                        ValueContainer: CustomValueContainer,
-                                                        DropdownIndicator: CustomDropdownIndicator,
-                                                        IndicatorSeparator: () => null,
-                                                        Option: CustomOption
-                                                    }}
-                                                    noOptionsMessage={() =>
-                                                        searchQuery.trim().length < 2
-                                                            ? 'Type at least 2 characters to search...'
-                                                            : pending
-                                                            ? 'Searching...'
-                                                            : 'No threat actor found'
-                                                    }
-                                                    className="malware-react-select"
-                                                    classNamePrefix="malware-rs"
-                                                />
-                                            </div>
-
-                                            {/* Action Buttons Row pushed to end */}
-                                            <div className="ms-auto d-flex align-items-center gap-2">
-                                                {/* <button
-                                                    type="button"
-                                                    className="btn show-btn text-white flex-shrink-0"
-                                                    style={{
-                                                        cursor: isLoader ? 'not-allowed' : 'pointer',
-                                                        opacity: isLoader ? 0.75 : 1
-                                                    }}
-                                                    onClick={formik.handleSubmit}
-                                                    disabled={isLoader}
-                                                >
-                                                    {isLoader && (
-                                                        <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" style={{ width: '12px', height: '12px' }}></span>
-                                                    )}
-                                                    <span>Submit</span>
-                                                </button> */}
-
-                                                <button
-                                                    type="button"
-                                                    className="btn clear-all-btn flex-shrink-0"
-                                                    onClick={handleClearOrSelectAll}
-                                                >
-                                                    Clear all <i className="bi bi-x"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    );
-                                })()}
-
                                 {/* Threat Actors Section with Accordion */}
                                 <div className="threat-actors-section w-100">
                                     <div
@@ -675,8 +635,20 @@ const Mitigationttpview = () => {
                                             <span className="section-title">THREAT ACTORS :</span>
                                             <span className="selected-badge">{selectedMalware.length} Selected</span>
                                         </div>
-                                        <div className="accordion-toggle-icon d-flex align-items-center text-muted" style={{ fontSize: '16px' }}>
-                                            <i className={`bi ${isAccordionOpen ? 'bi-dash' : 'bi-plus'}`}></i>
+                                        <div className="d-flex align-items-center gap-3">
+                                            <button
+                                                type="button"
+                                                className="btn clear-all-btn flex-shrink-0"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleClearOrSelectAll();
+                                                }}
+                                            >
+                                                Clear all <i className="bi bi-x"></i>
+                                            </button>
+                                            <div className="accordion-toggle-icon d-flex align-items-center text-muted" style={{ fontSize: '16px' }}>
+                                                <i className={`bi ${isAccordionOpen ? 'bi-dash' : 'bi-plus'}`}></i>
+                                            </div>
                                         </div>
                                     </div>
 
