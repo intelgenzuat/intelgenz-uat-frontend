@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
+import Select, { components } from 'react-select';
 import MitigationSidebar from '../../components/sidebars/MitigationSidebar';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import '../../assets/styles/view/View.scss';
@@ -12,7 +13,65 @@ import FloatingChatButtons from '../../components/Buttons/FloatingChatButtons';
 import Voicechatdrawer from '../../components/Drawers/Voicechatdrawer';
 import Intelegenzchatdrawer from '../../components/Drawers/Intelegenzchatdrawer';
 import { useFormik } from 'formik';
+import toast from 'react-hot-toast';
 import { getThreatTTP, sendThreatDefend } from '../../Context/ThreatTTP';
+
+// Custom sub-components for pill-styled search select
+const CustomValueContainer = ({ children, ...props }) => (
+    <components.ValueContainer {...props}>
+        <i
+            className="bi bi-search text-muted"
+            style={{
+                fontSize: "13.5px",
+                marginLeft: "8px",
+                marginRight: "6px",
+                flexShrink: 0
+            }}
+        />
+        {children}
+    </components.ValueContainer>
+);
+
+const CustomDropdownIndicator = (props) => (
+    <components.DropdownIndicator {...props}>
+        <i
+            className="bi bi-filter text-muted"
+            style={{
+                fontSize: "15px",
+                marginRight: "4px"
+            }}
+        />
+    </components.DropdownIndicator>
+);
+
+const CustomOption = (props) => {
+    const { data } = props;
+    return (
+        <components.Option {...props}>
+            <div className="d-flex align-items-center justify-content-between w-100">
+                <span className="suggestion-text">{data.label}</span>
+                {data.aliases && (Array.isArray(data.aliases) ? data.aliases.length > 0 : String(data.aliases).trim().length > 0) && (
+                    <span className="badge bg-light text-secondary ms-2 text-truncate" style={{ maxWidth: '120px' }}>
+                        {Array.isArray(data.aliases) ? data.aliases.join(', ') : String(data.aliases)}
+                    </span>
+                )}
+            </div>
+        </components.Option>
+    );
+};
+
+const CHIP_COLORS = [
+    '#2563eb', // Royal Blue
+    '#f97316', // Vivid Orange
+    '#10b981', // Emerald Green
+    '#8b5cf6', // Vivid Purple
+    '#e11d48', // Crimson
+    '#eab308', // Golden Yellow
+    '#06b6d4', // Sky Cyan
+    '#d946ef', // Fuchsia
+    '#14b8a6', // Deep Teal
+    '#84cc16', // Lime Green
+];
 
 const Mitigationttpview = () => {
     const navigate = useNavigate();
@@ -167,7 +226,12 @@ const Mitigationttpview = () => {
 
     const handleToggleMalware = (threatId) => {
         setSelectedMalware((prev) => {
-            const updated = prev.includes(threatId)
+            const isCurrentlySelected = prev.includes(threatId);
+            if (!isCurrentlySelected && prev.length >= 10) {
+                toast.error('You can select a maximum of 10 threat actors.');
+                return prev;
+            }
+            const updated = isCurrentlySelected
                 ? prev.filter((id) => id !== threatId)
                 : [...prev, threatId];
             try {
@@ -226,13 +290,21 @@ const Mitigationttpview = () => {
                 ? (typeof rawMalwareId === 'number' || !isNaN(Number(rawMalwareId)) ? Number(rawMalwareId) : rawMalwareId)
                 : rawNumId);
 
-        let targetId;
         const existingMalware = threatlist.find(
             (m) => (m.name && typeof m.name === 'string' && m.name.toLowerCase() === String(itemName).toLowerCase()) ||
                 (realActorId !== undefined && (m.actor_id === realActorId || m.id === realActorId || m.malware_id === realActorId)) ||
                 (item.id !== undefined && m.id === item.id)
         );
 
+        if (!existingMalware && threatlist.length >= 10) {
+            toast.error('You can select a maximum of 10 threat actors.');
+            setSearchQuery('');
+            setData([]);
+            setShowSuggestions(false);
+            return;
+        }
+
+        let targetId;
         let updatedList = threatlist;
         if (existingMalware) {
             targetId = existingMalware.actor_id !== undefined && (typeof existingMalware.actor_id === 'number' || !String(existingMalware.actor_id).startsWith('malware-'))
@@ -329,6 +401,160 @@ const Mitigationttpview = () => {
         };
     }, []);
 
+    const selectOptions = useMemo(() => {
+        return (data || [])
+            .filter((item) => {
+                const itemName = typeof item === 'string'
+                    ? item
+                    : item?.name || item?.malware_name || item?.threat_name || item?.actor_name || item?.label || item?.title || item?.value || '';
+                const rawActorId = item?.actor_id ?? item?.threat_id ?? item?.threat_actor_id;
+                const rawMalwareId = item?.malware_id;
+                const rawNumId = typeof item?.id === 'number' ? item.id : (typeof item?.id === 'string' && !item.id.startsWith('malware-') && !item.id.startsWith('threat-') && !isNaN(Number(item.id)) ? Number(item.id) : undefined);
+
+                const realActorId = rawActorId !== undefined
+                    ? (typeof rawActorId === 'number' || !isNaN(Number(rawActorId)) ? Number(rawActorId) : rawActorId)
+                    : (rawMalwareId !== undefined
+                        ? (typeof rawMalwareId === 'number' || !isNaN(Number(rawMalwareId)) ? Number(rawMalwareId) : rawMalwareId)
+                        : rawNumId);
+
+                const isAlreadySelected = threatlist.some(
+                    (m) => (m.name && typeof m.name === 'string' && itemName && m.name.toLowerCase() === String(itemName).toLowerCase()) ||
+                        (realActorId !== undefined && (m.actor_id === realActorId || m.id === realActorId || m.malware_id === realActorId)) ||
+                        (item?.id !== undefined && m.id === item.id)
+                );
+
+                return !isAlreadySelected;
+            })
+            .map((item, index) => {
+                const itemName = typeof item === 'string'
+                    ? item
+                    : item?.name || item?.malware_name || item?.threat_name || item?.actor_name || item?.label || item?.title || item?.value || '';
+                const itemKey = item?.id || item?._id || item?.actor_id || index;
+                return {
+                    value: itemKey,
+                    label: String(itemName),
+                    rawItem: item,
+                    aliases: item?.aliases
+                };
+            });
+    }, [data, threatlist]);
+
+    const reactSelectStyles = useMemo(() => ({
+        container: (base) => ({
+            ...base,
+            width: '320px',
+            minWidth: '320px',
+            maxWidth: '320px'
+        }),
+        control: (base, state) => ({
+            ...base,
+            height: '38px',
+            minHeight: '38px',
+            flexWrap: 'nowrap',
+            overflow: 'hidden',
+            fontSize: '13.5px',
+            borderColor: state.isFocused ? '#cbd5e1' : '#e2e8f0',
+            boxShadow: 'none',
+            borderRadius: '50px',
+            backgroundColor: '#f8fafc',
+            paddingLeft: '4px',
+            paddingRight: '6px',
+            cursor: 'text',
+            transition: 'all 0.2s ease',
+            '&:hover': { borderColor: '#cbd5e1', backgroundColor: '#f8fafc' }
+        }),
+        valueContainer: (base) => ({
+            ...base,
+            height: '38px',
+            flexWrap: 'nowrap',
+            overflowX: 'auto',
+            overflowY: 'hidden',
+            padding: '0 4px',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            '&::-webkit-scrollbar': { display: 'none' }
+        }),
+        input: (base) => ({
+            ...base,
+            color: '#1e293b',
+            margin: 0,
+            padding: 0
+        }),
+        indicatorsContainer: (base) => ({
+            ...base,
+            height: '38px',
+            flexShrink: 0
+        }),
+        dropdownIndicator: (base) => ({
+            ...base,
+            padding: '0 6px',
+            color: '#64748b',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            '&:hover': { color: '#334155' }
+        }),
+        clearIndicator: (base) => ({
+            ...base,
+            padding: '0 4px',
+            color: '#94a3b8',
+            cursor: 'pointer',
+            '&:hover': { color: '#64748b' }
+        }),
+        indicatorSeparator: () => ({ display: 'none' }),
+        menu: (base) => ({
+            ...base,
+            borderRadius: '12px',
+            zIndex: 1050,
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
+            border: '1px solid #e2e8f0',
+            overflow: 'hidden',
+            marginTop: '6px',
+            width: '320px',
+            backgroundColor: '#ffffff'
+        }),
+        menuList: (base) => ({
+            ...base,
+            padding: '6px',
+            maxHeight: '260px'
+        }),
+        option: (base, state) => ({
+            ...base,
+            borderRadius: '8px',
+            padding: '8px 12px',
+            fontSize: '13.5px',
+            backgroundColor: state.isSelected ? '#eff6ff' : state.isFocused ? '#f1f5f9' : 'transparent',
+            color: state.isSelected ? '#1d4ed8' : '#334155',
+            fontWeight: 500,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            '&:active': { backgroundColor: '#e2e8f0' }
+        }),
+        placeholder: (base) => ({
+            ...base,
+            color: '#94a3b8',
+            fontSize: '13.5px',
+            fontWeight: 400,
+            whiteSpace: 'nowrap'
+        }),
+        loadingMessage: (base) => ({
+            ...base,
+            fontSize: '13px',
+            color: '#64748b',
+            padding: '12px 16px'
+        }),
+        noOptionsMessage: (base) => ({
+            ...base,
+            fontSize: '13px',
+            color: '#64748b',
+            padding: '12px 16px'
+        })
+    }), []);
+
     return (
         <div className="view-page-container container-fluid p-0 d-flex flex-column h-100 overflow-hidden">
             <div className="d-flex flex-grow-1 overflow-hidden" style={{ minHeight: 0 }}>
@@ -356,7 +582,6 @@ const Mitigationttpview = () => {
                                 {/* Search bar */}
                                 {(() => {
                                     const isSearchDisabled = activeViewTab === 'nist' || activeViewTab === 'mitigation';
-                                    const hasMinChars = searchQuery.trim().length >= 2;
 
                                     return (
                                         <div
@@ -371,79 +596,42 @@ const Mitigationttpview = () => {
                                                 </span>
                                             </div>
                                             <div className="search-wrapper position-relative m-0" ref={searchWrapperRef}>
-                                                <i
-                                                    className="bi bi-search position-absolute text-muted"
-                                                    style={{ left: '12px', top: '50%', transform: 'translateY(-50%)' }}
-                                                ></i>
-                                                <input
-                                                    type="text"
-                                                    className="form-control rounded-pill ps-5 pe-5"
+                                                <Select
+                                                    inputId="threat-actor-select"
+                                                    options={selectOptions}
+                                                    value={null}
+                                                    inputValue={searchQuery}
+                                                    onInputChange={(val, { action }) => {
+                                                        if (action === 'input-change') {
+                                                            setSearchQuery(val);
+                                                        }
+                                                    }}
+                                                    onChange={(selected) => {
+                                                        if (selected?.rawItem) {
+                                                            handleSelectSuggestion(selected.rawItem);
+                                                        }
+                                                    }}
+                                                    isDisabled={isSearchDisabled}
+                                                    isLoading={pending}
                                                     placeholder="Search Threat Actor to add"
-                                                    disabled={isSearchDisabled}
-                                                    autoComplete="off"
-                                                    value={searchQuery}
-                                                    onChange={(e) => {
-                                                        const val = e.target.value;
-                                                        setSearchQuery(val);
-                                                        if (val.trim().length >= 2) {
-                                                            setShowSuggestions(true);
-                                                        } else {
-                                                            setShowSuggestions(false);
-                                                        }
+                                                    isSearchable
+                                                    styles={reactSelectStyles}
+                                                    components={{
+                                                        ValueContainer: CustomValueContainer,
+                                                        DropdownIndicator: CustomDropdownIndicator,
+                                                        IndicatorSeparator: () => null,
+                                                        Option: CustomOption
                                                     }}
-                                                    onFocus={() => {
-                                                        if (searchQuery.trim().length >= 2) {
-                                                            setShowSuggestions(true);
-                                                        }
-                                                    }}
+                                                    noOptionsMessage={() =>
+                                                        searchQuery.trim().length < 2
+                                                            ? 'Type at least 2 characters to search...'
+                                                            : pending
+                                                            ? 'Searching...'
+                                                            : 'No threat actor found'
+                                                    }
+                                                    className="malware-react-select"
+                                                    classNamePrefix="malware-rs"
                                                 />
-                                                <i
-                                                    className="bi bi-filter position-absolute text-muted"
-                                                    style={{ right: '16px', top: '50%', transform: 'translateY(-50%)' }}
-                                                ></i>
-
-                                                {/* Suggestions Dropdown */}
-                                                {showSuggestions && !isSearchDisabled && hasMinChars && (
-                                                    <div className="search-suggestions-dropdown">
-                                                        {pending ? (
-                                                            <div className="suggestion-loading">
-                                                                <div className="spinner-border spinner-border-sm me-2 text-primary" role="status"></div>
-                                                                <span>Loading suggestions...</span>
-                                                            </div>
-                                                        ) : data && data.length > 0 ? (
-                                                            <ul className="suggestion-list">
-                                                                {data.map((item, index) => {
-                                                                    const itemName = typeof item === 'string'
-                                                                        ? item
-                                                                        : item?.name || item?.malware_name || item?.threat_name || item?.actor_name || item?.label || item?.title || item?.value || '';
-                                                                    const itemKey = item?.id || item?._id || index;
-
-                                                                    return (
-                                                                        <li
-                                                                            key={itemKey}
-                                                                            className="suggestion-item"
-                                                                            onMouseDown={(e) => {
-                                                                                e.preventDefault();
-                                                                                handleSelectSuggestion(item);
-                                                                            }}
-                                                                        >
-                                                                            <span className="suggestion-text">{String(itemName)}</span>
-                                                                            {item?.aliases && item.aliases.length > 0 && (
-                                                                                <span className="badge bg-light text-secondary ms-2 text-truncate" style={{ maxWidth: '120px' }}>
-                                                                                    {Array.isArray(item.aliases) ? item.aliases.join(', ') : String(item.aliases)}
-                                                                                </span>
-                                                                            )}
-                                                                        </li>
-                                                                    );
-                                                                })}
-                                                            </ul>
-                                                        ) : (
-                                                            <div className="suggestion-empty">
-                                                                <span>No malware found</span>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                )}
                                             </div>
 
                                             {/* Action Buttons Row pushed to end */}
@@ -505,7 +693,7 @@ const Mitigationttpview = () => {
                                                             className={`actor-pill cursor-pointer ${isSelected ? 'active' : ''}`}
                                                             onClick={() => handleToggleMalware(malwareKey)}
                                                         >
-                                                            <div className="dot" style={{ backgroundColor: idx % 2 === 0 ? '#3b82f6' : '#5200ff' }}></div>
+                                                            <div className="dot" style={{ backgroundColor: CHIP_COLORS[idx % CHIP_COLORS.length] }}></div>
                                                             <span>{displayName}</span>
                                                             <i className={`bi ${isSelected ? 'bi-check-square-fill' : 'bi-square text-muted'}`}></i>
                                                             {handleRemoveMalware && (

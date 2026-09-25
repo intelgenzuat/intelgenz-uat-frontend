@@ -1,5 +1,53 @@
 import React, { useState } from 'react';
 
+const CHIP_COLORS = [
+    '#2563eb', // Royal Blue
+    '#f97316', // Vivid Orange
+    '#10b981', // Emerald Green
+    '#8b5cf6', // Vivid Purple
+    '#e11d48', // Crimson
+    '#eab308', // Golden Yellow
+    '#06b6d4', // Sky Cyan
+    '#d946ef', // Fuchsia
+    '#14b8a6', // Deep Teal
+    '#84cc16', // Lime Green
+];
+
+const getTechniqueDotStyle = (tech, threatlist) => {
+    const techActors = Array.isArray(tech.actors)
+        ? tech.actors
+        : (Array.isArray(tech.malwares) ? tech.malwares : []);
+
+    const matchedColors = [];
+
+    threatlist.forEach((item, i) => {
+        const itemId = item.actor_id ?? item.malware_id ?? item.id;
+        const itemName = item.name ? String(item.name).trim().toLowerCase() : '';
+
+        const isMatch = techActors.some((a) => {
+            const aId = a.actor_id ?? a.malware_id ?? a.id;
+            const aName = (a.name ?? a.actor_name ?? a.malware_name) ? String(a.name ?? a.actor_name ?? a.malware_name).trim().toLowerCase() : '';
+            return (aId !== undefined && itemId !== undefined && String(aId) === String(itemId)) ||
+                   (aName && itemName && aName === itemName);
+        }) || (tech.actor_id !== undefined && itemId !== undefined && String(tech.actor_id) === String(itemId)) ||
+              (tech.malware_id !== undefined && itemId !== undefined && String(tech.malware_id) === String(itemId)) ||
+              (tech.actor_name && itemName && String(tech.actor_name).trim().toLowerCase() === itemName) ||
+              (tech.malware_name && itemName && String(tech.malware_name).trim().toLowerCase() === itemName);
+
+        if (isMatch) {
+            matchedColors.push(CHIP_COLORS[i % CHIP_COLORS.length]);
+        }
+    });
+
+    if (matchedColors.length === 0) {
+        return { backgroundColor: CHIP_COLORS[0] };
+    }
+    if (matchedColors.length === 1) {
+        return { backgroundColor: matchedColors[0] };
+    }
+    return { background: `linear-gradient(135deg, ${matchedColors.join(', ')})` };
+};
+
 const TTPview = ({
     showOverlaps,
     setShowOverlaps,
@@ -57,17 +105,18 @@ const TTPview = ({
                 (tech.overlap_percentage !== undefined && tech.overlap_percentage > 0)
             );
             const overlapClass = getOverlapClass(tech.overlap_percentage, hasOverlap);
-            const dotClass = hasOverlap ? 'bg-danger' : 'bg-success';
+            const dotStyle = getTechniqueDotStyle(tech, threatlist);
 
             return {
                 ttp: tech.technique_id || tech.id || '',
                 name: tech.technique_name || tech.name || '',
                 subtechnique: tech.subtechnique_name,
                 overlap: overlapClass,
-                dot: dotClass,
+                dotStyle: dotStyle,
                 has_overlap: hasOverlap,
                 overlap_count: tech.overlap_count,
                 overlap_percentage: tech.overlap_percentage,
+                actors: tech.actors || [],
                 malwares: tech.malwares || [],
             };
         }),
@@ -211,7 +260,7 @@ const TTPview = ({
                                                     <td key={colIndex}>
                                                         <div className={`ttp-cell ${cell.overlap}`}>
                                                             <div className="ttp-id-wrapper">
-                                                                <div className={`dot ${cell.dot}`}></div>
+                                                                <div className="dot" style={cell.dotStyle}></div>
                                                                 {cell.ttp}
                                                                 <i
                                                                     className="bi bi-info-circle text-muted"
@@ -236,11 +285,16 @@ const TTPview = ({
                             MALWARE TECHNIQUES : <span>Click pill to see TTP's mapped to selected threat actor.</span>
                         </div>
                         <div className="footer-pills">
-                            {threatlist.filter(m => selectedMalware.includes(m.id) || (m.actor_id !== undefined && selectedMalware.includes(m.actor_id))).map((malware, idx) => (
-                                <div key={malware.id ?? malware.actor_id ?? idx} className="footer-pill">
-                                    <div className="dot" style={{ backgroundColor: '#3b82f6' }}></div> {malware.name} <i className="bi bi-chevron-right"></i>
-                                </div>
-                            ))}
+                            {threatlist.map((malware, originalIdx) => {
+                                const isSelected = selectedMalware.includes(malware.id) || (malware.actor_id !== undefined && selectedMalware.includes(malware.actor_id));
+                                if (!isSelected) return null;
+                                const dotColor = CHIP_COLORS[originalIdx % CHIP_COLORS.length];
+                                return (
+                                    <div key={malware.id ?? malware.actor_id ?? originalIdx} className="footer-pill">
+                                        <div className="dot" style={{ backgroundColor: dotColor }}></div> {malware.name} <i className="bi bi-chevron-right"></i>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>

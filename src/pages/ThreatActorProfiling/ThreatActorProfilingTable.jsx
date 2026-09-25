@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
+import Select, { components } from 'react-select';
 import { useNavigate } from 'react-router-dom';
 import { FiHome } from 'react-icons/fi';
 import { PiDiamondFill } from 'react-icons/pi';
@@ -8,6 +9,62 @@ import logo from '../../assets/images/logo.jpeg';
 import '../../assets/styles/threatactorprofile/threatactorprofilimg.scss';
 import { getThreatActorProfiling, getThreatActorByTechniques, getThreatActorProfilingtable } from '../../Context/ThreatActorprofiling';
 import AdversaryTriageTopcontent from './AdversaryTriageTopcontent';
+import toast from 'react-hot-toast';
+
+// Custom sub-components for pill-styled search select
+const CustomValueContainer = ({ children, ...props }) => (
+  <components.ValueContainer {...props}>
+    <i
+      className="bi bi-search text-muted"
+      style={{
+        fontSize: "13.5px",
+        marginLeft: "8px",
+        marginRight: "6px",
+        flexShrink: 0
+      }}
+    />
+    {children}
+  </components.ValueContainer>
+);
+
+const CustomDropdownIndicator = (props) => (
+  <components.DropdownIndicator {...props}>
+    <i
+      className="bi bi-filter text-muted"
+      style={{
+        fontSize: "15px",
+        marginRight: "4px"
+      }}
+    />
+  </components.DropdownIndicator>
+);
+
+const CustomOption = (props) => {
+  const { data } = props;
+  const isSelected = data.isSelected;
+  return (
+    <components.Option {...props}>
+      <div className="d-flex align-items-center justify-content-between w-100">
+        <div className="d-flex align-items-center gap-2 text-truncate">
+          {data.technique_id && (
+            <span className="suggestion-technique-id">{String(data.technique_id)}</span>
+          )}
+          <span className="suggestion-text text-truncate">{String(data.technique_name || data.label)}</span>
+        </div>
+        <div className="d-flex align-items-center gap-2 flex-shrink-0 ms-2">
+          {data.tactic && (
+            <span className="badge bg-light text-secondary text-truncate" style={{ maxWidth: '100px', fontSize: '10px' }}>
+              {String(data.tactic)}
+            </span>
+          )}
+          {isSelected && (
+            <i className="bi bi-check-circle-fill" style={{ color: '#5200ff', fontSize: '13px' }}></i>
+          )}
+        </div>
+      </div>
+    </components.Option>
+  );
+};
 
 export default function ThreatActorProfilingTable() {
   const navigate = useNavigate();
@@ -182,6 +239,12 @@ export default function ThreatActorProfilingTable() {
     if (exists) {
       updated = selectedTechniques.filter(t => t.technique_id !== techId);
     } else {
+      if (selectedTechniques.length >= 10) {
+        toast.error('You can select a maximum of 10 techniques.');
+        setShowSuggestions(false);
+        setTechniqueId('');
+        return;
+      }
       updated = [...selectedTechniques, {
         technique_id: techId,
         name: techName
@@ -363,6 +426,147 @@ export default function ThreatActorProfilingTable() {
   const startEntry = processedActors.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1;
   const endEntry = Math.min(currentPage * ITEMS_PER_PAGE, processedActors.length);
 
+  const selectOptions = useMemo(() => {
+    return (suggestions || [])
+      .filter((item) => {
+        const itemName = item?.name || item?.threat_name || item?.actor_name || item?.technique_name || '';
+        const techId = item?.technique_id || item?.id || item?.actor_id || '';
+        const isAlreadySelected = selectedTechniques.some(
+          t => (techId && t.technique_id === techId) || (itemName && t.name && t.name.toLowerCase() === itemName.toLowerCase())
+        );
+        return !isAlreadySelected;
+      })
+      .map((item, index) => {
+        const itemKey = item?.technique_id || item?.id || item?.actor_id || index;
+        const itemName = item?.name || item?.threat_name || item?.actor_name || item?.technique_name || '';
+        const techId = item?.technique_id || item?.id || item?.actor_id || '';
+        return {
+          value: itemKey,
+          label: String(techId ? `${techId} - ${itemName}` : itemName),
+          technique_id: techId,
+          technique_name: itemName,
+          tactic: item?.tactic,
+          rawItem: item
+        };
+      });
+  }, [suggestions, selectedTechniques]);
+
+  const reactSelectStyles = useMemo(() => ({
+    container: (base) => ({
+      ...base,
+      width: '320px',
+      minWidth: '320px',
+      maxWidth: '320px'
+    }),
+    control: (base, state) => ({
+      ...base,
+      height: '38px',
+      minHeight: '38px',
+      flexWrap: 'nowrap',
+      overflow: 'hidden',
+      fontSize: '13.5px',
+      borderColor: state.isFocused ? '#cbd5e1' : '#e2e8f0',
+      boxShadow: 'none',
+      borderRadius: '50px',
+      backgroundColor: '#f8fafc',
+      paddingLeft: '4px',
+      paddingRight: '6px',
+      cursor: 'text',
+      transition: 'all 0.2s ease',
+      '&:hover': { borderColor: '#cbd5e1', backgroundColor: '#f8fafc' }
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      height: '38px',
+      flexWrap: 'nowrap',
+      overflowX: 'auto',
+      overflowY: 'hidden',
+      padding: '0 4px',
+      scrollbarWidth: 'none',
+      msOverflowStyle: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      '&::-webkit-scrollbar': { display: 'none' }
+    }),
+    input: (base) => ({
+      ...base,
+      color: '#1e293b',
+      margin: 0,
+      padding: 0
+    }),
+    indicatorsContainer: (base) => ({
+      ...base,
+      height: '38px',
+      flexShrink: 0
+    }),
+    dropdownIndicator: (base) => ({
+      ...base,
+      padding: '0 6px',
+      color: '#64748b',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      '&:hover': { color: '#334155' }
+    }),
+    clearIndicator: (base) => ({
+      ...base,
+      padding: '0 4px',
+      color: '#94a3b8',
+      cursor: 'pointer',
+      '&:hover': { color: '#64748b' }
+    }),
+    indicatorSeparator: () => ({ display: 'none' }),
+    menu: (base) => ({
+      ...base,
+      borderRadius: '12px',
+      zIndex: 1050,
+      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
+      border: '1px solid #e2e8f0',
+      overflow: 'hidden',
+      marginTop: '6px',
+      width: '320px',
+      backgroundColor: '#ffffff'
+    }),
+    menuList: (base) => ({
+      ...base,
+      padding: '6px',
+      maxHeight: '260px'
+    }),
+    option: (base, state) => ({
+      ...base,
+      borderRadius: '8px',
+      padding: '8px 12px',
+      fontSize: '13.5px',
+      backgroundColor: state.isSelected ? '#eff6ff' : state.isFocused ? '#f1f5f9' : 'transparent',
+      color: state.isSelected ? '#1d4ed8' : '#334155',
+      fontWeight: 500,
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      '&:active': { backgroundColor: '#e2e8f0' }
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: '#94a3b8',
+      fontSize: '13.5px',
+      fontWeight: 400,
+      whiteSpace: 'nowrap'
+    }),
+    loadingMessage: (base) => ({
+      ...base,
+      fontSize: '13px',
+      color: '#64748b',
+      padding: '12px 16px'
+    }),
+    noOptionsMessage: (base) => ({
+      ...base,
+      fontSize: '13px',
+      color: '#64748b',
+      padding: '12px 16px'
+    })
+  }), []);
+
   return (
     <div className="threat-actor-detail-page">
       {/* Top Header Section */}
@@ -379,90 +583,41 @@ export default function ThreatActorProfilingTable() {
               </span>
             </div>
             <div className="search-wrapper position-relative m-0" ref={searchWrapperRef}>
-              <i
-                className="bi bi-search position-absolute text-muted"
-                style={{ left: '12px', top: '50%', transform: 'translateY(-50%)' }}
-              ></i>
-              <input
-                type="text"
-                className="form-control rounded-pill ps-5 pe-5"
+              <Select
+                inputId="technique-select"
+                options={selectOptions}
+                value={null}
+                inputValue={techniqueId}
+                onInputChange={(val, { action }) => {
+                  if (action === 'input-change') {
+                    setTechniqueId(val);
+                  }
+                }}
+                onChange={(selected) => {
+                  if (selected?.rawItem) {
+                    handleSelectTechnique(selected.rawItem);
+                  }
+                }}
+                isLoading={searchLoading}
                 placeholder="(T1059.001,T1059.002)"
-                autoComplete="off"
-                value={techniqueId}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setTechniqueId(val);
-                  if (error) setError('');
-                  if (val.trim().length >= 2) {
-                    setShowSuggestions(true);
-                  } else {
-                    setShowSuggestions(false);
-                  }
+                isSearchable
+                styles={reactSelectStyles}
+                components={{
+                  ValueContainer: CustomValueContainer,
+                  DropdownIndicator: CustomDropdownIndicator,
+                  IndicatorSeparator: () => null,
+                  Option: CustomOption
                 }}
-                onFocus={() => {
-                  if (techniqueId.trim().length >= 2) {
-                    setShowSuggestions(true);
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSearchSubmit();
-                  }
-                }}
+                noOptionsMessage={() =>
+                  techniqueId.trim().length < 2
+                    ? 'Type at least 2 characters to search...'
+                    : searchLoading
+                    ? 'Searching...'
+                    : 'No MITRE Technique found'
+                }
+                className="malware-react-select"
+                classNamePrefix="malware-rs"
               />
-              <i
-                className="bi bi-filter position-absolute text-muted"
-                style={{ right: '16px', top: '50%', transform: 'translateY(-50%)' }}
-              ></i>
-
-              {/* Suggestions Dropdown */}
-              {showSuggestions && techniqueId.trim().length >= 2 && (
-                <div className="search-suggestions-dropdown">
-                  {searchLoading ? (
-                    <div className="suggestion-loading">
-                      <div className="spinner-border spinner-border-sm me-2 text-primary" role="status"></div>
-                      <span>Loading suggestions...</span>
-                    </div>
-                  ) : suggestions && suggestions.length > 0 ? (
-                    <ul className="suggestion-list">
-                      {suggestions.map((item, index) => {
-                        const itemKey = item?.technique_id || item?.id || item?.actor_id || index;
-                        const isSelected = selectedTechniques.some(t => t.technique_id === (item.technique_id || item.id || item.actor_id || item.name));
-                        const itemName = item?.name || item?.threat_name || item?.actor_name || item?.technique_name || '';
-                        const techId = item?.technique_id || item?.id || item?.actor_id || '';
-
-                        return (
-                          <li
-                            key={itemKey}
-                            className={`suggestion-item ${isSelected ? 'selected' : ''}`}
-                            onMouseDown={(e) => {
-                              e.preventDefault();
-                              handleSelectTechnique(item);
-                            }}
-                          >
-                            {techId && (
-                              <span className="suggestion-technique-id">{String(techId)}</span>
-                            )}
-                            <span className="suggestion-text">{String(itemName || techId)}</span>
-                            {item?.tactic && (
-                              <span className="badge bg-light text-secondary text-truncate" style={{ maxWidth: '100px', fontSize: '10px' }}>
-                                {String(item.tactic)}
-                              </span>
-                            )}
-                            {isSelected && (
-                              <i className="bi bi-check-circle-fill ms-auto" style={{ color: '#5200ff', fontSize: '13px', flexShrink: 0 }}></i>
-                            )}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  ) : (
-                    <div className="suggestion-empty">
-                      <span>No MITRE Technique found</span>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
 
             {/* Action Buttons Row pushed to end */}

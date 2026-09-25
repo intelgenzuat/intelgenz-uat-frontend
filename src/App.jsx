@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Homepage from './pages/Homepage/Homepage';
 import View from './pages/Viewpages/View';
 import ViewReport from './pages/Viewpages/ViewReport';
@@ -9,15 +10,18 @@ import Privateroutes from './Privateroutes';
 
 function App() {
   return (
-    <Routes>
-      <Route exact path="/login" element={<Login />} />
-      <Route exact path="/*" element={<Privateroutes />} />
+    <>
+      <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
+      <Routes>
+        <Route exact path="/login" element={<Login />} />
+        <Route exact path="/*" element={<Privateroutes />} />
 
-      {/* <Route path="/" element={<Layout><Homepage /></Layout>} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/view" element={<Layout noFooter><View /></Layout>} />
-      <Route path="/view-report" element={<Layout noFooter><ViewReport /></Layout>} /> */}
-    </Routes>
+        {/* <Route path="/" element={<Layout><Homepage /></Layout>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/view" element={<Layout noFooter><View /></Layout>} />
+        <Route path="/view-report" element={<Layout noFooter><ViewReport /></Layout>} /> */}
+      </Routes>
+    </>
   );
 }
 

@@ -234,7 +234,7 @@ const MitigationView = ({ showOverlaps }) => {
                                     className={`actor-pill cursor-pointer ${isSelected ? 'active' : ''}`}
                                     onClick={() => handleToggleActor(actor.id)}
                                 >
-                                    <div className="dot" style={{ backgroundColor: idx === 0 || idx === 3 ? '#3b82f6' : '#5200ff' }}></div>
+                                    <div className="dot" style={{ backgroundColor: ['#2563eb', '#f97316', '#10b981', '#8b5cf6', '#e11d48', '#eab308'][idx % 6] }}></div>
                                     {actor.name}
                                     <i className={`bi ${isSelected ? 'bi-check-square-fill' : 'bi-square text-muted'}`}></i>
                                 </div>
