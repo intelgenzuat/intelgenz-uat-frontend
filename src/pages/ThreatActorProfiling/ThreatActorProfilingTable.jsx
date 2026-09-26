@@ -570,84 +570,49 @@ export default function ThreatActorProfilingTable() {
   return (
     <div className="threat-actor-detail-page">
       {/* Top Header Section */}
-      <AdversaryTriageTopcontent />
+      <AdversaryTriageTopcontent>
+        <div className="search-wrapper position-relative m-0" ref={searchWrapperRef}>
+          <Select
+            inputId="technique-select"
+            options={selectOptions}
+            value={null}
+            inputValue={techniqueId}
+            onInputChange={(val, { action }) => {
+              if (action === 'input-change') {
+                setTechniqueId(val);
+              }
+            }}
+            onChange={(selected) => {
+              if (selected?.rawItem) {
+                handleSelectTechnique(selected.rawItem);
+              }
+            }}
+            isLoading={searchLoading}
+            placeholder="Enter MITRE Technique IDs (T1059.001,T1059.002)"
+            isSearchable
+            styles={reactSelectStyles}
+            components={{
+              ValueContainer: CustomValueContainer,
+              DropdownIndicator: CustomDropdownIndicator,
+              IndicatorSeparator: () => null,
+              Option: CustomOption
+            }}
+            noOptionsMessage={() =>
+              techniqueId.trim().length < 2
+                ? 'Type at least 2 characters to search...'
+                : searchLoading
+                ? 'Searching...'
+                : 'No MITRE Technique found'
+            }
+            className="malware-react-select"
+            classNamePrefix="malware-rs"
+          />
+        </div>
+      </AdversaryTriageTopcontent>
 
       {/* View Controls Card */}
       <div className="view-controls-card flex-shrink-0 mx-4 mb-4">
         <div className="view-controls-section d-flex flex-column align-items-stretch gap-3">
-          {/* Search bar */}
-          <div className="threat-actor-search-section d-flex align-items-center justify-content-start gap-3">
-            <div className="d-flex flex-column">
-              <span className="fw-medium text-dark" style={{ fontSize: '14.5px' }}>
-                Enter MITRE Technique IDs
-              </span>
-            </div>
-            <div className="search-wrapper position-relative m-0" ref={searchWrapperRef}>
-              <Select
-                inputId="technique-select"
-                options={selectOptions}
-                value={null}
-                inputValue={techniqueId}
-                onInputChange={(val, { action }) => {
-                  if (action === 'input-change') {
-                    setTechniqueId(val);
-                  }
-                }}
-                onChange={(selected) => {
-                  if (selected?.rawItem) {
-                    handleSelectTechnique(selected.rawItem);
-                  }
-                }}
-                isLoading={searchLoading}
-                placeholder="(T1059.001,T1059.002)"
-                isSearchable
-                styles={reactSelectStyles}
-                components={{
-                  ValueContainer: CustomValueContainer,
-                  DropdownIndicator: CustomDropdownIndicator,
-                  IndicatorSeparator: () => null,
-                  Option: CustomOption
-                }}
-                noOptionsMessage={() =>
-                  techniqueId.trim().length < 2
-                    ? 'Type at least 2 characters to search...'
-                    : searchLoading
-                    ? 'Searching...'
-                    : 'No MITRE Technique found'
-                }
-                className="malware-react-select"
-                classNamePrefix="malware-rs"
-              />
-            </div>
-
-            {/* Action Buttons Row pushed to end */}
-            <div className="ms-auto d-flex align-items-center gap-2">
-              <button
-                type="button"
-                className="btn show-btn text-white flex-shrink-0"
-                style={{
-                  cursor: submitLoading ? 'not-allowed' : 'pointer',
-                  opacity: submitLoading ? 0.75 : 1
-                }}
-                onClick={handleShowThreatActors}
-                disabled={submitLoading || selectedTechniques.length === 0}
-              >
-                {submitLoading && (
-                  <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" style={{ width: '12px', height: '12px' }}></span>
-                )}
-                <span>Submit</span>
-              </button>
-
-              <button
-                type="button"
-                className="btn clear-all-btn flex-shrink-0"
-                onClick={handleClearAllTechniques}
-              >
-                Clear all <i className="bi bi-x"></i>
-              </button>
-            </div>
-          </div>
-
           {error && (
             <div className="text-danger small ps-2">
               <i className="bi bi-exclamation-circle me-1"></i>
@@ -667,10 +632,40 @@ export default function ThreatActorProfilingTable() {
                 <span className="selected-badge">{selectedTechniques.length} Selected</span>
               </div>
 
+              <div className="d-flex align-items-center gap-2">
+                <button
+                  type="button"
+                  className="btn show-btn text-white flex-shrink-0"
+                  style={{
+                    cursor: submitLoading ? 'not-allowed' : 'pointer',
+                    opacity: submitLoading ? 0.75 : 1
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleShowThreatActors();
+                  }}
+                  disabled={submitLoading || selectedTechniques.length === 0}
+                >
+                  {submitLoading && (
+                    <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" style={{ width: '12px', height: '12px' }}></span>
+                  )}
+                  <span>Submit</span>
+                </button>
 
+                <button
+                  type="button"
+                  className="btn clear-all-btn flex-shrink-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClearAllTechniques();
+                  }}
+                >
+                  Clear all <i className="bi bi-x"></i>
+                </button>
 
-              <div className="accordion-toggle-icon d-flex align-items-center text-muted" style={{ fontSize: '16px' }}>
-                <i className={`bi ${isAccordionOpen ? 'bi-dash' : 'bi-plus'}`}></i>
+                <div className="accordion-toggle-icon d-flex align-items-center text-muted" style={{ fontSize: '16px' }}>
+                  <i className={`bi ${isAccordionOpen ? 'bi-dash' : 'bi-plus'}`}></i>
+                </div>
               </div>
             </div>
 
