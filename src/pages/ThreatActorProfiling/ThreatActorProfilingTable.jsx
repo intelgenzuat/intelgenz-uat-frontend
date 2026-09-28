@@ -1,13 +1,10 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import Select, { components } from 'react-select';
-import { useNavigate } from 'react-router-dom';
-import { FiHome } from 'react-icons/fi';
 import { PiDiamondFill } from 'react-icons/pi';
 import { GoFlame } from 'react-icons/go';
-import cube from '../../assets/images/cube.png';
 import logo from '../../assets/images/logo.jpeg';
 import '../../assets/styles/threatactorprofile/threatactorprofilimg.scss';
-import { getThreatActorProfiling, getThreatActorByTechniques, getThreatActorProfilingtable } from '../../Context/ThreatActorprofiling';
+import { getThreatActorProfiling, getThreatActorByTechniques } from '../../Context/ThreatActorprofiling';
 import AdversaryTriageTopcontent from './AdversaryTriageTopcontent';
 import toast from 'react-hot-toast';
 
@@ -67,7 +64,6 @@ const CustomOption = (props) => {
 };
 
 export default function ThreatActorProfilingTable() {
-  const navigate = useNavigate();
   const [techniqueId, setTechniqueId] = useState('');
   const [error, setError] = useState('');
   const [data, setdata] = useState(null);
@@ -77,7 +73,6 @@ export default function ThreatActorProfilingTable() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const searchWrapperRef = useRef(null);
-  const [tabledata, setTableData] = useState([]);
   const client = "MERIDIAN FINANCIAL GROUP";
   const ITEMS_PER_PAGE = 10;
   const [currentPage, setCurrentPage] = useState(1);
@@ -103,46 +98,12 @@ export default function ThreatActorProfilingTable() {
     opportunity: true
   });
 
-  const getThreatActorProfilingtableData = (clientName = client, filtersOverride = filters) => {
-    setLoading(true);
-    getThreatActorProfilingtable({
-      client_name: clientName,
-      capability: filtersOverride?.capability,
-      intent: filtersOverride?.intent,
-      opportunity: filtersOverride?.opportunity
-    })((response) => {
-      console.log("ThreatActorProfilingtable", response);
-      if (response) {
-        // Normalize the response into a flat array
-        let actors = [];
-        if (Array.isArray(response)) actors = response;
-        else if (Array.isArray(response?.actors)) actors = response.actors;
-        else if (Array.isArray(response?.items)) actors = response.items;
-        else if (Array.isArray(response?.data?.items)) actors = response.data.items;
-        else if (Array.isArray(response?.data)) actors = response.data;
-        else if (Array.isArray(response?.results)) actors = response.results;
-        setTableData(actors);
-      }
-      setLoading(false);
-    });
-  };
-
-  useEffect(() => {
-    // If techniques were saved in localStorage, use the by-techniques API on load;
-    // otherwise fall back to the default by-assessment table
-    if (selectedTechniques.length > 0) {
-      const ids = selectedTechniques.map(t => t.technique_id);
-      fetchThreatActorsByTechniques(ids, client, filters);
-    } else {
-      getThreatActorProfilingtableData(client, filters);
-    }
-  }, []);
-  console.log(tabledata, 'tabledata')
-
-  // filtersOverride lets callers pass the latest filter values before React state has updated
-  // setLoadingFn controls which loading state to update (table spinner vs submit button)
+  // Fetch threat actors by selected techniques
   const fetchThreatActorsByTechniques = (techniqueIds, clientName = client, filtersOverride = filters, setLoadingFn = setLoading) => {
-    if (!techniqueIds || (Array.isArray(techniqueIds) && techniqueIds.length === 0)) return;
+    if (!techniqueIds || (Array.isArray(techniqueIds) && techniqueIds.length === 0)) {
+      setdata(null);
+      return;
+    }
     setLoadingFn(true);
     getThreatActorByTechniques({
       technique_ids: techniqueIds,
@@ -159,19 +120,24 @@ export default function ThreatActorProfilingTable() {
     });
   };
 
-  // Central decision: use by-techniques API when techniques are selected, else fall back to by-assessment
+  useEffect(() => {
+    // If techniques were saved in localStorage, load threat actors for them
+    if (selectedTechniques.length > 0) {
+      const ids = selectedTechniques.map(t => t.technique_id);
+      fetchThreatActorsByTechniques(ids, client, filters);
+    }
+  }, []);
+
   const refreshTable = (updatedTechniques = selectedTechniques, updatedFilters = filters) => {
     if (updatedTechniques.length > 0) {
       const ids = updatedTechniques.map(t => t.technique_id);
       fetchThreatActorsByTechniques(ids, client, updatedFilters);
     } else {
-      // No techniques selected — reset to the initial assessment table
       setdata(null);
-      getThreatActorProfilingtableData(client, updatedFilters);
     }
   };
 
-  // Called by each checkbox — updates filters state and immediately re-fetches with correct API
+  // Called by each checkbox — updates filters state and re-fetches
   const handleFilterChange = (key, value) => {
     const updatedFilters = { ...filters, [key]: value };
     setFilters(updatedFilters);
@@ -280,40 +246,6 @@ export default function ThreatActorProfilingTable() {
     } catch (e) {
       console.error("Error removing selected_techniques from localStorage:", e);
     }
-    // No techniques left — fall back to assessment table
-    getThreatActorProfilingtableData(client, filters);
-  };
-
-  const handleSearchSubmit = () => {
-    const trimmed = techniqueId.trim();
-    if (!trimmed) {
-      setError('Please enter a MITRE Technique ID or search query');
-      return;
-    }
-    setError('');
-    setSearchLoading(true);
-    setShowSuggestions(true);
-    getThreatActorProfiling({ query: trimmed, limit: 10 })((response) => {
-      console.log("profile data", response);
-      let results = [];
-      if (Array.isArray(response)) {
-        results = response;
-      } else if (Array.isArray(response?.items)) {
-        results = response.items;
-      } else if (Array.isArray(response?.data?.items)) {
-        results = response.data.items;
-      } else if (Array.isArray(response?.data)) {
-        results = response.data;
-      } else if (Array.isArray(response?.techniques)) {
-        results = response.techniques;
-      } else if (Array.isArray(response?.results)) {
-        results = response.results;
-      } else if (Array.isArray(response?.actors)) {
-        results = response.actors;
-      }
-      setSuggestions(results);
-      setSearchLoading(false);
-    });
   };
 
   const handleShowThreatActors = () => {
@@ -369,30 +301,27 @@ export default function ThreatActorProfilingTable() {
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4300D2" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="6" y1="12" x2="18" y2="12"></line><line x1="8" y1="18" x2="16" y2="18"></line></svg>
   );
 
-  // Actors from techniques search (submitted via the search bar)
+  // Extract threat actors list from API response
   const actorsList = useMemo(() => {
-    if (!data) return null;
+    if (!data) return [];
     if (Array.isArray(data)) return data;
     if (Array.isArray(data.items)) return data.items;
     if (Array.isArray(data.actors)) return data.actors;
     if (Array.isArray(data.data?.items)) return data.data.items;
     if (Array.isArray(data.data)) return data.data;
     if (Array.isArray(data.results)) return data.results;
-    return null;
+    return [];
   }, [data]);
 
-  // Use techniques-search result when available, otherwise fall back to initial table data
-  const baseActors = actorsList ?? tabledata;
-
   const processedActors = useMemo(() => {
-    if (!baseActors || !Array.isArray(baseActors)) return [];
+    if (!actorsList || !Array.isArray(actorsList) || actorsList.length === 0) return [];
 
     const isAnyFilterActive = filters.capability || filters.intent || filters.opportunity;
     if (!isAnyFilterActive) {
-      return baseActors;
+      return actorsList;
     }
 
-    return [...baseActors].sort((a, b) => {
+    return [...actorsList].sort((a, b) => {
       let scoreA = 0;
       let scoreB = 0;
 
@@ -411,7 +340,7 @@ export default function ThreatActorProfilingTable() {
 
       return scoreB - scoreA;
     });
-  }, [baseActors, filters]);
+  }, [actorsList, filters]);
 
   // Reset to page 1 whenever the filtered list changes
   useEffect(() => {
