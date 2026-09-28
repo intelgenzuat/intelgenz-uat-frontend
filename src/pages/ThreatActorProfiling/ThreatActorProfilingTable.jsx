@@ -569,7 +569,7 @@ export default function ThreatActorProfilingTable() {
 
   return (
     <div className="threat-actor-detail-page">
-      {/* Top Header Section */}
+ 
       <AdversaryTriageTopcontent />
 
       {/* View Controls Card */}
