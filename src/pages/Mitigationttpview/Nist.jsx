@@ -35,8 +35,18 @@ const transformNistFamilies = (nistFamilies, selectedMalwareIds = []) => {
 
         const columns = families.map((family, fIdx) => {
             const familyName = family.family_name || `Family ${fIdx + 1}`;
-            const familyId = family.family_id || '';
-            const colName = familyId ? `${familyName} (${familyId})` : familyName;
+            const rawFamilyId = family.family_id || family.family_code || family.code || '';
+            let extractedCode = rawFamilyId;
+            if (!extractedCode && familyName) {
+                const match = familyName.match(/\(([A-Za-z0-9_-]+)\)/);
+                if (match) {
+                    extractedCode = match[1];
+                }
+            }
+            const cleanCode = extractedCode ? extractedCode.replace(/[()]/g, '').trim() : '';
+            const familyId = cleanCode || rawFamilyId;
+            const colName = familyId ? `${familyName.replace(/\s*\([A-Za-z0-9_-]+\)\s*$/, '')} (${familyId})` : familyName;
+            const shortName = familyId ? `(${familyId})` : (familyName ? `(${familyName.slice(0, 2).toUpperCase()})` : '');
 
             const relevantControls = (family.controls || []).filter((control) => {
                 if (
@@ -100,6 +110,8 @@ const transformNistFamilies = (nistFamilies, selectedMalwareIds = []) => {
             return {
                 id: familyId || `family-${fIdx}`,
                 name: colName,
+                shortName: familyId ? `(${familyId})` : colName,
+                familyId: familyId,
                 items
             };
         });
@@ -171,6 +183,21 @@ const Nist = ({
     const tacticsData = useMemo(() => {
         return transformNistFamilies(nistList, selectedMalware);
     }, [nistList, selectedMalware]);
+
+    const allColIds = useMemo(() => {
+        return tacticsData.flatMap(t => t.columns.map(c => c.id));
+    }, [tacticsData]);
+
+    const isAllCollapsed = allColIds.length > 0 && collapsedCols.size === allColIds.length;
+
+    const handleToggleAll = () => {
+        if (isAllCollapsed) {
+            setCollapsedCols(new Set());
+        } else {
+            setCollapsedCols(new Set(allColIds));
+            setExpandedItems(new Set());
+        }
+    };
 
     const [expandedItems, setExpandedItems] = useState(() => new Set());
 
@@ -270,6 +297,16 @@ const Nist = ({
                                 </div>
                             </div>
 
+                            <button
+                                type="button"
+                                className={`btn-expand-toggle ${isAllCollapsed ? 'is-collapsed' : ''}`}
+                                onClick={handleToggleAll}
+                                title={isAllCollapsed ? 'Expand all' : 'Collapse all'}
+                            >
+                                <i className={`bi ${isAllCollapsed ? 'bi-arrows-angle-expand' : 'bi-arrows-angle-contract'}`}></i>
+                                <span>{isAllCollapsed ? 'Expand All' : 'Collapse All'}</span>
+                            </button>
+
                             <div className="controls-right">
                                 <div className="show-overlaps-btn">
                                     <input
@@ -324,7 +361,9 @@ const Nist = ({
                                             return (
                                                 <div key={colIndex} className={`mitigation-col d-flex flex-column ${isColCollapsed ? 'col-collapsed' : ''}`}>
                                                     <div className="col-header" style={{ top: 0 }}>
-                                                        <span className="col-header-name" title={col.name}>{col.name}</span>
+                                                        <span className="col-header-name" title={col.name}>
+                                                            {isColCollapsed ? (col.shortName || col.name) : col.name}
+                                                        </span>
                                                         <button
                                                             className="col-toggle-btn"
                                                             type="button"

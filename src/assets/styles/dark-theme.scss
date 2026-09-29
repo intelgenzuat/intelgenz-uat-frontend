@@ -1464,6 +1464,38 @@
             }
           }
 
+          .btn-expand-toggle {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #cbd5e1 !important;
+
+            i {
+              color: #818cf8 !important;
+            }
+
+            &:hover {
+              background-color: #1e293b !important;
+              border-color: #475569 !important;
+              color: #ffffff !important;
+            }
+
+            &.is-collapsed {
+              background-color: #2e1065 !important;
+              border-color: #6d28d9 !important;
+              color: #e9d5ff !important;
+
+              i {
+                color: #c084fc !important;
+              }
+
+              &:hover {
+                background-color: #3b0764 !important;
+                border-color: #7c3aed !important;
+                color: #ffffff !important;
+              }
+            }
+          }
+
           .controls-right {
             .show-overlaps-btn {
               background-color: #0b0f19 !important;
@@ -1509,7 +1541,7 @@
 
           .mapping-table {
             th {
-              background-color: #0f172a !important;
+              background-color: #1e293b !important;
               border-color: #334155 !important;
               color: #f1f5f9 !important;
 
@@ -1646,6 +1678,38 @@
           }
         }
 
+        .btn-expand-toggle {
+          background-color: #0f172a !important;
+          border-color: #334155 !important;
+          color: #cbd5e1 !important;
+
+          i {
+            color: #818cf8 !important;
+          }
+
+          &:hover {
+            background-color: #1e293b !important;
+            border-color: #475569 !important;
+            color: #ffffff !important;
+          }
+
+          &.is-collapsed {
+            background-color: #2e1065 !important;
+            border-color: #6d28d9 !important;
+            color: #e9d5ff !important;
+
+            i {
+              color: #c084fc !important;
+            }
+
+            &:hover {
+              background-color: #3b0764 !important;
+              border-color: #7c3aed !important;
+              color: #ffffff !important;
+            }
+          }
+        }
+
         .controls-right {
           .show-overlaps-btn {
             background-color: #0b0f19 !important;
@@ -1722,7 +1786,7 @@
           .col-header {
             color: #f1f5f9 !important;
             border-bottom-color: #334155 !important;
-            background-color: #0f172a !important;
+            background-color: #1e293b !important;
 
             .col-toggle-btn {
               border-color: #475569 !important;
