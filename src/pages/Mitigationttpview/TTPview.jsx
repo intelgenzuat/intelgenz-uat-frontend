@@ -192,7 +192,9 @@ const TTPview = ({
                                                 <th key={i} className={isCollapsed ? 'col-collapsed' : ''}>
                                                     <div className="header-content">
                                                         <i className="bi bi-filter"></i>
-                                                        <span className="header-col-title" title={col.col}>{col.col}</span>
+                                                        <span className="header-col-title" title={col.col}>
+                                                            {isCollapsed ? (col.col && col.col.length > 2 ? `${col.col.slice(0, 2)}...` : col.col) : col.col}
+                                                        </span>
                                                         <button
                                                             className="header-toggle-btn"
                                                             type="button"
@@ -200,7 +202,7 @@ const TTPview = ({
                                                                 e.stopPropagation();
                                                                 toggleCol(colId);
                                                             }}
-                                                            title={isCollapsed ? 'Expand column' : 'Collapse column'}
+                                                            title={isCollapsed ? `Expand ${col.col}` : `Collapse ${col.col}`}
                                                         >
                                                             <i className={`bi ${isCollapsed ? 'bi-plus' : 'bi-dash'}`}></i>
                                                         </button>

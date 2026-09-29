@@ -741,47 +741,59 @@
           z-index: 10;
           min-width: 130px;
           width: auto;
-          padding: 7px 10px;
+          height: 42px;
+          min-height: 42px;
+          max-height: 42px;
+          box-sizing: border-box;
+          padding: 6px 10px;
           font-size: 11px;
           font-weight: 600;
           color: #475569;
           text-align: center;
           border-bottom: 1px solid #e2e8f0;
           border-right: 1px solid #e2e8f0;
-          background-color: #fff;
+          background-color: #f8fafc;
           border-top: none;
           white-space: nowrap;
-          transition: width 0.2s, min-width 0.2s, max-width 0.2s;
+          transition: width 0.2s, min-width 0.2s, max-width 0.2s, background-color 0.2s;
 
           &:last-child {
             border-right: none;
           }
 
           &.col-collapsed {
-            width: 44px !important;
-            min-width: 44px !important;
-            max-width: 44px !important;
-            padding: 8px 4px !important;
+            min-width: 56px !important;
+            padding: 4px 6px !important;
 
             .header-content {
-              flex-direction: column;
-              justify-content: end;
-              gap: 5px;
-              min-height: 120px;
+              flex-direction: row;
+              justify-content: center;
+              align-items: center;
+              gap: 4px;
+              height: 100%;
+              min-height: auto;
 
               .bi-filter {
                 display: none;
               }
 
               .header-col-title {
-                writing-mode: vertical-rl;
-                transform: rotate(180deg);
-                font-size: 11px;
-                letter-spacing: 0.5px;
+                display: inline-block;
+                font-size: 10.5px;
+                font-weight: 700;
+                color: #475569;
                 white-space: nowrap;
-                max-height: 110px;
+                text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                line-height: 1;
+              }
+
+              .header-toggle-btn {
+                width: 16px;
+                height: 16px;
+                font-size: 11px;
+                flex-shrink: 0;
               }
             }
           }
@@ -791,6 +803,7 @@
             justify-content: space-between;
             align-items: center;
             gap: 6px;
+            height: 100%;
 
             .bi-filter {
               color: #8b5cf6;
@@ -842,9 +855,7 @@
           }
 
           &.col-collapsed {
-            width: 44px !important;
             min-width: 44px !important;
-            max-width: 44px !important;
             background-color: #f8fafc;
             padding: 0 !important;
           }
