@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 const CHIP_COLORS = [
     '#2563eb', // Royal Blue
@@ -127,6 +127,20 @@ const TTPview = ({
         cells: showOverlaps ? col.cells.filter((cell) => cell.has_overlap || cell.overlap !== '') : col.cells,
     }));
 
+    const allColIds = useMemo(() => {
+        return mappingData.map(c => c.col);
+    }, [mappingData]);
+
+    const isAllCollapsed = allColIds.length > 0 && collapsedCols.size === allColIds.length;
+
+    const handleToggleAll = () => {
+        if (isAllCollapsed) {
+            setCollapsedCols(new Set());
+        } else {
+            setCollapsedCols(new Set(allColIds));
+        }
+    };
+
     const maxRows = filteredMappingData.length > 0
         ? Math.max(...filteredMappingData.map((col) => col.cells.length), 0)
         : 0;
@@ -147,6 +161,16 @@ const TTPview = ({
                                     <span className="gradient-label">25%</span>
                                 </div>
                             </div>
+
+                            <button
+                                type="button"
+                                className={`btn-expand-toggle ${isAllCollapsed ? 'is-collapsed' : ''}`}
+                                onClick={handleToggleAll}
+                                title={isAllCollapsed ? 'Expand all' : 'Collapse all'}
+                            >
+                                <i className={`bi ${isAllCollapsed ? 'bi-arrows-angle-expand' : 'bi-arrows-angle-contract'}`}></i>
+                                <span>{isAllCollapsed ? 'Expand All' : 'Collapse All'}</span>
+                            </button>
 
                             <div className="controls-right">
                                 <div className="show-overlaps-btn">

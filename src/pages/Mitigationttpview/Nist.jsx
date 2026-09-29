@@ -184,6 +184,21 @@ const Nist = ({
         return transformNistFamilies(nistList, selectedMalware);
     }, [nistList, selectedMalware]);
 
+    const allColIds = useMemo(() => {
+        return tacticsData.flatMap(t => t.columns.map(c => c.id));
+    }, [tacticsData]);
+
+    const isAllCollapsed = allColIds.length > 0 && collapsedCols.size === allColIds.length;
+
+    const handleToggleAll = () => {
+        if (isAllCollapsed) {
+            setCollapsedCols(new Set());
+        } else {
+            setCollapsedCols(new Set(allColIds));
+            setExpandedItems(new Set());
+        }
+    };
+
     const [expandedItems, setExpandedItems] = useState(() => new Set());
 
     const filterOverlaps = (items) => {
@@ -281,6 +296,16 @@ const Nist = ({
                                     <span className="gradient-label">25%</span>
                                 </div>
                             </div>
+
+                            <button
+                                type="button"
+                                className={`btn-expand-toggle ${isAllCollapsed ? 'is-collapsed' : ''}`}
+                                onClick={handleToggleAll}
+                                title={isAllCollapsed ? 'Expand all' : 'Collapse all'}
+                            >
+                                <i className={`bi ${isAllCollapsed ? 'bi-arrows-angle-expand' : 'bi-arrows-angle-contract'}`}></i>
+                                <span>{isAllCollapsed ? 'Expand All' : 'Collapse All'}</span>
+                            </button>
 
                             <div className="controls-right">
                                 <div className="show-overlaps-btn">
