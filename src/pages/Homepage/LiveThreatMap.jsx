@@ -35,7 +35,7 @@ const americas = [
 export default function LiveThreatMap() {
     const [geographies, setGeographies] = useState([]);
     const [landMesh, setLandMesh] = useState(null);
-    const [timeRange, setTimeRange] = useState("24h");
+    const [timeRange, setTimeRange] = useState("1day");
     const [hoveredCountry, setHoveredCountry] = useState(null);
 
     const mapWidth = 900;
@@ -123,10 +123,10 @@ export default function LiveThreatMap() {
                 gap: '4px'
             }}>
                 {[
-                    { label: '24h', value: '24h' },
-                    { label: '7 Days', value: '7d' },
-                    { label: '30 Days', value: '30d' },
-                    { label: '90 Days', value: '90d' }
+                    { label: '1hr', value: '1hr' },
+                    { label: '1day', value: '1day' },
+                    { label: '3day', value: '3day' },
+                    { label: '7day', value: '7day' }
                 ].map((tab) => {
                     const isActive = timeRange === tab.value;
                     return (
