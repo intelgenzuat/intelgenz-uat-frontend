@@ -284,29 +284,22 @@ const Nist = ({
     return (
         <>
             <div className="mitigation-view-container flex-grow-1 d-flex flex-column overflow-hidden mx-4 mb-4">
+                {/* Overlap Legend at the top border of the table */}
+                <div className="d-flex justify-content-end align-items-center mb-2 px-1 flex-shrink-0">
+                    <div className="overlap-legend">
+                        <span className="legend-label">OVERLAP % :</span>
+                        <div className="overlap-items-container">
+                            <span className="gradient-label">0%</span>
+                            <div className="gradient-line"></div>
+                            <span className="gradient-label">100%</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="mitigation-view-card d-flex flex-column flex-grow-1 bg-white mb-3">
                     <div className="mapping-header flex-shrink-0 bg-white">
                         <h4>NIST</h4>
                         <div className="d-flex align-items-center gap-3">
-                            <div className="overlap-legend">
-                                <span className="legend-label">OVERLAP % :</span>
-                                <div className="overlap-items-container">
-                                    <span className="gradient-label">100%</span>
-                                    <div className="gradient-line"></div>
-                                    <span className="gradient-label">25%</span>
-                                </div>
-                            </div>
-
-                            <button
-                                type="button"
-                                className={`btn-expand-toggle ${isAllCollapsed ? 'is-collapsed' : ''}`}
-                                onClick={handleToggleAll}
-                                title={isAllCollapsed ? 'Expand all' : 'Collapse all'}
-                            >
-                                <i className={`bi ${isAllCollapsed ? 'bi-arrows-angle-expand' : 'bi-arrows-angle-contract'}`}></i>
-                                <span>{isAllCollapsed ? 'Expand All' : 'Collapse All'}</span>
-                            </button>
-
                             <div className="controls-right">
                                 <div className="show-overlaps-btn">
                                     <input
@@ -336,6 +329,15 @@ const Nist = ({
                                     </ul>
                                 )}
                             </div>
+
+                            <button
+                                type="button"
+                                className={`btn-expand-toggle ${isAllCollapsed ? 'is-collapsed' : ''}`}
+                                onClick={handleToggleAll}
+                                title={isAllCollapsed ? 'Expand all' : 'Collapse all'}
+                            >
+                                <i className={`bi ${isAllCollapsed ? 'bi-arrows-angle-expand' : 'bi-arrows-angle-contract'}`}></i>
+                            </button>
                         </div>
                     </div>
                     <div className="table-responsive flex-grow-1 m-0 d-flex d3fend-matrix-scroll">

@@ -212,10 +212,10 @@ export default function LiveThreatMap() {
                         {(() => {
                             const defaultMarkers = [
                                 { name: "Canada", dx: -70, dy: -50, align: "end" },
-                                { name: "United States of America", dx: -100, dy: 30, align: "end" },
+                                { name: "United States of America", dx: -65, dy: 30, align: "end" },
                                 { name: "Brazil", dx: -60, dy: 70, align: "end" },
-                                { name: "South Africa", dx: 10, dy: 100, align: "center" },
-                                { name: "Australia", dx: 80, dy: 60, align: "start" },
+                                { name: "South Africa", dx: 10, dy: 90, align: "center" },
+                                { name: "Australia", dx: 30, dy: 70, align: "center" },
                                 { name: "Russia", dx: 70, dy: -60, align: "start" }
                             ];
                             
@@ -250,6 +250,10 @@ export default function LiveThreatMap() {
                                         boxX = anchorX - 190;
                                     }
                                 }
+
+                                // Ensure tooltip card stays strictly inside SVG boundary
+                                boxX = Math.max(10, Math.min(mapWidth - 190, boxX));
+                                boxY = Math.max(10, Math.min(mapHeight - 70, boxY));
 
                                 return (
                                     <g key={`popup-${idx}`}>

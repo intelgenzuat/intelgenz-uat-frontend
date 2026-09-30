@@ -1335,7 +1335,8 @@
         color: #ffffff !important;
       }
 
-      .pills-container .actor-pill {
+      .pills-container .actor-pill,
+      .actor-pill {
         background-color: #1e293b !important;
         border-color: #334155 !important;
         color: #cbd5e1 !important;
@@ -1436,6 +1437,23 @@
     }
 
     .technique-mapping-container {
+      .overlap-legend {
+        color: #cbd5e1 !important;
+
+        .legend-label {
+          color: #cbd5e1 !important;
+        }
+
+        .overlap-items-container {
+          background-color: transparent !important;
+          border: none !important;
+
+          .gradient-label {
+            color: #cbd5e1 !important;
+          }
+        }
+      }
+
       .technique-mapping-card {
         background-color: #1e293b !important;
         border-color: #334155 !important;
@@ -1648,6 +1666,23 @@
   // Mitigation view / NIST / D3FEND overrides
   .mitigation-view-container {
     background-color: #0b0f19 !important;
+
+    .overlap-legend {
+      color: #cbd5e1 !important;
+
+      .legend-label {
+        color: #cbd5e1 !important;
+      }
+
+      .overlap-items-container {
+        background-color: transparent !important;
+        border: none !important;
+
+        .gradient-label {
+          color: #cbd5e1 !important;
+        }
+      }
+    }
 
     .mitigation-view-card {
       background-color: #1e293b !important;
