@@ -625,71 +625,135 @@ const Mitigationttpview = () => {
                         <div className="view-controls-card flex-shrink-0 mx-4 mb-4">
                             <div className="view-controls-section d-flex flex-column align-items-stretch gap-3">
                                 {/* Threat Actors Section with Accordion */}
-                                <div className="threat-actors-section w-100">
-                                    <div
-                                        className="d-flex align-items-center justify-content-between cursor-pointer user-select-none"
-                                        onClick={() => setIsAccordionOpen(!isAccordionOpen)}
-                                        style={{ cursor: 'pointer' }}
-                                    >
-                                        <div className="d-flex align-items-center">
-                                            <span className="section-title">THREAT ACTORS :</span>
-                                            <span className="selected-badge">{selectedMalware.length} Selected</span>
-                                        </div>
-                                        <div className="d-flex align-items-center gap-3">
-                                            <button
-                                                type="button"
-                                                className="btn clear-all-btn flex-shrink-0"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleClearOrSelectAll();
-                                                }}
-                                            >
-                                                Clear all <i className="bi bi-x"></i>
-                                            </button>
-                                            <div className="accordion-toggle-icon d-flex align-items-center text-muted" style={{ fontSize: '16px' }}>
-                                                <i className={`bi ${isAccordionOpen ? 'bi-dash' : 'bi-plus'}`}></i>
-                                            </div>
-                                        </div>
-                                    </div>
+                                {(() => {
+                                    const selectedThreatActors = threatlist.filter((malware) =>
+                                        selectedMalware.includes(malware.id) ||
+                                        (malware.actor_id !== undefined && selectedMalware.includes(malware.actor_id))
+                                    );
+                                    const MAX_HEADER_PILLS = 3;
+                                    const headerPills = selectedThreatActors.slice(0, MAX_HEADER_PILLS);
+                                    const remainingSelectedPills = selectedThreatActors.slice(MAX_HEADER_PILLS);
+                                    const unselectedPills = threatlist.filter((malware) =>
+                                        !selectedMalware.includes(malware.id) &&
+                                        (malware.actor_id === undefined || !selectedMalware.includes(malware.actor_id))
+                                    );
+                                    const remainingPills = [...remainingSelectedPills, ...unselectedPills];
 
-                                    {isAccordionOpen && (
-                                        <div className="accordion-content mt-3">
-                                            <div className="pills-container m-0 mt-0">
-                                                {threatlist.map((malware, idx) => {
-                                                    const malwareKey = malware.actor_id ?? malware.id;
-                                                    const isSelected = selectedMalware.includes(malware.id) || (malware.actor_id !== undefined && selectedMalware.includes(malware.actor_id));
-                                                    const displayName = typeof malware.name === 'string' ? malware.name : (malware.name ? String(malware.name) : 'Threat Actor');
-                                                    return (
+                                    return (
+                                        <div className="threat-actors-section w-100">
+                                            <div
+                                                className="d-flex align-items-center justify-content-between cursor-pointer user-select-none"
+                                                onClick={() => {
+                                                    if (remainingPills.length > 0) {
+                                                        setIsAccordionOpen(!isAccordionOpen);
+                                                    }
+                                                }}
+                                                style={{ cursor: remainingPills.length > 0 ? 'pointer' : 'default' }}
+                                            >
+                                                <div className="d-flex align-items-center flex-wrap gap-2">
+                                                    <span className="section-title">THREAT ACTORS :</span>
+                                                    <span className="selected-badge">{selectedMalware.length} Selected</span>
+                                                    {headerPills.map((malware, idx) => {
+                                                        const malwareKey = malware.actor_id ?? malware.id;
+                                                        const displayName = typeof malware.name === 'string' ? malware.name : (malware.name ? String(malware.name) : 'Threat Actor');
+                                                        const origIdx = threatlist.findIndex(t => (t.actor_id ?? t.id) === malwareKey);
+                                                        const colorIdx = origIdx >= 0 ? origIdx : idx;
+                                                        return (
+                                                            <div
+                                                                key={malwareKey}
+                                                                className="actor-pill cursor-pointer active"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleToggleMalware(malwareKey);
+                                                                }}
+                                                            >
+                                                                <div className="dot" style={{ backgroundColor: CHIP_COLORS[colorIdx % CHIP_COLORS.length] }}></div>
+                                                                <span>{displayName}</span>
+                                                                <i className="bi bi-check-square-fill"></i>
+                                                                {handleRemoveMalware && (
+                                                                    <i
+                                                                        className="bi bi-x chip-close-icon ms-1"
+                                                                        title="Remove threat actor"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            handleRemoveMalware(malwareKey);
+                                                                        }}
+                                                                    ></i>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                                <div className="d-flex align-items-center gap-3">
+                                                    <button
+                                                        type="button"
+                                                        className="btn clear-all-btn flex-shrink-0"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleClearOrSelectAll();
+                                                        }}
+                                                    >
+                                                        Clear all <i className="bi bi-x"></i>
+                                                    </button>
+                                                    {remainingPills.length > 0 && (
                                                         <div
-                                                            key={malware.id ?? malware.actor_id ?? idx}
-                                                            className={`actor-pill cursor-pointer ${isSelected ? 'active' : ''}`}
-                                                            onClick={() => handleToggleMalware(malwareKey)}
+                                                            className="accordion-toggle-icon d-flex align-items-center text-muted"
+                                                            style={{ fontSize: '16px', cursor: 'pointer' }}
+                                                            title={isAccordionOpen ? "Collapse remaining" : `Show ${remainingPills.length} more`}
                                                         >
-                                                            <div className="dot" style={{ backgroundColor: CHIP_COLORS[idx % CHIP_COLORS.length] }}></div>
-                                                            <span>{displayName}</span>
-                                                            <i className={`bi ${isSelected ? 'bi-check-square-fill' : 'bi-square text-muted'}`}></i>
-                                                            {handleRemoveMalware && (
-                                                                <i
-                                                                    className="bi bi-x chip-close-icon ms-1"
-                                                                    title="Remove malware"
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        handleRemoveMalware(malwareKey);
-                                                                    }}
-                                                                ></i>
+                                                            {remainingSelectedPills.length > 0 && (
+                                                                <span className="badge rounded-pill bg-light text-dark border me-1" style={{ fontSize: '11px', fontWeight: 600 }}>
+                                                                    +{remainingSelectedPills.length} more
+                                                                </span>
                                                             )}
+                                                            <i className={`bi ${isAccordionOpen ? 'bi-dash' : 'bi-plus'}`}></i>
                                                         </div>
-                                                    );
-                                                })}
+                                                    )}
+                                                </div>
                                             </div>
-                                            {formik.errors.malware_ids && (
-                                                <div className="text-danger mt-2 ms-1" style={{ fontSize: '12px' }}>
-                                                    {formik.errors.malware_ids}
+
+                                            {isAccordionOpen && remainingPills.length > 0 && (
+                                                <div className="accordion-content mt-3">
+                                                    <div className="pills-container m-0 mt-0">
+                                                        {remainingPills.map((malware, idx) => {
+                                                            const malwareKey = malware.actor_id ?? malware.id;
+                                                            const isSelected = selectedMalware.includes(malware.id) || (malware.actor_id !== undefined && selectedMalware.includes(malware.actor_id));
+                                                            const displayName = typeof malware.name === 'string' ? malware.name : (malware.name ? String(malware.name) : 'Threat Actor');
+                                                            const origIdx = threatlist.findIndex(t => (t.actor_id ?? t.id) === malwareKey);
+                                                            const colorIdx = origIdx >= 0 ? origIdx : idx;
+                                                            return (
+                                                                <div
+                                                                    key={malware.id ?? malware.actor_id ?? idx}
+                                                                    className={`actor-pill cursor-pointer ${isSelected ? 'active' : ''}`}
+                                                                    onClick={() => handleToggleMalware(malwareKey)}
+                                                                >
+                                                                    <div className="dot" style={{ backgroundColor: CHIP_COLORS[colorIdx % CHIP_COLORS.length] }}></div>
+                                                                    <span>{displayName}</span>
+                                                                    <i className={`bi ${isSelected ? 'bi-check-square-fill' : 'bi-square text-muted'}`}></i>
+                                                                    {handleRemoveMalware && (
+                                                                        <i
+                                                                            className="bi bi-x chip-close-icon ms-1"
+                                                                            title="Remove threat actor"
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                handleRemoveMalware(malwareKey);
+                                                                            }}
+                                                                        ></i>
+                                                                    )}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                    {formik.errors.malware_ids && (
+                                                        <div className="text-danger mt-2 ms-1" style={{ fontSize: '12px' }}>
+                                                            {formik.errors.malware_ids}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
-                                    )}
-                                </div>
+                                    );
+                                })()}
                             </div>
                         </div>
 

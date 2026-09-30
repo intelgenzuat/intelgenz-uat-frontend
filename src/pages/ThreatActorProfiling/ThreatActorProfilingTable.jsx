@@ -550,83 +550,130 @@ export default function ThreatActorProfilingTable() {
           )}
 
           {/* Threat Actors Section with Accordion */}
-          <div className="threat-actors-section w-100">
-            <div
-              className="d-flex align-items-center justify-content-between cursor-pointer user-select-none"
-              onClick={() => setIsAccordionOpen(!isAccordionOpen)}
-              style={{ cursor: 'pointer' }}
-            >
-              <div className="d-flex align-items-center">
-                <span className="section-title">SELECTED TECHNIQUES :</span>
-                <span className="selected-badge">{selectedTechniques.length} Selected</span>
-              </div>
+          {(() => {
+            const MAX_HEADER_PILLS = 3;
+            const headerPills = selectedTechniques.slice(0, MAX_HEADER_PILLS);
+            const remainingPills = selectedTechniques.slice(MAX_HEADER_PILLS);
 
-              <div className="d-flex align-items-center gap-2">
-                <button
-                  type="button"
-                  className="btn show-btn text-white flex-shrink-0"
-                  style={{
-                    cursor: submitLoading ? 'not-allowed' : 'pointer',
-                    opacity: submitLoading ? 0.75 : 1
+            return (
+              <div className="threat-actors-section w-100">
+                <div
+                  className="d-flex align-items-center justify-content-between cursor-pointer user-select-none"
+                  onClick={() => {
+                    if (remainingPills.length > 0) {
+                      setIsAccordionOpen(!isAccordionOpen);
+                    }
                   }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleShowThreatActors();
-                  }}
-                  disabled={submitLoading || selectedTechniques.length === 0}
+                  style={{ cursor: remainingPills.length > 0 ? 'pointer' : 'default' }}
                 >
-                  {submitLoading && (
-                    <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" style={{ width: '12px', height: '12px' }}></span>
-                  )}
-                  <span>Submit</span>
-                </button>
-
-                <button
-                  type="button"
-                  className="btn clear-all-btn flex-shrink-0"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleClearAllTechniques();
-                  }}
-                >
-                  Clear all <i className="bi bi-x"></i>
-                </button>
-
-                <div className="accordion-toggle-icon d-flex align-items-center text-muted" style={{ fontSize: '16px' }}>
-                  <i className={`bi ${isAccordionOpen ? 'bi-dash' : 'bi-plus'}`}></i>
-                </div>
-              </div>
-            </div>
-
-            {isAccordionOpen && (
-              <div className="accordion-content mt-3">
-                <div className="pills-container m-0 mt-0">
-                  {selectedTechniques.map((tech, idx) => {
-                    const techKey = tech.technique_id || idx;
-                    const displayName = tech.technique_id;
-                    return (
-                      <div
-                        key={techKey}
-                        className="actor-pill cursor-pointer active"
-                        onClick={() => handleRemoveTechnique(tech.technique_id)}
-                      >
-                        <div className="dot" style={{ backgroundColor: idx % 2 === 0 ? '#3b82f6' : '#5200ff' }}></div>
-                        <span>{displayName}</span>
-                        <i
-                          className="bi bi-x chip-close-icon ms-1"
-                          title="Remove threat actor"
+                  <div className="d-flex align-items-center flex-wrap gap-2">
+                    <span className="section-title">SELECTED TECHNIQUES :</span>
+                    <span className="selected-badge">{selectedTechniques.length} Selected</span>
+                    {headerPills.map((tech, idx) => {
+                      const techKey = tech.technique_id || idx;
+                      const displayName = tech.technique_id;
+                      return (
+                        <div
+                          key={techKey}
+                          className="actor-pill cursor-pointer active"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleRemoveTechnique(tech.technique_id);
                           }}
-                        ></i>
+                        >
+                          <div className="dot" style={{ backgroundColor: idx % 2 === 0 ? '#3b82f6' : '#5200ff' }}></div>
+                          <span>{displayName}</span>
+                          <i
+                            className="bi bi-x chip-close-icon ms-1"
+                            title="Remove technique"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRemoveTechnique(tech.technique_id);
+                            }}
+                          ></i>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="d-flex align-items-center gap-2">
+                    <button
+                      type="button"
+                      className="btn show-btn text-white flex-shrink-0"
+                      style={{
+                        cursor: submitLoading ? 'not-allowed' : 'pointer',
+                        opacity: submitLoading ? 0.75 : 1
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleShowThreatActors();
+                      }}
+                      disabled={submitLoading || selectedTechniques.length === 0}
+                    >
+                      {submitLoading && (
+                        <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" style={{ width: '12px', height: '12px' }}></span>
+                      )}
+                      <span>Submit</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn clear-all-btn flex-shrink-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleClearAllTechniques();
+                      }}
+                    >
+                      Clear all <i className="bi bi-x"></i>
+                    </button>
+
+                    {remainingPills.length > 0 && (
+                      <div
+                        className="accordion-toggle-icon d-flex align-items-center text-muted ms-1"
+                        style={{ fontSize: '16px', cursor: 'pointer' }}
+                        title={isAccordionOpen ? "Collapse remaining techniques" : `Show ${remainingPills.length} more techniques`}
+                      >
+                        <span className="badge rounded-pill bg-light text-dark border me-1" style={{ fontSize: '11px', fontWeight: 600 }}>
+                          +{remainingPills.length} more
+                        </span>
+                        <i className={`bi ${isAccordionOpen ? 'bi-dash' : 'bi-plus'}`}></i>
                       </div>
-                    );
-                  })}
+                    )}
+                  </div>
                 </div>
+
+                {isAccordionOpen && remainingPills.length > 0 && (
+                  <div className="accordion-content mt-3">
+                    <div className="pills-container m-0 mt-0">
+                      {remainingPills.map((tech, idx) => {
+                        const globalIdx = MAX_HEADER_PILLS + idx;
+                        const techKey = tech.technique_id || globalIdx;
+                        const displayName = tech.name ? `${tech.technique_id} - ${tech.name}` : tech.technique_id;
+                        return (
+                          <div
+                            key={techKey}
+                            className="actor-pill cursor-pointer active"
+                            onClick={() => handleRemoveTechnique(tech.technique_id)}
+                          >
+                            <div className="dot" style={{ backgroundColor: globalIdx % 2 === 0 ? '#3b82f6' : '#5200ff' }}></div>
+                            <span>{displayName}</span>
+                            <i
+                              className="bi bi-x chip-close-icon ms-1"
+                              title="Remove technique"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemoveTechnique(tech.technique_id);
+                              }}
+                            ></i>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            );
+          })()}
         </div>
       </div>
 
