@@ -295,13 +295,7 @@ export default function IntelcardThreatActorDetailNew() {
 
       {/* PAGE 2 */}
       <section className="page">
-        <header className="pagehead">
-          <div>
-            {/* <div className="over">Operational profile</div>
-            <h2>Execution &amp; observables</h2> */}
-          </div>
-          <div className="label">{threatData?.name || 'Threat Actor'} / 02</div>
-        </header>
+       
 
         <div className="title" style={{ marginTop: 0 }}>
           Execution path and MITRE ATT&amp;CK TTPs
