@@ -45,7 +45,7 @@ export default function IntelcardThreatActorDetailNew() {
     ...(targeting?.sectors || [])
   ];
 
-  const executionSteps = threatData?.execution?.confirmed_paths?.[0]?.steps || [];
+  const executionSteps = threatData?.execution?.confirmed_paths?.[0]?.steps || threatData?.execution?.steps || [];
 
   return (
     <div className="intelcard-threat-actor-detail-new-container">
@@ -292,34 +292,132 @@ export default function IntelcardThreatActorDetailNew() {
         </header>
 
         <div className="title" style={{ marginTop: 0 }}>
-          Execution path
+          Execution path and MITRE ATT&amp;CK TTPs
         </div>
-        <div className="steps">
-          {executionSteps.length > 0 ? (
-            executionSteps.map((step, idx) => (
-              <div key={idx} className={`step ${idx === executionSteps.length - 1 ? 'full warning' : ''}`}>
-                <div className="num">{step.step || idx + 1}</div>
-                <div>
-                  <strong>{step.title || step.action}</strong>
-                  {step.action && step.action !== step.title && <p className="mb-1">{step.action}</p>}
-                  <span className="meta">
-                    {[
-                      step.categories?.length > 0 ? `Category: ${step.categories.join(', ')}` : null,
-                      step.infrastructure?.length > 0 ? `Infrastructure: ${step.infrastructure.join(' · ')}` : null,
-                      step.artifacts?.length > 0 ? `Artifacts: ${step.artifacts.join(' · ')}` : null,
-                      step.tools?.length > 0 ? `Tools: ${step.tools.join(' · ')}` : null
-                    ].filter(Boolean).join(' | ')}
-                  </span>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="step">
-              <div className="num">1</div>
-              <div><strong>No confirmed execution paths documented.</strong></div>
-            </div>
-          )}
+
+        <div className="desc" style={{ margin: '1.5mm 0 2.5mm' }}>
+          <p style={{ margin: 0, color: '#475569', fontSize: 'calc(7.5pt + 1px)' }}>
+            {threatData?.execution?.description ||
+              (threatData?.execution?.confirmed_paths?.[0]?.target_context
+                ? `Target context: ${threatData.execution.confirmed_paths[0].target_context}`
+                : '') ||
+              'Detailed sequence of adversarial execution steps mapped directly to their corresponding MITRE ATT&CK tactics and techniques.'}
+          </p>
         </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th style={{ width: '60%' }}>Execution Path</th>
+              <th style={{ width: '40%' }}>MITRE ATT&amp;CK TTPs</th>
+            </tr>
+          </thead>
+          <tbody>
+            {executionSteps.length > 0 ? (
+              executionSteps.map((step, idx) => {
+                const stepNum = step.step || idx + 1;
+                const hasInfra = step.infrastructure?.length > 0;
+                const hasArtifacts = step.artifacts?.length > 0;
+                const hasCategories = step.categories?.length > 0;
+                const hasTools = step.tools?.length > 0;
+                const hasMalware = step.malware?.length > 0;
+                const hasVulns = step.vulnerabilities?.length > 0;
+                const hasTTPs = step.ttps?.length > 0;
+
+                return (
+                  <tr key={idx}>
+                    <td>
+                      <div className="exec-step-cell">
+                        <span className="step-num">Execution Path {stepNum}</span>
+                        <div className="exec-step-body">
+                          <strong className="exec-step-title">{step.title || step.action}</strong>
+                          {step.action && step.title && step.action !== step.title && (
+                            <p className="exec-step-action">{step.action}</p>
+                          )}
+
+                          {(hasCategories || hasInfra || hasArtifacts || hasTools || hasMalware || hasVulns) && (
+                            <div className="exec-meta-list" style={{ marginTop: '1.5mm' }}>
+                           
+                            
+                         
+                              {hasTools && (
+                                <div className="exec-meta-row">
+                                  <span className="meta-label">Tools:</span>
+                                  <span className="meta-values">
+                                    {step.tools.map((t, tIdx) => (
+                                      <span key={tIdx} className="chip">{typeof t === 'string' ? t : t.name}</span>
+                                    ))}
+                                  </span>
+                                </div>
+                              )}
+                              {hasMalware && (
+                                <div className="exec-meta-row">
+                                  <span className="meta-label">Malware:</span>
+                                  <span className="meta-values">
+                                    {step.malware.map((m, mIdx) => (
+                                      <span key={mIdx} className="chip red">{typeof m === 'string' ? m : m.name}</span>
+                                    ))}
+                                  </span>
+                                </div>
+                              )}
+                              {hasVulns && (
+                                <div className="exec-meta-row">
+                                  <span className="meta-label">Vulnerabilities:</span>
+                                  <span className="meta-values">
+                                    {step.vulnerabilities.map((v, vIdx) => (
+                                      <code key={vIdx} className="exec-code-badge">{typeof v === 'string' ? v : v.cve_id || v.name}</code>
+                                    ))}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+
+                    <td style={{ verticalAlign: 'top' }}>
+                      {hasTTPs ? (
+                        <div className="exec-ttp-list">
+                          {step.ttps.map((ttp, tIdx) => (
+                            <div key={tIdx} className="exec-ttp-item">
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5mm', flexWrap: 'wrap' }}>
+                                {ttp.technique_id && (
+                                  <span className="tid">{ttp.technique_id}</span>
+                                )}
+                                {ttp.tactic && (
+                                  <span className="tag" style={{ background: '#fef3c7', color: '#92400e', fontSize: '6pt' }}>
+                                    {ttp.tactic}
+                                  </span>
+                                )}
+                              </div>
+                              <div style={{ marginTop: '0.8mm' }}>
+                                <strong>{ttp.technique || '-'}</strong>
+                              </div>
+                              {ttp.procedure && (
+                                <p className="m-0 mt-1 text-muted" style={{ fontSize: 'calc(6.8pt + 1px)' }}>
+                                  {ttp.procedure}
+                                </p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-muted" style={{ fontSize: 'calc(7pt + 1px)' }}>-</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan="2" className="text-center">
+                  No confirmed execution paths documented
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
 
         <div className="grid2">
           <div>
