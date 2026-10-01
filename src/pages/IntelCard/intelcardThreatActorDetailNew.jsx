@@ -7,6 +7,14 @@ export default function IntelcardThreatActorDetailNew() {
   const { id } = useParams();
   const [threatData, setThreatData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [expandedPaths, setExpandedPaths] = useState({ 0: true });
+
+  const togglePath = (index) => {
+    setExpandedPaths((prev) => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
 
   const getThreatActorDetailedViewData = (actorId = id) => {
     setLoading(true);
@@ -45,7 +53,11 @@ export default function IntelcardThreatActorDetailNew() {
     ...(targeting?.sectors || [])
   ];
 
-  const executionSteps = threatData?.execution?.confirmed_paths?.[0]?.steps || threatData?.execution?.steps || [];
+  const confirmedPaths = threatData?.execution?.confirmed_paths?.length > 0
+    ? threatData.execution.confirmed_paths
+    : threatData?.execution?.steps?.length > 0
+      ? [{ path_id: 'path-1', steps: threatData.execution.steps, target_context: threatData?.execution?.target_context }]
+      : [];
 
   return (
     <div className="intelcard-threat-actor-detail-new-container">
@@ -298,14 +310,14 @@ export default function IntelcardThreatActorDetailNew() {
         <div className="desc" style={{ margin: '1.5mm 0 2.5mm' }}>
           <p style={{ margin: 0, color: '#475569', fontSize: 'calc(7.5pt + 1px)' }}>
             {threatData?.execution?.description ||
-              (threatData?.execution?.confirmed_paths?.[0]?.target_context
-                ? `Target context: ${threatData.execution.confirmed_paths[0].target_context}`
+              (threatData?.execution?.execution_path_description
+                ? `Execution path description: ${threatData.execution.execution_path_description}`
                 : '') ||
               'Detailed sequence of adversarial execution steps mapped directly to their corresponding MITRE ATT&CK tactics and techniques.'}
           </p>
         </div>
 
-        <table>
+        <table className="exec-unified-table">
           <thead>
             <tr>
               <th style={{ width: '60%' }}>Execution Path</th>
@@ -313,105 +325,157 @@ export default function IntelcardThreatActorDetailNew() {
             </tr>
           </thead>
           <tbody>
-            {executionSteps.length > 0 ? (
-              executionSteps.map((step, idx) => {
-                const stepNum = step.step || idx + 1;
-                const hasInfra = step.infrastructure?.length > 0;
-                const hasArtifacts = step.artifacts?.length > 0;
-                const hasCategories = step.categories?.length > 0;
-                const hasTools = step.tools?.length > 0;
-                const hasMalware = step.malware?.length > 0;
-                const hasVulns = step.vulnerabilities?.length > 0;
-                const hasTTPs = step.ttps?.length > 0;
+            {confirmedPaths.length > 0 ? (
+              confirmedPaths.map((path, pIdx) => {
+                const isOpen = expandedPaths[pIdx] !== false;
+                const pathSteps = path.steps || [];
+                const pathTitle = `Execution Path ${pIdx + 1}`;
 
                 return (
-                  <tr key={idx}>
-                    <td>
-                      <div className="exec-step-cell">
-                        <span className="step-num">Execution Path {stepNum}</span>
-                        <div className="exec-step-body">
-                          <strong className="exec-step-title">{step.title || step.action}</strong>
-                          {step.action && step.title && step.action !== step.title && (
-                            <p className="exec-step-action">{step.action}</p>
-                          )}
+                  <React.Fragment key={`path-${pIdx}`}>
+                    {/* Path Group Header Row */}
+                    <tr
+                      className="exec-path-group-row"
+                      onClick={() => togglePath(pIdx)}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <td colSpan="2">
+                        <div className="exec-path-group-header">
+                          <div className="group-left">
+                            <i className={`bi bi-chevron-${isOpen ? 'down' : 'right'} toggle-icon`}></i>
+                            <span className="path-title-badge">{pathTitle}</span>
+                            <span className="steps-count-badge">{pathSteps.length} Steps</span>
 
-                          {(hasCategories || hasInfra || hasArtifacts || hasTools || hasMalware || hasVulns) && (
-                            <div className="exec-meta-list" style={{ marginTop: '1.5mm' }}>
-                           
-                            
-                         
-                              {hasTools && (
-                                <div className="exec-meta-row">
-                                  <span className="meta-label">Tools:</span>
-                                  <span className="meta-values">
-                                    {step.tools.map((t, tIdx) => (
-                                      <span key={tIdx} className="chip">{typeof t === 'string' ? t : t.name}</span>
-                                    ))}
-                                  </span>
-                                </div>
-                              )}
-                              {hasMalware && (
-                                <div className="exec-meta-row">
-                                  <span className="meta-label">Malware:</span>
-                                  <span className="meta-values">
-                                    {step.malware.map((m, mIdx) => (
-                                      <span key={mIdx} className="chip red">{typeof m === 'string' ? m : m.name}</span>
-                                    ))}
-                                  </span>
-                                </div>
-                              )}
-                              {hasVulns && (
-                                <div className="exec-meta-row">
-                                  <span className="meta-label">Vulnerabilities:</span>
-                                  <span className="meta-values">
-                                    {step.vulnerabilities.map((v, vIdx) => (
-                                      <code key={vIdx} className="exec-code-badge">{typeof v === 'string' ? v : v.cve_id || v.name}</code>
-                                    ))}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </td>
+                          </div>
 
-                    <td style={{ verticalAlign: 'top' }}>
-                      {hasTTPs ? (
-                        <div className="exec-ttp-list">
-                          {step.ttps.map((ttp, tIdx) => (
-                            <div key={tIdx} className="exec-ttp-item">
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5mm', flexWrap: 'wrap' }}>
-                                {ttp.technique_id && (
-                                  <span className="tid">{ttp.technique_id}</span>
-                                )}
-                                {ttp.tactic && (
-                                  <span className="tag" style={{ background: '#fef3c7', color: '#92400e', fontSize: '6pt' }}>
-                                    {ttp.tactic}
-                                  </span>
-                                )}
-                              </div>
-                              <div style={{ marginTop: '0.8mm' }}>
-                                <strong>{ttp.technique || '-'}</strong>
-                              </div>
-                              {ttp.procedure && (
-                                <p className="m-0 mt-1 text-muted" style={{ fontSize: 'calc(6.8pt + 1px)' }}>
-                                  {ttp.procedure}
-                                </p>
-                              )}
-                            </div>
-                          ))}
                         </div>
-                      ) : (
-                        <span className="text-muted" style={{ fontSize: 'calc(7pt + 1px)' }}>-</span>
-                      )}
-                    </td>
-                  </tr>
+                      </td>
+                    </tr>
+
+                    {/* Path Steps Rows */}
+                    {isOpen && pathSteps.length > 0 ? (
+                      pathSteps.map((step, sIdx) => {
+                        const stepNum = step.step || sIdx + 1;
+                        const hasCategories = step.categories?.length > 0;
+                        const hasTTPs = step.ttps?.length > 0;
+
+                        return (
+                          <tr key={`path-${pIdx}-step-${sIdx}`} className="exec-step-row">
+                            <td style={{ verticalAlign: 'top' }}>
+                              <div className="exec-step-cell">
+                                <div className="exec-step-header-row">
+                                  <span className="step-num">Step {stepNum}</span>
+                                  {hasCategories && (
+                                    <div className="exec-tags-wrap">
+                                      {step.categories.map((cat, cIdx) => (
+                                        <span key={cIdx} className="tag category-tag">
+                                          {cat.replace(/_/g, ' ')}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div className="exec-step-body">
+                                  <strong className="exec-step-title">{step.title || step.action}</strong>
+                                  {step.action && step.title && step.action !== step.title && (
+                                    <p className="exec-step-action">{step.action}</p>
+                                  )}
+                                  {(step.tools?.length > 0 || step.malware?.length > 0 || step.vulnerabilities?.length > 0 || step.infrastructure?.length > 0) && (
+                                    <div className="exec-meta-list" style={{ marginTop: '1.2mm' }}>
+                                      {step.tools?.length > 0 && (
+                                        <div className="exec-meta-row">
+                                          <span className="meta-label">Tools:</span>
+                                          <div className="meta-values">
+                                            {step.tools.map((t, idx) => (
+                                              <span key={idx} className="exec-code-badge">{typeof t === 'string' ? t : t.name || t.value}</span>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+                                      {step.malware?.length > 0 && (
+                                        <div className="exec-meta-row">
+                                          <span className="meta-label">Malware:</span>
+                                          <div className="meta-values">
+                                            {step.malware.map((m, idx) => (
+                                              <span key={idx} className="exec-code-badge">{typeof m === 'string' ? m : m.name || m.value}</span>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+                                      {step.vulnerabilities?.length > 0 && (
+                                        <div className="exec-meta-row">
+                                          <span className="meta-label">CVEs:</span>
+                                          <div className="meta-values">
+                                            {step.vulnerabilities.map((v, idx) => (
+                                              <span key={idx} className="exec-code-badge">{typeof v === 'string' ? v : v.cve || v.name || v.id}</span>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+                                      {step.infrastructure?.length > 0 && (
+                                        <div className="exec-meta-row">
+                                          <span className="meta-label">Infra:</span>
+                                          <div className="meta-values">
+                                            {step.infrastructure.map((inf, idx) => (
+                                              <span key={idx} className="exec-code-badge">{typeof inf === 'string' ? inf : inf.value || inf.ip || inf.domain}</span>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </td>
+
+                            <td style={{ verticalAlign: 'top' }}>
+                              {hasTTPs ? (
+                                <div className="exec-ttp-list">
+                                  {step.ttps.map((ttp, tIdx) => (
+                                    <div key={tIdx} className="exec-ttp-item">
+                                      <div className="ttp-badge-row">
+                                        {ttp.technique_id && (
+                                          <span className="tid">{ttp.technique_id}</span>
+                                        )}
+                                        {ttp.tactic && (
+                                          <span className="tag tactic-tag">
+                                            {ttp.tactic}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div className="ttp-technique-title">
+                                        {ttp.technique || '-'}
+                                      </div>
+                                      {ttp.procedure && (
+                                        <p className="ttp-procedure-text">
+                                          {ttp.procedure}
+                                        </p>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <span className="text-muted text-dash">-</span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : isOpen && pathSteps.length === 0 ? (
+                      <tr className="exec-empty-step-row">
+                        <td colSpan="2" className="text-center text-muted py-2">
+                          No steps documented for this execution path
+                        </td>
+                      </tr>
+                    ) : null}
+                  </React.Fragment>
                 );
               })
             ) : (
               <tr>
-                <td colSpan="2" className="text-center">
+                <td colSpan="2" className="text-center text-muted py-3">
                   No confirmed execution paths documented
                 </td>
               </tr>
@@ -546,7 +610,7 @@ export default function IntelcardThreatActorDetailNew() {
           </tbody>
         </table>
 
-      
+
 
         <footer className="foot">
           <span>{threatData?.name || 'Threat Actor'} · Threat actor profile</span>
