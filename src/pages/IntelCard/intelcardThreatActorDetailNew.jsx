@@ -486,7 +486,7 @@ export default function IntelcardThreatActorDetailNew() {
           </div>
         </div>
 
-        <div className="title">
+        {/* <div className="title">
           MITRE ATT&amp;CK TTPs
         </div>
         <table>
@@ -514,7 +514,7 @@ export default function IntelcardThreatActorDetailNew() {
               </tr>
             )}
           </tbody>
-        </table>
+        </table> */}
 
         <div className="title">
           Indicators of compromise
