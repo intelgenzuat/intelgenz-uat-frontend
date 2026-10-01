@@ -382,50 +382,7 @@ export default function IntelcardThreatActorDetailNew() {
                                   {step.action && step.title && step.action !== step.title && (
                                     <p className="exec-step-action">{step.action}</p>
                                   )}
-                                  {(step.tools?.length > 0 || step.malware?.length > 0 || step.vulnerabilities?.length > 0 || step.infrastructure?.length > 0) && (
-                                    <div className="exec-meta-list" style={{ marginTop: '1.2mm' }}>
-                                      {step.tools?.length > 0 && (
-                                        <div className="exec-meta-row">
-                                          <span className="meta-label">Tools:</span>
-                                          <div className="meta-values">
-                                            {step.tools.map((t, idx) => (
-                                              <span key={idx} className="exec-code-badge">{typeof t === 'string' ? t : t.name || t.value}</span>
-                                            ))}
-                                          </div>
-                                        </div>
-                                      )}
-                                      {step.malware?.length > 0 && (
-                                        <div className="exec-meta-row">
-                                          <span className="meta-label">Malware:</span>
-                                          <div className="meta-values">
-                                            {step.malware.map((m, idx) => (
-                                              <span key={idx} className="exec-code-badge">{typeof m === 'string' ? m : m.name || m.value}</span>
-                                            ))}
-                                          </div>
-                                        </div>
-                                      )}
-                                      {step.vulnerabilities?.length > 0 && (
-                                        <div className="exec-meta-row">
-                                          <span className="meta-label">CVEs:</span>
-                                          <div className="meta-values">
-                                            {step.vulnerabilities.map((v, idx) => (
-                                              <span key={idx} className="exec-code-badge">{typeof v === 'string' ? v : v.cve || v.name || v.id}</span>
-                                            ))}
-                                          </div>
-                                        </div>
-                                      )}
-                                      {step.infrastructure?.length > 0 && (
-                                        <div className="exec-meta-row">
-                                          <span className="meta-label">Infra:</span>
-                                          <div className="meta-values">
-                                            {step.infrastructure.map((inf, idx) => (
-                                              <span key={idx} className="exec-code-badge">{typeof inf === 'string' ? inf : inf.value || inf.ip || inf.domain}</span>
-                                            ))}
-                                          </div>
-                                        </div>
-                                      )}
-                                    </div>
-                                  )}
+                               
                                 </div>
                               </div>
                             </td>
