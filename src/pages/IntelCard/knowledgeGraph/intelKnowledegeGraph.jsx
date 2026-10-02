@@ -879,125 +879,165 @@ const intelKnowledegeGraph = () => {
             {/* Header Section */}
             <div className="graph-header">
                 {/* Breadcrumb + Heading Group */}
-                <IntelTopcontent title="Neura View" />
+                <IntelTopcontent title="Neura View">
+                    {/* Malware Select Row */}
+                    <div className="picker-row d-flex align-items-center gap-3 flex-wrap mb-0">
+                        <div className="picker-group entity-picker-group" style={{ flex: '0 0 200px', width: '200px', minWidth: '200px', maxWidth: '200px' }}>
+                            <div className="select-wrapper" style={{ width: '100%', minWidth: 'unset', maxWidth: 'unset' }}>
+                                <select
+                                    className="form-select entity-dropdown-select rounded-pill"
+                                    value={selectedEntityType}
+                                    onChange={(e) => setSelectedEntityType(e.target.value)}
+                                >
+                                    <option value="malware">Malware</option>
+                                    <option value="threatactor">Threat Actor</option>
+                                    <option value="campaign">Campaign</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="picker-group">
+                            <div className="search-wrapper position-relative m-0">
+                                <Select
+                                    inputId="malware-select"
+                                    isMulti
+                                    options={malwareSelectOptions}
+                                    value={selectedMalwareSelectValue}
+                                    onChange={handleMalwareSelectChange}
+                                    isDisabled={isMalwareLoading}
+                                    isLoading={isMalwareLoading}
+                                    placeholder={
+                                        isMalwareLoading
+                                            ? "Loading…"
+                                            : selectedEntityType === "threatactor"
+                                            ? "Search Threat Actor to add"
+                                            : selectedEntityType === "malware"
+                                            ? "Search Malware to add"
+                                            : "Search Campaign to add"
+                                    }
+                                    closeMenuOnSelect={false}
+                                    isClearable
+                                    isSearchable
+                                    styles={reactSelectStyles}
+                                    components={{
+                                        ValueContainer: CustomValueContainer,
+                                        DropdownIndicator: CustomDropdownIndicator,
+                                        IndicatorSeparator: () => null
+                                    }}
+                                    noOptionsMessage={() => "No results found"}
+                                    className="malware-react-select"
+                                    classNamePrefix="malware-rs"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </IntelTopcontent>
 
                 {/* ================= ENTITY QUERY & MALWARE SELECTOR SECTION ================= */}
                 <div className="view-controls-card shadow-sm mt-3">
                     <div className="view-controls-section entity-query-section-white d-flex flex-column align-items-stretch gap-3">
-                        {/* Malware Select Row */}
-                        <div className="picker-row d-flex align-items-center gap-3 flex-wrap mb-0">
-                            <div className="picker-group entity-picker-group" style={{ flex: '0 0 200px', width: '200px', minWidth: '200px', maxWidth: '200px' }}>
-                                <div className="select-wrapper" style={{ width: '100%', minWidth: 'unset', maxWidth: 'unset' }}>
-                                    <select
-                                        className="form-select entity-dropdown-select rounded-pill"
-                                        value={selectedEntityType}
-                                        onChange={(e) => setSelectedEntityType(e.target.value)}
-                                    >
-                                        <option value="malware">Malware</option>
-                                        <option value="threatactor">Threat Actor</option>
-                                        <option value="campaign">Campaign</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div className="picker-group">
-                                <div className="search-wrapper position-relative m-0">
-                                    <Select
-                                        inputId="malware-select"
-                                        isMulti
-                                        options={malwareSelectOptions}
-                                        value={selectedMalwareSelectValue}
-                                        onChange={handleMalwareSelectChange}
-                                        isDisabled={isMalwareLoading}
-                                        isLoading={isMalwareLoading}
-                                        placeholder={
-                                            isMalwareLoading
-                                                ? "Loading…"
-                                                : selectedEntityType === "threatactor"
-                                                ? "Search Threat Actor to add"
-                                                : selectedEntityType === "malware"
-                                                ? "Search Malware to add"
-                                                : "Search Campaign to add"
-                                        }
-                                        closeMenuOnSelect={false}
-                                        isClearable
-                                        isSearchable
-                                        styles={reactSelectStyles}
-                                        components={{
-                                            ValueContainer: CustomValueContainer,
-                                            DropdownIndicator: CustomDropdownIndicator,
-                                            IndicatorSeparator: () => null
-                                        }}
-                                        noOptionsMessage={() => "No results found"}
-                                        className="malware-react-select"
-                                        classNamePrefix="malware-rs"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
                         {/* Threat Actors / Entities Section with Accordion */}
-                        <div className="threat-actors-section w-100">
-                            <div
-                                className="d-flex align-items-center justify-content-between cursor-pointer user-select-none"
-                                onClick={() => setIsOverviewAccordionOpen(!isOverviewAccordionOpen)}
-                                style={{ cursor: "pointer" }}
-                            >
-                                <div className="d-flex align-items-center">
-                                    <span className="section-title">SELECTED ENTITIES :</span>
-                                    <span className="selected-badge">{graphTags.length} Selected</span>
-                                </div>
+                        {(() => {
+                            const MAX_HEADER_CHIPS = 3;
+                            const headerChips = graphTags.slice(0, MAX_HEADER_CHIPS);
+                            const remainingChips = graphTags.slice(MAX_HEADER_CHIPS);
 
-                                <div className="accordion-toggle-icon d-flex align-items-center text-muted" style={{ fontSize: "16px" }}>
-                                    <i className={`bi ${isOverviewAccordionOpen ? "bi-dash" : "bi-plus"}`}></i>
-                                </div>
-                            </div>
+                            return (
+                                <div className="threat-actors-section w-100">
+                                    <div
+                                        className="d-flex align-items-center justify-content-between cursor-pointer user-select-none"
+                                        onClick={() => {
+                                            if (remainingChips.length > 0) {
+                                                setIsOverviewAccordionOpen(!isOverviewAccordionOpen);
+                                            }
+                                        }}
+                                        style={{ cursor: remainingChips.length > 0 ? "pointer" : "default" }}
+                                    >
+                                        <div className="d-flex align-items-center flex-wrap gap-2">
+                                            <span className="section-title">SELECTED ENTITIES :</span>
+                                            <span className="selected-badge">{graphTags.length} Selected</span>
 
-                            {isOverviewAccordionOpen && (
-                                <div className="accordion-content mt-3">
-                                    {/* Selected Entity Chips / Tags */}
-                                    {graphTags.length > 0 && (
-                                        <div className="selected-chips-container" aria-label="Selected entity chips">
-                                            {graphTags.map((tag) => {
-                                                const chipColor = getColourFor(tag.type || "Malware");
-                                                return (
-                                                    <div
-                                                        key={tag.key}
-                                                        className={`malware-chip ${tag.key === activeTagId ? "active" : ""}`}
-                                                        onClick={() => {
-                                                            setActiveTagId(tag.key);
-                                                            setFocusedNodeId(tag.nodeId);
-                                                        }}
-                                                    >
-                                                        <span className="chip-indicator" style={{ backgroundColor: chipColor }} />
-                                                        <span className="chip-text">{tag.name}</span>
-                                                        <button
-                                                            type="button"
-                                                            className="chip-close-btn"
-                                                            title={`Remove ${tag.name}`}
-                                                            onClick={(e) => handleRemoveTag(tag.key, e)}
+                                            {/* Header Entity Chips */}
+                                            {headerChips.length > 0 && (
+                                                <div className="selected-chips-container ms-2" aria-label="Selected entity chips" onClick={(e) => e.stopPropagation()}>
+                                                    {headerChips.map((tag) => {
+                                                        const chipColor = getColourFor(tag.type || "Malware");
+                                                        return (
+                                                            <div
+                                                                key={tag.key}
+                                                                className={`malware-chip ${tag.key === activeTagId ? "active" : ""}`}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setActiveTagId(tag.key);
+                                                                    setFocusedNodeId(tag.nodeId);
+                                                                }}
+                                                            >
+                                                                <span className="chip-indicator" style={{ backgroundColor: chipColor }} />
+                                                                <span className="chip-text">{tag.name}</span>
+                                                                <button
+                                                                    type="button"
+                                                                    className="chip-close-btn"
+                                                                    title={`Remove ${tag.name}`}
+                                                                    onClick={(e) => handleRemoveTag(tag.key, e)}
+                                                                >
+                                                                    <FiX />
+                                                                </button>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {remainingChips.length > 0 && (
+                                            <div
+                                                className="accordion-toggle-icon d-flex align-items-center text-muted"
+                                                style={{ fontSize: "16px", cursor: "pointer" }}
+                                                title={isOverviewAccordionOpen ? "Collapse remaining entities" : `Show ${remainingChips.length} more entities`}
+                                            >
+                                                <span className="badge rounded-pill bg-light text-dark border me-1" style={{ fontSize: "11px", fontWeight: 600 }}>
+                                                    +{remainingChips.length} more
+                                                </span>
+                                                <i className={`bi ${isOverviewAccordionOpen ? "bi-dash" : "bi-plus"}`}></i>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {isOverviewAccordionOpen && remainingChips.length > 0 && (
+                                        <div className="accordion-content mt-3">
+                                            {/* Remaining Entity Chips */}
+                                            <div className="selected-chips-container" aria-label="Remaining entity chips">
+                                                {remainingChips.map((tag) => {
+                                                    const chipColor = getColourFor(tag.type || "Malware");
+                                                    return (
+                                                        <div
+                                                            key={tag.key}
+                                                            className={`malware-chip ${tag.key === activeTagId ? "active" : ""}`}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setActiveTagId(tag.key);
+                                                                setFocusedNodeId(tag.nodeId);
+                                                            }}
                                                         >
-                                                            <FiX />
-                                                        </button>
-                                                    </div>
-                                                );
-                                            })}
+                                                            <span className="chip-indicator" style={{ backgroundColor: chipColor }} />
+                                                            <span className="chip-text">{tag.name}</span>
+                                                            <button
+                                                                type="button"
+                                                                className="chip-close-btn"
+                                                                title={`Remove ${tag.name}`}
+                                                                onClick={(e) => handleRemoveTag(tag.key, e)}
+                                                            >
+                                                                <FiX />
+                                                            </button>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
                                     )}
-
-                                    {/* Status Feedback Row */}
-                                    <div className="kg-status-row d-flex align-items-center justify-content-between mt-2">
-                                        <span className={`status-text ${isStatusError ? "text-danger" : "text-muted"}`}>
-                                            <FiActivity className="me-1" />
-                                            {statusMessage}
-                                        </span>
-                                        <span className="stats-summary text-muted">
-                                            Showing {filteredGraph.nodes.length} related nodes &middot; {filteredGraph.edges.length} relationships
-                                        </span>
-                                    </div>
                                 </div>
-                            )}
-                        </div>
+                            );
+                        })()}
                     </div>
                 </div>
             </div>
