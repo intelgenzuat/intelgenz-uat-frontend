@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { FiArrowLeft } from 'react-icons/fi';
 import '../../assets/styles/Intelcard/intelcardThreatActorDetailNew.scss';
 import { getTheatreIntelCardDetailedView } from '../../Context/Intelcard';
 
 export default function IntelcardThreatActorDetailNew() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [threatData, setThreatData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [expandedPaths, setExpandedPaths] = useState({ 0: true });
@@ -65,9 +67,14 @@ export default function IntelcardThreatActorDetailNew() {
       <section className="page">
         <header className="hero">
           <div className="top">
-            {/* <div>
-              Profile {threatData?.actor_id ? String(threatData.actor_id).padStart(2, '0') : '01'} / {summary?.last_seen?.date?.slice(0, 4) || new Date().getFullYear()}
-            </div> */}
+            <button
+              type="button"
+              className="back-btn"
+              onClick={() => navigate(-1)}
+            >
+              <FiArrowLeft /> Back
+            </button>
+            <div></div>
           </div>
           <div className="heroGrid">
             <div>
