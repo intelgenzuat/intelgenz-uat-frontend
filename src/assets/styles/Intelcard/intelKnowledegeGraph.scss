@@ -492,8 +492,9 @@
   .selected-chips-container {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 8px;
-    margin-top: 12px;
+    margin-top: 0;
 
     .malware-chip {
       display: inline-flex;
