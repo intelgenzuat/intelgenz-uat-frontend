@@ -89,7 +89,7 @@ const MOCK_CARDS = [
 ];
 
 
-export default function View() {
+export default function Threatpulse() {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState(location.state?.tab || 'customized');
   const [showFilter, setShowFilter] = useState(false);
