@@ -101,6 +101,7 @@ const Privateroutes = () => {
                         <Route exact path={blogsnewsadd} element={<AdminRoute><BlogsnewsEditpage noFooter /></AdminRoute>}></Route>
                     </Route>
                     <Route exact path={EmergingThreatReport} element={<EmergingThreatReportpage />}></Route>
+                    <Route exact path="/emerging-threat-report" element={<EmergingThreatReportpage />}></Route>
                     <Route exact path="*" element={<Notfoundpage />}></Route>
                 </Routes>
             </Suspense>

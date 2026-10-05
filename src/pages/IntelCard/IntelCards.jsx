@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getThreatCard } from '../../Context/View';
 import '../../assets/styles/Intelcard/intelcard.scss';
 import { FiArrowRight } from 'react-icons/fi';
 import { ImEarth } from 'react-icons/im';

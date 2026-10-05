@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Pagination.scss';
 
 export default function Pagination({
   currentPage = 1,

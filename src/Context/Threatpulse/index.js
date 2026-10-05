@@ -6,10 +6,26 @@ import axiosInstance from "../../Api/Axiosinstance/Axiosinstance";
 
 export const getThreatPulseList = (props) => onResponse => {
     try {
-        let BASE_URL = `${GET_THREAT_PULSE_LIST}?`;
-        if (props?.page) {
-            BASE_URL += 'page=' + props?.page;
+        let params = [];
+        if (props?.client_name) {
+            params.push('client_name=' + encodeURIComponent(props?.client_name));
         }
+        if (props?.page) {
+            params.push('page=' + props?.page);
+        }
+        params.push('view=' + encodeURIComponent(props?.view || 'all'));
+        if (props?.curation) {
+            params.push('curation=' + encodeURIComponent(props?.curation));
+        }
+        if (props?.query) {
+            params.push('query=' + encodeURIComponent(props?.query));
+        }
+        if (props?.limit) {
+            params.push('limit=' + props?.limit);
+        }
+
+        let queryString = params.length > 0 ? `?${params.join('&')}` : '';
+        let BASE_URL = `${GET_THREAT_PULSE_LIST}${queryString}`;
 
         axiosInstance.get(BASE_URL)
             .then((response) => {

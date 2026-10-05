@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../../assets/styles/view/View.scss';
 import ViewSidebar from '../../components/sidebars/ViewSidebar'
-import ThreatCard from '../../components/ThreatCard';
+import ThreatCard from './ThreatCard';
 import AllViewList from './AllViewList';
 import Filter from '../../components/Filter';
 import Voicechatdrawer from '../../components/Drawers/Voicechatdrawer';
@@ -11,87 +11,13 @@ import { LuRefreshCw, LuChevronDown, LuCheck } from 'react-icons/lu';
 import { IoFilterSharp } from 'react-icons/io5';
 import { useNavigate, useLocation, useOutletContext } from 'react-router-dom';
 import Topcontent from './Topcontent';
-import { getThreatCard } from '../../Context/View';
-
-const MOCK_CARDS = [
-  {
-    "id": 1,
-    "date": "2026-04-20",
-    "title": "Ransomware Attack on Banking Sector",
-    "threat_type": "Ransomware",
-    "threat_group_names": ["DarkLock", "Shadow Team"],
-    "target_countries": ["India", "United States"],
-    "target_regions": ["Asia", "North America"],
-    "industries": ["Banking", "Finance"],
-    "severity_level": "high",
-    "analyst_comments": "Multiple banks reported encrypted systems and ransom demands."
-  },
-  {
-    "id": 2,
-    "date": "2026-04-19",
-    "title": "Phishing Campaign Targeting Healthcare",
-    "threat_type": "Phishing",
-    "threat_group_names": ["PhishNet"],
-    "target_countries": ["United Kingdom"],
-    "target_regions": ["Europe"],
-    "industries": ["Healthcare"],
-    "severity_level": "medium",
-    "analyst_comments": "Fake emails impersonating hospital staff to steal credentials."
-  },
-  {
-    "id": 3,
-    "date": "2026-04-18",
-    "title": "DDoS Attack on E-commerce Platforms",
-    "threat_type": "DDoS",
-    "threat_group_names": ["StormBreak"],
-    "target_countries": ["Germany", "France"],
-    "target_regions": ["Europe"],
-    "industries": ["E-commerce"],
-    "severity_level": "high",
-    "analyst_comments": "Websites experienced downtime due to massive traffic floods."
-  },
-  {
-    "id": 4,
-    "date": "2026-04-17",
-    "title": "Malware Spread via Mobile Apps",
-    "threat_type": "Malware",
-    "threat_group_names": ["AppTrap"],
-    "target_countries": ["India"],
-    "target_regions": ["Asia"],
-    "industries": ["Technology"],
-    "severity_level": "medium",
-    "analyst_comments": "Malicious apps found stealing user data from mobile devices."
-  },
-  {
-    "id": 5,
-    "date": "2026-04-16",
-    "title": "Insider Threat in IT Company",
-    "threat_type": "Insider Threat",
-    "threat_group_names": ["Internal Actor"],
-    "target_countries": ["Canada"],
-    "target_regions": ["North America"],
-    "industries": ["IT Services"],
-    "severity_level": "low",
-    "analyst_comments": "Employee leaked sensitive company information."
-  },
-  {
-    "id": 6,
-    "date": "2026-04-15",
-    "title": "Zero-Day Vulnerability Exploitation",
-    "threat_type": "Zero-Day",
-    "threat_group_names": ["Unknown"],
-    "target_countries": ["Australia"],
-    "target_regions": ["Oceania"],
-    "industries": ["Government"],
-    "severity_level": "critical",
-    "analyst_comments": "Attackers exploited unknown vulnerability affecting systems."
-  }
-];
+import { getThreatPulseList, getThreatPulseDetailedReport } from '../../Context/Threatpulse';
+import Pagination from '../../components/pagination/Pagination';
 
 
 export default function Threatpulse() {
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState(location.state?.tab || 'customized');
+  const [activeTab, setActiveTab] = useState(location.state?.tab || 'all');
   const [showFilter, setShowFilter] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isVoicechatDrawerOpen, setIsVoicechatDrawerOpen] = useState(false);
@@ -146,24 +72,26 @@ export default function Threatpulse() {
   };
 
   const getFilteredCards = () => {
-    const results = cardData?.data?.results || [];
+    const results = cardData?.items || cardData?.data?.items || cardData?.data?.results || cardData?.results || (Array.isArray(cardData?.data) ? cardData.data : Array.isArray(cardData) ? cardData : []);
     let filtered = results;
 
     if (selectedType !== 'All') {
       const lowerType = selectedType.toLowerCase();
       filtered = results.filter(threat => {
+        const impactSection = threat?.sections?.find(s => s.type === 'impact_overview') || threat?.sections?.[0] || {};
         const threatType = (threat.threat_type || '').toLowerCase();
         const groupNames = (threat.threat_group_names || []).map(g => g.toLowerCase());
-        const title = (threat.title || '').toLowerCase();
+        const title = (threat.report?.title || threat.title || '').toLowerCase();
+        const sectors = (impactSection?.affected_sectors || threat.industries || []).map(s => s.toLowerCase());
 
         if (lowerType === 'threat actor') {
           return threatType.includes('actor') || threatType.includes('insider') || (groupNames.length > 0 && !groupNames.includes('unknown') && !groupNames.includes('internal actor'));
         }
         if (lowerType === 'malware') {
-          return threatType.includes('malware') || threatType.includes('ransomware');
+          return threatType.includes('malware') || threatType.includes('ransomware') || title.includes('ransomware') || title.includes('malware');
         }
         if (lowerType === 'campaign') {
-          return threatType.includes('campaign') || threatType.includes('phishing');
+          return threatType.includes('campaign') || threatType.includes('phishing') || title.includes('campaign');
         }
         if (lowerType === 'situation') {
           return threatType.includes('ddos') || threatType.includes('situation') || threatType.includes('zero-day');
@@ -176,15 +104,19 @@ export default function Threatpulse() {
     }
 
     return [...filtered].sort((a, b) => {
+      const dateA = a.report?.activity_period?.end || a.report?.activity_period?.start || a.date || 0;
+      const dateB = b.report?.activity_period?.end || b.report?.activity_period?.start || b.date || 0;
       if (sortBy === 'New') {
-        return new Date(b.date || 0) - new Date(a.date || 0);
+        return new Date(dateB) - new Date(dateA);
       }
       if (sortBy === 'Older') {
-        return new Date(a.date || 0) - new Date(b.date || 0);
+        return new Date(dateA) - new Date(dateB);
       }
       if (sortBy === 'Severity') {
-        const rankA = severityRank[(a.severity_level || '').toLowerCase()] || 0;
-        const rankB = severityRank[(b.severity_level || '').toLowerCase()] || 0;
+        const sevA = a.sections?.[0]?.severity || a.severity_level || a.severity || '';
+        const sevB = b.sections?.[0]?.severity || b.severity_level || b.severity || '';
+        const rankA = severityRank[String(sevA).toLowerCase()] || 0;
+        const rankB = severityRank[String(sevB).toLowerCase()] || 0;
         return rankB - rankA;
       }
       return 0;
@@ -197,34 +129,38 @@ export default function Threatpulse() {
     }
   }, [location.state]);
 
-  useEffect(() => {
-    if (activeTab === 'customized') {
-      setSelectedType('All');
-    }
-  }, [activeTab]);
+  const [page, setPage] = useState(1);
 
-  const getThreatCardData = () => {
-    setLoading(true)
+  const getThreatPulseListData = (pageNo = page, viewType = activeTab) => {
+    setLoading(true);
+    const viewParam = viewType === 'all' ? 'all' : 'curated';
     try {
-      getThreatCard({})(response => {
+      getThreatPulseList({
+        client_name: 'MERIDIAN FINANCIAL GROUP',
+        page: pageNo,
+        view: viewParam,
+      })((response) => {
         console.log(response, "res");
-        if (response && response.status && response?.data?.data?.results) {
-          setCardData(response?.data)
-          setLoading(false)
-        } else {
-          setCardData({ data: { results: MOCK_CARDS } })
-          setLoading(false)
+        if (response) {
+          setCardData(response);
         }
-      })
+        setLoading(false);
+      });
     } catch (error) {
-      console.error("Error calling getThreatCard API:", error);
-      setCardData({ data: { results: MOCK_CARDS } })
-      setLoading(false)
+      console.error("Error calling getThreatPulseList API:", error);
+      setLoading(false);
     }
-  }
+  };
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    getThreatPulseListData(newPage, activeTab);
+  };
+
   useEffect(() => {
-    getThreatCardData()
-  }, [])
+    setPage(1);
+    getThreatPulseListData(1, activeTab);
+  }, [activeTab]);
   console.log(cardData, "cardData");
 
   return (
@@ -314,7 +250,7 @@ export default function Threatpulse() {
                 </div>
               </div>
 
-              <button className="refresh-btn shadow-sm" onClick={getThreatCardData}>
+              <button className="refresh-btn shadow-sm" onClick={getThreatPulseListData}>
                 <LuRefreshCw />
               </button>
 
@@ -374,19 +310,19 @@ export default function Threatpulse() {
             </div>
 
             {/* SCROLLABLE GRID CONTAINER */}
-            <div className="cards-scroll-area px-3 w-100">
+            <div className="cards-scroll-area px-3 w-100 flex-grow-1 d-flex flex-column">
               {loading ? (
-                <div className="d-flex justify-content-center align-items-center py-5">
-                  <div className="spinner-border text-primary" role="status">
+                <div className="d-flex flex-grow-1 justify-content-center align-items-center w-100" style={{ minHeight: '60vh' }}>
+                  <div className="spinner-border text-primary" role="status" style={{ width: '2.5rem', height: '2.5rem' }}>
                     <span className="visually-hidden">Loading...</span>
                   </div>
                 </div>
               ) : getFilteredCards().length === 0 ? (
-                <div className="d-flex flex-column justify-content-center align-items-center py-5 w-100">
+                <div className="d-flex flex-column flex-grow-1 justify-content-center align-items-center py-5 w-100" style={{ minHeight: '50vh' }}>
                   <div className="text-muted mb-2 fw-medium" style={{ fontSize: '15px' }}>
                     No reports found for "{selectedType}"
                   </div>
-                  <button 
+                  <button
                     onClick={() => setSelectedType('All')}
                     className="btn btn-sm text-decoration-none fw-semibold"
                     style={{ color: '#4300d2', backgroundColor: '#f1f0fe', borderRadius: '8px', padding: '6px 16px' }}
@@ -397,7 +333,7 @@ export default function Threatpulse() {
               ) : (
                 <div className="row g-3 mb-2">
                   {getFilteredCards().map(threat => (
-                    <div key={threat.id} className="col-12 col-xl-4 col-md-6 mb-1">
+                    <div key={threat.report_id || threat.id} className="col-12 col-xl-4 col-md-6 mb-1">
                       <ThreatCard cardData={threat} />
                     </div>
                   ))}
@@ -406,28 +342,15 @@ export default function Threatpulse() {
             </div>
 
             {/* Pagination (Fixed at bottom) */}
-
-          </div>
-          <div className="pagination-wrapper">
-            <div className="pagination-container shadow-sm">
-              <span className="pagination-info">01-09 of 120</span>
-              <div className="pagination-controls">
-                <button className="pagination-btn"><i className="bi bi-chevron-left"></i></button>
-                <button className="pagination-btn active">1</button>
-                <button className="btn btn-sm btn-light bg-transparent border-0 text-secondary">2</button>
-                <button className="btn btn-sm btn-light bg-transparent border-0 text-secondary">3</button>
-                <button className="btn btn-sm btn-light bg-transparent border-0 text-secondary">4</button>
-                <button className="btn btn-sm btn-light bg-transparent border-0 text-secondary">5</button>
-                <span className="pagination-ellipsis">...</span>
-                <button className="btn btn-sm btn-light bg-transparent border-0 text-secondary">20</button>
-                <button className="pagination-btn"><i className="bi bi-chevron-right"></i></button>
-              </div>
-              <div className="pagination-page-jump">
-                <span>Page</span>
-                <input type="text" className="pagination-input" defaultValue="101" />
-                <button className="pagination-go-btn">Go</button>
-              </div>
-            </div>
+            {!loading && getFilteredCards().length > 0 && (
+              <Pagination
+                currentPage={cardData?.page || page}
+                totalPages={cardData?.total_pages || 1}
+                totalItems={cardData?.total_items || getFilteredCards().length}
+                pageSize={cardData?.page_size || 6}
+                onPageChange={handlePageChange}
+              />
+            )}
           </div>
         </div>
 

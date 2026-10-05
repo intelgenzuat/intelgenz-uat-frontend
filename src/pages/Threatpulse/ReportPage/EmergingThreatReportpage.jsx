@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { FiMonitor, FiUser, FiGlobe, FiShield } from 'react-icons/fi';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { FiMonitor, FiUser, FiGlobe, FiShield, FiArrowLeft } from 'react-icons/fi';
 import EmergingThreatHeader from './EmergingThreatHeader';
 import EmergingThreatFooter from './EmergingThreatFooter';
 import logo from '../../../assets/images/logo.png';
@@ -24,6 +25,9 @@ const GRADIENT_GROUPS = [
 ];
 
 export default function EmergingThreatReportpage() {
+    const { id } = useParams();
+    const location = useLocation();
+    const navigate = useNavigate();
     const paragraphText = `In May 2026, FortiGuard Labs identified an attack targeting users in Spain and Portugal involving 
     the banking Trojan Ousaban. This malware has been active in Brazil and is spread through an MSI downloader. 
     The malicious payload involves a DLL file that is run via DLL side-loading or process injection. In this campaign, the threat actor primarily targets users in Spain and Portugal. Figure 1 shows how the attack unfolds. The phishing PDF tricks victims into visiting a malicious webpage that scans the user's environment. If they are in Spain or Portugal, the webpage downloads a VBS file to kickstart the next part of the attack. The final payload is an EXE file that is dropped onto the victim’s computer and executed by the VBS script. In May 2026, FortiGuard Labs identified an attack targeting users in Spain and Portugal involving the banking Trojan Ousaban. This malware has been active in Brazil and is spread through an MSI downloader. The malicious payload involves a DLL file that is run via DLL side-loading or process injection. In this campaign, the threat actor primarily targets users in Spain and Portugal. Figure 1 shows how the attack unfolds. The phishing PDF tricks victims into visiting a malicious webpage that scans the user's environment. If they are in Spain or Portugal, the webpage downloads a VBS file to kickstart the next part of the attack. The final payload is an EXE file that is dropped onto the victim’s computer and executed by the VBS script. In May 2026, FortiGuard Labs identified an attack targeting users in Spain and Portugal involving the banking Trojan Ousaban. This malware has been active in Brazil and is spread through an MSI downloader. The malicious payload involves a DLL file that is run via DLL side-loading or process injection. In this campaign, the threat actor primarily targets users in Spain and Portugal. Figure 1 shows how the attack unfolds. The phishing PDF tricks victims into visiting a malicious webpage that scans the user's environment. If they are in Spain or Portugal, the webpage downloads a VBS file to kickstart the next part of the attack. The final payload is an EXE file that is dropped onto the victim’s computer and executed by the VBS script. In May 2026, FortiGuard Labs identified an attack targeting users in Spain and Portugal involving the banking Trojan Ousaban. This malware has been active in Brazil and is spread through an MSI downloader. The malicious payload involves a DLL file that is run via DLL side-loading or process injection. In this campaign, the threat actor primarily targets users in Spain and Portugal. Figure 1 shows how the attack unfolds. The phishing PDF tricks victims into visiting a malicious webpage that scans the user's environment. If they are in Spain or Portugal, the webpage downloads a VBS file to kickstart the next part of the attack. The final payload is an EXE file that is dropped onto the victim’s
@@ -51,6 +55,15 @@ export default function EmergingThreatReportpage() {
                 <div className="hero-watermark"></div>
 
                 <div className="hero-text-content">
+                    <button
+                        type="button"
+                        className="hero-back-btn"
+                        onClick={() => navigate(-1)}
+                        title="Go back"
+                    >
+                        <FiArrowLeft className="back-icon" />
+                        <span>Back</span>
+                    </button>
                     <h1 className="hero-title">
                         Analysis of Ongoing Ousaban Attacks Targeting the <br /> Iberian Peninsula
                     </h1>

@@ -25,9 +25,11 @@
     border: 2px solid transparent;
     border-radius: 16px;
     position: relative;
-    padding: 12px;
+    padding: 10px 12px;
+    display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
+    min-height: 72px;
 
     background:
       linear-gradient(90deg, #f3f0ff 0%, #fff1f2 100%) padding-box,
@@ -39,6 +41,7 @@
 
     .date-badge {
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04) !important;
+      flex-shrink: 0;
     }
   }
 
@@ -51,7 +54,58 @@
   .info-list {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 7px;
+  }
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+
+    .tc-icon {
+      font-size: 15px;
+      flex-shrink: 0;
+      stroke-width: 0px !important;
+    }
+
+    .tc-label {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #334155;
+      white-space: nowrap;
+      flex-shrink: 0;
+      min-width: 108px;
+    }
+
+    .tc-badge-region {
+      background-color: #fff;
+      font-size: 11px;
+      border: 1px solid #e2e8f0;
+      color: #1e293b;
+      font-weight: 400;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      display: inline-block;
+      text-align: center;
+      padding: 3px 10px;
+    }
+
+    &.severity-row {
+      .tc-badge-severity {
+        font-size: 11px;
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 3px 14px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        flex-shrink: 0;
+      }
+    }
   }
 
   .view-report-btn {
@@ -60,7 +114,6 @@
     background: linear-gradient(90deg, #4c0a829c 0%, #a0005585 50%, #e60026bb 100%);
     border: none;
     color: #ffff;
-
   }
 }
 
@@ -84,10 +137,15 @@
 }
 
 .tc-banner-text {
-  font-size: 14px;
-  line-height: 1.4;
-  font-weight: 400;
-  color: #000000;
+  font-size: 13.5px;
+  line-height: 1.35;
+  font-weight: 500;
+  color: #0f172a;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 0;
 }
 
 .tc-icon {
