@@ -7,6 +7,7 @@ import '../../assets/styles/threatactorprofile/threatactorprofilimg.scss';
 import { getThreatActorProfiling, getThreatActorByTechniques } from '../../Context/ThreatActorprofiling';
 import AdversaryTriageTopcontent from './AdversaryTriageTopcontent';
 import toast from 'react-hot-toast';
+import Loader from '../../components/helper/Loader';
 
 // Custom sub-components for pill-styled search select
 const CustomValueContainer = ({ children, ...props }) => (
@@ -732,8 +733,7 @@ export default function ThreatActorProfilingTable() {
                 <tr>
                   <td colSpan="6" className="text-center py-5 text-muted" style={{ height: '320px', verticalAlign: 'middle' }}>
                     <div className="d-flex flex-column align-items-center justify-content-center gap-2">
-                      <div className="spinner-border text-primary" role="status" style={{ width: '2rem', height: '2rem' }}></div>
-                      <span>Loading threat actors...</span>
+                      <Loader />
                     </div>
                   </td>
                 </tr>

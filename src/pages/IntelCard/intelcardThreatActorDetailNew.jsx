@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import '../../assets/styles/Intelcard/intelcardThreatActorDetailNew.scss';
 import { getTheatreIntelCardDetailedView } from '../../Context/Intelcard';
+import Loader from '../../components/helper/Loader';
 
 export default function IntelcardThreatActorDetailNew() {
   const { id } = useParams();
@@ -40,9 +41,7 @@ export default function IntelcardThreatActorDetailNew() {
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center py-5 vh-100">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
+        <Loader />
       </div>
     );
   }

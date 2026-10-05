@@ -44,9 +44,17 @@ export const getThreatPulseList = (props) => onResponse => {
 
 export const getThreatPulseDetailedReport = (props) => onResponse => {
     try {
-        let BASE_URL = props?.id || props?.actor_id
-            ? `${GET_THREAT_PULSE_DETAILED_REPORT}/${props?.id || props?.actor_id}`
-            : `${GET_THREAT_PULSE_DETAILED_REPORT}`;
+        const reportId = props?.id || props?.report_id || props?.actor_id || '';
+        let params = [];
+        if (props?.client_name) {
+            params.push('client_name=' + encodeURIComponent(props?.client_name));
+        }
+        let queryString = params.length > 0 ? `?${params.join('&')}` : '';
+
+        const baseEndpoint = GET_THREAT_PULSE_LIST.replace(/\/+$/, '');
+        let BASE_URL = reportId
+            ? `${baseEndpoint}/${encodeURIComponent(reportId)}${queryString}`
+            : `${baseEndpoint}${queryString}`;
 
         axiosInstance.get(BASE_URL)
             .then((response) => {

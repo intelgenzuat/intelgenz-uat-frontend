@@ -6,6 +6,7 @@ import { PiBug, PiShieldWarningDuotone } from 'react-icons/pi';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { getTheatreIntelCardsList } from '../../Context/Intelcard';
 import Pagination from '../../components/pagination/Pagination';
+import Loader from '../../components/helper/Loader';
 import logoonly from '../../assets/images/logoonly.png';
 
 
@@ -224,9 +225,7 @@ export default function IntelCards() {
       <div className="intelcard-cards-scroll-area px-3 w-100">
         {loading ? (
           <div className="intelcard-spinner-container d-flex justify-content-center align-items-center py-5" style={{ minHeight: '300px' }}>
-            <div className="intelcard-spinner-border spinner-border text-primary" role="status" style={{ width: '2.5rem', height: '2.5rem' }}>
-              <span className="visually-hidden">Loading...</span>
-            </div>
+            <Loader />
           </div>
         ) : threatData?.items?.length > 0 ? (
           <div className="intelcard-cards-row row g-3 mb-2">

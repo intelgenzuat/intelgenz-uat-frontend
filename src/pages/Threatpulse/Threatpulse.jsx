@@ -13,6 +13,7 @@ import { useNavigate, useLocation, useOutletContext } from 'react-router-dom';
 import Topcontent from './Topcontent';
 import { getThreatPulseList, getThreatPulseDetailedReport } from '../../Context/Threatpulse';
 import Pagination from '../../components/pagination/Pagination';
+import Loader from '../../components/helper/Loader';
 
 
 export default function Threatpulse() {
@@ -313,9 +314,7 @@ export default function Threatpulse() {
             <div className="cards-scroll-area px-3 w-100 flex-grow-1 d-flex flex-column">
               {loading ? (
                 <div className="d-flex flex-grow-1 justify-content-center align-items-center w-100" style={{ minHeight: '60vh' }}>
-                  <div className="spinner-border text-primary" role="status" style={{ width: '2.5rem', height: '2.5rem' }}>
-                    <span className="visually-hidden">Loading...</span>
-                  </div>
+                  <Loader text="Loading" />
                 </div>
               ) : getFilteredCards().length === 0 ? (
                 <div className="d-flex flex-column flex-grow-1 justify-content-center align-items-center py-5 w-100" style={{ minHeight: '50vh' }}>

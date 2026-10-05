@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
+import Loader from './components/helper/Loader';
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Layout from './layout/Layout'
 import {
@@ -74,7 +75,7 @@ const Privateroutes = () => {
 
     return (
         <div>
-            <Suspense fallback={<div className="d-flex justify-content-center align-items-center vh-100 vw-100" ></div>}>
+            <Suspense fallback={<div className="d-flex justify-content-center align-items-center vh-100 vw-100"><Loader /></div>}>
                 <Routes>
                     <Route exact path="/" element={role === 'Admin' ? <AdminLayout /> : <Layout />}>
                         <Route exact path={Home} element={role === 'Admin' ? <Dashboardpage /> : <Homepage />}></Route>
