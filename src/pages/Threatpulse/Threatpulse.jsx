@@ -163,6 +163,7 @@ export default function Threatpulse() {
     getThreatPulseListData(1, activeTab);
   }, [activeTab]);
   console.log(cardData, "cardData");
+  console.log(selectedType, "selectedType");
 
   return (
     <div className="view-page-container container-fluid p-0 d-flex flex-column h-100 overflow-hidden">
@@ -319,7 +320,7 @@ export default function Threatpulse() {
               ) : getFilteredCards().length === 0 ? (
                 <div className="d-flex flex-column flex-grow-1 justify-content-center align-items-center py-5 w-100" style={{ minHeight: '50vh' }}>
                   <div className="text-muted mb-2 fw-medium" style={{ fontSize: '15px' }}>
-                    No reports found for "{selectedType}"
+                    No reports found for "{activeTab === 'customized' ? (selectedType === 'All' ? 'Curated' : selectedType) : selectedType}"
                   </div>
                   <button
                     onClick={() => setSelectedType('All')}

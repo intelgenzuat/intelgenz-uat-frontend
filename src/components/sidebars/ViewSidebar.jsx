@@ -65,14 +65,14 @@ export default function ViewSidebar({ activeTab = 'customized', setActiveTab, co
 
           <ul className="sidebar-nav list-unstyled mb-0 px-2">
             <li
-              className={`nav-item d-flex align-items-center mb-2 px-3 py-2 rounded-3 ${activeTab === 'customized' ? 'active' : ''}`}
+              className={`nav-item d-flex align-items-center mb-2 px-3 py-2 rounded-3 ${activeTab === 'customized' || activeTab === 'all' ? 'active' : ''}`}
               onClick={() => setActiveTab && setActiveTab('customized')}
               style={{ overflow: 'hidden', whiteSpace: 'nowrap', justifyContent: collapsed ? 'center' : 'flex-start', paddingLeft: collapsed ? '0' : undefined, paddingRight: collapsed ? '0' : undefined }}
             >
-              <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0" style={activeTab === 'customized' ? { width: '28px', height: '28px', backgroundColor: '#fff', borderRadius: '50%', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { width: '28px', height: '28px', backgroundColor: 'transparent', borderRadius: '50%' }}>
+              <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0" style={activeTab === 'customized' || activeTab === 'all' ? { width: '28px', height: '28px', backgroundColor: '#fff', borderRadius: '50%', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { width: '28px', height: '28px', backgroundColor: 'transparent', borderRadius: '50%' }}>
                 <MdCrisisAlert className="text-danger" style={{ fontSize: '16px' }} />
               </div>
-              {!collapsed && <span className={`  ${activeTab === 'customized' ? 'text-dark' : 'text-secondary'}`} style={{ fontSize: '15px', fontWeight: 500 }}>Curated View</span>}
+              {!collapsed && <span className={`  ${activeTab === 'customized' || activeTab === 'all' ? 'text-dark' : 'text-secondary'}`} style={{ fontSize: '15px', fontWeight: 500 }}>Curated View</span>}
             </li>
 
             {/* <li
