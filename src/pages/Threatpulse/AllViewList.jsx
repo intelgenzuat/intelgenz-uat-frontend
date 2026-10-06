@@ -83,7 +83,8 @@ const severityColor = (level) => {
   return { bg: '#22c55e', text: '#fff' };
 };
 
-export default function AllViewList({ selectedType, sortBy = 'New' }) {
+export default function AllViewList({ selectedType, sortBy = 'New', activeTab }) {
+  console.log(selectedType, "selectedType");
   const navigate = useNavigate();
 
   const severityRank = {
@@ -172,7 +173,7 @@ export default function AllViewList({ selectedType, sortBy = 'New' }) {
             {sortedList.length === 0 ? (
               <tr>
                 <td colSpan="9" className="text-center py-5 text-muted fw-medium" style={{ fontSize: '15px' }}>
-                  No reports found for "{selectedType}"
+                  No reports found for "{activeTab === 'customized' ? (selectedType === 'All' ? 'Curated' : selectedType) : selectedType}"
                 </td>
               </tr>
             ) : (
