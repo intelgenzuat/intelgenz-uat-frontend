@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { FiMonitor, FiUser, FiGlobe, FiShield, FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft } from 'react-icons/fi';
 import EmergingThreatHeader from './EmergingThreatHeader';
 import EmergingThreatFooter from './EmergingThreatFooter';
 import logo from '../../../assets/images/logo.png';
@@ -32,31 +32,31 @@ export default function EmergingThreatReportpage() {
     const [reportData, setReportData] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const defaultParagraphText = `In May 2026, FortiGuard Labs identified an attack targeting users in Spain and Portugal involving 
-    the banking Trojan Ousaban. This malware has been active in Brazil and is spread through an MSI downloader. 
-    The malicious payload involves a DLL file that is run via DLL side-loading or process injection. In this campaign, the threat actor primarily targets users in Spain and Portugal. Figure 1 shows how the attack unfolds. The phishing PDF tricks victims into visiting a malicious webpage that scans the user's environment. If they are in Spain or Portugal, the webpage downloads a VBS file to kickstart the next part of the attack. The final payload is an EXE file that is dropped onto the victim’s computer and executed by the VBS script. In May 2026, FortiGuard Labs identified an attack targeting users in Spain and Portugal involving the banking Trojan Ousaban. This malware has been active in Brazil and is spread through an MSI downloader. The malicious payload involves a DLL file that is run via DLL side-loading or process injection. In this campaign, the threat actor primarily targets users in Spain and Portugal. Figure 1 shows how the attack unfolds. The phishing PDF tricks victims into visiting a malicious webpage that scans the user's environment. If they are in Spain or Portugal, the webpage downloads a VBS file to kickstart the next part of the attack. The final payload is an EXE file that is dropped onto the victim’s computer and executed by the VBS script. In May 2026, FortiGuard Labs identified an attack targeting users in Spain and Portugal involving the banking Trojan Ousaban. This malware has been active in Brazil and is spread through an MSI downloader. The malicious payload involves a DLL file that is run via DLL side-loading or process injection. In this campaign, the threat actor primarily targets users in Spain and Portugal. Figure 1 shows how the attack unfolds. The phishing PDF tricks victims into visiting a malicious webpage that scans the user's environment. If they are in Spain or Portugal, the webpage downloads a VBS file to kickstart the next part of the attack. The final payload is an EXE file that is dropped onto the victim’s computer and executed by the VBS script. In May 2026, FortiGuard Labs identified an attack targeting users in Spain and Portugal involving the banking Trojan Ousaban. This malware has been active in Brazil and is spread through an MSI downloader. The malicious payload involves a DLL file that is run via DLL side-loading or process injection. In this campaign, the threat actor primarily targets users in Spain and Portugal. Figure 1 shows how the attack unfolds. The phishing PDF tricks victims into visiting a malicious webpage that scans the user's environment. If they are in Spain or Portugal, the webpage downloads a VBS file to kickstart the next part of the attack. The final payload is an EXE file that is dropped onto the victim’s computer and executed by the VBS script. In May 2026, FortiGuard Labs identified an attack targeting users in Spain and Portugal involving the banking Trojan Ousaban. This malware has been active in Brazil and is spread through an MSI downloader. The malicious payload involves a DLL file that is run via DLL side-loading or process injection. In this campaign, the threat actor primarily targets users in Spain and Portugal. Figure 1 shows how the attack unfolds. The phishing PDF tricks victims into visiting a malicious webpage that scans the user's environment. If they are in Spain or Portugal, the webpage downloads a VBS file to kickstart the next part of the attack. The final payload is an EXE file that is dropped onto the victim’s computer and executed by the VBS script.`;
+    const fetchDetailedReport = (reportId, clientName) => {
+        if (!reportId) return;
+        setLoading(true);
+        try {
+            getThreatPulseDetailedReport({
+                id: reportId,
+                client_name: clientName || 'Meridian Financial Group',
+            })((response) => {
+                console.log(response, "detailed report res");
+                if (response) {
+                    setReportData(response?.data || response);
+                }
+                setLoading(false);
+            });
+        } catch (error) {
+            console.error("Error calling getThreatPulseDetailedReport API:", error);
+            setLoading(false);
+        }
+    };
+    console.log(reportData, "DetailedreportData");
 
     useEffect(() => {
         const reportId = id || location.state?.report_id || location.state?.data?.report_id || location.state?.data?.id;
         const clientName = location.state?.client_name || location.state?.data?.client_name || 'Meridian Financial Group';
-        if (reportId) {
-            setLoading(true);
-            try {
-                getThreatPulseDetailedReport({
-                    id: reportId,
-                    client_name: clientName,
-                })((response) => {
-                    console.log(response, "detailed report res");
-                    if (response) {
-                        setReportData(response);
-                    }
-                    setLoading(false);
-                });
-            } catch (error) {
-                console.error("Error calling getThreatPulseDetailedReport API:", error);
-                setLoading(false);
-            }
-        }
+        fetchDetailedReport(reportId, clientName);
     }, [id, location.state]);
 
     // Pick a random gradient group once per mount
@@ -65,15 +65,81 @@ export default function EmergingThreatReportpage() {
         return `linear-gradient(to right, ${group[0]} 0%, ${group[1]} 50%, ${group[2]} 100%)`;
     }, []);
 
+    const sections = useMemo(() => {
+        return reportData?.sections || reportData?.data?.sections || reportData?.report?.sections || [];
+    }, [reportData]);
+
+    const impactSection = useMemo(() => {
+        return sections?.find(s => s.type === 'impact_overview') || sections?.[0];
+    }, [sections]);
+
     const title = reportData?.report?.title || reportData?.title || "Analysis of Ongoing Ousaban Attacks Targeting the Iberian Peninsula";
     const subtitle = reportData?.report?.subtitle || reportData?.subtitle || "Inside Ousaban's Geofenced Campaign Targeting Banking Users in Spain and Portugal";
-    const author = reportData?.author || reportData?.report?.author || "By Augustine Joseph";
-    const date = reportData?.publish_date || reportData?.date || reportData?.report?.activity_period?.start || "02/ March/ 2026";
-    const narrative = reportData?.narrative || reportData?.content || reportData?.description || defaultParagraphText;
-    const affectedPlatform = reportData?.sections?.[0]?.affected_platform || reportData?.affected_platform || "Microsoft Windows";
-    const impactedUsers = reportData?.sections?.[0]?.affected_sectors?.join(', ') || reportData?.impacted_users || "Microsoft Windows";
-    const impactedOverview = reportData?.sections?.[0]?.impact_overview || reportData?.impacted || "The stolen information can be used for future attacks";
-    const severity = reportData?.sections?.[0]?.severity || reportData?.severity || "High";
+    const rawAuthor = reportData?.report?.author || reportData?.author || "Unknown";
+    const author = rawAuthor.toLowerCase().startsWith('by ') ? rawAuthor : `By ${rawAuthor}`;
+
+    const date = useMemo(() => {
+        if (reportData?.report?.activity_period?.start && reportData?.report?.activity_period?.end) {
+            return `${reportData.report.activity_period.start} - ${reportData.report.activity_period.end}`;
+        }
+        if (reportData?.report?.activity_period?.start) {
+            return reportData.report.activity_period.start;
+        }
+        return reportData?.publish_date || reportData?.date || "02/ March/ 2026";
+    }, [reportData]);
+
+    const affectedPlatform = useMemo(() => {
+        if (impactSection?.affected_platforms && impactSection.affected_platforms.length > 0) {
+            return impactSection.affected_platforms.join(', ');
+        }
+        return impactSection?.affected_platform || reportData?.affected_platform || "All Platforms";
+    }, [impactSection, reportData]);
+
+    const impactedUsers = useMemo(() => {
+        if (impactSection?.impacted_users && impactSection.impacted_users.length > 0) {
+            return impactSection.impacted_users.join(', ');
+        }
+        return reportData?.impacted_users || "Not Specified";
+    }, [impactSection, reportData]);
+
+    const impactedOverview = useMemo(() => {
+        return impactSection?.impact || impactSection?.impact_overview || reportData?.impacted || "The stolen information can be used for future attacks";
+    }, [impactSection, reportData]);
+
+    const severity = useMemo(() => {
+        return impactSection?.severity || reportData?.severity || "Not rated";
+    }, [impactSection, reportData]);
+
+    const affectedRegions = useMemo(() => {
+        if (impactSection?.affected_regions && impactSection.affected_regions.length > 0) {
+            return impactSection.affected_regions.join(', ');
+        }
+        return reportData?.affected_regions?.join(', ') || null;
+    }, [impactSection, reportData]);
+
+    const affectedCountries = useMemo(() => {
+        if (impactSection?.affected_countries && impactSection.affected_countries.length > 0) {
+            return impactSection.affected_countries.join(', ');
+        }
+        return reportData?.affected_countries?.join(', ') || null;
+    }, [impactSection, reportData]);
+
+    const affectedSectors = useMemo(() => {
+        if (impactSection?.affected_sectors && impactSection.affected_sectors.length > 0) {
+            return impactSection.affected_sectors.join(', ');
+        }
+        return reportData?.affected_sectors?.join(', ') || null;
+    }, [impactSection, reportData]);
+
+    const narrativeSections = useMemo(() => {
+        return sections?.filter(s => s.type === 'narrative' || (s.content && s.title && s.type !== 'impact_overview')) || [];
+    }, [sections]);
+
+    const allReferences = useMemo(() => {
+        const rootRefs = reportData?.references || reportData?.sources || [];
+        const secRefs = narrativeSections.flatMap(s => s.references || []);
+        return [...rootRefs, ...secRefs];
+    }, [reportData, narrativeSections]);
 
     return (
         <div className="emerging-threat-page-container">
@@ -109,9 +175,11 @@ export default function EmergingThreatReportpage() {
                             <h1 className="hero-title">
                                 {title}
                             </h1>
-                            <p className="hero-subtitle">
-                                {subtitle}
-                            </p>
+                            {subtitle && (
+                                <p className="hero-subtitle">
+                                    {subtitle}
+                                </p>
+                            )}
                         </div>
                     </section>
 
@@ -180,12 +248,91 @@ export default function EmergingThreatReportpage() {
                                         {severity}
                                     </p>
                                 </div>
+
+                                <div className="meta-pill">
+                                    <div className="icon-circle-white">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E9004A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
+                                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                                            <line x1="8" y1="2" x2="8" y2="18"></line>
+                                            <line x1="16" y1="6" x2="16" y2="22"></line>
+                                        </svg>
+                                    </div>
+                                    <p className="pill-text">
+                                        <span className="pill-label">Affected Regions: </span>
+                                        {affectedRegions}
+                                    </p>
+                                </div>
+
+                                <div className="meta-pill">
+                                    <div className="icon-circle-white">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E9004A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                            <line x1="4" y1="22" x2="4" y2="15"></line>
+                                        </svg>
+                                    </div>
+                                    <p className="pill-text">
+                                        <span className="pill-label">Affected Countries: </span>
+                                        {affectedCountries}
+                                    </p>
+                                </div>
+
+                                <div className="meta-pill">
+                                    <div className="icon-circle-white">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E9004A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
+                                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                        </svg>
+                                    </div>
+                                    <p className="pill-text">
+                                        <span className="pill-label">Affected Sectors: </span>
+                                        {affectedSectors}
+                                    </p>
+                                </div>
                             </div>
 
                             {/* Report Narrative Content */}
-                            <article className="report-narrative">
-                                <p>{narrative}</p>
-                            </article>
+                            <div className="report-narrative article">
+                                {narrativeSections.map((sec, idx) => {
+                                    const secTitle = (sec.title === 'Actor introduction' || sec.title?.toLowerCase().includes('actor')) && reportData?.actor?.name
+                                        ? `About ${reportData.actor.name}`
+                                        : sec.title;
+
+                                    return (
+                                        <section key={idx}>
+                                            <h2>{secTitle}</h2>
+                                            {Array.isArray(sec.content) ? (
+                                                sec.content.map((para, pIdx) => (
+                                                    <p key={pIdx}>{para}</p>
+                                                ))
+                                            ) : (
+                                                <p>{sec.content}</p>
+                                            )}
+                                            {sec.references && sec.references.length > 0 && (
+                                                <div className="citations">
+                                                    {sec.references.map((ref, rIdx) => (
+                                                        <a key={rIdx} href={ref.url || `#${ref}`} target="_blank" rel="noopener noreferrer">
+                                                            [{typeof ref === 'string' ? ref : (ref.title || rIdx + 1)}]
+                                                        </a>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </section>
+                                    );
+                                })}
+
+                                {allReferences.length > 0 && (
+                                    <section>
+                                        <h2>Sources</h2>
+                                        <div>
+                                            {allReferences.map((ref, rIdx) => (
+                                                <p key={rIdx}>
+                                                    [{rIdx + 1}] {typeof ref === 'string' ? ref : (ref.url ? <a href={ref.url} target="_blank" rel="noopener noreferrer">{ref.title || ref.url}</a> : ref.title || JSON.stringify(ref))}
+                                                </p>
+                                            ))}
+                                        </div>
+                                    </section>
+                                )}
+                            </div>
                         </div>
                     </section>
                 </>

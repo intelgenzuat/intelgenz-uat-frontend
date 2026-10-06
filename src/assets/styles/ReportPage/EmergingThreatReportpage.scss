@@ -202,19 +202,71 @@
       }
     }
 
-    // Report Narrative/Body Text
-    .report-narrative {
-      font-size: 16.5px;
-      line-height: 1.8;
-      color: #3b2c34;
-      font-weight: 400;
+    // Report Narrative / Article Content
+    .report-narrative,
+    .article {
+      max-width: 100%;
+      margin-top: 10px;
 
-      p {
-        margin-bottom: 24px;
-        text-align: justify;
+      section {
+        margin-bottom: 28px;
 
         &:last-child {
           margin-bottom: 0;
+        }
+
+        h2 {
+          font-size: 21px;
+          font-weight: 700;
+          color: #17243d;
+          margin: 0 0 10px 0;
+          letter-spacing: -0.3px;
+        }
+
+        p,
+        .placeholder {
+          font-size: 15.5px;
+          line-height: 1.65;
+          color: #58657e;
+          margin: 0 0 14px 0;
+          text-align: left;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          a {
+            color: #987eb3;
+            text-decoration: none;
+            font-weight: 500;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+
+        .citations {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin: 8px 0 14px 0;
+          font-size: 13px;
+
+          a {
+            color: #987eb3;
+            background: #f4f0f8;
+            border-radius: 5px;
+            padding: 3px 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+
+            &:hover {
+              background: #e9def4;
+              color: #7b599c;
+            }
+          }
         }
       }
     }
