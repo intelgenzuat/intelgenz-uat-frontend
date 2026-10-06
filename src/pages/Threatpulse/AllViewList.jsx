@@ -222,7 +222,18 @@ export default function AllViewList({ selectedType, sortBy = 'New' }) {
                 </td>
                 <td className="px-4 py-3" style={{ position: 'sticky', right: 0, backgroundColor: '#fff', zIndex: 1, boxShadow: '-3px 0 6px rgba(0,0,0,0.08)' }}>
                   <button
-                    onClick={() => navigate('/emerging-threat-report')}
+                    onClick={() => {
+                      const reportId = item.report_id || item.id;
+                      if (reportId) {
+                        navigate(`/emerging-threat-report/${reportId}`, {
+                          state: { report_id: reportId, data: item }
+                        });
+                      } else {
+                        navigate('/emerging-threat-report', {
+                          state: { data: item }
+                        });
+                      }
+                    }}
                     className="btn rounded-pill d-flex justify-content-center align-items-center w-100 py-2 view-report-btn"
                     style={{ backgroundColor: '#5200ff', color: '#fff', fontSize: '13.6px', whiteSpace: 'nowrap' }}>
                     <FiArrowRight className="me-2" style={{ fontSize: '16px' }} /> View Report

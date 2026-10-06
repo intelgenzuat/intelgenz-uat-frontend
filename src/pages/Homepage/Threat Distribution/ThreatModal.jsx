@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getRadarSinglelist } from '../../../Context/Radar';
+import Loader from '../../../components/helper/Loader';
 
 const ThreatModal = ({
   showModal,
@@ -165,9 +166,7 @@ const ThreatModal = ({
         <div className="radar-detailed-modal-body">
           {loading && !data ? (
             <div className="d-flex justify-content-center align-items-center py-5">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading threat actor details...</span>
-              </div>
+              <Loader />
             </div>
           ) : (
             <>

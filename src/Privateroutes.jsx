@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
+import Loader from './components/helper/Loader';
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Layout from './layout/Layout'
 import {
@@ -28,8 +29,8 @@ import AdminLayout from './layout/AdminLayout';
 const Homepage = lazy(() => import('./pages/Homepage/Homepage'));
 const Dashboardpage = lazy(() => import('./pages/Admindashboard/dashboard/Dashboardpage'));
 const BlogsnewsList = lazy(() => import('./pages/Admindashboard/blogsnews/BlogsnewsList'));
-const Viewpage = lazy(() => import('./pages/Viewpages/View'))
-const Viewreportpage = lazy(() => import('./pages/Viewpages/ViewReport'))
+const Viewpage = lazy(() => import('./pages/Threatpulse/Threatpulse'))
+const Viewreportpage = lazy(() => import('./pages/Threatpulse/ViewReport'))
 const Notfoundpage = lazy(() => import('./common/404/Pagenotfound'))
 const IntelCardLayout = lazy(() => import('./pages/IntelCard/IntelCardPage'))
 const Mitigationttpview = lazy(() => import('./pages/Mitigationttpview/Mitigationttpview'));
@@ -41,7 +42,7 @@ const IntelCardsGrid = lazy(() => import('./pages/IntelCard/IntelCards'));
 const IntelCardMalwareGrid = lazy(() => import('./pages/IntelCard/IntelCardMalware'));
 const IntelCardThreatActorDetail = lazy(() => import('./pages/IntelCard/IntelCardThreatActorDetail'));
 const BlogsandNewsPage = lazy(() => import('./pages/Blogsandnews/BlogsandNewsPage'));
-const EmergingThreatReportpage = lazy(() => import('./pages/Viewpages/ReportPage/EmergingThreatReportpage'));
+const EmergingThreatReportpage = lazy(() => import('./pages/Threatpulse/ReportPage/EmergingThreatReportpage'));
 const BlogsnewsEditpage = lazy(() => import('./pages/Admindashboard/blogsnews/BlogsnewsEdit'));
 const ViewinKnowledgegrap = lazy(() => import('./pages/ThreatActorProfiling/ViewInKnowledgeGraph/ViewInKnowledegeGraph'));
 const IntelviewinKnowlegdeGraphpage = lazy(() => import('./pages/IntelCard/knowledgeGraph/intelKnowledegeGraph'));
@@ -74,7 +75,7 @@ const Privateroutes = () => {
 
     return (
         <div>
-            <Suspense fallback={<div className="d-flex justify-content-center align-items-center vh-100 vw-100" ></div>}>
+            <Suspense fallback={<div className="d-flex justify-content-center align-items-center vh-100 vw-100"><Loader /></div>}>
                 <Routes>
                     <Route exact path="/" element={role === 'Admin' ? <AdminLayout /> : <Layout />}>
                         <Route exact path={Home} element={role === 'Admin' ? <Dashboardpage /> : <Homepage />}></Route>
@@ -101,6 +102,7 @@ const Privateroutes = () => {
                         <Route exact path={blogsnewsadd} element={<AdminRoute><BlogsnewsEditpage noFooter /></AdminRoute>}></Route>
                     </Route>
                     <Route exact path={EmergingThreatReport} element={<EmergingThreatReportpage />}></Route>
+                    <Route exact path="/emerging-threat-report" element={<EmergingThreatReportpage />}></Route>
                     <Route exact path="*" element={<Notfoundpage />}></Route>
                 </Routes>
             </Suspense>

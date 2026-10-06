@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import Loader from '../../components/helper/Loader';
 
 const CHIP_COLORS = [
     '#2563eb', // Royal Blue
@@ -251,11 +252,8 @@ const TTPview = ({
                                 {isLoader ? (
                                     <tr>
                                         <td colSpan="100%" className="text-center py-5 text-muted">
-                                            <div className="d-flex justify-content-center align-items-center gap-2">
-                                                <div className="spinner-border spinner-border-sm text-primary" role="status">
-                                                    <span className="visually-hidden">Loading...</span>
-                                                </div>
-                                                <span className="fw-medium">Loading technique mapping...</span>
+                                            <div className="d-flex justify-content-center align-items-center py-4">
+                                                <Loader />
                                             </div>
                                         </td>
                                     </tr>
