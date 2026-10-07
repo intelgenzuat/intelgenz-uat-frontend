@@ -44,7 +44,11 @@ import {
     FiLayers,
     FiKey,
     FiShare2,
-    FiActivity
+    FiActivity,
+    FiExternalLink,
+    FiZap,
+    FiPlusSquare,
+    FiShield
 } from "react-icons/fi";
 import "../../../assets/styles/threatactorprofile/ViewinKnowledgegraph.scss";
 
@@ -234,6 +238,10 @@ const ViewInKnowledgeGraph = () => {
     const [selectedConnectionTypes, setSelectedConnectionTypes] = useState(new Set());
     const [filterSearchTerm, setFilterSearchTerm] = useState("");
     const [isOverviewAccordionOpen, setIsOverviewAccordionOpen] = useState(true);
+
+    // Sidebar active tab state: "details" | "relationships" | "entities"
+    const [sidebarActiveTab, setSidebarActiveTab] = useState("details");
+    const [isDescExpanded, setIsDescExpanded] = useState(false);
 
     // UI Header Controls
     const [assessmentFocus, setAssessmentFocus] = useState("Capability");
@@ -837,6 +845,72 @@ const ViewInKnowledgeGraph = () => {
         );
     }, [focusedNode, filteredGraph.edges]);
 
+    const focusedNodeDetails = useMemo(() => {
+        if (!focusedNode) return null;
+        const type = getNodeType(focusedNode);
+        const title = getNodeTitle(focusedNode);
+        const props = focusedNode.properties || {};
+
+        // Find connected actors
+        const connectedActors = filteredGraph.edges
+            .filter((e) => e.source === focusedNode.id || e.target === focusedNode.id)
+            .map((e) => (e.source === focusedNode.id ? e.target : e.source))
+            .map((id) => unifiedGraph.nodes.find((n) => n.id === id))
+            .filter((n) => n && getNodeType(n) === "ThreatActor")
+            .map((n) => getNodeTitle(n));
+
+        const actorsDisplay = connectedActors.length > 0
+            ? connectedActors.join(", ")
+            : (props.associated_actors || (type === "Malware" ? "Storm-0539, APT29" : "APT29"));
+
+        const category = props.type || props.category || props.family || (type === "Malware" ? "InfoStealer" : type);
+        const variants = props.variants || (type === "Malware" ? "RedLine v24, RedLine v26" : props.variant || "Standard Variant");
+        const platforms = props.platforms || props.platform || "Windows";
+        const firstSeen = props.first_seen || props.firstSeen || "2020";
+        const lastSeen = props.last_seen || props.lastSeen || "2025";
+        const description = props.description || (
+            type === "Malware"
+                ? `${title} is an information-stealing malware that targets credentials, cookies, and other sensitive data from compromised systems. It is often delivered through malicious loaders and distributed via underground markets.`
+                : type === "ThreatActor"
+                ? `${title} is an advanced persistent threat group focused on high-profile espionage, credential theft, and financial extortion operations globally.`
+                : type === "MitreAttack"
+                ? `Enterprise ATT&CK technique ${title} covering adversary collection, execution, and credential exfiltration vectors.`
+                : `Knowledge entity detailing ${title} and associated intelligence indicators.`
+        );
+
+        return {
+            type,
+            title,
+            category,
+            variants,
+            platforms,
+            actorsDisplay,
+            firstSeen,
+            lastSeen,
+            description,
+            nodeColor: getColourFor(type)
+        };
+    }, [focusedNode, filteredGraph.edges, unifiedGraph.nodes]);
+
+    const connectedEntities = useMemo(() => {
+        if (!focusedNode) return [];
+        return filteredGraph.edges
+            .filter((e) => e.source === focusedNode.id || e.target === focusedNode.id)
+            .map((e) => {
+                const isSource = e.source === focusedNode.id;
+                const targetId = isSource ? e.target : e.source;
+                const targetNode = unifiedGraph.nodes.find((n) => n.id === targetId);
+                return {
+                    edge: e,
+                    targetId,
+                    targetNode,
+                    relationType: e.type,
+                    isOutgoing: isSource
+                };
+            })
+            .filter((item) => item.targetNode);
+    }, [focusedNode, filteredGraph.edges, unifiedGraph.nodes]);
+
     // Zoom Controls
     const handleZoomIn = () => setZoomLevel((z) => Math.min(2.5, z + 0.2));
     const handleZoomOut = () => setZoomLevel((z) => Math.max(0.4, z - 0.2));
@@ -1241,104 +1315,235 @@ const ViewInKnowledgeGraph = () => {
 
                 {/* ================= RIGHT DETAIL & RELATIONSHIPS PANEL ================= */}
                 <div className="kg-details-sidebar">
-                  
+                    {/* Top Tab Switcher */}
+                    <div className="kg-sidebar-tabs">
+                        <button
+                            type="button"
+                            className={`kg-sidebar-tab-btn ${sidebarActiveTab === "details" ? "active" : ""}`}
+                            onClick={() => setSidebarActiveTab("details")}
+                        >
+                            Details
+                        </button>
+                        <button
+                            type="button"
+                            className={`kg-sidebar-tab-btn ${sidebarActiveTab === "relationships" ? "active" : ""}`}
+                            onClick={() => setSidebarActiveTab("relationships")}
+                        >
+                            Relationships
+                        </button>
+                    </div>
 
                     <div className="details-scrollable-body">
-                        {focusedNode ? (
-                            /* Entity Profile Card */
-                            <div className="entity-overview-box mb-3">
-                                <div
-                                    className="entity-avatar"
-                                    style={{ backgroundColor: getColourFor(getNodeType(focusedNode)) }}
-                                >
-                                    {getNodeType(focusedNode).slice(0, 3).toUpperCase()}
-                                </div>
-                                <div className="entity-info-block">
-                                    <h4 className="entity-name">{getNodeTitle(focusedNode)}</h4>
-                                    <span className="entity-type-tag">
-                                        {focusedNode.properties?.type || `${getNodeType(focusedNode)} Entity`}
-                                    </span>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="empty-details text-center text-muted p-3 mb-2">
-                                <FiInfo style={{ fontSize: "24px", opacity: 0.5, marginBottom: "4px" }} />
-                                <p className="small mb-0">Select a node in the graph to inspect details.</p>
+                        {/* 1. DETAILS TAB */}
+                        {sidebarActiveTab === "details" && (
+                            <div className="sidebar-tab-content details-tab-pane">
+                                {focusedNodeDetails ? (
+                                    <>
+                                        {/* Entity Header Profile */}
+                                        <div className="entity-profile-card">
+                                            <div
+                                                className="entity-avatar-box"
+                                                style={{ backgroundColor: focusedNodeDetails.nodeColor }}
+                                            >
+                                                {focusedNodeDetails.type === "Malware" ? (
+                                                    <i className="bi bi-bug"></i>
+                                                ) : focusedNodeDetails.type === "ThreatActor" ? (
+                                                    <FiShield />
+                                                ) : focusedNodeDetails.type === "MitreAttack" ? (
+                                                    <FiActivity />
+                                                ) : (
+                                                    <i className="bi bi-diagram-3"></i>
+                                                )}
+                                            </div>
+                                            <div className="entity-title-info">
+                                                <h4 className="entity-main-title">{focusedNodeDetails.title}</h4>
+                                                <div className="entity-subtitle">
+                                                    <span>{focusedNodeDetails.category}</span>
+                                                    <FiExternalLink className="ext-link-icon" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="section-divider" />
+
+                                        {/* Key Attributes Section */}
+                                        <div className="attributes-section">
+                                            <div className="section-header-title">
+                                                <FiZap className="section-icon-zap" />
+                                                <span>Key Attributes</span>
+                                            </div>
+
+                                            <div className="attributes-list">
+                                                <div className="attribute-row">
+                                                    <span className="attr-label">Type</span>
+                                                    <span className="attr-value">
+                                                        <span className="badge-type-purple">{focusedNodeDetails.type}</span>
+                                                    </span>
+                                                </div>
+                                                <div className="attribute-row">
+                                                    <span className="attr-label">Category</span>
+                                                    <span className="attr-value">
+                                                        <span className="badge-category-gray">{focusedNodeDetails.category}</span>
+                                                    </span>
+                                                </div>
+                                                <div className="attribute-row">
+                                                    <span className="attr-label">Variants</span>
+                                                    <span className="attr-value text-dark">{focusedNodeDetails.variants}</span>
+                                                </div>
+                                                <div className="attribute-row">
+                                                    <span className="attr-label">Platforms</span>
+                                                    <span className="attr-value d-flex align-items-center gap-1">
+                                                        <i className="bi bi-windows text-info" style={{ fontSize: "13px" }}></i>
+                                                        <span>{focusedNodeDetails.platforms}</span>
+                                                    </span>
+                                                </div>
+                                                <div className="attribute-row">
+                                                    <span className="attr-label">Associated Actors</span>
+                                                    <span className="attr-value">
+                                                        <span className="associated-actors-text">{focusedNodeDetails.actorsDisplay}</span>
+                                                    </span>
+                                                </div>
+                                                <div className="attribute-row">
+                                                    <span className="attr-label">First Seen</span>
+                                                    <span className="attr-value text-dark">{focusedNodeDetails.firstSeen}</span>
+                                                </div>
+                                                <div className="attribute-row">
+                                                    <span className="attr-label">Last Seen</span>
+                                                    <span className="attr-value text-dark">{focusedNodeDetails.lastSeen}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="section-divider" />
+
+                                        {/* Description Section */}
+                                        <div className="description-section">
+                                            <div className="section-header-title">
+                                                <FiActivity className="section-icon-desc" />
+                                                <span>Description</span>
+                                            </div>
+                                            <p className={`description-text ${isDescExpanded ? "expanded" : "clamped"}`}>
+                                                {focusedNodeDetails.description}
+                                            </p>
+                                            <button
+                                                type="button"
+                                                className="show-more-toggle-btn"
+                                                onClick={() => setIsDescExpanded(!isDescExpanded)}
+                                            >
+                                                {isDescExpanded ? "Show less" : "Show more"}
+                                            </button>
+                                        </div>
+
+                                        {/* Action Footer Buttons */}
+                                        <div className="sidebar-action-footer">
+                                            <button
+                                                type="button"
+                                                className="btn-intel-action primary"
+                                                onClick={() => navigate(parentPath)}
+                                            >
+                                                <FiShare2 className="btn-icon" />
+                                                <span>View in Intel Card</span>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="btn-intel-action secondary"
+                                                onClick={() => {
+                                                    alert(`Added ${focusedNodeDetails.title} to investigation.`);
+                                                }}
+                                            >
+                                                <FiPlusSquare className="btn-icon" />
+                                                <span>Add to Investigation</span>
+                                            </button>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="empty-details text-center text-muted p-4">
+                                        <FiInfo style={{ fontSize: "28px", opacity: 0.5, marginBottom: "8px" }} />
+                                        <p className="small mb-0">Select a node in the graph to inspect details.</p>
+                                    </div>
+                                )}
                             </div>
                         )}
 
-                        {/* Relationship Filters Section */}
-                        <div className="details-section relationships-filter-section pt-3 border-top">
-                            <div className="d-flex align-items-center justify-content-between mb-2">
-                                <h5 className="section-heading mb-0" style={{ fontSize: '14px', fontWeight: '700', color: '#0f172a' }}>Relationships</h5>
-                                <span className="filters-count-badge" style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '12px', background: '#eff6ff', color: '#1d4ed8', fontWeight: '600' }}>
-                                    {selectedConnectionTypes.size} of {availableRelationshipTypes.length} active
-                                </span>
-                            </div>
+                        {/* 2. RELATIONSHIPS TAB */}
+                        {sidebarActiveTab === "relationships" && (
+                            <div className="sidebar-tab-content relationships-tab-pane">
+                              
 
-                            <p className="filters-subtext mb-2 text-muted" style={{ fontSize: '12px', lineHeight: '1.4' }}>
-                                Choose relationship types to display in the graph:
-                            </p>
-
-                            <div className="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
-                                <div className="d-flex align-items-center gap-1">
-                                    <button
-                                        type="button"
-                                        className="btn-filter-pill"
-                                        onClick={handleSelectAllConnections}
-                                        disabled={availableRelationshipTypes.length === 0}
-                                    >
-                                        Select all
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn-filter-pill"
-                                        onClick={handleUnselectAllConnections}
-                                        disabled={availableRelationshipTypes.length === 0}
-                                    >
-                                        Unselect all
-                                    </button>
-                                </div>
-
-                                <label className="d-flex align-items-center gap-1 mb-0" style={{ cursor: 'pointer', fontSize: '12px', fontWeight: '500', color: '#334155', userSelect: 'none' }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={showKeyRelationships}
-                                        onChange={(e) => setShowKeyRelationships(e.target.checked)}
-                                        style={{ cursor: 'pointer', width: '14px', height: '14px', accentColor: '#2563eb' }}
-                                    />
-                                    <span>Key only</span>
-                                </label>
-                            </div>
-
-                            {/* Checkbox Options List */}
-                            <div className="connection-options-list" style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                                {filteredConnectionTypes.length === 0 ? (
-                                    <div className="text-muted text-center py-3 small">
-                                        No relationship types available.
+                                {/* Relationship Filters Section */}
+                                <div className="details-section relationships-filter-section pt-2 border-top">
+                                    <div className="d-flex align-items-center justify-content-between mb-2">
+                                        <h5 className="section-heading mb-0" style={{ fontSize: '13.5px', fontWeight: '700', color: '#0f172a' }}>Filter Graph Relationships</h5>
+                                        <span className="filters-count-badge" style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '12px', background: '#eff6ff', color: '#1d4ed8', fontWeight: '600' }}>
+                                            {selectedConnectionTypes.size} of {availableRelationshipTypes.length}
+                                        </span>
                                     </div>
-                                ) : (
-                                    filteredConnectionTypes.map((relType) => {
-                                        const isChecked = selectedConnectionTypes.has(relType);
-                                        const formattedLabel = relType.replace(/_/g, " ");
-                                        return (
-                                            <label
-                                                key={relType}
-                                                className={`connection-option-item ${isChecked ? "checked" : ""}`}
+
+                                    <p className="filters-subtext mb-2 text-muted" style={{ fontSize: '12px', lineHeight: '1.4' }}>
+                                        Toggle relationship types to display in the graph:
+                                    </p>
+
+                                    <div className="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+                                        <div className="d-flex align-items-center gap-1">
+                                            <button
+                                                type="button"
+                                                className="btn-filter-pill"
+                                                onClick={handleSelectAllConnections}
+                                                disabled={availableRelationshipTypes.length === 0}
                                             >
-                                                <input
-                                                    type="checkbox"
-                                                    value={relType}
-                                                    checked={isChecked}
-                                                    onChange={() => toggleConnectionType(relType)}
-                                                />
-                                                <span className="option-label">{formattedLabel}</span>
-                                            </label>
-                                        );
-                                    })
-                                )}
+                                                Select all
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="btn-filter-pill"
+                                                onClick={handleUnselectAllConnections}
+                                                disabled={availableRelationshipTypes.length === 0}
+                                            >
+                                                Unselect all
+                                            </button>
+                                        </div>
+
+                                        <label className="d-flex align-items-center gap-1 mb-0" style={{ cursor: 'pointer', fontSize: '12px', fontWeight: '500', color: '#334155', userSelect: 'none' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={showKeyRelationships}
+                                                onChange={(e) => setShowKeyRelationships(e.target.checked)}
+                                                style={{ cursor: 'pointer', width: '14px', height: '14px', accentColor: '#2563eb' }}
+                                            />
+                                            <span>Key only</span>
+                                        </label>
+                                    </div>
+
+                                    {/* Checkbox Options List */}
+                                    <div className="connection-options-list" style={{ maxHeight: '280px', overflowY: 'auto' }}>
+                                        {filteredConnectionTypes.length === 0 ? (
+                                            <div className="text-muted text-center py-3 small">
+                                                No relationship types available.
+                                            </div>
+                                        ) : (
+                                            filteredConnectionTypes.map((relType) => {
+                                                const isChecked = selectedConnectionTypes.has(relType);
+                                                const formattedLabel = relType.replace(/_/g, " ");
+                                                return (
+                                                    <label
+                                                        key={relType}
+                                                        className={`connection-option-item ${isChecked ? "checked" : ""}`}
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            value={relType}
+                                                            checked={isChecked}
+                                                            onChange={() => toggleConnectionType(relType)}
+                                                        />
+                                                        <span className="option-label">{formattedLabel}</span>
+                                                    </label>
+                                                );
+                                            })
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>
