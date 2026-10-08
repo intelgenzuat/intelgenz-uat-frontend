@@ -146,6 +146,26 @@
       background: #0f172a !important;
       border: 1px solid rgba(255, 255, 255, 0.08) !important;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+
+      svg,
+      img {
+        filter: brightness(0) invert(1) !important;
+      }
+
+      svg {
+        fill: #ffffff !important;
+        color: #ffffff !important;
+      }
+
+      i {
+        color: #ffffff !important;
+      }
+    }
+
+    .intel-card-top-row svg {
+      filter: brightness(0) invert(1) !important;
+      fill: #ffffff !important;
+      color: #ffffff !important;
     }
 
     .intel-card-btn-halo {
@@ -2444,6 +2464,12 @@
   }
 
   // Live Threat Map dark mode overrides
+  .live-threat-map-section {
+    .map-title {
+      color: #ffffff !important;
+    }
+  }
+
   .live-threat-map-container {
     background: #1e293b !important;
     border: 1px solid #334155 !important;

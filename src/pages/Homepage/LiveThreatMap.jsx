@@ -75,44 +75,36 @@ export default function LiveThreatMap() {
     };
 
     return (
-        <div className="live-threat-map-container" style={containerStyle}>
-            {/* Header / Tabs */}
-            <div style={{
-                position: 'absolute',
-                top: '32px',
-                left: '32px',
-                zIndex: 10,
-                pointerEvents: 'none'
+        <div className="live-threat-map-section" style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', height: '100%' }}>
+            <h5 className="section-title map-title" style={{ 
+                margin: 0, 
+                fontSize: '20px', 
+                fontWeight: '600', 
+                lineHeight: 'normal',
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '8px',
+                color: '#0f172a'
             }}>
-                <h3 className="map-title" style={{ 
-                    margin: 0, 
-                    fontSize: '22px', 
-                    fontWeight: '700', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '12px',
-                    color: '#1a0e2a',
-                    fontFamily: 'Inter, system-ui, sans-serif'
-                }}>
-                    Atlas
-                    <div style={{ 
-                        width: '16px', 
-                        height: '16px', 
-                        borderRadius: '50%', 
-                        background: '#7c1032', 
-                        border: '3px solid #e1b4c3',
-                        display: 'inline-block',
-                        boxSizing: 'border-box'
-                    }}></div>
-                </h3>
-            </div>
-               
-            {/* Legend / Time Filter Overlay */}
-            <div className="map-legend-container" style={{ 
-                position: 'absolute',
-                top: '32px',
-                right: '32px',
-                zIndex: 10,
+                Atlas
+                <div style={{ 
+                    width: '14px', 
+                    height: '14px', 
+                    borderRadius: '50%', 
+                    background: '#7c1032', 
+                    border: '2.5px solid #e1b4c3',
+                    display: 'inline-block',
+                    boxSizing: 'border-box'
+                }}></div>
+            </h5>
+
+            <div className="live-threat-map-container" style={containerStyle}>
+                {/* Legend / Time Filter Overlay */}
+                <div className="map-legend-container" style={{ 
+                    position: 'absolute',
+                    top: '20px',
+                    right: '20px',
+                    zIndex: 10,
                 display: 'flex', 
                 background: '#fcfafc',
                 padding: '6px',
@@ -295,5 +287,6 @@ export default function LiveThreatMap() {
                 </svg>
             </div>
         </div>
-    );
+    </div>
+);
 }

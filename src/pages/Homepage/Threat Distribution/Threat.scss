@@ -162,8 +162,8 @@
     // Left column: Radar chart
     .threat-radar-col {
       position: relative;
-      flex: 1 1 380px;
-      min-width: 320px;
+      flex: 1 1 540px;
+      min-width: 360px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -178,6 +178,7 @@
         flex: 1 1 auto;
         max-width: 100%;
         width: 100%;
+        min-width: 0;
       }
 
       .radar-header-right {
@@ -247,7 +248,7 @@
       }
 
       .radar-chart-container {
-        height: 360px;
+        height: 460px;
         width: 100%;
         position: relative;
         display: flex;
@@ -350,13 +351,20 @@
 
     // Right column: Threat Actors Table
     .threat-table-col {
-      flex: 0 1 450px;
-      max-width: 480px;
+      flex: 0 0 350px;
+      max-width: 360px;
       width: 100%;
-      min-width: 0;
+      min-width: 300px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+
+      @media (max-width: 992px) {
+        flex: 1 1 auto;
+        max-width: 100%;
+        width: 100%;
+        min-width: 0;
+      }
 
       .table-toolbar {
         display: flex;
@@ -429,7 +437,8 @@
 
         .search-box-wrapper {
           position: relative;
-          min-width: 180px;
+          min-width: 120px;
+          flex: 1;
 
           .search-icon {
             position: absolute;
@@ -466,8 +475,8 @@
 
       .table-scroll-container {
         flex: 1;
-        max-height: 450px;
-        min-height: 360px;
+        max-height: 460px;
+        min-height: 380px;
         overflow-y: auto;
         border: 1px solid #f1f5f9;
         border-radius: 8px;
@@ -546,7 +555,13 @@
 
               // When actively hovered or selected
               &.is-hovered {
-                background-color: #eef2ff !important;
+                background-color: #ede9fe !important;
+                box-shadow: inset 3px 0 0 #5200ff;
+
+                .actor-name-cell .name-text {
+                  color: #5200ff;
+                  font-weight: 700;
+                }
               }
 
               td {
@@ -562,9 +577,9 @@
                 display: flex;
                 align-items: center;
                 gap: 8px;
-                width: 150px;
-                min-width: 150px;
-                max-width: 150px;
+                width: 130px;
+                min-width: 120px;
+                max-width: 140px;
                 overflow: hidden;
 
                 .actor-icon {
