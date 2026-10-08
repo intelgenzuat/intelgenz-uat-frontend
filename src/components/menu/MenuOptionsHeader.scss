@@ -73,6 +73,13 @@
       font-size: 15px;
       transition: transform 0.18s ease;
 
+      svg,
+      img {
+        width: 20px;
+        height: 20px;
+        display: block;
+      }
+
       &.gradient-threat-dashboard {
         box-shadow: 0 2px 8px rgba(255, 0, 128, 0.2);
       }
@@ -145,6 +152,22 @@
 
         .option-title {
           color: #c4b5fd !important;
+        }
+      }
+
+      .menu-icon-box {
+        svg,
+        img {
+          filter: brightness(0) invert(1) !important;
+        }
+
+        svg {
+          fill: #ffffff !important;
+          color: #ffffff !important;
+        }
+
+        i {
+          color: #ffffff !important;
         }
       }
 
