@@ -482,7 +482,6 @@ $card-cap-bg: transparent;
       cursor: pointer;
       user-select: none;
       overflow: hidden;
-      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease;
 
       [data-bs-theme='dark'] &,
       [data-theme='dark'] & {
@@ -495,32 +494,6 @@ $card-cap-bg: transparent;
         --intel-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
         --intel-card-border-color: #334155;
         border: 1px solid #334155 !important;
-      }
-
-      &:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 14px 32px rgba(152, 126, 179, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
-        border-color: rgba(173, 82, 118, 0.3);
-
-        .intel-card-btn {
-          transform: scale(1.08);
-          box-shadow: 0 6px 20px rgba(152, 126, 179, 0.45), 0 2px 10px rgba(173, 82, 118, 0.35);
-          filter: brightness(1.1);
-
-          i {
-            transform: translateX(3px);
-          }
-        }
-
-        [data-bs-theme='dark'] &,
-        [data-theme='dark'] & {
-          border-color: rgba(173, 82, 118, 0.5) !important;
-
-          .intel-card-btn {
-            box-shadow: 0 6px 22px rgba(152, 126, 179, 0.55), 0 2px 12px rgba(173, 82, 118, 0.45);
-            filter: brightness(1.15);
-          }
-        }
       }
 
       .intel-card-wave-bg {
@@ -565,7 +538,6 @@ $card-cap-bg: transparent;
         justify-content: center;
         flex-shrink: 0;
         box-shadow: 0 2px 10px rgba(124, 58, 237, 0.05);
-        transition: all 0.2s ease;
         margin-top: 2px;
 
         svg,
@@ -573,12 +545,30 @@ $card-cap-bg: transparent;
           width: 36px;
           height: 36px;
           display: block;
+
+          [data-bs-theme='dark'] &,
+          [data-theme='dark'] & {
+            filter: brightness(0) invert(1) !important;
+          }
+        }
+
+        svg {
+          [data-bs-theme='dark'] &,
+          [data-theme='dark'] & {
+            fill: #ffffff !important;
+            color: #ffffff !important;
+          }
         }
 
         i {
           font-size: 20px;
           line-height: 1;
           display: block;
+
+          [data-bs-theme='dark'] &,
+          [data-theme='dark'] & {
+            color: #ffffff !important;
+          }
         }
       }
 
@@ -597,7 +587,6 @@ $card-cap-bg: transparent;
           line-height: 1.25;
           letter-spacing: -0.25px;
           margin-bottom: 0px;
-          transition: color 0.2s ease;
         }
 
         .intel-card-description {
@@ -609,20 +598,7 @@ $card-cap-bg: transparent;
           max-width: calc(100% - 40px);
           position: relative;
           z-index: 1;
-          transition: color 0.2s ease;
         }
-      }
-
-      .intel-card-description {
-        font-size: 13.5px;
-        font-weight: 450;
-        color: var(--intel-card-desc-color);
-        line-height: 1.45;
-        margin: 0;
-        max-width: calc(100% - 40px);
-        position: relative;
-        z-index: 1;
-        transition: color 0.2s ease;
       }
 
       .intel-card-cutout {
@@ -637,7 +613,6 @@ $card-cap-bg: transparent;
         align-items: center;
         justify-content: center;
         pointer-events: none;
-        transition: background-color 0.2s ease;
         border-left: 1px solid var(--intel-card-border-color, #dbdbdb) !important;
         border-top: 1px solid var(--intel-card-border-color, #dbdbdb) !important;
         z-index: 2;
@@ -734,13 +709,11 @@ $card-cap-bg: transparent;
           justify-content: center;
           font-size: 18px;
           box-shadow: 0 4px 14px rgba(152, 126, 179, 0.35), 0 2px 6px rgba(173, 82, 118, 0.2);
-          transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, filter 0.25s ease;
           pointer-events: auto;
 
           i {
             color: #ffffff;
             font-size: 20px;
-            transition: transform 0.2s ease;
             display: inline-flex;
           }
         }

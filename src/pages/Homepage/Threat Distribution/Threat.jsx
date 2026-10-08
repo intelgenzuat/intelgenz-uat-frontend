@@ -46,6 +46,8 @@ export default function Threat() {
   const containerRef = useRef(null);
   const popupRef = useRef(null);
   const timeoutRef = useRef(null);
+  const tableScrollRef = useRef(null);
+  const rowRefs = useRef({});
   const hoveredNameRef = useRef('');
   const [showModal, setShowModal] = useState(false);
   const [selectedActorId, setSelectedActorId] = useState(null);
@@ -81,8 +83,8 @@ export default function Threat() {
     const updateRadius = () => {
       if (containerRef.current) {
         const { clientWidth, clientHeight } = containerRef.current;
-        const minDim = Math.min(clientWidth || 360, clientHeight || 360);
-        const computedR = (minDim / 2) * 0.88;
+        const minDim = Math.min(clientWidth || 460, clientHeight || 460);
+        const computedR = (minDim / 2) * 0.94;
         if (computedR > 0) {
           setChartRadius(computedR);
         }
@@ -317,8 +319,24 @@ export default function Threat() {
     const actorObj = payloadActor || radarChartData[index]?.actor;
     if (!actorObj) return;
     const name = actorObj?.name || hoveredNameRef.current || 'Threat Actor';
+    const actorKey = actorObj?.id || actorObj?.actor_id || name;
     hoveredNameRef.current = name;
     setHoveredActor(name);
+
+    // Scroll table to the corresponding threat actor row
+    const rowEl = rowRefs.current[actorKey] || rowRefs.current[name] || rowRefs.current[actorObj?.id];
+    if (rowEl && tableScrollRef.current) {
+      const container = tableScrollRef.current;
+      const rowTop = rowEl.offsetTop;
+      const rowHeight = rowEl.offsetHeight;
+      const containerScrollTop = container.scrollTop;
+      const containerHeight = container.clientHeight;
+
+      if (rowTop < containerScrollTop || rowTop + rowHeight > containerScrollTop + containerHeight) {
+        const targetScroll = Math.max(0, rowTop - containerHeight / 2 + rowHeight / 2);
+        container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+      }
+    }
 
     if (e && e.currentTarget && containerRef.current && popupRef.current) {
       const rect = e.currentTarget.getBoundingClientRect();
@@ -433,8 +451,8 @@ export default function Threat() {
             </div>
           </div>
           <div className="radar-chart-container" ref={containerRef}>
-            <ResponsiveContainer width="100%" height={420}>
-              <RadarChart cx="50%" cy="50%" outerRadius="88%" data={radarChartData}>
+            <ResponsiveContainer width="100%" height={460}>
+              <RadarChart cx="50%" cy="50%" outerRadius="94%" data={radarChartData}>
                 <PolarGrid gridType="circle" stroke="#e2e8f0" polarAngles={RADAR_POLAR_ANGLES} />
                 <PolarRadiusAxis
                   angle={30}
@@ -532,7 +550,7 @@ export default function Threat() {
         {/* Right: Interactive Threat Actor Table */}
         <div className="threat-table-col">
           {/* Scrollable Table View */}
-          <div className="table-scroll-container">
+          <div className="table-scroll-container" ref={tableScrollRef}>
             <table className="threat-actors-table">
               <thead>
                 <tr>
@@ -554,6 +572,12 @@ export default function Threat() {
                     return (
                       <tr
                         key={actor.id}
+                        ref={(el) => {
+                          if (el) {
+                            if (actor.id) rowRefs.current[actor.id] = el;
+                            if (actor.name) rowRefs.current[actor.name] = el;
+                          }
+                        }}
                         className={`actor-row ${inFocus ? 'in-focus-zone' : ''} ${
                           isHovered ? 'is-hovered' : ''
                         }`}

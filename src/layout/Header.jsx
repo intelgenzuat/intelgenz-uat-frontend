@@ -95,7 +95,7 @@ const Header = ({ toggleSidebar, showHamburger }) => {
           <button className="nav-icon-btn" onClick={toggleTheme}>
             <i className={`bi ${theme === 'dark' ? 'bi-sun' : 'bi-moon'}`}></i>
           </button>
-          <button className="nav-icon-btn"><i className="bi bi-question-circle"></i></button>
+          {/* <button className="nav-icon-btn"><i className="bi bi-question-circle"></i></button> */}
           <button className="nav-icon-btn"><i className="bi bi-bell"></i></button>
           <Heliosheadersection />
           <Dropdown
