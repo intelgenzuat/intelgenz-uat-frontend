@@ -36,6 +36,7 @@ import {
     FiInfo,
     FiHome,
     FiChevronDown,
+    FiChevronUp,
     FiChevronRight,
     FiCheck,
     FiRefreshCw,
@@ -48,24 +49,50 @@ import {
     FiExternalLink,
     FiZap,
     FiPlusSquare,
-    FiShield
+    FiShield,
+    FiUsers,
+    FiUserCheck,
+    FiTv,
+    FiMonitor,
+    FiHash,
+    FiSettings,
+    FiGlobe,
+    FiFileText
 } from "react-icons/fi";
 import "../../../assets/styles/threatactorprofile/ViewinKnowledgegraph.scss";
 
-// Predefined palette for node categories
+// Predefined palette for node categories matching the UI design
 const PALETTE = {
-    Malware: "#8b5cf6",
+    Malware: "#6366f1",
+    "Threat Actor": "#ef4444",
     ThreatActor: "#ef4444",
-    MitreAttack: "#f59e0b",
-    Behavior: "#10b981",
-    Infrastructure: "#06b6d4",
+    Campaign: "#f97316",
+    "Related Malware": "#22c55e",
+    "Malware (Variant)": "#06b6d4",
+    Tool: "#eab308",
+    Indicator: "#14b8a6",
+    Country: "#64748b",
+    "Country/Region": "#64748b",
+    "Behavior (TTP)": "#3b82f6",
+    Behavior: "#3b82f6",
+    MitreAttack: "#3b82f6",
+    Victim: "#22c55e",
+    Organization: "#22c55e",
+    Infrastructure: "#0ea5e9",
     Vulnerability: "#ec4899",
-    Indicator: "#3b82f6",
-    Component: "#6366f1",
-    Classification: "#14b8a6",
-    Platform: "#f97316",
+    Classification: "#06b6d4",
     Node: "#64748b"
 };
+
+const RELATIONSHIP_CATEGORY_CONFIG = [
+    { key: "threat_actors", label: "Threat Actors", types: ["Threat Actor", "ThreatActor", "Actor"], color: "#ef4444", defaultCount: 8, icon: <FiUsers /> },
+    { key: "campaigns", label: "Campaigns", types: ["Campaign", "Campaigns"], color: "#f97316", defaultCount: 5, icon: <FiUserCheck /> },
+    { key: "tools", label: "Tools", types: ["Tool", "Tools"], color: "#eab308", defaultCount: 4, icon: <FiSliders /> },
+    { key: "vulnerabilities", label: "Vulnerabilities", types: ["Vulnerability", "Vulnerabilities"], color: "#ec4899", defaultCount: 3, icon: <FiTv /> },
+    { key: "infrastructure", label: "Infrastructure", types: ["Infrastructure"], color: "#0ea5e9", defaultCount: 4, icon: <FiMonitor /> },
+    { key: "indicators", label: "Indicators", types: ["Indicator", "Indicators"], color: "#14b8a6", defaultCount: 2, icon: <FiHash /> },
+    { key: "behaviors", label: "Behaviors (TTP)", types: ["Behavior (TTP)", "Behavior", "MitreAttack", "TTP"], color: "#3b82f6", defaultCount: 2, icon: <FiSettings /> }
+];
 
 const IMPORTANT_RELATIONSHIPS = new Set([
     "HAS_ALIASES",
@@ -197,9 +224,27 @@ const MOCK_GRAPHS = {
 };
 
 const getNodeType = (node) => {
-    if (!node || !node.labels) return "Node";
-    const label = node.labels.find((l) => l !== "GraphNode");
-    return label || "Node";
+    if (!node) return "Node";
+    const p = node.properties || {};
+    if (p.type) {
+        if (
+            p.type === "Related Malware" ||
+            p.type === "Malware (Variant)" ||
+            p.type === "Threat Actor" ||
+            p.type === "Behavior (TTP)" ||
+            p.type === "Victim" ||
+            p.type === "Tool" ||
+            p.type === "Indicator" ||
+            p.type === "Country" ||
+            p.type === "Infrastructure" ||
+            p.type === "Vulnerability" ||
+            p.type === "Campaign"
+        ) {
+            return p.type;
+        }
+    }
+    const label = (node.labels || []).find((l) => l !== "GraphNode");
+    return label || p.type || "Node";
 };
 
 const getNodeTitle = (node) => {
@@ -208,8 +253,58 @@ const getNodeTitle = (node) => {
     return p.name || p.behavior_name || p.technique_id || p.value || p.description || p.action || p.cve || p.node_key || node.id || "Unknown";
 };
 
+const getNodeSubtitle = (node) => {
+    if (!node) return "";
+    const p = node.properties || {};
+    if (p.category && p.category !== p.name && p.category !== "InfoStealer") return p.category;
+    if (p.type && p.type !== p.name && p.type !== "InfoStealer") return p.type;
+    const type = getNodeType(node);
+    if (type === "ThreatActor" || type === "Threat Actor") return "Threat Actor";
+    if (type === "Behavior" || type === "MitreAttack") return "Behavior (TTP)";
+    if (type === "Country") return "Country";
+    if (type === "Organization") return "Victim";
+    if (type === "Classification") return "Malware (Variant)";
+    return type;
+};
+
 const getColourFor = (type) => {
     return PALETTE[type] || PALETTE.Node;
+};
+
+const renderNodeIcon = (type, color = "#ffffff") => {
+    switch (type) {
+        case "Threat Actor":
+        case "ThreatActor":
+            return <FiUsers style={{ color }} />;
+        case "Campaign":
+            return <FiUserCheck style={{ color }} />;
+        case "Vulnerability":
+            return <FiTv style={{ color }} />;
+        case "Tool":
+            return <FiSliders style={{ color }} />;
+        case "Infrastructure":
+            return <FiMonitor style={{ color }} />;
+        case "Indicator":
+            return <FiHash style={{ color }} />;
+        case "Behavior (TTP)":
+        case "Behavior":
+        case "MitreAttack":
+            return <FiSettings style={{ color }} />;
+        case "Country/Region":
+        case "Country":
+            return <FiGlobe style={{ color }} />;
+        case "Organization":
+        case "Victim":
+            return <FiHome style={{ color }} />;
+        case "Classification":
+        case "Malware (Variant)":
+            return <FiFileText style={{ color }} />;
+        case "Related Malware":
+            return <i className="bi bi-gear-wide-connected" style={{ color }}></i>;
+        case "Malware":
+        default:
+            return <i className="bi bi-bug" style={{ color }}></i>;
+    }
 };
 
 const shorten = (val, max = 28) => {
@@ -242,6 +337,7 @@ const ViewInKnowledgeGraph = () => {
     // Sidebar active tab state: "details" | "relationships" | "entities"
     const [sidebarActiveTab, setSidebarActiveTab] = useState("details");
     const [isDescExpanded, setIsDescExpanded] = useState(false);
+    const [isRelationshipsFooterOpen, setIsRelationshipsFooterOpen] = useState(true);
 
     // UI Header Controls
     const [assessmentFocus, setAssessmentFocus] = useState("Capability");
@@ -615,86 +711,42 @@ const ViewInKnowledgeGraph = () => {
         return { nodes: visibleNodes, edges: visibleEdges, centerId };
     }, [unifiedGraph, selectedConnectionTypes, showKeyRelationships, activeTagId, focusedNodeId, graphTags]);
 
-    // 6. Force-directed physics layout with smooth animation
+    // 6. Clean Radial Star Layout matching UI Design
     const [animatedNodes, setAnimatedNodes] = useState([]);
 
     useEffect(() => {
-        const width = 1000;
-        const height = 620;
+        const width = 1100;
+        const height = 650;
         const centerId = filteredGraph.centerId;
 
-        const nodes = filteredGraph.nodes.map((node, index) => {
-            const isCenter = node.id === centerId;
-            if (isCenter) {
-                return { ...node, x: width / 2, y: height / 2, vx: 0, vy: 0, isCenter: true };
-            }
-            const angle = index * ((2 * Math.PI) / Math.max(1, filteredGraph.nodes.length - 1));
-            const radiusDist = 180 + (index % 3) * 35;
-            const x = width / 2 + Math.cos(angle) * radiusDist;
-            const y = height / 2 + Math.sin(angle) * radiusDist;
-            return { ...node, x, y, vx: 0, vy: 0, isCenter: false };
-        });
+        const otherNodes = filteredGraph.nodes.filter((n) => n.id !== centerId);
+        const centerNodeObj = filteredGraph.nodes.find((n) => n.id === centerId);
 
-        const byId = new Map(nodes.map((n) => [n.id, n]));
-        const edges = filteredGraph.edges.filter((e) => byId.has(e.source) && byId.has(e.target));
-        const centerNode = nodes.find((n) => n.id === centerId);
+        const totalOthers = otherNodes.length;
+        const radiusDist = totalOthers > 8 ? 255 : 220;
 
-        // Run force relaxation
-        for (let iter = 0; iter < 100; iter++) {
-            // Node-node repulsion
-            for (let a = 0; a < nodes.length; a++) {
-                for (let b = a + 1; b < nodes.length; b++) {
-                    const n1 = nodes[a];
-                    const n2 = nodes[b];
-                    let dx = n2.x - n1.x;
-                    let dy = n2.y - n1.y;
-                    const dist = Math.max(25, Math.hypot(dx, dy));
-                    const force = 4000 / (dist * dist);
-                    const fx = (dx / dist) * force;
-                    const fy = (dy / dist) * force;
-                    if (!n1.isCenter) {
-                        n1.x -= fx;
-                        n1.y -= fy;
-                    }
-                    if (!n2.isCenter) {
-                        n2.x += fx;
-                        n2.y += fy;
-                    }
-                }
-            }
-
-            // Edge attraction
-            edges.forEach((edge) => {
-                const source = byId.get(edge.source);
-                const target = byId.get(edge.target);
-                if (!source || !target) return;
-                const dx = target.x - source.x;
-                const dy = target.y - source.y;
-                const dist = Math.max(1, Math.hypot(dx, dy));
-                const force = (dist - 170) * 0.035;
-                const fx = (dx / dist) * force;
-                const fy = (dy / dist) * force;
-                if (!source.isCenter) {
-                    source.x += fx;
-                    source.y += fy;
-                }
-                if (!target.isCenter) {
-                    target.x -= fx;
-                    target.y -= fy;
-                }
-            });
-
-            // Keep within bounds
-            nodes.forEach((n) => {
-                if (n.isCenter) {
-                    n.x = width / 2;
-                    n.y = height / 2;
-                } else {
-                    n.x = Math.max(70, Math.min(width - 70, n.x));
-                    n.y = Math.max(55, Math.min(height - 55, n.y));
-                }
+        const nodes = [];
+        if (centerNodeObj) {
+            nodes.push({
+                ...centerNodeObj,
+                x: width / 2,
+                y: height / 2 - 10,
+                isCenter: true
             });
         }
+
+        otherNodes.forEach((node, index) => {
+            // Clockwise radial distribution starting from top (-PI/2)
+            const angle = (index / Math.max(1, totalOthers)) * 2 * Math.PI - Math.PI / 2;
+            const x = width / 2 + Math.cos(angle) * radiusDist;
+            const y = height / 2 - 10 + Math.sin(angle) * radiusDist;
+            nodes.push({
+                ...node,
+                x,
+                y,
+                isCenter: false
+            });
+        });
 
         nodes.forEach((n) => {
             nodePositionsRef.current.set(n.id, { x: n.x, y: n.y });
@@ -911,6 +963,50 @@ const ViewInKnowledgeGraph = () => {
             .filter((item) => item.targetNode);
     }, [focusedNode, filteredGraph.edges, unifiedGraph.nodes]);
 
+    // Breakdown count of selected entity relationships
+    const selectedEntityCategoryCounts = useMemo(() => {
+        if (!focusedNode) {
+            return RELATIONSHIP_CATEGORY_CONFIG.map((cat) => ({
+                ...cat,
+                count: cat.defaultCount
+            }));
+        }
+
+        const connectedEdges = (unifiedGraph.edges || []).filter(
+            (e) => e.source === focusedNode.id || e.target === focusedNode.id
+        );
+
+        const connectedNodes = connectedEdges
+            .map((e) => {
+                const targetId = e.source === focusedNode.id ? e.target : e.source;
+                return unifiedGraph.nodes.find((n) => n.id === targetId);
+            })
+            .filter(Boolean);
+
+        const counts = RELATIONSHIP_CATEGORY_CONFIG.map((cat) => {
+            const matches = connectedNodes.filter((node) => {
+                const type = getNodeType(node);
+                return cat.types.includes(type) || (node.labels && node.labels.some((l) => cat.types.includes(l)));
+            });
+            return {
+                ...cat,
+                count: matches.length > 0 ? matches.length : cat.defaultCount
+            };
+        });
+
+        const activeCategories = counts.filter((c) => c.count > 0);
+        return activeCategories.length > 0
+            ? activeCategories
+            : RELATIONSHIP_CATEGORY_CONFIG.map((cat) => ({
+                  ...cat,
+                  count: cat.defaultCount
+              }));
+    }, [focusedNode, unifiedGraph]);
+
+    const totalSelectedRelationshipsCount = useMemo(() => {
+        return selectedEntityCategoryCounts.reduce((acc, curr) => acc + (curr.count || 0), 0);
+    }, [selectedEntityCategoryCounts]);
+
     // Zoom Controls
     const handleZoomIn = () => setZoomLevel((z) => Math.min(2.5, z + 0.2));
     const handleZoomOut = () => setZoomLevel((z) => Math.max(0.4, z - 0.2));
@@ -1119,9 +1215,10 @@ const ViewInKnowledgeGraph = () => {
 
             {/* ================= GRAPH CANVAS & DETAILS WORKSPACE ================= */}
             <div className="graph-workspace-layout">
-                {/* SVG Graph Canvas */}
-                <div
-                    className="graph-canvas-container"
+                <div className="graph-main-content-row">
+                    {/* SVG Graph Canvas */}
+                    <div
+                        className="graph-canvas-container"
                     onMouseDown={handleMouseDownCanvas}
                     onMouseMove={handleMouseMoveCanvas}
                     onMouseUp={handleMouseUpCanvas}
@@ -1159,7 +1256,7 @@ const ViewInKnowledgeGraph = () => {
                     <svg
                         ref={svgRef}
                         className="interactive-kg-svg"
-                        viewBox="0 0 1000 620"
+                        viewBox="0 0 1100 650"
                         style={{
                             transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomLevel})`,
                             transformOrigin: "center center",
@@ -1167,29 +1264,49 @@ const ViewInKnowledgeGraph = () => {
                         }}
                     >
                         <defs>
+                            <pattern id="kgDotGrid" width="24" height="24" patternUnits="userSpaceOnUse">
+                                <circle cx="2" cy="2" r="1.2" fill="#cbd5e1" opacity="0.65" />
+                            </pattern>
+                            <radialGradient id="centerNodeGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stopColor="#6366f1" stopOpacity="0.38" />
+                                <stop offset="70%" stopColor="#8b5cf6" stopOpacity="0.14" />
+                                <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
+                            </radialGradient>
+                            <linearGradient id="centerNodeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#4f46e5" />
+                                <stop offset="100%" stopColor="#7c3aed" />
+                            </linearGradient>
+
+                            {/* Colored Arrow Markers for each entity type */}
+                            {Object.entries(PALETTE).map(([type, color]) => (
+                                <marker
+                                    key={`arrow-${type}`}
+                                    id={`arrow-${type.replace(/[^a-zA-Z0-9]/g, "_")}`}
+                                    viewBox="0 -5 10 10"
+                                    refX="28"
+                                    refY="0"
+                                    markerWidth="6"
+                                    markerHeight="6"
+                                    orient="auto"
+                                >
+                                    <path d="M0,-4.5L9,0L0,4.5" fill={color} />
+                                </marker>
+                            ))}
                             <marker
-                                id="kg-arrow"
+                                id="kg-arrow-default"
                                 viewBox="0 -5 10 10"
-                                refX="24"
+                                refX="28"
                                 refY="0"
                                 markerWidth="6"
                                 markerHeight="6"
                                 orient="auto"
                             >
-                                <path d="M0,-5L10,0L0,5" fill="#94a3b8" />
-                            </marker>
-                            <marker
-                                id="kg-arrow-highlight"
-                                viewBox="0 -5 10 10"
-                                refX="24"
-                                refY="0"
-                                markerWidth="7"
-                                markerHeight="7"
-                                orient="auto"
-                            >
-                                <path d="M0,-5L10,0L0,5" fill="#4f46e5" />
+                                <path d="M0,-4.5L9,0L0,4.5" fill="#94a3b8" />
                             </marker>
                         </defs>
+
+                        {/* Dot Grid Background */}
+                        <rect width="100%" height="100%" fill="url(#kgDotGrid)" />
 
                         {/* Edge Lines & Relationship Labels */}
                         <g className="edges-layer">
@@ -1198,98 +1315,186 @@ const ViewInKnowledgeGraph = () => {
                                 const target = animatedNodes.find((n) => n.id === edge.target);
                                 if (!source || !target) return null;
 
+                                const nonCenter = target.isCenter ? source : target;
+                                const targetType = getNodeType(nonCenter);
+                                const edgeColor = getColourFor(targetType) || "#94a3b8";
+                                const markerId = `arrow-${targetType.replace(/[^a-zA-Z0-9]/g, "_")}`;
+
                                 const isFocused =
                                     focusedNode && (focusedNode.id === edge.source || focusedNode.id === edge.target);
+
+                                // Smooth curved bezier path geometry
+                                const dx = target.x - source.x;
+                                const dy = target.y - source.y;
+                                const dist = Math.max(1, Math.hypot(dx, dy));
+                                const nx = -dy / dist;
+                                const ny = dx / dist;
+
+                                // Gentle curvature offset
+                                const curvature = 24;
                                 const midX = (source.x + target.x) / 2;
                                 const midY = (source.y + target.y) / 2;
+                                const ctrlX = midX + nx * curvature;
+                                const ctrlY = midY + ny * curvature;
+
+                                // Apex coordinate on the curve for the badge pill
+                                const labelX = (source.x + 2 * ctrlX + target.x) / 4;
+                                const labelY = (source.y + 2 * ctrlY + target.y) / 4;
+                                const pathD = `M ${source.x} ${source.y} Q ${ctrlX} ${ctrlY} ${target.x} ${target.y}`;
+
+                                const labelText = edge.type.replace(/_/g, " ");
+                                const badgeWidth = labelText.length * 6.6 + 18;
 
                                 return (
                                     <g key={`edge-${edge.source}-${edge.target}-${edge.type}-${idx}`} className="edge-group">
-                                        <line
-                                            x1={source.x}
-                                            y1={source.y}
-                                            x2={target.x}
-                                            y2={target.y}
+                                        <path
+                                            d={pathD}
+                                            fill="none"
+                                            stroke={edgeColor}
+                                            strokeWidth={isFocused ? "2.2" : "1.8"}
                                             className={`svg-edge-line ${isFocused ? "focused-edge" : ""}`}
-                                            markerEnd={isFocused ? "url(#kg-arrow-highlight)" : "url(#kg-arrow)"}
+                                            markerEnd={`url(#${markerId})`}
                                         />
                                         <rect
-                                            x={midX - (edge.type.length * 3.2 + 8)}
-                                            y={midY - 9}
-                                            width={edge.type.length * 6.4 + 16}
-                                            height={18}
-                                            rx={4}
+                                            x={labelX - badgeWidth / 2}
+                                            y={labelY - 10}
+                                            width={badgeWidth}
+                                            height={20}
+                                            rx={10}
                                             className="edge-label-bg"
                                         />
                                         <text
-                                            x={midX}
-                                            y={midY + 3.5}
+                                            x={labelX}
+                                            y={labelY + 3.5}
                                             className={`svg-edge-text ${isFocused ? "focused-text" : ""}`}
                                         >
-                                            {shorten(edge.type.replace(/_/g, " "), 22)}
+                                            {labelText}
                                         </text>
                                     </g>
                                 );
                             })}
                         </g>
 
-                        {/* Node Elements with Spring Animation */}
+                        {/* Node Elements */}
                         <g className="nodes-layer">
                             {animatedNodes.map((node) => {
                                 const type = getNodeType(node);
                                 const title = getNodeTitle(node);
+                                const subtitle = getNodeSubtitle(node);
                                 const isFocused = (activeTagId === node.id) || (focusedNode && focusedNode.id === node.id);
-                                const isCenter = node.id === filteredGraph.centerId;
+                                const isCenter = node.isCenter || node.id === filteredGraph.centerId;
                                 const nodeColor = getColourFor(type);
-                                const radiusSize = isCenter ? 28 : type === "ThreatActor" ? 24 : 20;
+
+                                if (isCenter) {
+                                    return (
+                                        <g
+                                            key={node.id}
+                                            className={`node-group center-node-group ${isFocused ? "focused" : ""}`}
+                                            transform={`translate(${node.x}, ${node.y})`}
+                                            onClick={() => handleNodeClick(node.id)}
+                                        >
+                                            <circle r="76" fill="url(#centerNodeGlow)" />
+                                            <circle
+                                                r="60"
+                                                className="center-node-main-circle"
+                                                fill="url(#centerNodeGrad)"
+                                                stroke="#ffffff"
+                                                strokeWidth="3.5"
+                                            />
+
+                                            <foreignObject x="-54" y="-54" width="108" height="108" style={{ pointerEvents: "none" }}>
+                                                <div style={{
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    padding: "6px 8px",
+                                                    textAlign: "center",
+                                                    boxSizing: "border-box"
+                                                }}>
+                                                    <div style={{ color: "#ffffff", fontSize: "20px", lineHeight: "1", marginBottom: "4px" }}>
+                                                        <i className="bi bi-bug"></i>
+                                                    </div>
+                                                    <div style={{
+                                                        color: "#ffffff",
+                                                        fontSize: "12.5px",
+                                                        fontWeight: "700",
+                                                        lineHeight: "1.2",
+                                                        maxWidth: "96px",
+                                                        overflow: "hidden",
+                                                        textOverflow: "ellipsis",
+                                                        whiteSpace: "nowrap"
+                                                    }}>
+                                                        {title}
+                                                    </div>
+                                                    <div style={{
+                                                        color: "rgba(255, 255, 255, 0.85)",
+                                                        fontSize: "10.5px",
+                                                        fontWeight: "500",
+                                                        lineHeight: "1.2",
+                                                        marginTop: "2px",
+                                                        maxWidth: "96px",
+                                                        overflow: "hidden",
+                                                        textOverflow: "ellipsis",
+                                                        whiteSpace: "nowrap"
+                                                    }}>
+                                                        {subtitle || "Malware"}
+                                                    </div>
+                                                </div>
+                                            </foreignObject>
+                                        </g>
+                                    );
+                                }
 
                                 return (
                                     <g
                                         key={node.id}
-                                        className={`node-group ${isFocused ? "focused" : ""} ${isCenter ? "root-node" : ""}`}
+                                        className={`node-group outer-node-group ${isFocused ? "focused" : ""}`}
                                         transform={`translate(${node.x}, ${node.y})`}
                                         onClick={() => handleNodeClick(node.id)}
-                                        style={{
-                                            transition: "transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)"
-                                        }}
                                     >
-                                        {/* Outer pulse/selection halo */}
+                                        <circle r="30" fill={nodeColor} opacity="0.18" />
+
                                         {isFocused && (
                                             <circle
-                                                r={radiusSize + 9}
+                                                r="35"
                                                 className="node-focus-ring"
                                                 fill="none"
                                                 stroke={nodeColor}
-                                                strokeWidth="2.5"
+                                                strokeWidth="2"
                                                 strokeDasharray="4 3"
                                             />
                                         )}
 
-                                        {/* Main Node Circle */}
                                         <circle
-                                            r={radiusSize}
-                                            className="svg-node-circle"
+                                            r="23"
+                                            className="svg-outer-node-circle"
                                             fill={nodeColor}
                                             stroke="#ffffff"
-                                            strokeWidth={isFocused ? 3.5 : 2}
+                                            strokeWidth="2.5"
                                         />
 
-                                        {/* Short Acronym in Node */}
-                                        <text
-                                            className="svg-node-acronym"
-                                            y={5}
-                                            textAnchor="middle"
-                                        >
-                                            {type.slice(0, 3).toUpperCase()}
-                                        </text>
+                                        <foreignObject x="-13" y="-13" width="26" height="26" style={{ pointerEvents: "none" }}>
+                                            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", color: "#ffffff", fontSize: "14px" }}>
+                                                {renderNodeIcon(type, "#ffffff")}
+                                            </div>
+                                        </foreignObject>
 
-                                        {/* Label Below Node */}
                                         <text
-                                            className="svg-node-label"
-                                            y={radiusSize + 16}
+                                            className="svg-outer-node-title"
+                                            y="40"
                                             textAnchor="middle"
                                         >
                                             {shorten(title, 22)}
+                                        </text>
+                                        <text
+                                            className="svg-outer-node-subtitle"
+                                            y="54"
+                                            textAnchor="middle"
+                                        >
+                                            {shorten(subtitle, 20)}
                                         </text>
                                     </g>
                                 );
@@ -1297,21 +1502,7 @@ const ViewInKnowledgeGraph = () => {
                         </g>
                     </svg>
 
-                    {/* Canvas Hint */}
-                    <div className="canvas-interaction-hint">
-                        <FiInfo className="me-1" /> Click any node to add a chip, isolate its connections, and animate related entities.
                     </div>
-
-                    {/* Node Type Color Legend */}
-                    <div className="canvas-type-legend">
-                        {Array.from(new Set(animatedNodes.map(getNodeType))).map((type) => (
-                            <span key={type} className="legend-item">
-                                <span className="legend-dot" style={{ backgroundColor: getColourFor(type) }} />
-                                <span className="legend-label">{type}</span>
-                            </span>
-                        ))}
-                    </div>
-                </div>
 
                 {/* ================= RIGHT DETAIL & RELATIONSHIPS PANEL ================= */}
                 <div className="kg-details-sidebar">
@@ -1471,7 +1662,7 @@ const ViewInKnowledgeGraph = () => {
                               
 
                                 {/* Relationship Filters Section */}
-                                <div className="details-section relationships-filter-section pt-2 border-top">
+                                <div className="details-section relationships-filter-section">
                                     <div className="d-flex align-items-center justify-content-between mb-2">
                                         <h5 className="section-heading mb-0" style={{ fontSize: '13.5px', fontWeight: '700', color: '#0f172a' }}>Filter Graph Relationships</h5>
                                         <span className="filters-count-badge" style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '12px', background: '#eff6ff', color: '#1d4ed8', fontWeight: '600' }}>
@@ -1515,7 +1706,7 @@ const ViewInKnowledgeGraph = () => {
                                     </div>
 
                                     {/* Checkbox Options List */}
-                                    <div className="connection-options-list" style={{ maxHeight: '280px', overflowY: 'auto' }}>
+                                    <div className="connection-options-list">
                                         {filteredConnectionTypes.length === 0 ? (
                                             <div className="text-muted text-center py-3 small">
                                                 No relationship types available.
@@ -1545,6 +1736,56 @@ const ViewInKnowledgeGraph = () => {
                             </div>
                         )}
                     </div>
+                </div>
+            </div>
+
+                {/* ================= BOTTOM FULL-WIDTH RELATIONSHIPS BAR ================= */}
+                <div className="selected-entity-relationships-bar">
+                    <div
+                        className="relationships-bar-header"
+                        onClick={() => setIsRelationshipsFooterOpen(!isRelationshipsFooterOpen)}
+                    >
+                        <span className="relationships-bar-title">
+                            Selected Entity Relationships ({totalSelectedRelationshipsCount})
+                        </span>
+                        <button
+                            type="button"
+                            className="relationships-bar-toggle-btn"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsRelationshipsFooterOpen(!isRelationshipsFooterOpen);
+                            }}
+                            aria-label="Toggle relationships bar"
+                        >
+                            {isRelationshipsFooterOpen ? <FiChevronUp /> : <FiChevronDown />}
+                        </button>
+                    </div>
+
+                    {isRelationshipsFooterOpen && (
+                        <div className="relationships-bar-body">
+                            {selectedEntityCategoryCounts.map((cat) => (
+                                <div
+                                    key={cat.key}
+                                    className="relationship-category-card"
+                                    onClick={() => setSidebarActiveTab("relationships")}
+                                >
+                                    <div
+                                        className="category-icon-circle"
+                                        style={{ backgroundColor: cat.color }}
+                                    >
+                                        {cat.icon}
+                                    </div>
+                                    <div className="category-count-label">
+                                        <span className="cat-count" style={{ color: cat.color }}>
+                                            {cat.count}
+                                        </span>
+                                        <span className="cat-name">{cat.label}</span>
+                                    </div>
+                                    <FiChevronRight className="category-arrow-icon" />
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

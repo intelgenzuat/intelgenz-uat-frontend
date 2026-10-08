@@ -3199,19 +3199,40 @@
       }
     }
 
-    // Interaction hint
-    .canvas-interaction-hint {
-      color: #64748b !important;
-      background: rgba(15, 23, 42, 0.88) !important;
-      border-color: #1e293b !important;
-    }
+    // Selected Entity Relationships Bar
+    .selected-entity-relationships-bar {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
 
-    // Node type legend
-    .canvas-type-legend {
-      background: rgba(15, 23, 42, 0.92) !important;
-      border-color: #1e293b !important;
+      .relationships-bar-header {
+        .relationships-bar-title { color: #f8fafc !important; }
+        .relationships-bar-toggle-btn {
+          color: #94a3b8 !important;
+          &:hover { color: #f8fafc !important; background: #334155 !important; }
+        }
+      }
 
-      .legend-item .legend-label { color: #64748b !important; }
+      .relationships-bar-body {
+        .relationship-category-card {
+          background: #0f172a !important;
+          border-color: #334155 !important;
+          color: #e2e8f0 !important;
+
+          &:hover {
+            background: #1e293b !important;
+            border-color: #475569 !important;
+          }
+
+          .category-count-label .cat-name {
+            color: #cbd5e1 !important;
+          }
+
+          .category-arrow-icon {
+            color: #64748b !important;
+          }
+        }
+      }
     }
   }
 
