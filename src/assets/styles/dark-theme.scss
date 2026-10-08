@@ -183,6 +183,51 @@
     }
   }
 
+  .menu-options-dropdown-container {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+
+    .menu-option-card {
+      background: rgba(255, 255, 255, 0.04) !important;
+
+      &:hover {
+        background: #273549 !important;
+        border-color: #475569 !important;
+      }
+
+      &.active {
+        background: rgba(99, 102, 241, 0.15) !important;
+        border-color: rgba(99, 102, 241, 0.35) !important;
+
+        .option-title {
+          color: #c4b5fd !important;
+        }
+      }
+
+      .menu-icon-box {
+        svg,
+        img {
+          filter: brightness(0) invert(1) !important;
+        }
+
+        svg {
+          fill: #ffffff !important;
+          color: #ffffff !important;
+        }
+
+        i {
+          color: #ffffff !important;
+        }
+      }
+
+      .menu-text-content {
+        .option-title {
+          color: #e2e8f0 !important;
+        }
+      }
+    }
+  }
+
   .radar-chart-container {
     .radar-tooltip-popup {
       background: #1e293b !important;
