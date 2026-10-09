@@ -76,16 +76,7 @@ export default function LiveThreatMap() {
 
     return (
         <div className="live-threat-map-section" style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', height: '100%' }}>
-            <h5 className="section-title map-title" style={{ 
-                margin: 0, 
-                fontSize: '20px', 
-                fontWeight: '600', 
-                lineHeight: 'normal',
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '8px',
-                color: '#0f172a'
-            }}>
+            <h5 className="section-title map-title">
                 Atlas
                 <div style={{ 
                     width: '14px', 

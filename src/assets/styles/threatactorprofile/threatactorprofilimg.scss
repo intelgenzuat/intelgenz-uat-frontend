@@ -76,6 +76,15 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     display: inline-block;
+
+    [data-bs-theme='dark'] &,
+    [data-theme='dark'] & {
+      background: none !important;
+      -webkit-background-clip: initial !important;
+      background-clip: initial !important;
+      -webkit-text-fill-color: #ffffff !important;
+      color: #ffffff !important;
+    }
   }
 
   .title-divider {

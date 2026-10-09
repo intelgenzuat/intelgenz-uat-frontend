@@ -80,13 +80,13 @@ export default function Filter({ selectedSeverity, onSeverityChange }) {
           </div>
         </div>
 
-        {/* Industry Dropdown */}
+        {/* Industry / Sector Dropdown */}
         <div className={`${colClass} ${isEmergingThreats ? 'border-end' : ''} px-4 filter-section`}>
           <div className="d-flex justify-content-between align-items-end">
             <div className="flex-grow-1">
               <div className="d-flex align-items-center mb-1 text-dark gap-2">
                 <PiMaskHappyLight className="text-secondary" />
-                <span style={{ fontSize: '14.4px' }}>Industry</span>
+                <span style={{ fontSize: '14.4px' }}>{isEmergingThreats ? 'Sector' : 'Industry'}</span>
               </div>
               <input
                 type="text"

@@ -63,6 +63,14 @@
       width: 36px;
       height: 36px;
     
+      [data-bs-theme='dark'] &,
+      [data-theme='dark'] & {
+        svg, img, image, i {
+          filter: brightness(0) invert(1) !important;
+          fill: #ffffff !important;
+          color: #ffffff !important;
+        }
+      }
     }
 
     .intelcard-view-checkboxes {
