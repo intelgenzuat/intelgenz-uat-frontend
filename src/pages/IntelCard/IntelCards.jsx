@@ -26,11 +26,18 @@ function IntelCard({ threatData }) {
     };
   };
 
+  // Helper to truncate text with ellipsis
+  const truncateText = (text, maxLength = 35) => {
+    if (!text || text === 'Unknown' || text === 'N/A') return text || 'N/A';
+    if (text.length <= maxLength) return text;
+    return `${text.substring(0, maxLength)}...`;
+  };
+
   // Map backend keys to component expectations with fallbacks
   const summary = threatData?.summary || {};
   const targeting = summary?.targeting?.[0] || {};
 
-  const data = {
+  const fullData = {
     date: parseDate(summary?.last_seen?.date),
     banner_text: threatData?.name || 'Unknown Threat',
     threat_type: summary?.actor_types?.[0] || 'N/A',
@@ -47,141 +54,78 @@ function IntelCard({ threatData }) {
   };
 
   return (
-    <div className="threat-card-wrapper" style={{ background: 'linear-gradient(90deg, #F2E8FC 0%, #FAEDF5 100%)', borderRadius: '14px', paddingTop: '6px' }}>
-      <div
-        className="threat-card position-relative d-flex flex-column bg-white"
-        style={{
-          borderRadius: '14px',
-          padding: '12px 12px',
-          border: '1px solid #f8f9fa',
-          overflow: 'hidden'
-        }}
-      >
-        {/* Top Header with Active Indicator */}
-        <div className="d-flex justify-content-end align-items-center mb-2 px-1 position-relative gap-1" style={{ zIndex: 1 }}>
-          <div className="d-flex align-items-center gap-1">
-
+    <div
+      className="custom-card-intel"
+      onClick={() => navigate(`/intel-card-threat-details/${threatData?.actor_id}`)}
+      role="button"
+      tabIndex={0}
+    >
+      <div className="intel-card-top-row">
+        <div className="intel-card-content">
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <h5 className="intel-card-title text-truncate" title={fullData.banner_text}>
+              {truncateText(fullData.banner_text, 24)}
+            </h5>
+            <div className="d-flex align-items-center gap-1 flex-shrink-0 ms-2">
+              <span
+                style={{
+                  width: '7px',
+                  height: '7px',
+                  backgroundColor: fullData.status === 'Active' ? '#ef4444' : '#94a3b8',
+                  borderRadius: '50%',
+                  display: 'inline-block',
+                  boxShadow: fullData.status === 'Active' ? '0 0 0 2.5px rgba(239, 68, 68, 0.25)' : 'none'
+                }}
+              />
+              <span style={{ fontSize: '11px', fontWeight: '600', color: fullData.status === 'Active' ? '#ef4444' : '#64748b' }}>
+                {fullData.status}
+              </span>
+            </div>
           </div>
 
-          <span
-            style={{
-              width: '7px',
-              height: '7px',
-              backgroundColor: data.status === 'Active' ? '#ef4444' : '#94a3b8',
-              borderRadius: '50%',
-              display: 'inline-block',
-              boxShadow: data.status === 'Active' ? '0 0 0 2.5px rgba(239, 68, 68, 0.25)' : 'none'
-            }}
-          />
-          <span style={{ fontSize: '11px', fontWeight: '600', color: data.status === 'Active' ? '#ef4444' : '#64748b' }}>
-            {data.status}
-          </span>
-        </div>
-
-        {/* Title */}
-        <h5 className="text-center mb-2 mt-1 px-1 position-relative" title={data.banner_text} style={{
-          fontSize: '15px',
-          fontWeight: '600',
-          color: '#000',
-          display: '-webkit-box',
-          WebkitLineClamp: 1,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-          zIndex: 1
-        }}>
-          {data.banner_text}
-        </h5>
-
-        {/* Details section */}
-        <div className="d-flex flex-column gap-2 mb-3 position-relative" style={{ zIndex: 1 }}>
-
-          <div className="d-flex justify-content-center align-items-center gap-2 flex-nowrap w-100 px-1">
-            {/* Region */}
-            <div className="d-flex align-items-center" style={{ flex: 1, minWidth: 0 }}>
-              <div className="d-flex justify-content-center align-items-center me-2 rounded-circle flex-shrink-0" style={{ width: '24px', height: '24px', backgroundColor: '#fff', border: '1px solid #fae8eb', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', color: '#f43f5e' }}>
-                <ImEarth size={12} />
+          {/* Details Section */}
+          <div className="d-flex flex-column gap-2 mt-2 position-relative" style={{ zIndex: 1 }}>
+            {/* Alias Names */}
+            <div className="d-flex align-items-center" style={{ minWidth: 0, maxWidth: 'calc(100% - 50px)' }}>
+              <div className="d-flex justify-content-center align-items-center me-1 rounded-circle flex-shrink-0" style={{ width: '22px', height: '22px', backgroundColor: 'var(--intel-card-bg)', border: '1px solid var(--intel-card-badge-border, #fae8eb)', color: '#e11d48' }}>
+                <PiBug size={12} />
               </div>
-              <span className="text-dark" title={`Region: ${data.target_region}`} style={{
-                fontSize: '11px',
-                display: '-webkit-box',
-                WebkitLineClamp: 1,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden'
-              }}>
-                <span style={{ fontWeight: '600' }}>Region :</span> <span style={{ fontWeight: '400' }}>{data.target_region}</span>
+              <span className="text-truncate" title={`Alias Names: ${fullData.threat_group}`} style={{ fontSize: '11px', color: 'var(--intel-card-desc-color)' }}>
+                <span style={{ fontWeight: '600', color: 'var(--intel-card-title-color)' }}>Alias: </span>{truncateText(fullData.threat_group, 25)}
+              </span>
+            </div>
+            {/* Region */}
+            <div className="d-flex align-items-center" style={{ minWidth: 0 }}>
+              <div className="d-flex justify-content-center align-items-center me-1 rounded-circle flex-shrink-0" style={{ width: '22px', height: '22px', backgroundColor: 'var(--intel-card-bg)', border: '1px solid var(--intel-card-badge-border, #fae8eb)', color: '#e11d48' }}>
+                <ImEarth size={11} />
+              </div>
+              <span className="text-truncate" title={`Region: ${fullData.target_region}`} style={{ fontSize: '11px', color: 'var(--intel-card-desc-color)' }}>
+                <span style={{ fontWeight: '600', color: 'var(--intel-card-title-color)' }}>Region: </span>{truncateText(fullData.target_region, 35)}
               </span>
             </div>
 
             {/* Domain */}
-            <div className="d-flex align-items-center" style={{ flex: 1, minWidth: 0 }}>
-              <div className="d-flex justify-content-center align-items-center me-2 rounded-circle flex-shrink-0" style={{ width: '24px', height: '24px', backgroundColor: '#fff', border: '1px solid #fae8eb', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', color: '#f43f5e' }}>
-                <PiShieldWarningDuotone size={13} />
+            <div className="d-flex align-items-center" style={{ minWidth: 0 }}>
+              <div className="d-flex justify-content-center align-items-center me-1 rounded-circle flex-shrink-0" style={{ width: '22px', height: '22px', backgroundColor: 'var(--intel-card-bg)', border: '1px solid var(--intel-card-badge-border, #fae8eb)', color: '#e11d48' }}>
+                <PiShieldWarningDuotone size={12} />
               </div>
-              <span className="text-dark" title={`Domain: ${data.target_sector}`} style={{
-                fontSize: '11px',
-                display: '-webkit-box',
-                WebkitLineClamp: 1,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden'
-              }}>
-                <span style={{ fontWeight: '600' }}>Domain:</span> <span style={{ fontWeight: '400' }}>{data.target_sector}</span>
+              <span className="text-truncate" title={`Domain: ${fullData.target_sector}`} style={{ fontSize: '11px', color: 'var(--intel-card-desc-color)' }}>
+                <span style={{ fontWeight: '600', color: 'var(--intel-card-title-color)' }}>Domain: </span>{truncateText(fullData.target_sector, 35)}
               </span>
             </div>
+
+
           </div>
+        </div>
+      </div>
 
-          {/* Alias Names */}
-          <div className="d-flex justify-content-center align-items-center mt-1 px-2">
-            <div className="d-flex justify-content-center align-items-center me-2 rounded-circle flex-shrink-0" style={{ width: '24px', height: '24px', backgroundColor: '#fff', border: '1px solid #fae8eb', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', color: '#f43f5e' }}>
-              <PiBug size={13} />
-            </div>
-            <span className="text-dark" title={`Alias Names: ${data.threat_group}`} style={{
-              fontSize: '11px',
-              maxWidth: '220px',
-              display: '-webkit-box',
-              WebkitLineClamp: 1,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden'
-            }}>
-              <span style={{ fontWeight: '600' }}>Alias Names:</span> <span style={{ fontWeight: '400' }}>{data.threat_group}</span>
-            </span>
+      {/* Cutout Arrow Button */}
+      <div className="intel-card-cutout">
+        <div className="intel-card-btn-halo">
+          <div className="intel-card-btn">
+            <i className="bi bi-arrow-right"></i>
           </div>
-
         </div>
-
-        {/* Bottom Section */}
-        <div className="mt-auto d-flex justify-content-center position-relative w-100 align-items-center pb-1" style={{ zIndex: 1 }}>
-          <button
-            onClick={() => navigate(`/intel-card-threat-details/${threatData?.actor_id}`)}
-            className="btn rounded-pill text-white px-4 py-1 d-flex align-items-center position-relative"
-            style={{ background: "linear-gradient(90deg, #4c0a829c 0%, #95051e85 50%, #e60026bb 100%)", fontSize: '12px', fontWeight: '500', transition: 'background-color 0.2s', border: 'none', zIndex: 2 }}
-
-          >
-            <FiArrowRight className="me-2" style={{ strokeWidth: '2.5px', fontSize: '14px' }} /> View Report
-          </button>
-
-          {/* Watermark Logo */}
-          <img
-            src={logoonly}
-            alt="logo"
-            className="position-absolute end-0"
-            style={{ width: '40px', height: '40px', objectFit: 'contain', zIndex: 2 }}
-          />
-        </div>
-
-        {/* Corner pizza pie / quarter circle shape */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            right: 0,
-            width: '30px',
-            height: '30px',
-            backgroundColor: '#FDE4EA',
-            borderTopLeftRadius: '100%',
-            pointerEvents: 'none',
-            zIndex: 0
-          }}
-        />
       </div>
     </div>
   );
