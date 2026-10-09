@@ -386,6 +386,21 @@
         flex-grow: 1;
         width: max-content;
         min-width: 100%;
+
+        &.all-collapsed {
+          width: 100% !important;
+
+          .mitigation-col {
+            flex: 1 1 0 !important;
+            min-width: 70px !important;
+            max-width: none !important;
+            width: 100% !important;
+
+            .col-header {
+              width: 100% !important;
+            }
+          }
+        }
       }
 
       .mitigation-col {

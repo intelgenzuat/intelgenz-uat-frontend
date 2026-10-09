@@ -290,9 +290,10 @@ export default function Threatpulse() {
 
               <button
                 onClick={() => setShowFilter(!showFilter)}
-                className={`filter-btn shadow-sm ${showFilter ? 'active' : ''}`}
+                className={`btn btn-white border rounded-pill shadow-sm d-flex align-items-center px-3 py-1 ${showFilter ? 'active' : ''}`}
+                style={{ fontSize: '13px', fontWeight: '500' }}
               >
-                <IoFilterSharp /> Filters
+                <IoFilterSharp className="me-2" /> Filters
               </button>
             </div>
           </Topcontent>

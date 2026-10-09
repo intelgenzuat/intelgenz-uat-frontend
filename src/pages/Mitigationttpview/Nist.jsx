@@ -352,8 +352,9 @@ const Nist = ({
                             </div>
                         ) : (
                             tacticsData.map(tactic => {
+                                const isTacticAllCollapsed = tactic.columns.length > 0 && tactic.columns.every(c => collapsedCols.has(c.id || c.name || c));
                                 return (
-                                    <div key={tactic.id} className="tactic-columns d-flex flex-grow-1">
+                                    <div key={tactic.id} className={`tactic-columns d-flex flex-grow-1 ${isTacticAllCollapsed || isAllCollapsed ? 'all-collapsed' : ''}`}>
                                         {tactic.columns.map((col, colIndex) => {
                                             const colId = col.id || col.name || colIndex;
                                             const isColCollapsed = collapsedCols.has(colId);

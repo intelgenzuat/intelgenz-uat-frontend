@@ -22,7 +22,6 @@ export default function EmergingThreatFooter() {
         {/* Brand section */}
         <div className="footer-brand">
           <img src={logo} alt="INTELGENZ Logo" className="footer-logo-img" />
-          <p className="footer-tagline">Illuminating The Dark Side Of The Web</p>
         </div>
 
         {/* Social media links */}
