@@ -2,7 +2,7 @@
 [data-theme='dark'] {
   // Global & General Layout overrides
   body {
-    background-color: #0b0f19 !important;
+    background-color: #1e242b !important;
     color: #f1f5f9 !important;
   }
 
@@ -106,7 +106,7 @@
   
   // Top navbar overrides
   .top-navbar {
-    background: #0f172a !important;
+    background: #181d24 !important;
     border-bottom: 1px solid #1e293b !important;
 
     .brand-logo {
@@ -169,12 +169,12 @@
     }
 
     .chart-title {
-      background: #0b0f19 !important;
+      background: #1e242b !important;
       color: #f1f5f9 !important;
     }
 
     .radius-control-wrapper {
-      background: #0b0f19 !important;
+      background: #1e242b !important;
       border-color: #334155 !important;
 
       .radius-control-label {
@@ -196,12 +196,12 @@
   .dashboard-container .custom-card-intel,
   .dashboard-container .homepage-content .custom-card-intel {
     --intel-card-bg: #1e293b;
-    --intel-card-cutout-bg: #0b0f19;
+    --intel-card-cutout-bg: #1e242b;
     --intel-card-title-color: #f8fafc;
     --intel-card-desc-color: #94a3b8;
-    --intel-card-badge-bg: #0f172a;
+    --intel-card-badge-bg: #181d24;
     --intel-card-badge-border: rgba(255, 255, 255, 0.08);
-    --intel-card-btn-bg: #0f172a;
+    --intel-card-btn-bg: #181d24;
     --intel-card-btn-color: #ffffff;
     --intel-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
     --intel-card-border: 1px solid #334155;
@@ -851,12 +851,12 @@
 
   // View pages overrides
   .view-page-container {
-    background-color: #0b0f19 !important;
+    background-color: #1e242b !important;
     border-top: 1px solid #1e293b !important;
 
     // Override generic bg-white wrapper areas
     .bg-white {
-      background-color: #0b0f19 !important;
+      background-color: #1e242b !important;
     }
 
     .all-view-list {
@@ -865,15 +865,15 @@
 
       .table-responsive-container {
         background-color: #1e293b !important;
-        scrollbar-color: #8b5cf6 #0f172a !important;
+        scrollbar-color: #8b5cf6 #1e242b !important;
 
         &::-webkit-scrollbar-track {
-          background: #0f172a !important;
+          background: #1e242b !important;
         }
 
         &::-webkit-scrollbar-thumb {
           background: #8b5cf6 !important;
-          border: 2px solid #0f172a !important;
+          border: 2px solid #1e242b !important;
 
           &:hover {
             background: #a78bfa !important;
@@ -896,8 +896,8 @@
         }
 
         thead th {
-          background-color: #0f172a !important;
-          background: #0f172a !important;
+          background-color: #181d24 !important;
+          background: #181d24 !important;
           color: #f1f5f9 !important;
         }
 
@@ -916,15 +916,15 @@
 
         // Action column sticky header
         thead th:last-child {
-          background-color: #0f172a !important;
-          background: #0f172a !important;
+          background-color: #181d24 !important;
+          background: #181d24 !important;
           box-shadow: -3px 0 6px rgba(0, 0, 0, 0.3) !important;
         }
 
         // Date pill/box inside cell
         .d-inline-flex {
-          background-color: #0f172a !important;
-          background: #0f172a !important;
+          background-color: #181d24 !important;
+          background: #181d24 !important;
           border-color: #334155 !important;
 
           span {
@@ -952,8 +952,8 @@
 
         // Pill badges in table cells
         .badge.border-1 {
-          background-color: #0f172a !important;
-          background: #0f172a !important;
+          background-color: #181d24 !important;
+          background: #181d24 !important;
           border-color: #334155 !important;
           color: #cbd5e1 !important;
         }
@@ -999,7 +999,7 @@
     }
 
     .pagination-wrapper {
-      background-color: #0b0f19 !important;
+      background-color: #1e242b !important;
     }
 
     .pagination-container {
@@ -1029,7 +1029,7 @@
         color: #94a3b8 !important;
 
         .pagination-input {
-          background-color: #0b0f19 !important;
+          background-color: #1e242b !important;
           color: #f1f5f9 !important;
         }
 
@@ -1042,16 +1042,16 @@
 
   // Intel Card page overrides
   .intelcard-page-container {
-    background-color: #0b0f19 !important;
+    background-color: #1e242b !important;
     border-top: 1px solid #1e293b !important;
 
     // Override generic bg-white wrapper areas
     .bg-white {
-      background-color: #0b0f19 !important;
+      background-color: #1e242b !important;
     }
 
     .intelcard-dashboard-wrapper {
-      background-color: #0b0f19 !important;
+      background-color: #1e242b !important;
     }
 
     .all-view-list {
@@ -1190,7 +1190,7 @@
     }
 
     .intelcard-pagination-wrapper {
-      background-color: #0b0f19 !important;
+      background-color: #1e242b !important;
     }
 
     .intelcard-pagination-container {
@@ -1220,7 +1220,7 @@
         color: #94a3b8 !important;
 
         .intelcard-pagination-input {
-          background-color: #0b0f19 !important;
+          background-color: #1e242b !important;
           color: #f1f5f9 !important;
         }
 
@@ -1233,10 +1233,10 @@
 
   // View report overrides
   .view-report-container {
-    background-color: #0b0f19 !important;
+    background-color: #1e242b !important;
 
     .report-content-wrapper {
-      background-color: #0b0f19 !important;
+      background-color: #1e242b !important;
     }
 
     .report-details-section {
@@ -1415,7 +1415,7 @@
 
   // Mitigation & TTP view overrides
   .mitigation-ttp-view {
-    background-color: #0b0f19 !important;
+    background-color: #1e242b !important;
 
     .header-actions {
       border-bottom-color: #334155 !important;
@@ -1520,7 +1520,7 @@
 
         .controls-right {
           .show-overlaps-btn {
-            background-color: #0b0f19 !important;
+            background-color: #181d24 !important;
             border-color: #334155 !important;
             
             label {
@@ -1569,7 +1569,7 @@
         }
 
         .legend-items .legend-pill {
-          background-color: #0b0f19 !important;
+          background-color: #181d24 !important;
           border-color: #334155 !important;
           color: #cbd5e1 !important;
         }
@@ -1623,7 +1623,7 @@
           }
 
           .btn-expand-toggle {
-            background-color: #0f172a !important;
+            background-color: #181d24 !important;
             border-color: #334155 !important;
             color: #cbd5e1 !important;
 
@@ -1656,7 +1656,7 @@
 
           .controls-right {
             .show-overlaps-btn {
-              background-color: #0b0f19 !important;
+              background-color: #181d24 !important;
               border-color: #334155 !important;
               
               label {
@@ -1682,11 +1682,11 @@
 
         .table-responsive {
           border-color: #334155 !important;
-          background-color: #0b0f19 !important;
-          scrollbar-color: #475569 #0f172a;
+          background-color: #1e242b !important;
+          scrollbar-color: #475569 #1e242b;
 
           &::-webkit-scrollbar-track {
-            background: #0f172a !important;
+            background: #1e242b !important;
           }
 
           &::-webkit-scrollbar-thumb {
@@ -1704,7 +1704,7 @@
               color: #f1f5f9 !important;
 
               &.col-collapsed {
-                background-color: #0b0f19 !important;
+                background-color: #1e242b !important;
               }
 
               .header-content {
@@ -1725,7 +1725,7 @@
               border-color: #334155 !important;
 
               &.col-collapsed {
-                background-color: #0b0f19 !important;
+                background-color: #1e242b !important;
               }
 
               .ttp-cell {
@@ -1791,7 +1791,7 @@
           }
 
           .footer-pills .footer-pill {
-            background-color: #0b0f19 !important;
+            background-color: #181d24 !important;
             color: #3b82f6 !important;
             
             &:hover {
@@ -1805,7 +1805,7 @@
 
   // Mitigation view / NIST / D3FEND overrides
   .mitigation-view-container {
-    background-color: #0b0f19 !important;
+    background-color: #1e242b !important;
 
     .overlap-legend {
       color: #cbd5e1 !important;
@@ -1887,7 +1887,7 @@
 
         .controls-right {
           .show-overlaps-btn {
-            background-color: #0b0f19 !important;
+            background-color: #0f172a !important;
             border-color: #334155 !important;
             
             label {
@@ -2026,7 +2026,7 @@
 
               .cell-content {
                 .expand-btn {
-                  background-color: #0b0f19 !important;
+                  background-color: #0f172a !important;
                   border-color: #334155 !important;
                   color: #f1f5f9 !important;
                   
@@ -2101,7 +2101,7 @@
       .pagination-go-to {
         .pagination-input {
           border-color: #334155 !important;
-          background-color: #0b0f19 !important;
+          background-color: #1e242b !important;
           color: #f1f5f9 !important;
 
         
@@ -2120,7 +2120,7 @@
 
   // Voice chat sidebar overrides
   .voice-chat-sidebar {
-    background-color: #121824 !important;
+    background-color: #181d24 !important;
     border-color: #1e293b !important;
 
     .status-pill {
@@ -2153,7 +2153,7 @@
       border-color: #334155 !important;
 
       .chip-btn {
-        background-color: #0b0f19 !important;
+        background-color: #181d24 !important;
         color: #cbd5e1 !important;
       }
     }
@@ -2182,7 +2182,7 @@
 
   // Text chat sidebar overrides
   .intelegenz-chat-sidebar {
-    background-color: #121824 !important;
+    background-color: #181d24 !important;
     border-color: #1e293b !important;
 
     .chip-btn {
@@ -2203,7 +2203,7 @@
       color: #cbd5e1 !important;
 
       &.user {
-        background-color: #0b0f19 !important;
+        background-color: #181d24 !important;
       }
 
       &.ai {
@@ -2239,7 +2239,7 @@
 
     .date-badge {
       &.bg-white {
-        background-color: #0b0f19 !important;
+        background-color: #181d24 !important;
       }
     }
 
@@ -2272,10 +2272,10 @@
 
   // Login page overrides
   .login-container {
-    background-color: #0b0f19 !important;
+    background-color: #1e242b !important;
     background-image:
-      linear-gradient(#151b26 1px, transparent 1px),
-      linear-gradient(90deg, #151b26 1px, transparent 1px) !important;
+      linear-gradient(#181d24 1px, transparent 1px),
+      linear-gradient(90deg, #181d24 1px, transparent 1px) !important;
     color: #f1f5f9 !important;
 
     .login-header {
@@ -2375,7 +2375,7 @@
 
   // Live Threat Map Overrides
   .live-threat-map-container {
-    background-color: #0b1120 !important;
+    background-color: #1e242b !important;
 
     .ltm-title {
       color: #f1f5f9 !important;
@@ -2395,7 +2395,7 @@
     }
 
     .ltm-tabs-container {
-      background: #0f172a !important;
+      background: #181d24 !important;
       border-color: rgba(255, 255, 255, 0.05) !important;
     }
 
@@ -2445,7 +2445,7 @@
     .top-reports-table {
       thead tr {
         border-bottom-color: #334155 !important;
-        background: #0f172a !important;
+        background: #181d24 !important;
       }
 
       th {
@@ -2456,7 +2456,7 @@
         border-bottom-color: #334155 !important;
 
         &:hover {
-          background-color: #0b0f19 !important;
+          background-color: #181d24 !important;
         }
       }
 
@@ -2601,7 +2601,7 @@
     }
 
     .map-legend-container {
-      background: #0f172a !important;
+      background: #181d24 !important;
       border: 1px solid #334155 !important;
 
       .map-legend-btn {
@@ -2640,7 +2640,7 @@
     }
 
     .map-country-path {
-      fill: #0f172a !important;
+      fill: #181d24 !important;
       stroke: #251b35 !important;
 
       &.hovered {
@@ -2686,7 +2686,7 @@
 
   // Threat Actor Profiling Page overrides
   .threat-actor-detail-page {
-    background-color: #0b0f19 !important;
+    background-color: #1e242b !important;
 
     .tap-breadcrumb {
       color: #94a3b8 !important;
@@ -2740,9 +2740,9 @@
       }
       table {
         thead {
-          background-color: #0f172a !important;
+          background-color: #181d24 !important;
           th {
-            background-color: #0f172a !important;
+            background-color: #181d24 !important;
             border-bottom-color: #334155 !important;
             border-right-color: #334155 !important;
             color: #cbd5e1 !important;
@@ -2767,7 +2767,7 @@
     }
 
     .tap-check-icon {
-      background-color: #0f172a !important;
+      background-color: #181d24 !important;
       border-color: #334155 !important;
       color: #a855f7 !important; 
     }
@@ -2816,7 +2816,7 @@
     }
 
     .tap-custom-footer {
-      background-color: #0f172a !important;
+      background-color: #181d24 !important;
       border-top-color: #334155 !important;
 
       .footer-links a {
@@ -2836,12 +2836,12 @@
   // Threat Actor Knowledge Graph Dark Theme
   // =========================================================
   .threat-page {
-    background-color: #0b0f19 !important;
+    background-color: #1e242b !important;
     color: #f1f5f9 !important;
 
     .graph-header {
-      background-color: #0b0f19 !important;
-      border-bottom: 1px solid #1e293b !important;
+      background-color: #1e242b !important;
+      border-bottom: 1px solid #334155 !important;
 
       .breadcrumb-nav {
         color: #94a3b8 !important;
@@ -3098,14 +3098,14 @@
   .threat-page.malware-kg-page,
   .threat-page.threat-actor-kg-page,
   .threat-page.intel-knowledge-graph-page {
-    background: #0b0f19 !important;
+    background: #1e242b !important;
     color: #e2e8f0 !important;
   }
 
   // ── Graph header bar ─────────────────────────────────────
   .graph-header {
-    background: #0f172a !important;
-    border-bottom: 1px solid #1e293b !important;
+    background: #1e242b !important;
+    border-bottom: 1px solid #334155 !important;
 
     // Breadcrumb
     .breadcrumb-nav {
@@ -3195,7 +3195,7 @@
 
   // ── Entity query / malware selector panel ────────────────
   .entity-query-section-white {
-    background: #0f172a !important;
+    background: #1e242b !important;
 
     // Picker label
     .picker-label { color: #94a3b8 !important; }
@@ -3278,7 +3278,7 @@
       box-shadow: none !important;
 
       .connection-filters-header {
-        background: #161f2e !important;
+        background: #181d24 !important;
         border-bottom-color: transparent !important;
 
         &:hover { background: #1e293b !important; }
@@ -3286,7 +3286,7 @@
         .accordion-arrow { color: #64748b !important; }
         .filters-title { color: #e2e8f0 !important; }
         .filters-count-badge {
-          background: #0f172a !important;
+          background: #181d24 !important;
           color: #64748b !important;
         }
       }
@@ -3298,7 +3298,7 @@
         .filters-subtext { color: #64748b !important; }
 
         .btn-filter-pill {
-          background: #0f172a !important;
+          background: #181d24 !important;
           border-color: #334155 !important;
           color: #94a3b8 !important;
 
@@ -3310,7 +3310,7 @@
         }
 
         .connection-options-grid {
-          background: #161f2e !important;
+          background: #181d24 !important;
           border-color: #1e293b !important;
 
           &::-webkit-scrollbar-thumb { background: #334155 !important; }
@@ -3334,11 +3334,11 @@
 
   // ── Graph workspace + canvas ──────────────────────────────
   .graph-workspace-layout {
-    background: #0b0f19 !important;
+    background: #1e242b !important;
   }
 
   .graph-canvas-container {
-    background-color: #0d1120 !important;
+    background-color: #181d24 !important;
     background-image: none !important;
 
     // Floating zoom controls
@@ -3371,7 +3371,7 @@
 
       .relationships-bar-body {
         .relationship-category-card {
-          background: #0f172a !important;
+          background: #181d24 !important;
           border-color: #334155 !important;
           color: #e2e8f0 !important;
 
@@ -3439,12 +3439,12 @@
 
   // ── Right details / inspection sidebar ───────────────────
   .kg-details-sidebar {
-    background: #0f172a !important;
-    border-left-color: #1e293b !important;
+    background: #181d24 !important;
+    border-left-color: #334155 !important;
 
     .details-header {
-      background: #161f2e !important;
-      border-bottom-color: #1e293b !important;
+      background: #161c24 !important;
+      border-bottom-color: #334155 !important;
 
       .details-header-title { color: #e2e8f0 !important; }
 
@@ -3473,8 +3473,8 @@
 
       // Properties list
       .prop-row {
-        background: #161f2e !important;
-        border-color: #1e293b !important;
+        background: #161c24 !important;
+        border-color: #334155 !important;
 
         .prop-key { color: #475569 !important; }
         .prop-val { color: #e2e8f0 !important; }
@@ -3506,11 +3506,11 @@
 
   // Intelegenz Chat Drawer
   .intelegenzchat-drawer {
-    background-color: #0f172a !important;
-    border-color: #1e293b !important;
+    background-color: #1e242b !important;
+    border-color: #334155 !important;
 
     .drawer-header {
-      border-bottom-color: #1e293b !important;
+      border-bottom-color: #334155 !important;
       h4 { color: #f1f5f9 !important; }
     }
 
@@ -3529,6 +3529,426 @@
             color: #cbd5e1 !important;
           }
         }
+      }
+    }
+  }
+
+  // ==========================================================================
+  // UNIFIED DARK MODE THEME: Threat Pulse, Intel Card, Defense Convergence, Adversary Triage
+  // Palette matches Homepage: #1e242b (Root bg), #1e293b (Card/Table bg), #334155 (Borders), #181d24 (Sidebar/Badge bg)
+  // ==========================================================================
+
+  // 1. THREAT PULSE
+  .view-page-container,
+  .threatpulse-page,
+  .view-report-container,
+  .report-page-container {
+    background-color: #1e242b !important;
+    border-color: #1e293b !important;
+    color: #f1f5f9 !important;
+
+    .view-dashboard-wrapper,
+    .view-main-content,
+    .top-content-wrapper,
+    .cards-scroll-area {
+      background-color: #1e242b !important;
+    }
+
+    .view-sidebar-container,
+    .threatpulse-sidebar {
+      background-color: #181d24 !important;
+      border-right: 1px solid #334155 !important;
+    }
+
+    .list-header-wrapper {
+      .list-header-title {
+        color: #ffffff !important;
+      }
+      .list-header-subtitle {
+        color: #94a3b8 !important;
+      }
+    }
+
+    .filter-btn,
+    .custom-dropdown-toggle,
+    .dropdown-btn {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+      color: #cbd5e1 !important;
+
+      &:hover, &.active {
+        background-color: #334155 !important;
+        border-color: #475569 !important;
+        color: #ffffff !important;
+      }
+    }
+
+    .dropdown-menu,
+    .custom-dropdown-menu {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+
+      .dropdown-item,
+      .custom-dropdown-item {
+        color: #cbd5e1 !important;
+
+        &:hover, &:focus, &.active {
+          background-color: #334155 !important;
+          color: #ffffff !important;
+        }
+      }
+    }
+
+    .all-view-list-container,
+    .all-view-list {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+
+      .table {
+        background-color: #1e293b !important;
+        color: #f1f5f9 !important;
+
+        thead th {
+          background-color: #181d24 !important;
+          color: #94a3b8 !important;
+          border-bottom: 1px solid #334155 !important;
+        }
+
+        tbody tr {
+          background-color: #1e293b !important;
+          border-bottom: 1px solid #334155 !important;
+
+          &:hover {
+            background-color: #243248 !important;
+          }
+
+          td {
+            color: #cbd5e1 !important;
+            border-bottom: 1px solid #334155 !important;
+          }
+        }
+      }
+    }
+
+    .report-card,
+    .threat-card,
+    .threat-card-container {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+      color: #f1f5f9 !important;
+    }
+
+    .pagination-wrapper {
+      background-color: #1e242b !important;
+      border-top: 1px solid #334155 !important;
+    }
+  }
+
+  // 2. INTEL CARD DASHBOARD
+  .intelcard-page-container,
+  .intel-card-page,
+  .intel-card-detail-view,
+  .intel-top-content-wrapper {
+    background-color: #1e242b !important;
+    border-color: #1e293b !important;
+    color: #f1f5f9 !important;
+
+    .intelcard-dashboard-wrapper,
+    .intelcard-layout-wrapper,
+    .intelcard-main-content,
+    .intelcard-cards-scroll-area {
+      background-color: #1e242b !important;
+    }
+
+    .intelcard-sidebar-container,
+    .intelcard-sidebar {
+      background-color: #181d24 !important;
+      border-right: 1px solid #334155 !important;
+    }
+
+    .intelcard-list-header-wrapper {
+      .intelcard-list-header-title {
+        color: #ffffff !important;
+      }
+      .intelcard-list-header-subtitle {
+        color: #94a3b8 !important;
+      }
+    }
+
+    .search-input-wrapper,
+    .search-bar {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+
+      input {
+        background: transparent !important;
+        color: #ffffff !important;
+
+        &::placeholder {
+          color: #94a3b8 !important;
+        }
+      }
+    }
+
+    .filter-btn,
+    .intel-filter-btn {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+      color: #cbd5e1 !important;
+
+      &:hover, &.active {
+        background-color: #334155 !important;
+        border-color: #475569 !important;
+        color: #ffffff !important;
+      }
+    }
+
+    .intelcard-pagination-wrapper,
+    .pagination-wrapper {
+      background-color: #1e242b !important;
+      border-top: 1px solid #334155 !important;
+    }
+
+    .detail-card,
+    .intel-detail-card,
+    .intel-info-box {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+      color: #cbd5e1 !important;
+
+      h1, h2, h3, h4, h5, h6 {
+        color: #ffffff !important;
+      }
+
+      .text-muted {
+        color: #94a3b8 !important;
+      }
+    }
+  }
+
+  // 3. DEFENSE CONVERGENCE (Mitigation TTP / Malware TTP / Defend / NIST)
+  .mitigation-ttp-view,
+  .mitigation-page-container,
+  .defense-convergence-page,
+  .mitigation-view-container {
+    background-color: #1e242b !important;
+    color: #f1f5f9 !important;
+
+    .defense-convergence-top-content,
+    .mitigation-layout-wrapper,
+    .mitigation-dashboard-wrapper,
+    .mitigation-main-content {
+      background-color: #1e242b !important;
+    }
+
+    .mitigation-sidebar-container,
+    .mitigation-sidebar {
+      background-color: #181d24 !important;
+      border-right: 1px solid #334155 !important;
+    }
+
+    // Tabs & Navigation
+    .nav-tabs,
+    .mitigation-nav-tabs,
+    .ttp-nav-tabs {
+      border-bottom: 1px solid #334155 !important;
+
+      .nav-link {
+        color: #94a3b8 !important;
+        background: transparent !important;
+        border: 1px solid transparent !important;
+
+        &:hover {
+          color: #f1f5f9 !important;
+          border-color: #334155 #334155 transparent !important;
+        }
+
+        &.active {
+          color: #ffffff !important;
+          background-color: #1e293b !important;
+          border-color: #334155 #334155 #1e293b !important;
+        }
+      }
+    }
+
+    .tab-pill,
+    .filter-pill,
+    .custom-pill-btn {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+      color: #94a3b8 !important;
+
+      &:hover, &.active {
+        background-color: #334155 !important;
+        color: #ffffff !important;
+        border-color: #475569 !important;
+      }
+    }
+
+    // Cards, Matrix & Techniques
+    .mitigation-card,
+    .ttp-card,
+    .nist-card,
+    .defend-card,
+    .technique-box,
+    .technique-card,
+    .matrix-card,
+    .matrix-table-container,
+    .defense-box {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+      color: #f1f5f9 !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+
+      .title, .technique-name, h5, h6 {
+        color: #ffffff !important;
+      }
+
+      .description, .technique-desc, .text-muted, p {
+        color: #94a3b8 !important;
+      }
+
+      .badge, .tag {
+        background-color: #181d24 !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        color: #cbd5e1 !important;
+      }
+    }
+
+    // Tables
+    .table,
+    .mitigation-table,
+    .ttp-table {
+      background-color: #1e293b !important;
+      color: #f1f5f9 !important;
+
+      thead th {
+        background-color: #181d24 !important;
+        color: #94a3b8 !important;
+        border-bottom: 1px solid #334155 !important;
+      }
+
+      tbody tr {
+        background-color: #1e293b !important;
+        border-bottom: 1px solid #334155 !important;
+
+        &:hover {
+          background-color: #243248 !important;
+        }
+
+        td {
+          color: #cbd5e1 !important;
+          border-bottom: 1px solid #334155 !important;
+        }
+      }
+    }
+  }
+
+  // 4. ADVERSARY TRIAGE (Threat Actor Profiling)
+  .threat-actor-detail-page,
+  .threat-actor-page-container,
+  .threat-actor-profiling-container,
+  .tap-page-container {
+    background-color: #1e242b !important;
+    color: #f1f5f9 !important;
+
+    .tap-header-section,
+    .threat-actor-layout-wrapper,
+    .threat-actor-dashboard-wrapper,
+    .threat-actor-main-content {
+      background-color: #1e242b !important;
+    }
+
+    .threat-actor-sidebar-container,
+    .threat-actor-sidebar {
+      background-color: #181d24 !important;
+      border-right: 1px solid #334155 !important;
+    }
+
+    .tap-title-row {
+      h4 {
+        color: #ffffff !important;
+      }
+      .title-subtitle {
+        color: #94a3b8 !important;
+      }
+      .title-divider {
+        background-color: #334155 !important;
+      }
+    }
+
+    // Search & Filter controls
+    .tap-search-wrapper,
+    .search-container {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+
+      input {
+        background: transparent !important;
+        color: #ffffff !important;
+
+        &::placeholder {
+          color: #94a3b8 !important;
+        }
+      }
+    }
+
+    .tap-filter-btn,
+    .filter-btn {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+      color: #cbd5e1 !important;
+
+      &:hover, &.active {
+        background-color: #334155 !important;
+        border-color: #475569 !important;
+        color: #ffffff !important;
+      }
+    }
+
+    // Table & Cards
+    .tap-table-container,
+    .threat-actor-profiling-table,
+    .tap-card,
+    .threat-actor-card,
+    .profile-card {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+      color: #f1f5f9 !important;
+
+      .table,
+      table {
+        background-color: #1e293b !important;
+        color: #f1f5f9 !important;
+
+        thead th {
+          background-color: #181d24 !important;
+          color: #94a3b8 !important;
+          border-bottom: 1px solid #334155 !important;
+        }
+
+        tbody tr {
+          background-color: #1e293b !important;
+          border-bottom: 1px solid #334155 !important;
+
+          &:hover {
+            background-color: #243248 !important;
+          }
+
+          td {
+            color: #cbd5e1 !important;
+            border-bottom: 1px solid #334155 !important;
+          }
+        }
+      }
+
+      .badge,
+      .tag,
+      .badge-soft {
+        background-color: #181d24 !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        color: #cbd5e1 !important;
       }
     }
   }
