@@ -3004,7 +3004,7 @@
 
     .graph-container {
       background-color: #080d1a !important;
-      background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1.2px, transparent 1.2px) !important;
+      background-image: none !important;
 
       .graph-floating-controls {
         background-color: #1e293b !important;
@@ -3167,8 +3167,10 @@
     // Page heading
     .view-top-header {
       .header-icon-wrapper {
-        background-color: rgba(225, 29, 72, 0.12) !important;
-        border-color: rgba(225, 29, 72, 0.25) !important;
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        border-color: transparent !important;
 
         svg, img, image, i {
           filter: brightness(0) invert(1) !important;
@@ -3230,7 +3232,7 @@
 
   // ── Entity query / malware selector panel ────────────────
   .entity-query-section-white {
-    background: #1e242b !important;
+    background: #1e293b !important;
 
     // Picker label
     .picker-label { color: #94a3b8 !important; }
@@ -3375,6 +3377,15 @@
   .graph-canvas-container {
     background-color: #181d24 !important;
     background-image: none !important;
+
+    .kg-dot-grid-bg,
+    #kgDotGrid,
+    #kgDotGrid circle,
+    rect[fill*="kgDotGrid"] {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
 
     // Floating zoom controls
     .graph-floating-controls {
@@ -4751,9 +4762,16 @@
       background-color: #1e293b !important;
       border: 1px solid #334155 !important;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+
+      .view-controls-section {
+        background-color: #1e293b !important;
+        border-color: #334155 !important;
+      }
     }
 
     .entity-query-section-white {
+      background-color: #1e293b !important;
+
       .threat-actors-section {
         .section-title {
           color: #f1f5f9 !important;
@@ -4880,6 +4898,16 @@
 
     .graph-canvas-container {
       background-color: #181d24 !important;
+      background-image: none !important;
+
+      .kg-dot-grid-bg,
+      #kgDotGrid,
+      #kgDotGrid circle,
+      rect[fill*="kgDotGrid"] {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+      }
 
       .graph-floating-controls {
         background-color: #1e293b !important;

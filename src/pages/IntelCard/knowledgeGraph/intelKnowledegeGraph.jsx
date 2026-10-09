@@ -1306,7 +1306,7 @@ const intelKnowledegeGraph = () => {
                         </defs>
 
                         {/* Dot Grid Background */}
-                        <rect width="100%" height="100%" fill="url(#kgDotGrid)" />
+                        <rect className="kg-dot-grid-bg" width="100%" height="100%" fill="url(#kgDotGrid)" />
 
                         {/* Edge Lines & Relationship Labels */}
                         <g className="edges-layer">

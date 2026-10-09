@@ -79,6 +79,11 @@
 
       [data-bs-theme='dark'] &,
       [data-theme='dark'] & {
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        border-color: transparent !important;
+
         svg, img, image, i {
           filter: brightness(0) invert(1) !important;
           fill: #ffffff !important;
