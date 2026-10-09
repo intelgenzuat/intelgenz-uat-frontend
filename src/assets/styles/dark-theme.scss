@@ -52,6 +52,43 @@
   
   .text-dark {
     color: #cbd5e1 !important;
+  }
+
+  // Global Breadcrumb Navigation & Separator (/) Overrides for Dark Mode
+  .breadcrumb-nav,
+  .tap-breadcrumb,
+  .breadcrumb {
+    color: #94a3b8 !important;
+
+    .home-icon {
+      color: #94a3b8 !important;
+    }
+
+    span, a, .breadcrumb-clickable {
+      color: #94a3b8 !important;
+
+      &:hover {
+        color: #60a5fa !important;
+      }
+
+      &.text-dark,
+      &.fw-medium,
+      &.fw-semibold,
+      &.active {
+        color: #f1f5f9 !important;
+      }
+    }
+
+    // Ensure the '/' separator is always bright & clearly visible in dark mode
+    .text-black-50,
+    .mx-2 {
+      color: #cbd5e1 !important;
+      opacity: 0.9 !important;
+    }
+
+    .text-muted {
+      color: #94a3b8 !important;
+    }
   }  
 
   .section-title {
@@ -204,12 +241,6 @@
       i {
         color: #ffffff !important;
       }
-    }
-
-    .intel-card-top-row svg {
-      filter: brightness(0) invert(1) !important;
-      fill: #ffffff !important;
-      color: #ffffff !important;
     }
 
     .intel-card-btn-halo {
@@ -2484,7 +2515,8 @@
         }
 
         .text-black-50 {
-          color: #475569 !important;
+          color: #cbd5e1 !important;
+          opacity: 0.9 !important;
         }
 
         .text-dark {
@@ -3086,7 +3118,10 @@
         &:hover { color: #60a5fa !important; }
       }
 
-      .text-black-50 { color: #334155 !important; }
+      .text-black-50 { 
+        color: #cbd5e1 !important; 
+        opacity: 0.9 !important;
+      }
 
       .text-dark.fw-semibold,
       .text-dark.fw-medium,
