@@ -236,7 +236,7 @@ export default function AllViewList({ selectedType, sortBy = 'New', activeTab })
                       }
                     }}
                     className="btn rounded-pill d-flex justify-content-center align-items-center w-100 py-2 view-report-btn"
-                    style={{ backgroundColor: '#5200ff', color: '#fff', fontSize: '13.6px', whiteSpace: 'nowrap' }}>
+                    style={{ background: 'linear-gradient(180deg, var(--map-arc-start, #987eb3) 0%, var(--map-arc-end, #ad5276) 100%)', color: '#fff', fontSize: '13.6px', whiteSpace: 'nowrap', border: 'none' }}>
                     <FiArrowRight className="me-2" style={{ fontSize: '16px' }} /> View Report
                   </button>
                 </td>

@@ -111,9 +111,15 @@
   .view-report-btn {
     font-size: 14px;
     border-radius: 12px;
-    background: linear-gradient(90deg, #4c0a829c 0%, #a0005585 50%, #e60026bb 100%);
+    background: linear-gradient(180deg, var(--map-arc-start, #987eb3) 0%, var(--map-arc-end, #ad5276) 100%);
     border: none;
-    color: #ffff;
+    color: #ffffff;
+    transition: all 0.2s ease;
+
+    &:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
   }
 }
 

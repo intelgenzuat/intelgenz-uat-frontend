@@ -59,11 +59,13 @@
   }
 
   .view-report-btn {
+    background: linear-gradient(180deg, var(--map-arc-start, #987eb3) 0%, var(--map-arc-end, #ad5276) 100%) !important;
     transition: all 0.2s ease;
     border: none;
+    color: #ffffff !important;
     
     &:hover {
-      background-color: #4300d1 !important;
+      opacity: 0.9;
       transform: translateY(-1px);
     }
   }

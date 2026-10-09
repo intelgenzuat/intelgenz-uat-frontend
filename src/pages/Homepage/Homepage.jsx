@@ -62,9 +62,8 @@ export default function Homepage() {
                         <main className="main-content">
                             <div className="threat-distribution-section">
                                 <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                                    <h5 className="section-title mb-0 d-flex align-items-center" style={{ color: '#0f172a', fontWeight: '600', fontSize: '20px' }}>
-                                        Radius 
-                                        <i className="bi bi-question-circle ms-2" style={{ color: '#5200ff', fontSize: '19.2px' }}></i>
+                                    <h5 className="section-title">
+                                        Radius <i className="bi bi-question-circle"></i>
                                     </h5>
                                     {/* <div className="legend-indicators d-flex align-items-center">
                                         <span className="legend-label d-flex align-items-center gap-2 me-2">

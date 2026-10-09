@@ -21,8 +21,8 @@ export default function EmergingThreatHeader() {
   return (
     <header className="emerging-threat-header">
       <div className="header-logo-container">
-        <img src={theme === 'dark' ? logodarkmode : logo} alt="INTELGENZ Logo" className="brand-logo-img" />
-        <span className="brand-tagline">  </span>
+        <img src={logo} alt="INTELGENZ Logo" className="brand-logo-img" />
+        <span className="brand-tagline"></span>
       </div>
       <button className="download-btn-header" onClick={handleDownload}>
         <LiaDownloadSolid /> Download now
