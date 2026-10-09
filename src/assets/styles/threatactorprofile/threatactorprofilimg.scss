@@ -47,13 +47,23 @@
   margin-top: 0;
   width: 100%;
 
-  .shield-icon-wrapper {
+  .shield-icon-wrapper,
+  .header-icon-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     width: 36px;
     height: 36px;
+
+    [data-bs-theme='dark'] &,
+    [data-theme='dark'] & {
+      svg, img, image, i {
+        filter: brightness(0) invert(1) !important;
+        fill: #ffffff !important;
+        color: #ffffff !important;
+      }
+    }
 
     .red-dot {
       position: absolute;

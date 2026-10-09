@@ -33,15 +33,26 @@ function IntelCard({ threatData }) {
     return `${text.substring(0, maxLength)}...`;
   };
 
-  // Map backend keys to component expectations with fallbacks
   const summary = threatData?.summary || {};
   const targeting = summary?.targeting?.[0] || {};
+
+  const aliasesList = Array.isArray(threatData?.aliases)
+    ? threatData.aliases.filter(Boolean).join(', ')
+    : typeof threatData?.aliases === 'string'
+      ? threatData.aliases
+      : Array.isArray(summary?.aliases)
+        ? summary.aliases.filter(Boolean).join(', ')
+        : Array.isArray(threatData?.alias_names)
+          ? threatData.alias_names.filter(Boolean).join(', ')
+          : '';
+  const aliasDisplay = aliasesList && aliasesList.trim() !== '' ? aliasesList : 'N/A';
 
   const fullData = {
     date: parseDate(summary?.last_seen?.date),
     banner_text: threatData?.name || 'Unknown Threat',
     threat_type: summary?.actor_types?.[0] || 'N/A',
-    threat_group: summary?.actor_types?.join(', ') || 'Unknown',
+    threat_group: aliasDisplay,
+    aliases: aliasDisplay,
     target_region: targeting?.regions?.join(', ') || 'Global',
     target_country: summary?.nexus?.map(n => n.country_or_region).join(', ') || 'Global',
     target_sector: targeting?.sectors?.join(', ') || 'General',
@@ -90,8 +101,8 @@ function IntelCard({ threatData }) {
               <div className="d-flex justify-content-center align-items-center me-1 rounded-circle flex-shrink-0" style={{ width: '22px', height: '22px', backgroundColor: 'var(--intel-card-bg)', border: '1px solid var(--intel-card-badge-border, #fae8eb)', color: '#e11d48' }}>
                 <PiBug size={12} />
               </div>
-              <span className="text-truncate" title={`Alias Names: ${fullData.threat_group}`} style={{ fontSize: '11px', color: 'var(--intel-card-desc-color)' }}>
-                <span style={{ fontWeight: '600', color: 'var(--intel-card-title-color)' }}>Alias: </span>{truncateText(fullData.threat_group, 25)}
+              <span className="text-truncate" title={`Alias Names: ${fullData.aliases}`} style={{ fontSize: '11px', color: 'var(--intel-card-desc-color)' }}>
+                <span style={{ fontWeight: '600', color: 'var(--intel-card-title-color)' }}>Alias: </span>{truncateText(fullData.aliases, 25)}
               </span>
             </div>
             {/* Region */}

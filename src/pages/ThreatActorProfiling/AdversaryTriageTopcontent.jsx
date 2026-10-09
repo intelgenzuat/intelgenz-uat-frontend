@@ -30,7 +30,7 @@ const AdversaryTriageTopcontent = ({ title, breadcrumbTitle, children }) => {
         {/* Title Row */}
         <div className="tap-title-row d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-2">
-            <div className="shield-icon-wrapper">
+            <div className="header-icon-wrapper shield-icon-wrapper rounded-3 d-flex align-items-center justify-content-center" style={{ width: '36px', height: '36px' }}>
               <svg width="30" height="30" viewBox="0 0 47 48" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                 <rect width="46.4951" height="47.6113" fill="url(#pattern0_166_738)" />
                 <defs>

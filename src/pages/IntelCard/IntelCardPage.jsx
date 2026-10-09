@@ -33,25 +33,43 @@ export default function IntelCardPage() {
     control: (base, state) => ({
       ...base,
       borderRadius: '50px',
-      border: '1px solid #dee2e6',
+      border: '1px solid var(--select-control-border, #dee2e6)',
       boxShadow: state.isFocused ? '0 0 0 0.15rem rgba(13,110,253,.2)' : '0 .125rem .25rem rgba(0,0,0,.075)',
       fontSize: '13px',
       fontWeight: '500',
       minHeight: '32px',
       height: '32px',
       cursor: 'pointer',
-      backgroundColor: '#fff',
-      '&:hover': { borderColor: '#adb5bd' },
+      backgroundColor: 'var(--select-control-bg, #fff)',
+      '&:hover': { borderColor: 'var(--select-control-border-hover, #adb5bd)' },
     }),
     valueContainer: (base) => ({ ...base, padding: '0 10px' }),
-    singleValue: (base) => ({ ...base, color: '#212529' }),
+    singleValue: (base) => ({ ...base, color: 'var(--select-control-color, #212529)' }),
     indicatorSeparator: () => ({ display: 'none' }),
-    dropdownIndicator: (base) => ({ ...base, padding: '0 6px', color: '#6c757d' }),
-    menu: (base) => ({ ...base, width: '160px', borderRadius: '12px', fontSize: '13px', zIndex: 9999, overflow: 'hidden' }),
+    dropdownIndicator: (base) => ({ ...base, padding: '0 6px', color: 'var(--select-indicator-color, #6c757d)' }),
+    menu: (base) => ({
+      ...base,
+      width: '160px',
+      borderRadius: '12px',
+      fontSize: '13px',
+      zIndex: 9999,
+      overflow: 'hidden',
+      backgroundColor: 'var(--select-menu-bg, #fff)',
+      border: '1px solid var(--select-menu-border, #e2e8f0)',
+      boxShadow: 'var(--select-menu-shadow, 0 10px 15px -3px rgba(0, 0, 0, 0.1))',
+    }),
     option: (base, state) => ({
       ...base,
-      backgroundColor: state.isSelected ? '#e7f1ff' : state.isFocused ? '#f8f9fa' : '#fff',
-      color: state.isSelected ? '#0d6efd' : '#212529',
+      backgroundColor: state.isSelected
+        ? 'var(--select-option-selected-bg, #e7f1ff)'
+        : state.isFocused
+        ? 'var(--select-option-hover-bg, #f8f9fa)'
+        : 'var(--select-menu-bg, #fff)',
+      color: state.isSelected
+        ? 'var(--select-option-selected-color, #0d6efd)'
+        : state.isFocused
+        ? 'var(--select-option-hover-color, #212529)'
+        : 'var(--select-option-color, #212529)',
       fontWeight: state.isSelected ? '600' : '400',
       cursor: 'pointer',
     }),
@@ -105,6 +123,7 @@ export default function IntelCardPage() {
                     value={selectedView}
                     onChange={(opt) => setSelectedView(opt)}
                     styles={curatedSelectStyles}
+                    classNamePrefix="intel-curated-select"
                     isSearchable={false}
                     placeholder="Curated View"
                     menuPlacement="auto"

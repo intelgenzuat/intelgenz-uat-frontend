@@ -416,15 +416,15 @@ const ViewInKnowledgeGraph = () => {
             flexWrap: 'nowrap',
             overflow: 'hidden',
             fontSize: '13.5px',
-            borderColor: state.isFocused ? '#cbd5e1' : '#e2e8f0',
+            borderColor: state.isFocused ? 'var(--select-control-border-hover, #cbd5e1)' : 'var(--select-control-border, #e2e8f0)',
             boxShadow: 'none',
             borderRadius: '50px',
-            backgroundColor: '#f8fafc',
+            backgroundColor: 'var(--select-control-bg, #f8fafc)',
             paddingLeft: '4px',
             paddingRight: '6px',
             cursor: 'text',
             transition: 'all 0.2s ease',
-            '&:hover': { borderColor: '#cbd5e1', backgroundColor: '#f8fafc' }
+            '&:hover': { borderColor: 'var(--select-control-border-hover, #cbd5e1)', backgroundColor: 'var(--select-control-bg, #f8fafc)' }
         }),
         valueContainer: (base) => ({
             ...base,
@@ -441,7 +441,7 @@ const ViewInKnowledgeGraph = () => {
         }),
         input: (base) => ({
             ...base,
-            color: '#1e293b',
+            color: 'var(--select-control-color, #1e293b)',
             margin: 0,
             padding: 0
         }),
@@ -453,37 +453,37 @@ const ViewInKnowledgeGraph = () => {
         dropdownIndicator: (base) => ({
             ...base,
             padding: '0 6px',
-            color: '#64748b',
+            color: 'var(--select-indicator-color, #64748b)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            '&:hover': { color: '#334155' }
+            '&:hover': { color: 'var(--select-control-color, #334155)' }
         }),
         clearIndicator: (base) => ({
             ...base,
             padding: '0 4px',
-            color: '#94a3b8',
+            color: 'var(--select-indicator-color, #94a3b8)',
             cursor: 'pointer',
-            '&:hover': { color: '#64748b' }
+            '&:hover': { color: 'var(--select-control-color, #64748b)' }
         }),
         indicatorSeparator: () => ({ display: 'none' }),
         multiValue: (base) => ({
             ...base,
-            backgroundColor: '#E2ECF6',
+            backgroundColor: 'var(--select-multivalue-bg, #E2ECF6)',
             borderRadius: '20px',
             flexShrink: 0,
             padding: '1px 3px'
         }),
         multiValueLabel: (base) => ({
             ...base,
-            color: '#334155',
+            color: 'var(--select-multivalue-color, #334155)',
             fontSize: '12px',
             fontWeight: 500,
             paddingLeft: '6px'
         }),
         multiValueRemove: (base) => ({
             ...base,
-            color: '#64748b',
+            color: 'var(--select-indicator-color, #64748b)',
             borderRadius: '50%',
             '&:hover': { backgroundColor: 'rgba(239, 68, 68, 0.15)', color: '#ef4444' }
         }),
@@ -491,8 +491,9 @@ const ViewInKnowledgeGraph = () => {
             ...base,
             borderRadius: '12px',
             zIndex: 30,
-            boxShadow: '0 8px 24px rgba(15, 23, 42, 0.12)',
-            border: '1px solid #e2e8f0',
+            boxShadow: 'var(--select-menu-shadow, 0 8px 24px rgba(15, 23, 42, 0.12))',
+            border: '1px solid var(--select-menu-border, #e2e8f0)',
+            backgroundColor: 'var(--select-menu-bg, #fff)',
             overflow: 'hidden',
             marginTop: '6px',
             width: '320px'
@@ -500,15 +501,15 @@ const ViewInKnowledgeGraph = () => {
         option: (base, state) => ({
             ...base,
             fontSize: '13px',
-            backgroundColor: state.isSelected ? '#eff6ff' : state.isFocused ? '#f8fafc' : '#fff',
-            color: state.isSelected ? '#1d4ed8' : '#1e293b',
+            backgroundColor: state.isSelected ? 'var(--select-option-selected-bg, #eff6ff)' : state.isFocused ? 'var(--select-option-hover-bg, #f8fafc)' : 'var(--select-menu-bg, #fff)',
+            color: state.isSelected ? 'var(--select-option-selected-color, #1d4ed8)' : 'var(--select-option-color, #1e293b)',
             fontWeight: state.isSelected ? 600 : 400,
             cursor: 'pointer',
-            '&:active': { backgroundColor: '#dbeafe' }
+            '&:active': { backgroundColor: 'var(--select-option-selected-bg, #dbeafe)' }
         }),
         placeholder: (base) => ({
             ...base,
-            color: '#7B96B2',
+            color: 'var(--select-placeholder-color, #7B96B2)',
             fontSize: '13.5px',
             fontWeight: 400,
             whiteSpace: 'nowrap'

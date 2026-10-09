@@ -1,5 +1,22 @@
 [data-bs-theme='dark'],
 [data-theme='dark'] {
+  --select-control-bg: #1e293b;
+  --select-control-border: #334155;
+  --select-control-border-hover: #475569;
+  --select-control-color: #f1f5f9;
+  --select-indicator-color: #94a3b8;
+  --select-placeholder-color: #64748b;
+  --select-multivalue-bg: #334155;
+  --select-multivalue-color: #f1f5f9;
+  --select-menu-bg: #1e293b;
+  --select-menu-border: #334155;
+  --select-menu-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --select-option-color: #cbd5e1;
+  --select-option-hover-bg: #273549;
+  --select-option-hover-color: #f1f5f9;
+  --select-option-selected-bg: rgba(99, 102, 241, 0.25);
+  --select-option-selected-color: #a5b4fc;
+
   // Global & General Layout overrides
   body {
     background-color: #1e242b !important;
@@ -34,7 +51,8 @@
   }
 
   // Header icon wrapper icon color to white in dark mode
-  .header-icon-wrapper {
+  .header-icon-wrapper,
+  .shield-icon-wrapper {
     svg,
     img,
     image,
@@ -972,11 +990,26 @@
 
         .refresh-btn {
           background-color: #1e293b !important;
+          background: #1e293b !important;
           border: 1px solid #334155 !important;
-          color: #94a3b8 !important;
+          color: #cbd5e1 !important;
+
+          svg,
+          i {
+            color: #cbd5e1 !important;
+            stroke: #cbd5e1 !important;
+          }
 
           &:hover {
-            background-color: #334155 !important;
+            background-color: #273549 !important;
+            border-color: #475569 !important;
+            color: #ffffff !important;
+
+            svg,
+            i {
+              color: #ffffff !important;
+              stroke: #ffffff !important;
+            }
           }
         }
 
@@ -986,13 +1019,15 @@
           color: #f1f5f9 !important;
 
           &:hover {
-            background-color: #334155 !important;
+            background-color: #273549 !important;
+            border-color: #475569 !important;
+            color: #ffffff !important;
           }
 
           &.active {
-            background-color: #5200ff !important;
-            border-color: #5200ff !important;
-            color: #ffffff !important;
+            background-color: #273549 !important;
+            border-color: #6366f1 !important;
+            color: #a5b4fc !important;
           }
         }
       }
@@ -2120,8 +2155,8 @@
 
   // Voice chat sidebar overrides
   .voice-chat-sidebar {
-    background-color: #181d24 !important;
-    border-color: #1e293b !important;
+    background-color: #1e242b !important;
+    border-color: #334155 !important;
 
     .status-pill {
       background-color: #1e293b !important;
@@ -2182,8 +2217,8 @@
 
   // Text chat sidebar overrides
   .intelegenz-chat-sidebar {
-    background-color: #181d24 !important;
-    border-color: #1e293b !important;
+    background-color: #1e242b !important;
+    border-color: #334155 !important;
 
     .chip-btn {
       background-color: #1e293b !important;
@@ -3439,11 +3474,11 @@
 
   // ── Right details / inspection sidebar ───────────────────
   .kg-details-sidebar {
-    background: #181d24 !important;
+    background: #1e242b !important;
     border-left-color: #334155 !important;
 
     .details-header {
-      background: #161c24 !important;
+      background: #1e242b !important;
       border-bottom-color: #334155 !important;
 
       .details-header-title { color: #e2e8f0 !important; }
@@ -3473,7 +3508,7 @@
 
       // Properties list
       .prop-row {
-        background: #161c24 !important;
+        background: #1e293b !important;
         border-color: #334155 !important;
 
         .prop-key { color: #475569 !important; }
@@ -3535,7 +3570,7 @@
 
   // ==========================================================================
   // UNIFIED DARK MODE THEME: Threat Pulse, Intel Card, Defense Convergence, Adversary Triage
-  // Palette matches Homepage: #1e242b (Root bg), #1e293b (Card/Table bg), #334155 (Borders), #181d24 (Sidebar/Badge bg)
+  // Palette matches Homepage: #1e242b (Root & Sidebar bg), #1e293b (Card/Table bg), #334155 (Borders), #181d24 (Table thead/Badge bg)
   // ==========================================================================
 
   // 1. THREAT PULSE
@@ -3555,8 +3590,9 @@
     }
 
     .view-sidebar-container,
-    .threatpulse-sidebar {
-      background-color: #181d24 !important;
+    .threatpulse-sidebar,
+    .view-sidebar {
+      background-color: #1e242b !important;
       border-right: 1px solid #334155 !important;
     }
 
@@ -3663,7 +3699,7 @@
 
     .intelcard-sidebar-container,
     .intelcard-sidebar {
-      background-color: #181d24 !important;
+      background-color: #1e242b !important;
       border-right: 1px solid #334155 !important;
     }
 
@@ -3744,7 +3780,7 @@
 
     .mitigation-sidebar-container,
     .mitigation-sidebar {
-      background-color: #181d24 !important;
+      background-color: #1e242b !important;
       border-right: 1px solid #334155 !important;
     }
 
@@ -3861,8 +3897,9 @@
     }
 
     .threat-actor-sidebar-container,
-    .threat-actor-sidebar {
-      background-color: #181d24 !important;
+    .threat-actor-sidebar,
+    .threatactor-sidebar {
+      background-color: #1e242b !important;
       border-right: 1px solid #334155 !important;
     }
 
@@ -3952,5 +3989,1282 @@
       }
     }
   }
-}
 
+  // ==========================================================================
+  // UNIVERSAL SIDEBAR DARK THEME OVERRIDES (#1e242b Background for All Sidebars)
+  // ==========================================================================
+  .view-sidebar,
+  .intelcard-sidebar,
+  .mitigation-sidebar,
+  .threatactor-sidebar,
+  .threat-actor-sidebar,
+  .admin-sidebar,
+  .ps-sidebar-root,
+  .ps-sidebar-container,
+  .view-sidebar-container,
+  .intelcard-sidebar-container,
+  .mitigation-sidebar-container,
+  .threat-actor-sidebar-container,
+  .voice-chat-sidebar,
+  .intelegenz-chat-sidebar,
+  .chat-sidebar,
+  .kg-details-sidebar {
+    background-color: #1e242b !important;
+    background: #1e242b !important;
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
+
+    // React Pro Sidebar container element override
+    .ps-sidebar-container {
+      background-color: #1e242b !important;
+      background: #1e242b !important;
+    }
+
+    .ps-menu-root,
+    .ps-menu-button {
+      background-color: transparent !important;
+      color: #cbd5e1 !important;
+
+      &:hover {
+        background-color: #273549 !important;
+        color: #f1f5f9 !important;
+      }
+    }
+
+    // Sidebar navigation & items
+    .sidebar-nav {
+      .nav-item {
+        color: #cbd5e1 !important;
+
+        .nav-label {
+          color: #cbd5e1 !important;
+        }
+
+        &:hover:not(.active) {
+          background-color: #273549 !important;
+          background: #273549 !important;
+
+          .nav-label {
+            color: #f1f5f9 !important;
+          }
+        }
+
+        &.active {
+          .nav-label {
+            color: #ffffff !important;
+          }
+        }
+
+        .icon-wrapper {
+          background-color: #181d24 !important;
+          background: #181d24 !important;
+          border: 1px solid #334155 !important;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
+        }
+      }
+    }
+
+    // Sidebar heading & titles
+    .sidebar-heading,
+    .vs-title,
+    .vs-tab-label {
+      color: #f1f5f9 !important;
+    }
+
+    .sidebar-group {
+      border-color: #334155 !important;
+    }
+
+    .cursor-pointer:hover {
+      background-color: #273549 !important;
+    }
+
+    // Sidebar bottom support card
+    .sidebar-support,
+    .support-card,
+    .intelcard-sidebar-support {
+      background-color: #1e293b !important;
+      background: #1e293b !important;
+      border: 1px solid #334155 !important;
+      color: #cbd5e1 !important;
+
+      .support-header {
+        .icon-wrapper {
+          background-color: #181d24 !important;
+          border: 1px solid #334155 !important;
+          box-shadow: none !important;
+        }
+
+        .vs-support-title,
+        h6,
+        span {
+          color: #f1f5f9 !important;
+        }
+      }
+
+      .support-links-container {
+        .support-links {
+          li {
+            &:hover {
+              background-color: #273549 !important;
+            }
+
+            .vs-support-link,
+            .text-dark {
+              color: #cbd5e1 !important;
+            }
+
+            .vs-icon-chevron {
+              color: #94a3b8 !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // ==========================================================================
+  // INTEL CARD DROPDOWN & FILTER DARK THEME OVERRIDES (/intel-card)
+  // ==========================================================================
+  .intel-curated-select__control {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
+
+    &:hover {
+      border-color: #475569 !important;
+    }
+  }
+
+  .intel-curated-select__single-value {
+    color: #f1f5f9 !important;
+  }
+
+  .intel-curated-select__placeholder {
+    color: #94a3b8 !important;
+  }
+
+  .intel-curated-select__dropdown-indicator {
+    color: #94a3b8 !important;
+
+    &:hover {
+      color: #f1f5f9 !important;
+    }
+  }
+
+  .intel-curated-select__menu {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .intel-curated-select__menu-list {
+    background-color: #1e293b !important;
+  }
+
+  .intel-curated-select__option {
+    background-color: #1e293b !important;
+    color: #cbd5e1 !important;
+
+    &:hover,
+    &--is-focused {
+      background-color: #273549 !important;
+      color: #f1f5f9 !important;
+    }
+
+    &--is-selected {
+      background-color: rgba(99, 102, 241, 0.25) !important;
+      color: #a5b4fc !important;
+      font-weight: 600 !important;
+    }
+  }
+
+  // Header Actions on /intel-card
+  .intelcard-list-header-actions {
+    .btn,
+    .btn-white {
+      background-color: #1e293b !important;
+      background: #1e293b !important;
+      border-color: #334155 !important;
+      color: #f1f5f9 !important;
+
+      &:hover {
+        background-color: #273549 !important;
+        border-color: #475569 !important;
+        color: #ffffff !important;
+      }
+
+      &.active {
+        background-color: #273549 !important;
+        border-color: #6366f1 !important;
+        color: #a5b4fc !important;
+      }
+    }
+  }
+
+  // Date Filter Dropdown on IntelCard
+  .intelcard-date-dropdown-wrapper {
+    .bg-white {
+      background-color: #1e293b !important;
+      border-color: #334155 !important;
+      color: #f1f5f9 !important;
+
+      span.text-dark {
+        color: #f1f5f9 !important;
+      }
+    }
+
+    .intelcard-date-dropdown-menu {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+
+      .intelcard-date-dropdown-item {
+        color: #cbd5e1 !important;
+
+        &:hover {
+          background-color: #273549 !important;
+          color: #f1f5f9 !important;
+        }
+
+        &.active {
+          background-color: rgba(99, 102, 241, 0.2) !important;
+          color: #a5b4fc !important;
+
+          i {
+            color: #a5b4fc !important;
+          }
+        }
+      }
+    }
+  }
+
+  // Inline Filter & Filter Component on /intel-card
+  .intelcard-filter-inline-wrapper {
+    .intelcard-filter-triangle {
+      border-bottom-color: #1e293b !important;
+    }
+
+    &::before {
+      border-bottom-color: #334155 !important;
+    }
+  }
+
+  .filter-component {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+
+    .filter-section {
+      border-color: #334155 !important;
+
+      .text-dark {
+        color: #f1f5f9 !important;
+      }
+
+      .text-secondary {
+        color: #94a3b8 !important;
+      }
+
+      input {
+        color: #f1f5f9 !important;
+
+        &::placeholder {
+          color: #64748b !important;
+        }
+      }
+
+      .filter-dropdown-trigger {
+        color: #f1f5f9 !important;
+
+        .text-dark {
+          color: #f1f5f9 !important;
+        }
+
+        .text-muted {
+          color: #94a3b8 !important;
+        }
+
+        &:hover .text-muted {
+          color: #f1f5f9 !important;
+        }
+      }
+
+      .filter-dropdown-menu {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45) !important;
+
+        .filter-dropdown-item {
+          color: #cbd5e1 !important;
+
+          &:hover {
+            background-color: #273549 !important;
+            color: #f1f5f9 !important;
+          }
+
+          &.active {
+            background-color: rgba(99, 102, 241, 0.2) !important;
+            color: #a5b4fc !important;
+          }
+        }
+      }
+    }
+  }
+
+  // Intel Card Pagination
+  .intelcard-pagination-wrapper {
+    background-color: transparent !important;
+  }
+
+  .intelcard-pagination-container {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+
+    .intelcard-pagination-info {
+      color: #94a3b8 !important;
+    }
+
+    .intelcard-pagination-btn {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+      color: #cbd5e1 !important;
+
+      &:hover {
+        background-color: #273549 !important;
+        color: #f1f5f9 !important;
+      }
+
+      &.active {
+        background-color: #6366f1 !important;
+        color: #ffffff !important;
+        border-color: #6366f1 !important;
+      }
+    }
+
+    .intelcard-pagination-page-jump {
+      color: #94a3b8 !important;
+
+      .intelcard-pagination-input {
+        background-color: #181d24 !important;
+        color: #f1f5f9 !important;
+        border: 1px solid #334155 !important;
+      }
+
+      .intelcard-pagination-go-btn {
+        color: #a5b4fc !important;
+      }
+    }
+  }
+
+  // ==========================================================================
+  // EMERGING THREATS DROPDOWN & REFRESH BUTTON DARK THEME OVERRIDES (/emerging-threats)
+  // ==========================================================================
+  .threat-type-dropdown-wrapper {
+    .dropdown-toggle-btn {
+      background-color: #1e293b !important;
+      background: #1e293b !important;
+      border: 1px solid #334155 !important;
+      color: #f1f5f9 !important;
+
+      .dropdown-selected-text {
+        color: #f1f5f9 !important;
+      }
+
+      .dropdown-chevron {
+        color: #94a3b8 !important;
+      }
+
+      &:hover {
+        background-color: #273549 !important;
+        border-color: #475569 !important;
+        color: #ffffff !important;
+
+        .dropdown-chevron {
+          color: #f1f5f9 !important;
+        }
+      }
+
+      &.active {
+        background-color: #273549 !important;
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+
+        .dropdown-chevron {
+          color: #a5b4fc !important;
+        }
+      }
+    }
+
+    .dropdown-menu-custom {
+      background-color: #1e293b !important;
+      background: #1e293b !important;
+      border: 1px solid #334155 !important;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45) !important;
+
+      .dropdown-item-custom {
+        color: #cbd5e1 !important;
+        background: transparent !important;
+
+        .dropdown-item-text {
+          color: #cbd5e1 !important;
+        }
+
+        &:hover {
+          background-color: #273549 !important;
+          color: #f1f5f9 !important;
+
+          .dropdown-item-text {
+            color: #f1f5f9 !important;
+          }
+        }
+
+        &.active {
+          background-color: rgba(99, 102, 241, 0.25) !important;
+          color: #a5b4fc !important;
+
+          .dropdown-item-text {
+            color: #a5b4fc !important;
+            font-weight: 600 !important;
+          }
+
+          .dropdown-check-icon {
+            color: #a5b4fc !important;
+          }
+        }
+      }
+    }
+  }
+
+  // Refresh Buttons globally and specifically on /emerging-threats
+  .refresh-btn,
+  .intelcard-refresh-btn,
+  .list-header-actions .refresh-btn,
+  .view-top-header .refresh-btn {
+    background-color: #1e293b !important;
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #cbd5e1 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+
+    svg,
+    i {
+      color: #cbd5e1 !important;
+      stroke: #cbd5e1 !important;
+    }
+
+    &:hover {
+      background-color: #273549 !important;
+      border-color: #475569 !important;
+      color: #ffffff !important;
+
+      svg,
+      i {
+        color: #ffffff !important;
+        stroke: #ffffff !important;
+      }
+    }
+
+    &:active {
+      background-color: #334155 !important;
+    }
+  }
+
+  // View Mode Checkboxes (Curated View / All View) on /emerging-threats
+  .view-mode-checkboxes {
+    .form-check-label {
+      color: #cbd5e1 !important;
+    }
+
+    .form-check-input {
+      background-color: #181d24 !important;
+      border-color: #475569 !important;
+
+      &:checked {
+        background-color: #6366f1 !important;
+        border-color: #6366f1 !important;
+      }
+    }
+  }
+
+  // Header Actions on /emerging-threats & general view pages
+  .list-header-actions {
+    .btn,
+    .btn-white {
+      background-color: #1e293b !important;
+      background: #1e293b !important;
+      border: 1px solid #334155 !important;
+      color: #f1f5f9 !important;
+
+      &:hover {
+        background-color: #273549 !important;
+        border-color: #475569 !important;
+        color: #ffffff !important;
+      }
+
+      &.active {
+        background-color: #273549 !important;
+        border-color: #6366f1 !important;
+        color: #a5b4fc !important;
+      }
+    }
+  }
+
+  // Inline filter triangle on /emerging-threats
+  .filter-inline-wrapper {
+    .filter-triangle {
+      border-bottom-color: #1e293b !important;
+    }
+
+    &::before {
+      border-bottom-color: #334155 !important;
+    }
+  }
+
+  // ==========================================================================
+  // KNOWLEDGE GRAPH DARK THEME OVERRIDES (/intel-neura-view & /neura-view)
+  // ==========================================================================
+  .intel-knowledge-graph-page,
+  .threat-actor-kg-page,
+  .malware-kg-page {
+    background-color: #1e242b !important;
+    color: #f1f5f9 !important;
+
+    // Header Section
+    .graph-header {
+      background-color: #1e242b !important;
+      border-bottom: 1px solid #334155 !important;
+
+      .breadcrumb-nav {
+        color: #94a3b8 !important;
+
+        .home-icon {
+          color: #94a3b8 !important;
+        }
+
+        .breadcrumb-clickable {
+          color: #94a3b8 !important;
+
+          &:hover {
+            color: #a5b4fc !important;
+          }
+        }
+
+        .text-dark {
+          color: #f1f5f9 !important;
+        }
+
+        .text-muted {
+          color: #94a3b8 !important;
+        }
+      }
+
+      .view-top-header,
+      .tap-header-section {
+        h2 .header,
+        .header,
+        .tap-title-row h4 {
+          color: #ffffff !important;
+        }
+
+        .tap-title-row .shield-icon-wrapper {
+          background: #181d24 !important;
+          border-color: #334155 !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+        }
+      }
+
+      .intelcard-view-checkboxes {
+        .intelcard-checkbox-item {
+          .intelcard-checkbox-label {
+            color: #cbd5e1 !important;
+          }
+
+          .intelcard-custom-checkbox {
+            background-color: #181d24 !important;
+            border-color: #475569 !important;
+
+            &:checked {
+              background-color: #6366f1 !important;
+              border-color: #6366f1 !important;
+            }
+          }
+
+          &:hover .intelcard-checkbox-label {
+            color: #f1f5f9 !important;
+          }
+        }
+      }
+
+      .picker-row {
+        .picker-group {
+          .picker-label {
+            color: #cbd5e1 !important;
+          }
+
+          .malware-dropdown-select,
+          .entity-dropdown-select {
+            background-color: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #f1f5f9 !important;
+
+            option {
+              background-color: #1e293b !important;
+              color: #f1f5f9 !important;
+            }
+
+            &:focus {
+              border-color: #475569 !important;
+              background-color: #1e293b !important;
+            }
+
+            &:disabled {
+              background-color: #181d24 !important;
+              color: #64748b !important;
+            }
+          }
+
+          .malware-react-select,
+          .css-b62m3t-container {
+            .malware-rs__control {
+              background-color: #1e293b !important;
+              border-color: #334155 !important;
+
+              &:hover {
+                background-color: #1e293b !important;
+                border-color: #475569 !important;
+              }
+            }
+
+            .malware-rs__menu {
+              background-color: #1e293b !important;
+              border: 1px solid #334155 !important;
+              box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45) !important;
+            }
+
+            .malware-rs__option {
+              background-color: #1e293b !important;
+              color: #cbd5e1 !important;
+
+              &:hover,
+              &--is-focused {
+                background-color: #273549 !important;
+                color: #f1f5f9 !important;
+              }
+
+              &--is-selected {
+                background-color: rgba(99, 102, 241, 0.25) !important;
+                color: #a5b4fc !important;
+              }
+            }
+          }
+        }
+
+        #connection-toggle-btn,
+        .btn-kg-action {
+          background-color: #1e293b !important;
+          background: #1e293b !important;
+          border: 1px solid #334155 !important;
+          color: #f1f5f9 !important;
+
+          .icon-btn {
+            color: #a5b4fc !important;
+          }
+
+          &:hover:not(:disabled) {
+            background-color: #273549 !important;
+            background: #273549 !important;
+            border-color: #475569 !important;
+            color: #ffffff !important;
+
+            .icon-btn {
+              color: #c4b5fd !important;
+            }
+          }
+
+          &.active,
+          &.btn-toggle-connections.active {
+            background-color: rgba(99, 102, 241, 0.25) !important;
+            background: rgba(99, 102, 241, 0.25) !important;
+            border-color: #6366f1 !important;
+            color: #a5b4fc !important;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+
+            .icon-btn {
+              color: #a5b4fc !important;
+            }
+          }
+
+          &:disabled {
+            background-color: #181d24 !important;
+            color: #64748b !important;
+          }
+        }
+      }
+
+      .section-label {
+        color: #94a3b8 !important;
+      }
+
+      .radius-section {
+        .radius-select-btn {
+          background-color: #1e293b !important;
+          background: #1e293b !important;
+          border: 1px solid #334155 !important;
+          color: #f1f5f9 !important;
+
+          .chevron-icon {
+            color: #94a3b8 !important;
+          }
+
+          &:hover {
+            background-color: #273549 !important;
+            background: #273549 !important;
+            border-color: #475569 !important;
+          }
+        }
+
+        .radius-dropdown-menu {
+          background-color: #1e293b !important;
+          border: 1px solid #334155 !important;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45) !important;
+
+          .radius-dropdown-item {
+            color: #cbd5e1 !important;
+
+            &:hover {
+              background-color: #273549 !important;
+              color: #f1f5f9 !important;
+            }
+
+            &.selected {
+              background-color: rgba(99, 102, 241, 0.25) !important;
+              color: #a5b4fc !important;
+            }
+          }
+        }
+      }
+    }
+
+    // View Controls Card
+    .view-controls-card {
+      background-color: #1e293b !important;
+      border: 1px solid #334155 !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .entity-query-section-white {
+      .threat-actors-section {
+        .section-title {
+          color: #f1f5f9 !important;
+        }
+
+        .selected-badge {
+          background-color: #334155 !important;
+          color: #f1f5f9 !important;
+        }
+
+        .accordion-toggle-icon {
+          color: #94a3b8 !important;
+
+          &:hover {
+            color: #f1f5f9 !important;
+          }
+        }
+      }
+
+      .selected-chips-container {
+        .malware-chip {
+          background-color: #181d24 !important;
+          border: 1px solid #334155 !important;
+          color: #f1f5f9 !important;
+
+          &:hover {
+            background-color: #273549 !important;
+            border-color: #475569 !important;
+          }
+
+          &.active {
+            background-color: rgba(99, 102, 241, 0.25) !important;
+            border-color: #6366f1 !important;
+            color: #a5b4fc !important;
+
+            .chip-indicator {
+              box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3) !important;
+            }
+          }
+
+          .chip-close-btn {
+            color: #94a3b8 !important;
+
+            &:hover {
+              background-color: rgba(239, 68, 68, 0.2) !important;
+              color: #ef4444 !important;
+            }
+          }
+        }
+      }
+
+      .connection-filters-card {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+
+        .connection-filters-header {
+          background-color: #181d24 !important;
+          border-bottom-color: #334155 !important;
+
+          &:hover {
+            background-color: #273549 !important;
+          }
+
+          .filters-title {
+            color: #f1f5f9 !important;
+          }
+
+          .accordion-arrow {
+            color: #94a3b8 !important;
+          }
+
+          .filters-count-badge {
+            background-color: #334155 !important;
+            color: #cbd5e1 !important;
+          }
+        }
+
+        .connection-filters-body {
+          background-color: #1e293b !important;
+          border-top: 1px solid #334155 !important;
+
+          .filters-subtext {
+            color: #94a3b8 !important;
+          }
+
+          .btn-filter-pill {
+            background-color: #181d24 !important;
+            border: 1px solid #334155 !important;
+            color: #cbd5e1 !important;
+
+            &:hover:not(:disabled) {
+              background-color: #273549 !important;
+              border-color: #475569 !important;
+              color: #f1f5f9 !important;
+            }
+          }
+
+          .connection-options-grid {
+            background-color: #181d24 !important;
+            border: 1px solid #334155 !important;
+
+            .connection-option-item {
+              color: #cbd5e1 !important;
+
+              &:hover {
+                background-color: #273549 !important;
+                color: #f1f5f9 !important;
+              }
+
+              &.checked {
+                color: #f1f5f9 !important;
+                font-weight: 600 !important;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Graph Workspace & Canvas Layout
+    .graph-workspace-layout {
+      background-color: #1e242b !important;
+    }
+
+    .graph-canvas-container {
+      background-color: #181d24 !important;
+
+      .graph-floating-controls {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+
+        .control-divider {
+          background-color: #334155 !important;
+        }
+
+        .tool-icon-btn {
+          color: #94a3b8 !important;
+
+          &:hover {
+            background-color: #273549 !important;
+            color: #f1f5f9 !important;
+          }
+        }
+      }
+    }
+
+    // SVG Graph Edge and Node Labels in Dark Mode
+    .edges-layer {
+      .edge-group {
+        .edge-label-bg {
+          fill: #1e293b !important;
+          stroke: #475569 !important;
+        }
+
+        .svg-edge-text {
+          fill: #c4b5fd !important;
+
+          &.focused-text {
+            fill: #e0e7ff !important;
+          }
+        }
+      }
+    }
+
+    .nodes-layer {
+      .node-group {
+        .svg-outer-node-title {
+          fill: #f1f5f9 !important;
+          stroke: #181d24 !important;
+        }
+
+        .svg-outer-node-subtitle {
+          fill: #94a3b8 !important;
+          stroke: #181d24 !important;
+        }
+      }
+    }
+
+    // Bottom Relationships Bar
+    .selected-entity-relationships-bar {
+      background-color: #1e293b !important;
+      border-top: 1px solid #334155 !important;
+
+      .relationships-bar-header {
+        .relationships-bar-title {
+          color: #f1f5f9 !important;
+        }
+
+        .relationships-bar-toggle-btn {
+          color: #94a3b8 !important;
+
+          &:hover {
+            background-color: #273549 !important;
+            color: #f1f5f9 !important;
+          }
+        }
+      }
+
+      .relationships-bar-body {
+        .relationship-category-card {
+          background-color: #181d24 !important;
+          border: 1px solid #334155 !important;
+          color: #cbd5e1 !important;
+
+          &:hover {
+            background-color: #273549 !important;
+            border-color: #475569 !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+          }
+
+          .category-count-label {
+            .cat-name {
+              color: #cbd5e1 !important;
+            }
+
+            .cat-count {
+              color: #f1f5f9 !important;
+            }
+          }
+
+          .category-arrow-icon {
+            color: #94a3b8 !important;
+          }
+        }
+      }
+    }
+
+    // Right Inspection Details Sidebar
+    .kg-details-sidebar {
+      background-color: #1e293b !important;
+      border-left: 1px solid #334155 !important;
+
+      .kg-sidebar-tabs {
+        background-color: #181d24 !important;
+        border-bottom: 1px solid #334155 !important;
+
+        .kg-sidebar-tab-btn {
+          color: #94a3b8 !important;
+
+          &:hover {
+            color: #f1f5f9 !important;
+          }
+
+          &.active {
+            color: #a5b4fc !important;
+
+            &::after {
+              background-color: #6366f1 !important;
+            }
+          }
+        }
+      }
+
+      .details-scrollable-body {
+        color: #f1f5f9 !important;
+
+        .entity-profile-card {
+          .entity-title-info {
+            .entity-main-title {
+              color: #f1f5f9 !important;
+            }
+
+            .entity-subtitle {
+              color: #94a3b8 !important;
+
+              .ext-link-icon {
+                color: #94a3b8 !important;
+
+                &:hover {
+                  color: #a5b4fc !important;
+                }
+              }
+            }
+          }
+        }
+
+        .section-divider {
+          background-color: #334155 !important;
+        }
+
+        .section-header-title {
+          color: #f1f5f9 !important;
+        }
+
+        .attributes-list {
+          .attribute-row {
+            .attr-label {
+              color: #94a3b8 !important;
+            }
+
+            .attr-value {
+              color: #f1f5f9 !important;
+
+              .badge-type-purple {
+                background-color: rgba(99, 102, 241, 0.25) !important;
+                color: #c4b5fd !important;
+              }
+
+              .badge-category-gray {
+                background-color: #181d24 !important;
+                border: 1px solid #334155 !important;
+                color: #cbd5e1 !important;
+              }
+
+              .associated-actors-text {
+                color: #a5b4fc !important;
+              }
+            }
+          }
+        }
+
+        .description-section {
+          .description-text {
+            color: #cbd5e1 !important;
+          }
+
+          .show-more-toggle-btn {
+            color: #a5b4fc !important;
+          }
+        }
+
+        .sidebar-action-footer {
+          .btn-intel-action.secondary {
+            background-color: #181d24 !important;
+            border: 1px solid #334155 !important;
+            color: #cbd5e1 !important;
+
+            &:hover {
+              background-color: #273549 !important;
+              border-color: #475569 !important;
+              color: #ffffff !important;
+            }
+          }
+        }
+
+        .connected-rel-subblock {
+          background-color: #181d24 !important;
+          border: 1px solid #334155 !important;
+
+          .section-subtitle-text {
+            color: #f1f5f9 !important;
+          }
+
+          .rel-card-item {
+            background-color: #1e293b !important;
+            border: 1px solid #334155 !important;
+
+            &:hover {
+              background-color: #273549 !important;
+              border-color: #6366f1 !important;
+            }
+
+            .rel-type-tag {
+              color: #a5b4fc !important;
+            }
+
+            .rel-target-name {
+              color: #f1f5f9 !important;
+            }
+
+            .rel-target-type-badge {
+              background-color: #181d24 !important;
+              border: 1px solid #334155 !important;
+              color: #94a3b8 !important;
+            }
+          }
+        }
+
+        .related-entities-grid {
+          .related-entity-card {
+            background-color: #1e293b !important;
+            border: 1px solid #334155 !important;
+
+            &:hover {
+              background-color: #273549 !important;
+              border-color: #6366f1 !important;
+            }
+
+            .related-entity-title {
+              color: #f1f5f9 !important;
+            }
+
+            .related-entity-type-badge {
+              color: #94a3b8 !important;
+            }
+
+            .related-rel-badge {
+              background-color: rgba(99, 102, 241, 0.25) !important;
+              color: #a5b4fc !important;
+            }
+
+            .related-entity-arrow {
+              color: #94a3b8 !important;
+            }
+          }
+        }
+
+        .details-section.relationships-filter-section {
+          .btn-filter-pill {
+            background-color: #181d24 !important;
+            border: 1px solid #334155 !important;
+            color: #cbd5e1 !important;
+
+            &:hover:not(:disabled) {
+              background-color: #273549 !important;
+              border-color: #475569 !important;
+              color: #f1f5f9 !important;
+            }
+          }
+
+          .connection-options-list {
+            .connection-option-item {
+              background-color: #181d24 !important;
+              border: 1px solid #334155 !important;
+              color: #cbd5e1 !important;
+
+              &:hover {
+                background-color: #273549 !important;
+                border-color: #475569 !important;
+                color: #f1f5f9 !important;
+              }
+
+              &.checked {
+                background-color: rgba(99, 102, 241, 0.25) !important;
+                border-color: #6366f1 !important;
+                color: #a5b4fc !important;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Connection Filters Drawer (Right Slide-In)
+    .connection-filters-drawer-overlay {
+      background: rgba(0, 0, 0, 0.6) !important;
+
+      .connection-filters-drawer {
+        background-color: #1e293b !important;
+        border-left: 1px solid #334155 !important;
+        box-shadow: -10px 0 35px rgba(0, 0, 0, 0.5) !important;
+
+        .drawer-header {
+          background-color: #181d24 !important;
+          border-bottom: 1px solid #334155 !important;
+
+          .drawer-title {
+            color: #f1f5f9 !important;
+          }
+
+          .filters-count-badge {
+            background-color: #334155 !important;
+            color: #cbd5e1 !important;
+          }
+
+          .drawer-close-btn {
+            color: #94a3b8 !important;
+
+            &:hover {
+              background-color: rgba(239, 68, 68, 0.2) !important;
+              color: #ef4444 !important;
+            }
+          }
+        }
+
+        .drawer-body {
+          background-color: #1e293b !important;
+
+          .filters-subtext {
+            color: #94a3b8 !important;
+          }
+
+          .btn-filter-pill {
+            background-color: #181d24 !important;
+            border: 1px solid #334155 !important;
+            color: #cbd5e1 !important;
+
+            &:hover:not(:disabled) {
+              background-color: #273549 !important;
+              border-color: #475569 !important;
+              color: #f1f5f9 !important;
+            }
+          }
+
+          .connection-options-list {
+            .connection-option-item {
+              background-color: #181d24 !important;
+              border: 1px solid #334155 !important;
+              color: #cbd5e1 !important;
+
+              &:hover {
+                background-color: #273549 !important;
+                border-color: #475569 !important;
+                color: #f1f5f9 !important;
+              }
+
+              &.checked {
+                background-color: rgba(99, 102, 241, 0.25) !important;
+                border-color: #6366f1 !important;
+                color: #a5b4fc !important;
+              }
+            }
+          }
+        }
+
+        .drawer-footer {
+          background-color: #181d24 !important;
+          border-top: 1px solid #334155 !important;
+        }
+      }
+    }
+  }
+}

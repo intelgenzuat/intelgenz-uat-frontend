@@ -28,7 +28,7 @@ const IntelTopcontent = ({ showHeliosInfo = true, title, breadcrumbTitle, childr
             {/* Top Header specific to View Page */}
             <div className="view-top-header d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center gap-3">
-                    <div className="header-icon-wrapper rounded-3 d-flex align-items-center justify-content-center subtle text-danger" style={{ width: '36px', height: '36px' }}>
+                    <div className="header-icon-wrapper rounded-3 d-flex align-items-center justify-content-center" style={{ width: '36px', height: '36px' }}>
                         <svg width="30" height="30" viewBox="0 0 49 44" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                             <rect width="48.2596" height="43.6113" fill="url(#pattern0_166_740)" />
                             <defs>
