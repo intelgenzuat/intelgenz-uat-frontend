@@ -323,7 +323,7 @@ const Defend = ({
                             tacticsData.map(tactic => {
                                 const isTacticExpanded = !collapsedTactics.has(tactic.id);
                                 return (
-                                    <div key={tactic.id} className="tactic-group d-flex flex-column">
+                                    <div key={tactic.id} className={`tactic-group d-flex flex-column ${!isTacticExpanded ? 'tactic-collapsed' : ''}`}>
                                         <div className="tactic-group-header" onClick={() => toggleTactic(tactic.id)}>
                                             <button className="tactic-toggle-btn" type="button">
                                                 <i className={`bi ${isTacticExpanded ? 'bi-dash' : 'bi-plus'}`}></i>
