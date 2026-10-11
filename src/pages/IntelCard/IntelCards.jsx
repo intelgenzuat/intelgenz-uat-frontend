@@ -116,12 +116,12 @@ function IntelCard({ threatData }) {
             </div>
 
             {/* Domain */}
-            <div className="d-flex align-items-center" style={{ minWidth: 0 }}>
+            <div className="d-flex align-items-center" style={{ minWidth: 0, maxWidth: 'calc(100% - 50px)' }}>
               <div className="d-flex justify-content-center align-items-center me-1 rounded-circle flex-shrink-0" style={{ width: '22px', height: '22px', backgroundColor: 'var(--intel-card-bg)', border: '1px solid var(--intel-card-badge-border, #fae8eb)', color: '#e11d48' }}>
                 <PiShieldWarningDuotone size={12} />
               </div>
               <span className="text-truncate" title={`Domain: ${fullData.target_sector}`} style={{ fontSize: '11px', color: 'var(--intel-card-desc-color)' }}>
-                <span style={{ fontWeight: '600', color: 'var(--intel-card-title-color)' }}>Domain: </span>{truncateText(fullData.target_sector, 35)}
+                <span style={{ fontWeight: '600', color: 'var(--intel-card-title-color)' }}>Domain: </span>{truncateText(fullData.target_sector, 20)}
               </span>
             </div>
 

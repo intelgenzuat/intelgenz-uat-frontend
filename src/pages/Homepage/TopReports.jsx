@@ -15,7 +15,7 @@ export default function TopReports() {
     return (
         <div className="top-reports-section">
             <h5 className="section-title">
-                Top Reports <i className="bi bi-question-circle"></i>
+                Top Reports
             </h5>
             <div className="top-reports-card">
                 <table className="top-reports-table">

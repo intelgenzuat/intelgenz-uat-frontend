@@ -19,7 +19,7 @@ export default function BlogsandNews() {
     return (
         <div className="blogs-news-section">
             <h5 className="section-title">
-                Blogs & News <i className="bi bi-question-circle"></i>
+                Blogs & News 
             </h5>
             <div className="news-sidebar">
 

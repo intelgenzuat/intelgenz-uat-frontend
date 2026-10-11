@@ -63,7 +63,7 @@ export default function Homepage() {
                             <div className="threat-distribution-section">
                                 <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
                                     <h5 className="section-title">
-                                        Radius <i className="bi bi-question-circle"></i>
+                                        Radius 
                                     </h5>
                                     {/* <div className="legend-indicators d-flex align-items-center">
                                         <span className="legend-label d-flex align-items-center gap-2 me-2">
