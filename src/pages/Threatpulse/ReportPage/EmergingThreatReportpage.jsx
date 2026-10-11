@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
-import EmergingThreatHeader from './EmergingThreatHeader';
+import { LiaDownloadSolid } from 'react-icons/lia';
+import Header from '../../../layout/Header';
 import EmergingThreatFooter from './EmergingThreatFooter';
 import logo from '../../../assets/images/logo.png';
 import gradientImg from '../../../assets/images/gradient.png';
@@ -30,7 +31,7 @@ export default function EmergingThreatReportpage() {
     const location = useLocation();
     const navigate = useNavigate();
     const [reportData, setReportData] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const fetchDetailedReport = (reportId, clientName) => {
         if (!reportId) return;
@@ -184,10 +185,14 @@ export default function EmergingThreatReportpage() {
         });
     }, [reportData, narrativeSections]);
 
+    const handleDownload = () => {
+        window.print();
+    };
+
     return (
         <div className="emerging-threat-page-container">
-            {/* Custom Header */}
-            <EmergingThreatHeader />
+            {/* Top Header - Same as home page */}
+            <Header />
 
             {loading ? (
                 <div className="d-flex justify-content-center align-items-center w-100 flex-grow-1" style={{ minHeight: '60vh' }}>
@@ -206,15 +211,26 @@ export default function EmergingThreatReportpage() {
                         <div className="hero-watermark"></div>
 
                         <div className="hero-text-content">
-                            <button
-                                type="button"
-                                className="hero-back-btn"
-                                onClick={() => navigate(-1)}
-                                title="Go back"
-                            >
-                                <FiArrowLeft className="back-icon" />
-                                <span>Back</span>
-                            </button>
+                            <div className="hero-top-actions">
+                                <button
+                                    type="button"
+                                    className="hero-back-btn"
+                                    onClick={() => navigate(-1)}
+                                    title="Go back"
+                                >
+                                    <FiArrowLeft className="back-icon" />
+                                    <span>Back</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    className="hero-download-btn"
+                                    onClick={handleDownload}
+                                    title="Download Report"
+                                >
+                                    <LiaDownloadSolid className="download-icon" />
+                                    <span>Download</span>
+                                </button>
+                            </div>
                             {title && (
                                 <h1 className="hero-title">
                                     {title}
@@ -403,11 +419,11 @@ export default function EmergingThreatReportpage() {
                             </div>
                         </div>
                     </section>
+
+                    {/* Custom Footer */}
+                    <EmergingThreatFooter />
                 </>
             )}
-
-            {/* Custom Footer */}
-            <EmergingThreatFooter />
         </div>
     );
 }

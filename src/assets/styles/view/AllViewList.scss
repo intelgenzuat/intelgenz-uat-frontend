@@ -83,3 +83,63 @@
 .th-view-report { background-color: #5200ff; color: #fff; font-size: 14px; white-space: nowrap; }
 .th-view-icon { font-size: 16px; margin-right: 8px; }
 
+// ── Dark Mode Overrides ──────────────────────────────────────────────────────
+[data-bs-theme='dark'],
+[data-theme='dark'] {
+  .all-view-list {
+    background-color: #1e242b !important;
+    border-color: #334155 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+
+    .table-responsive-container {
+      scrollbar-color: #6366f1 #1e242b;
+
+      &::-webkit-scrollbar-track {
+        background: #1e242b;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #6366f1;
+        border-color: #1e242b;
+      }
+    }
+
+    .table {
+      --bs-table-bg: #1e242b !important;
+      --bs-table-striped-bg: #181d24 !important;
+      --bs-table-hover-bg: #273549 !important;
+      --bs-table-border-color: #334155 !important;
+      color: #f1f5f9 !important;
+      border-color: #334155 !important;
+
+      thead th {
+        background-color: #181d24 !important;
+        color: #94a3b8 !important;
+        border-color: #334155 !important;
+      }
+
+      tbody td {
+        background-color: #1e242b !important;
+        color: #cbd5e1 !important;
+        border-color: #334155 !important;
+      }
+
+      tbody tr:hover td {
+        background-color: #273549 !important;
+      }
+    }
+
+    .th-date-month { color: #94a3b8 !important; }
+    .th-date-day { color: #fb7185 !important; }
+    .th-date-year { color: #64748b !important; }
+    .th-list-text-1 { color: #cbd5e1 !important; }
+    .th-list-badge-1 {
+      background-color: #181d24 !important;
+      border-color: #334155 !important;
+      color: #94a3b8 !important;
+    }
+    .th-list-text-2 { color: #cbd5e1 !important; }
+    .th-list-text-dark { color: #f8fafc !important; }
+    .th-list-text-3 { color: #cbd5e1 !important; }
+  }
+}

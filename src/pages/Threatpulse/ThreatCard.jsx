@@ -64,9 +64,9 @@ export default function ThreatCard({ cardData }) {
 
   const getSeverityStyle = (level) => {
     const lowLevel = level?.toLowerCase();
-    if (lowLevel === 'high' || lowLevel === 'critical') return { backgroundColor: '#FF6B6B', color: '#fff' };
-    if (lowLevel === 'medium') return { backgroundColor: '#FFD166', color: '#000' };
-    return { backgroundColor: '#06D6A0', color: '#fff' };
+    if (lowLevel === 'high' || lowLevel === 'critical') return { backgroundColor: '#F97316', color: '#fff' };
+    if (lowLevel === 'medium') return { backgroundColor: '#F59E0B', color: '#000' };
+    return { backgroundColor: '#22C55E', color: '#fff' };
   };
 
   return (

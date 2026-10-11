@@ -21,7 +21,7 @@ export default function EmergingThreatFooter() {
       <div className="footer-content">
         {/* Brand section */}
         <div className="footer-brand">
-          <img src={logo} alt="INTELGENZ Logo" className="footer-logo-img" />
+          <img src={theme === 'dark' ? logodarkmode : logo} alt="INTELGENZ Logo" className="footer-logo-img" />
         </div>
 
         {/* Social media links */}

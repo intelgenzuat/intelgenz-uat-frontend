@@ -1,4 +1,4 @@
-/* ── Floating Chat Circular Icon Button (Bottom-Right) ── */
+/* ── Floating Chat Circular Icon Button ── */
 .floating-chat-icon-btn {
   position: fixed;
   bottom: 24px;
@@ -14,8 +14,11 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 16px rgba(0, 102, 212, 0.4), 0 2px 6px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+  cursor: grab;
   z-index: 1050;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background-color 0.2s ease;
 
   &:hover {
@@ -25,11 +28,21 @@
   }
 
   &:active {
-    transform: scale(0.95);
+    cursor: grabbing;
+    transform: scale(0.98);
+  }
+
+  &.is-dragging {
+    cursor: grabbing !important;
+    transform: scale(1.1) !important;
+    background: #0052b3;
+    box-shadow: 0 8px 24px rgba(0, 102, 212, 0.6), 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: none !important; // Zero latency tracking while dragging
   }
 
   .floating-chat-icon {
     font-size: 26px;
     color: #ffffff;
+    pointer-events: none;
   }
-}
+}

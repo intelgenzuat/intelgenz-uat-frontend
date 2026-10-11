@@ -1,2 +1,115 @@
-ÿþ.header-icon-home { font-size: 15px; }
+// Navbar styling for top-navbar
+.top-navbar {
+  background: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 12px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
 
+  .brand-logo {
+    font-weight: 700;
+    font-size: 24px;
+    color: #1a1f36;
+    letter-spacing: -0.5px;
+
+    span {
+      color: #e63946;
+    }
+  }
+
+  .nav-icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    transition: all 0.2s;
+    cursor: pointer;
+
+    &:hover {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    &.active {
+      color: #0f172a;
+      border-color: #cbd5e1;
+    }
+  }
+
+  .user-profile-btn {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 5.6px 12px 5.6px 5.6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #ffffff;
+
+    &:hover {
+      background: #f8fafc;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      margin-right: 12px;
+
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .status-dot {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 14px;
+        height: 14px;
+        background-color: #00b85c;
+        border: 2px solid #ffffff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+          width: 8px;
+          height: 8px;
+          color: white;
+        }
+      }
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+
+      .greeting {
+        font-size: 10.4px;
+        color: #64748b;
+        margin-bottom: 0px;
+        line-height: 1.2;
+      }
+
+      .name {
+        font-size: 13.6px;
+        font-weight: 600;
+        color: #0f172a;
+        line-height: 1.2;
+      }
+    }
+  }
+}
+
+.header-icon-home {
+  font-size: 15px;
+}

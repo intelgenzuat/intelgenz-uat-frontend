@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-top: 67px;
+  padding-top: 0;
   background-color: #ffffff;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   box-sizing: border-box;
@@ -12,7 +12,7 @@
     background: linear-gradient(to right, #e2e7f7 0%, #faebf0 55%, #f6d2d9 100%);
     padding: 80px 32px 120px 32px;
     position: sticky;
-    top: 67px;
+    top: 74px;
     z-index: 1;
     overflow: hidden;
 
@@ -59,38 +59,78 @@
       margin: 0 auto;
       text-align: left;
 
-      .hero-back-btn {
-        display: inline-flex;
+      .hero-top-actions {
+        display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 6px;
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.9);
-        color: #1e293b;
-        font-size: 13px;
-        font-weight: 600;
-        padding: 6px 16px;
-        border-radius: 20px;
-        cursor: pointer;
         margin-bottom: 18px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        transition: all 0.2s ease-in-out;
-        outline: none;
+        position: relative;
+        z-index: 3;
 
-        .back-icon {
-          font-size: 15px;
-          stroke-width: 2.5px;
+        .hero-back-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: rgba(255, 255, 255, 0.7);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.9);
+          color: #1e293b;
+          font-size: 13px;
+          font-weight: 600;
+          padding: 6px 16px;
+          border-radius: 20px;
+          cursor: pointer;
+          margin-bottom: 0;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+          transition: all 0.2s ease-in-out;
+          outline: none;
+
+          .back-icon {
+            font-size: 15px;
+            stroke-width: 2.5px;
+          }
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.95);
+            color: #0f172a;
+            transform: translateX(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+          }
+
+          &:active {
+            transform: translateX(0);
+          }
         }
 
-        &:hover {
-          background: rgba(255, 255, 255, 0.95);
-          color: #0f172a;
-          transform: translateX(-3px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
+        .hero-download-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background-color: #111317;
+          color: #ffffff;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          font-size: 13px;
+          font-weight: 600;
+          padding: 7px 20px;
+          border-radius: 24px;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+          transition: all 0.2s ease-in-out;
+          outline: none;
 
-        &:active {
-          transform: translateX(0);
+          .download-icon {
+            font-size: 17px;
+          }
+
+          &:hover {
+            background-color: #2a2e39;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
         }
       }
 
@@ -332,10 +372,138 @@
 
 @media (max-width: 576px) {
   .emerging-threat-page-container {
-    padding-top: 55px;
+    padding-top: 0;
 
     .report-hero-section {
-      top: 55px;
+      top: 60px;
+
+      .hero-top-actions {
+        gap: 10px;
+
+        .hero-download-btn {
+          padding: 6px 16px;
+          font-size: 12px;
+        }
+      }
     }
   }
 }
+
+@media print {
+  .top-navbar,
+  .hero-top-actions,
+  .emerging-threat-footer,
+  .floating-chat-icon-btn {
+    display: none !important;
+  }
+
+  .emerging-threat-page-container {
+    padding-top: 0 !important;
+  }
+}
+
+// ── Dark Mode Overrides ──────────────────────────────────────────────────────
+[data-bs-theme='dark'],
+[data-theme='dark'] {
+  .emerging-threat-page-container {
+    background-color: #0b0f17 !important;
+    color: #f1f5f9;
+
+    // Preserve original gradient, text colors, and styling in report-hero-section
+    .report-hero-section {
+      .hero-title {
+        color: #1a0e15 !important;
+      }
+
+      .hero-subtitle {
+        color: #70243b !important;
+      }
+    }
+
+    .report-content-section {
+      background-color: #0f172a !important;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+
+      .author-date-row {
+        color: #f1f5f9 !important;
+
+        .author-name {
+          color: #f8fafc !important;
+        }
+
+        .publish-date {
+          color: #94a3b8 !important;
+
+          .date-label {
+            color: #f8fafc !important;
+          }
+        }
+      }
+
+      .metadata-pills-container {
+        .meta-pill {
+          background: #1e293b !important;
+          border: 1px solid #334155 !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+
+          &:hover {
+            background: #273549 !important;
+            border-color: #475569 !important;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4) !important;
+          }
+
+          .icon-circle-white {
+            background-color: #0b0f17 !important;
+            border: 1px solid #334155 !important;
+            box-shadow: none !important;
+          }
+
+          .pill-text {
+            color: #cbd5e1 !important;
+
+            .pill-label {
+              color: #f8fafc !important;
+            }
+          }
+        }
+      }
+
+      .report-narrative,
+      .article {
+        section {
+          h2 {
+            color: #f8fafc !important;
+          }
+
+          p,
+          .placeholder {
+            color: #cbd5e1 !important;
+
+            a {
+              color: #a78bfa !important;
+
+              &:hover {
+                color: #c4b5fd !important;
+              }
+            }
+          }
+
+          .citations {
+            a {
+              background: #1e293b !important;
+              color: #c4b5fd !important;
+              border: 1px solid #334155 !important;
+
+              &:hover {
+                background: #312e81 !important;
+                color: #ffffff !important;
+                border-color: #6366f1 !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

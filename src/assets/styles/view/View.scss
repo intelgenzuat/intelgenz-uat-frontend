@@ -323,3 +323,78 @@
   }
 
 }
+
+// ── Dark Mode Overrides ──────────────────────────────────────────────────────
+[data-bs-theme='dark'],
+[data-theme='dark'] {
+  .view-page-container {
+    background-color: #181d24 !important;
+    border-top-color: #334155 !important;
+
+    .view-main-content {
+      .list-header-wrapper {
+        .list-header-title {
+          color: #f8fafc !important;
+        }
+
+        .list-header-subtitle {
+          color: #94a3b8 !important;
+        }
+      }
+
+      .sort-btn {
+        background-color: #1e242b !important;
+        border-color: #334155 !important;
+        color: #f1f5f9 !important;
+
+        &:hover {
+          background-color: #273549 !important;
+        }
+      }
+
+      .sort-dropdown-menu {
+        background-color: #1e242b !important;
+        border-color: #334155 !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+
+        .sort-menu-item {
+          color: #cbd5e1 !important;
+
+          &:hover {
+            background-color: #273549 !important;
+            color: #a78bfa !important;
+          }
+
+          &.active {
+            background-color: rgba(99, 102, 241, 0.2) !important;
+            color: #a5b4fc !important;
+          }
+        }
+      }
+
+      .chat-btn {
+        background-color: #1e242b !important;
+        border-color: #334155 !important;
+        color: #f1f5f9 !important;
+
+        &:hover {
+          background-color: #273549 !important;
+        }
+      }
+
+      .form-check-label {
+        color: #cbd5e1 !important;
+      }
+    }
+
+    .cards-scroll-area {
+      &::-webkit-scrollbar-thumb {
+        background: #334155;
+
+        &:hover {
+          background: #475569;
+        }
+      }
+    }
+  }
+}

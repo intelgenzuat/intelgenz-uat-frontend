@@ -72,7 +72,7 @@ export default function ViewSidebar({ activeTab = 'customized', setActiveTab, co
               <div className="icon-wrapper d-flex align-items-center justify-content-center me-3 flex-shrink-0" style={activeTab === 'customized' || activeTab === 'all' ? { width: '28px', height: '28px', backgroundColor: '#fff', borderRadius: '50%', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { width: '28px', height: '28px', backgroundColor: 'transparent', borderRadius: '50%' }}>
                 <MdCrisisAlert className="text-danger" style={{ fontSize: '16px' }} />
               </div>
-              {!collapsed && <span className={`  ${activeTab === 'customized' || activeTab === 'all' ? 'text-dark' : 'text-secondary'}`} style={{ fontSize: '15px', fontWeight: 500 }}>Curated View</span>}
+              {!collapsed && <span className={`  ${activeTab === 'customized' || activeTab === 'all' ? 'text-dark' : 'text-secondary'}`} style={{ fontSize: '15px', fontWeight: 500 }}>Emerging Threat Reports</span>}
             </li>
 
             {/* <li

@@ -194,21 +194,6 @@ export default function Threatpulse() {
                   <input
                     className="form-check-input mt-0 cursor-pointer"
                     type="checkbox"
-                    id="curatedViewCheck"
-                    checked={activeTab === 'customized'}
-                    onChange={() => setActiveTab('customized')}
-                  />
-                  <label
-                    className="form-check-label user-select-none cursor-pointer"
-                    htmlFor="curatedViewCheck"
-                  >
-                    Curated View
-                  </label>
-                </div>
-                <div className="form-check d-flex align-items-center gap-2 mb-0">
-                  <input
-                    className="form-check-input mt-0 cursor-pointer"
-                    type="checkbox"
                     id="allViewCheck"
                     checked={activeTab === 'all'}
                     onChange={() => setActiveTab('all')}
@@ -218,6 +203,21 @@ export default function Threatpulse() {
                     htmlFor="allViewCheck"
                   >
                     All View
+                  </label>
+                </div>
+                <div className="form-check d-flex align-items-center gap-2 mb-0">
+                  <input
+                    className="form-check-input mt-0 cursor-pointer"
+                    type="checkbox"
+                    id="curatedViewCheck"
+                    checked={activeTab === 'customized'}
+                    onChange={() => setActiveTab('customized')}
+                  />
+                  <label
+                    className="form-check-label user-select-none cursor-pointer"
+                    htmlFor="curatedViewCheck"
+                  >
+                    Curated View
                   </label>
                 </div>
               </div>

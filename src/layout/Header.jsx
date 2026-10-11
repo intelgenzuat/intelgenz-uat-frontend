@@ -8,7 +8,7 @@ import { MdLockReset, MdLogout } from 'react-icons/md';
 import LogOutSweetAlert from '../common/sweetalert/logoutSweetAlert';
 import Heliosheadersection from '../components/HeliosInfoSection/Heliosheadersection';
 import MenuOptionsHeader from '../components/menu/MenuOptionsHeader';
-
+import './Header.scss';
 
 const Header = ({ toggleSidebar, showHamburger }) => {
   const [theme, setTheme] = useState(() => {
