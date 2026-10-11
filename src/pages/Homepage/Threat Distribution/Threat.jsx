@@ -531,6 +531,14 @@ export default function Threat() {
             >
               Threat Actor
             </div>
+
+            {/* Radar Focus Status Overlay */}
+            <div className="radar-focus-legend">
+              <span className="focus-dot"></span>
+              <span>
+                Highlighted: <strong>{radiusLabel}</strong> ({focusedCount} active threats)
+              </span>
+            </div>
           </div>
 
           {/* Mini Proximity Legend underneath radar */}
@@ -629,13 +637,7 @@ export default function Threat() {
 
           {/* Footer Status */}
           <div className="table-footer-status">
-            <div className="focus-legend-info">
-              <span className="focus-dot"></span>
-              <span>
-                Highlighted: <strong>{radiusLabel}</strong> ({focusedCount} active threats)
-              </span>
-            </div>
-            <span className="count-summary">
+            <span className="count-summary ms-auto">
               Showing {filteredActors.length} of {allActorsList.length} actors
             </span>
           </div>

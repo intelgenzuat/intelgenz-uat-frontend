@@ -367,8 +367,17 @@
       color: #f1f5f9 !important;
       border-color: #334155 !important;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    }
 
-   
+    .radar-focus-legend {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      color: #94a3b8 !important;
+
+      strong {
+        color: #f8fafc !important;
+      }
     }
   }
 

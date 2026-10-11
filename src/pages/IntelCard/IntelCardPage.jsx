@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../../assets/styles/Intelcard/intelcardpage.scss';
 import Intelcardsidebar from '../../components/sidebars/Intelcardsidebar';
-import Filter from '../../components/Filter';
 import Voicechatdrawer from '../../components/Drawers/Voicechatdrawer';
 import Intelegenzchatdrawer from '../../components/Drawers/Intelegenzchatdrawer';
 import FloatingChatButtons from '../../components/Buttons/FloatingChatButtons';
@@ -185,21 +184,17 @@ export default function IntelCardPage() {
             <Outlet />
           ) : (
             <div className="intelcard-main-content flex-grow-1 d-flex flex-column">
-
-              {/* List Header (Fixed inside main content) */}
-              <div className="intelcard-list-header-wrapper">
-                {/* Inline Filter Section */}
-                {showFilter && (
-                  <div className="mt-2 animation-fade-in intelcard-filter-inline-wrapper position-relative">
-                    <div className="intelcard-filter-triangle"></div>
-                    <Filter />
-                  </div>
-                )}
-              </div>
-
               {/* SCROLLABLE GRID CONTAINER */}
-              <Outlet context={{ selectedView: selectedView?.value, setSelectedView, selectedDateFilter, setSelectedDateFilter }} />
-
+              <Outlet
+                context={{
+                  selectedView: selectedView?.value,
+                  setSelectedView,
+                  selectedDateFilter,
+                  setSelectedDateFilter,
+                  showFilter,
+                  setShowFilter,
+                }}
+              />
             </div>
           )}
         </div>

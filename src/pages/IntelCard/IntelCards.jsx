@@ -8,6 +8,7 @@ import { getTheatreIntelCardsList } from '../../Context/Intelcard';
 import Pagination from '../../components/pagination/Pagination';
 import Loader from '../../components/helper/Loader';
 import logoonly from '../../assets/images/logoonly.png';
+import IntelCardFilter from './IntelCardFilter';
 
 
 
@@ -143,7 +144,7 @@ function IntelCard({ threatData }) {
 }
 
 export default function IntelCards() {
-  const { selectedView } = useOutletContext() || {};
+  const { selectedView, showFilter } = useOutletContext() || {};
   const [cardData, setCardData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [threatData, setThreatData] = useState([]);
@@ -177,6 +178,14 @@ export default function IntelCards() {
   console.log("ThreatData", threatData);
   return (
     <>
+      {showFilter && (
+        <div className="w-100 px-3 mb-2">
+          <div className="animation-fade-in intelcard-filter-inline-wrapper position-relative">
+            <div className="intelcard-filter-triangle"></div>
+            <IntelCardFilter />
+          </div>
+        </div>
+      )}
       <div className="intelcard-cards-scroll-area px-3 w-100">
         {loading ? (
           <div className="intelcard-spinner-container d-flex justify-content-center align-items-center py-5" style={{ minHeight: '300px' }}>

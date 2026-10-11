@@ -305,6 +305,50 @@
             transform: translate(-50%, -100%) scale(1.05) !important;
           }
         }
+
+        .radar-focus-legend {
+          position: absolute;
+          bottom: 4px;
+          right: 4px;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          background: transparent;
+          border: none;
+          box-shadow: none;
+          padding: 0;
+          font-size: 11px;
+          color: #64748b;
+          z-index: 10;
+          pointer-events: none;
+          white-space: nowrap;
+
+          .focus-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #e11d48;
+            box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.2);
+            flex-shrink: 0;
+          }
+
+          strong {
+            color: #0f172a;
+            font-weight: 600;
+          }
+
+          [data-bs-theme='dark'] &,
+          [data-theme='dark'] & {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: #94a3b8;
+
+            strong {
+              color: #f8fafc;
+            }
+          }
+        }
       }
 
       .radar-mini-legend {
