@@ -14,6 +14,7 @@ import Topcontent from './Topcontent';
 import { getThreatPulseList, getThreatPulseDetailedReport } from '../../Context/Threatpulse';
 import Pagination from '../../components/pagination/Pagination';
 import Loader from '../../components/helper/Loader';
+import Select from 'react-select';
 
 
 export default function Threatpulse() {
@@ -37,6 +38,59 @@ export default function Threatpulse() {
   const sortDropdownRef = useRef(null);
 
   const navigate = useNavigate();
+
+  const sortSelectOptions = [
+    { value: 'New', label: 'Sort: New' },
+    { value: 'Older', label: 'Sort: Older' },
+    { value: 'Severity', label: 'Sort: Severity' },
+  ];
+
+  const sortSelectStyles = {
+    container: (base) => ({ ...base, width: '150px' }),
+    control: (base, state) => ({
+      ...base,
+      borderRadius: '50px',
+      border: '1px solid var(--select-control-border, #dee2e6)',
+      boxShadow: state.isFocused ? '0 0 0 0.15rem rgba(13,110,253,.2)' : '0 .125rem .25rem rgba(0,0,0,.075)',
+      fontSize: '13px',
+      fontWeight: '500',
+      minHeight: '32px',
+      height: '32px',
+      cursor: 'pointer',
+      backgroundColor: 'var(--select-control-bg, #fff)',
+      '&:hover': { borderColor: 'var(--select-control-border-hover, #adb5bd)' },
+    }),
+    valueContainer: (base) => ({ ...base, padding: '0 10px' }),
+    singleValue: (base) => ({ ...base, color: 'var(--select-control-color, #212529)' }),
+    indicatorSeparator: () => ({ display: 'none' }),
+    dropdownIndicator: (base) => ({ ...base, padding: '0 6px', color: 'var(--select-indicator-color, #6c757d)' }),
+    menu: (base) => ({
+      ...base,
+      width: '150px',
+      borderRadius: '12px',
+      fontSize: '13px',
+      zIndex: 9999,
+      overflow: 'hidden',
+      backgroundColor: 'var(--select-menu-bg, #fff)',
+      border: '1px solid var(--select-menu-border, #e2e8f0)',
+      boxShadow: 'var(--select-menu-shadow, 0 10px 15px -3px rgba(0, 0, 0, 0.1))',
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isSelected
+        ? 'var(--select-option-selected-bg, #e7f1ff)'
+        : state.isFocused
+          ? 'var(--select-option-hover-bg, #f8f9fa)'
+          : 'var(--select-menu-bg, #fff)',
+      color: state.isSelected
+        ? 'var(--select-option-selected-color, #0d6efd)'
+        : state.isFocused
+          ? 'var(--select-option-hover-color, #212529)'
+          : 'var(--select-option-color, #212529)',
+      fontWeight: state.isSelected ? '600' : '400',
+      cursor: 'pointer',
+    }),
+  };
 
   const sortOptions = ['New', 'Older', 'Severity'];
 
@@ -223,38 +277,18 @@ export default function Threatpulse() {
               </div>
 
               {/* Sort Dropdown */}
-              <div className="threat-type-dropdown-wrapper position-relative" ref={sortDropdownRef}>
-                <button
-                  type="button"
-                  onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
-                  className={`dropdown-toggle-btn shadow-sm ${isSortDropdownOpen ? 'active' : ''}`}
-                >
-                  <span className="dropdown-selected-text">Sort: {sortBy}</span>
-                  <LuChevronDown className="ms-2 dropdown-chevron" />
-                </button>
-                <div className={`dropdown-menu-custom shadow-lg ${isSortDropdownOpen ? 'show' : ''}`}>
-                  {sortOptions.map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      className={`dropdown-item-custom ${sortBy === option ? 'active' : ''}`}
-                      onClick={() => {
-                        setSortBy(option);
-                        setIsSortDropdownOpen(false);
-                      }}
-                    >
-                      <span className="dropdown-item-text">{option}</span>
-                      {sortBy === option && (
-                        <LuCheck className="dropdown-check-icon ms-2" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <Select
+                options={sortSelectOptions}
+                value={sortSelectOptions.find((opt) => opt.value === sortBy) || sortSelectOptions[0]}
+                onChange={(opt) => setSortBy(opt.value)}
+                styles={sortSelectStyles}
+                classNamePrefix="intel-curated-select"
+                isSearchable={false}
+                placeholder="Sort"
+                menuPlacement="auto"
+              />
 
-              <button className="refresh-btn shadow-sm" onClick={getThreatPulseListData}>
-                <LuRefreshCw />
-              </button>
+
 
               {/* Threat Type Category Dropdown */}
               {/* {activeTab !== 'customized' && (
@@ -294,6 +328,9 @@ export default function Threatpulse() {
                 style={{ fontSize: '13px', fontWeight: '500' }}
               >
                 <IoFilterSharp className="me-2" /> Filters
+              </button>
+              <button className="refresh-btn shadow-sm" onClick={getThreatPulseListData}>
+                <LuRefreshCw />
               </button>
             </div>
           </Topcontent>

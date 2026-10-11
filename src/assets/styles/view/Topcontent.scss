@@ -123,19 +123,32 @@
     }
 
     .refresh-btn, .intelcard-refresh-btn {
-      width: 40px;
-      height: 40px;
-      background-color: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      background-color: var(--select-control-bg, #fff);
+      border: 1px solid var(--select-control-border, #dee2e6);
+      border-radius: 50%;
+      box-shadow: 0 .125rem .25rem rgba(0, 0, 0, 0.075);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #64748b;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+      svg {
+        font-size: 14px;
+      }
 
       &:hover {
         background-color: #f8fafc;
+        border-color: var(--select-control-border-hover, #adb5bd);
+        color: #1e293b;
+      }
+
+      &:active {
+        box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.2);
       }
     }
 

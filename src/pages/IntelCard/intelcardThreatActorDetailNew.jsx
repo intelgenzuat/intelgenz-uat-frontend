@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
+import { LiaDownloadSolid } from 'react-icons/lia';
 import '../../assets/styles/Intelcard/intelcardThreatActorDetailNew.scss';
 import { getTheatreIntelCardDetailedView } from '../../Context/Intelcard';
 import Loader from '../../components/helper/Loader';
@@ -11,6 +12,10 @@ export default function IntelcardThreatActorDetailNew() {
   const [threatData, setThreatData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [expandedPaths, setExpandedPaths] = useState({ 0: true });
+
+  const handleDownload = () => {
+    window.print();
+  };
 
   const togglePath = (index) => {
     setExpandedPaths((prev) => ({
@@ -73,7 +78,14 @@ export default function IntelcardThreatActorDetailNew() {
             >
               <FiArrowLeft /> Back
             </button>
-            <div></div>
+            <button
+              type="button"
+              className="download-btn"
+              onClick={handleDownload}
+              title="Download Report"
+            >
+              <LiaDownloadSolid /> Download Report
+            </button>
           </div>
           <div className="heroGrid">
             <div>
