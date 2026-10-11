@@ -52,7 +52,7 @@ export default function Homepage() {
                             <LiveThreatMap />
                         </main>
 
-                        <aside className="sidebar-content" style={{ paddingTop: 0, paddingBottom: 0, marginTop: 0 }}>
+                        <aside className="sidebar-content" style={{ paddingTop: 0, paddingBottom: 0, marginTop: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
                             <TopReports />
                         </aside>
                     </div>
