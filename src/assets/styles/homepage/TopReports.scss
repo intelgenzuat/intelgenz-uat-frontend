@@ -310,14 +310,56 @@
 body.dark-theme .top-reports-section {
   .section-title {
     color: #f8fafc;
+
+    .info-icon {
+      color: #64748b;
+
+      &:hover {
+        color: #a78bfa;
+      }
+    }
   }
 
   .top-reports-card {
     background: #1e293b;
     border-color: #334155;
-    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35);
 
     .top-reports-header {
+      .severity-chips {
+        .summary-chip {
+          &.chip-critical {
+            background: rgba(225, 29, 72, 0.16);
+            color: #fb7185;
+            border: 1px solid rgba(225, 29, 72, 0.28);
+
+            .dot {
+              background-color: #fb7185;
+            }
+          }
+
+          &.chip-high {
+            background: rgba(234, 88, 12, 0.16);
+            color: #fb923c;
+            border: 1px solid rgba(234, 88, 12, 0.28);
+
+            .dot {
+              background-color: #fb923c;
+            }
+          }
+
+          &.chip-medium {
+            background: rgba(234, 179, 8, 0.16);
+            color: #facc15;
+            border: 1px solid rgba(234, 179, 8, 0.28);
+
+            .dot {
+              background-color: #facc15;
+            }
+          }
+        }
+      }
+
       .total-badge {
         background: #334155;
         color: #cbd5e1;
@@ -331,16 +373,70 @@ body.dark-theme .top-reports-section {
         border-bottom-color: #334155;
 
         &:hover {
-          background-color: #27354a;
+          background-color: #273549;
         }
 
-        .report-item-left .report-info {
-          .report-name {
-            color: #f8fafc;
+        .report-item-left {
+          .report-icon-box {
+            &.severity-critical {
+              background: rgba(225, 29, 72, 0.16);
+              color: #fb7185;
+              border: 1px solid rgba(225, 29, 72, 0.25);
+            }
+
+            &.severity-high {
+              background: rgba(234, 88, 12, 0.16);
+              color: #fb923c;
+              border: 1px solid rgba(234, 88, 12, 0.25);
+            }
+
+            &.severity-medium {
+              background: rgba(234, 179, 8, 0.16);
+              color: #facc15;
+              border: 1px solid rgba(234, 179, 8, 0.25);
+            }
           }
 
-          .report-date {
+          .report-info {
+            .report-name {
+              color: #f8fafc;
+            }
+
+            .report-date {
+              color: #94a3b8;
+            }
+          }
+        }
+
+        .report-item-right {
+          .severity-pill {
+            &.severity-critical {
+              background: rgba(225, 29, 72, 0.16);
+              color: #fb7185;
+              border: 1px solid rgba(225, 29, 72, 0.28);
+            }
+
+            &.severity-high {
+              background: rgba(234, 88, 12, 0.16);
+              color: #fb923c;
+              border: 1px solid rgba(234, 88, 12, 0.28);
+            }
+
+            &.severity-medium {
+              background: rgba(234, 179, 8, 0.16);
+              color: #facc15;
+              border: 1px solid rgba(234, 179, 8, 0.28);
+            }
+          }
+
+          .action-link-btn {
             color: #94a3b8;
+
+            &:hover {
+              color: #c4b5fd;
+              background: rgba(167, 139, 250, 0.12);
+              border-radius: 6px;
+            }
           }
         }
       }
@@ -349,10 +445,12 @@ body.dark-theme .top-reports-section {
     .view-all-reports-btn {
       background: rgba(82, 0, 255, 0.16);
       color: #c4b5fd;
+      border: 1px solid rgba(167, 139, 250, 0.25);
 
       &:hover {
-        background: rgba(82, 0, 255, 0.26);
-        color: #ddd6fe;
+        background: rgba(82, 0, 255, 0.28);
+        color: #ede9fe;
+        border-color: rgba(167, 139, 250, 0.45);
       }
     }
   }

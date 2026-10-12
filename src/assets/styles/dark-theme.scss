@@ -2768,6 +2768,155 @@
     }
   }
 
+  // Top Reports dark mode overrides
+  .top-reports-section {
+    .section-title {
+      color: #f8fafc !important;
+
+      .info-icon {
+        color: #64748b !important;
+
+        &:hover {
+          color: #a78bfa !important;
+        }
+      }
+    }
+
+    .top-reports-card {
+      background: #1e293b !important;
+      border: 1px solid #334155 !important;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35) !important;
+
+      .top-reports-header {
+        .severity-chips {
+          .summary-chip {
+            &.chip-critical {
+              background: rgba(225, 29, 72, 0.16) !important;
+              color: #fb7185 !important;
+              border: 1px solid rgba(225, 29, 72, 0.28) !important;
+
+              .dot {
+                background-color: #fb7185 !important;
+              }
+            }
+
+            &.chip-high {
+              background: rgba(234, 88, 12, 0.16) !important;
+              color: #fb923c !important;
+              border: 1px solid rgba(234, 88, 12, 0.28) !important;
+
+              .dot {
+                background-color: #fb923c !important;
+              }
+            }
+
+            &.chip-medium {
+              background: rgba(234, 179, 8, 0.16) !important;
+              color: #facc15 !important;
+              border: 1px solid rgba(234, 179, 8, 0.28) !important;
+
+              .dot {
+                background-color: #facc15 !important;
+              }
+            }
+          }
+        }
+
+        .total-badge {
+          background: #334155 !important;
+          color: #cbd5e1 !important;
+        }
+      }
+
+      .reports-list {
+        border-top-color: #334155 !important;
+
+        .report-item {
+          border-bottom-color: #334155 !important;
+
+          &:hover {
+            background-color: #273549 !important;
+          }
+
+          .report-item-left {
+            .report-icon-box {
+              &.severity-critical {
+                background: rgba(225, 29, 72, 0.16) !important;
+                color: #fb7185 !important;
+                border: 1px solid rgba(225, 29, 72, 0.25) !important;
+              }
+
+              &.severity-high {
+                background: rgba(234, 88, 12, 0.16) !important;
+                color: #fb923c !important;
+                border: 1px solid rgba(234, 88, 12, 0.25) !important;
+              }
+
+              &.severity-medium {
+                background: rgba(234, 179, 8, 0.16) !important;
+                color: #facc15 !important;
+                border: 1px solid rgba(234, 179, 8, 0.25) !important;
+              }
+            }
+
+            .report-info {
+              .report-name {
+                color: #f8fafc !important;
+              }
+
+              .report-date {
+                color: #94a3b8 !important;
+              }
+            }
+          }
+
+          .report-item-right {
+            .severity-pill {
+              &.severity-critical {
+                background: rgba(225, 29, 72, 0.16) !important;
+                color: #fb7185 !important;
+                border: 1px solid rgba(225, 29, 72, 0.28) !important;
+              }
+
+              &.severity-high {
+                background: rgba(234, 88, 12, 0.16) !important;
+                color: #fb923c !important;
+                border: 1px solid rgba(234, 88, 12, 0.28) !important;
+              }
+
+              &.severity-medium {
+                background: rgba(234, 179, 8, 0.16) !important;
+                color: #facc15 !important;
+                border: 1px solid rgba(234, 179, 8, 0.28) !important;
+              }
+            }
+
+            .action-link-btn {
+              color: #94a3b8 !important;
+
+              &:hover {
+                color: #c4b5fd !important;
+                background: rgba(167, 139, 250, 0.12) !important;
+              }
+            }
+          }
+        }
+      }
+
+      .view-all-reports-btn {
+        background: rgba(82, 0, 255, 0.16) !important;
+        color: #c4b5fd !important;
+        border: 1px solid rgba(167, 139, 250, 0.25) !important;
+
+        &:hover {
+          background: rgba(82, 0, 255, 0.28) !important;
+          color: #ede9fe !important;
+          border-color: rgba(167, 139, 250, 0.45) !important;
+        }
+      }
+    }
+  }
+
   // Threat Actor Profiling Page overrides
   .threat-actor-detail-page {
     background-color: #1e242b !important;
