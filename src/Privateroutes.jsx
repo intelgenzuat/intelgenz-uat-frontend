@@ -59,18 +59,25 @@ const AdminRoute = ({ children }) => {
 const Privateroutes = () => {
     const navigate = useNavigate();
 
-    const [isLogged, setIsLogged] = useState(false);
+    const [isLogged, setIsLogged] = useState(() => localStorage.getItem('is_logged') === 'true');
     const role = localStorage.getItem('role');
 
     useEffect(() => {
-        const logged = localStorage.getItem('is_logged');
-        if (!logged && window.location.pathname !== '/login') {
+        const logged = localStorage.getItem('is_logged') === 'true';
+        const hasAuthParams = typeof window !== 'undefined' && (
+            window.location.hash.includes('code=') ||
+            window.location.hash.includes('error=') ||
+            window.location.search.includes('code=') ||
+            window.location.search.includes('error=')
+        );
+
+        if (!logged && window.location.pathname !== '/login' && !hasAuthParams) {
             setIsLogged(false);
-            navigate('/login');
+            navigate('/login', { replace: true });
         } else {
             setIsLogged(true);
         }
-    }, []);
+    }, [navigate]);
 
 
     return (

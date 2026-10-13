@@ -52,7 +52,7 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
         {isVoiceMode && <div className="voice-mode-gradient"></div>}
 
         {/* Drawer Header */}
-        <div className="drawer-header px-4 py-4 d-flex justify-content-between align-items-center">
+        <div className="  ">
           <div className="d-flex align-items-center gap-2">
             <h4 className="mb-0">Chat</h4>
             <BiHelpCircle className="help-icon mt-1" />

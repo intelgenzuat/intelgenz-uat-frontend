@@ -35,6 +35,12 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // If already logged in, redirect immediately to home
+    if (localStorage.getItem('is_logged') === 'true') {
+      navigate('/', { replace: true });
+      return;
+    }
+
     // Process redirect response from Azure if applicable
     const checkRedirect = async () => {
       try {
@@ -44,11 +50,13 @@ const Login = () => {
         }
       } catch (err) {
         console.error('Azure redirect auth error:', err);
-        setError(err.message || 'Failed to authenticate with Azure SSO');
+        if (err?.errorCode !== 'no_token_request_cache_error') {
+          setError(err?.message || 'Failed to authenticate with Azure SSO');
+        }
       }
     };
     checkRedirect();
-  }, []);
+  }, [navigate]);
 
   const handleAuthSuccess = (account) => {
     localStorage.setItem('is_logged', 'true');
@@ -63,7 +71,7 @@ const Login = () => {
       role: role,
       provider: 'azure-sso'
     }));
-    navigate('/');
+    navigate('/', { replace: true });
   };
 
   const handleAzureLogin = async () => {
@@ -76,10 +84,15 @@ const Login = () => {
       }
     } catch (err) {
       console.error('Azure SSO error:', err);
-      if (err.errorCode === 'user_cancelled') {
+      if (
+        err?.errorCode === 'user_cancelled' ||
+        err?.errorCode === 'user_cancelled_authorization'
+      ) {
         setError('Azure login was cancelled.');
+      } else if (err?.errorCode === 'no_token_request_cache_error') {
+        setError('Session cache refreshed. Please click "Sign in with Azure SSO" again.');
       } else {
-        setError(err.message || 'Failed to authenticate with Azure SSO');
+        setError(err?.message || 'Failed to authenticate with Azure SSO');
       }
     } finally {
       setSsoLoading(false);

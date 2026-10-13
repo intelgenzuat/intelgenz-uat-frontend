@@ -8,6 +8,7 @@ import { MdLockReset, MdLogout } from 'react-icons/md';
 import LogOutSweetAlert from '../common/sweetalert/logoutSweetAlert';
 import Heliosheadersection from '../components/HeliosInfoSection/Heliosheadersection';
 import MenuOptionsHeader from '../components/menu/MenuOptionsHeader';
+import { signOutAzure } from '../auth/authConfig';
 import './Header.scss';
 
 const Header = ({ toggleSidebar, showHamburger }) => {
@@ -32,15 +33,27 @@ const Header = ({ toggleSidebar, showHamburger }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const logoutUser = () => {
-    localStorage.removeItem("is_logged");
-    localStorage.removeItem("role");
-    localStorage.removeItem("auth_provider");
-    localStorage.removeItem("user_email");
-    localStorage.removeItem("user_name");
-    localStorage.removeItem("user");
-    navigate("/login");
-  }
+  const logoutUser = async () => {
+    const authProvider = localStorage.getItem('auth_provider');
+    const savedTheme = localStorage.getItem('theme');
+
+    localStorage.clear();
+    sessionStorage.clear();
+    if (savedTheme) {
+      localStorage.setItem('theme', savedTheme);
+    }
+
+    if (authProvider === 'azure') {
+      try {
+        await signOutAzure();
+        return;
+      } catch (err) {
+        console.warn('Azure logout error:', err);
+      }
+    }
+
+    navigate('/login', { replace: true });
+  };
 
   const items = [
     // {
