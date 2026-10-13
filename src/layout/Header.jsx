@@ -34,6 +34,11 @@ const Header = ({ toggleSidebar, showHamburger }) => {
 
   const logoutUser = () => {
     localStorage.removeItem("is_logged");
+    localStorage.removeItem("role");
+    localStorage.removeItem("auth_provider");
+    localStorage.removeItem("user_email");
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("user");
     navigate("/login");
   }
 

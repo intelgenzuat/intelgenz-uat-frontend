@@ -405,7 +405,7 @@ $button-disabled-text: #94a3b8;
     gap: 8px;
     transition: all 0.2s;
     cursor: default;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
 
     &.disabled {
       background-color: #f1f5f9;
@@ -421,6 +421,69 @@ $button-disabled-text: #94a3b8;
 
     .arrow-icon-left {
       font-size: 17.6px;
+    }
+  }
+
+  .sso-divider {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 4px 0 16px;
+    gap: 12px;
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background-color: #e2e8f0;
+    }
+
+    .divider-text {
+      font-size: 11px;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+  }
+
+  .azure-sso-button {
+    width: 100%;
+    padding: 14px 20px;
+    border-radius: 15px;
+    border: 1.5px solid #e2e8f0;
+    background-color: #ffffff;
+    color: #0f172a;
+    font-size: 14.5px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    margin-bottom: 28px;
+
+    .ms-logo {
+      flex-shrink: 0;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: #f8fafc;
+      border-color: #cbd5e1;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      background-color: #f1f5f9;
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
   }
 

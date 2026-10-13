@@ -8,6 +8,7 @@ import logo from '../../assets/images/logo.png';
 import logodarkmode from '../../assets/images/logodarkmode.png';
 import { BiMobileVibration } from 'react-icons/bi';
 import { BsKey } from "react-icons/bs";
+import { signInWithAzure, handleRedirectAuth } from '../../auth/authConfig';
 
 
 const demoUsers = [
@@ -29,8 +30,61 @@ const Login = () => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [timer, setTimer] = useState(59);
   const [error, setError] = useState('');
+  const [ssoLoading, setSsoLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Process redirect response from Azure if applicable
+    const checkRedirect = async () => {
+      try {
+        const response = await handleRedirectAuth();
+        if (response && response.account) {
+          handleAuthSuccess(response.account);
+        }
+      } catch (err) {
+        console.error('Azure redirect auth error:', err);
+        setError(err.message || 'Failed to authenticate with Azure SSO');
+      }
+    };
+    checkRedirect();
+  }, []);
+
+  const handleAuthSuccess = (account) => {
+    localStorage.setItem('is_logged', 'true');
+    const role = account.idTokenClaims?.roles?.[0] || 'user';
+    localStorage.setItem('role', role);
+    localStorage.setItem('auth_provider', 'azure');
+    localStorage.setItem('user_email', account.username || account.idTokenClaims?.email || '');
+    localStorage.setItem('user_name', account.name || '');
+    localStorage.setItem('user', JSON.stringify({
+      name: account.name,
+      email: account.username || account.idTokenClaims?.email,
+      role: role,
+      provider: 'azure-sso'
+    }));
+    navigate('/');
+  };
+
+  const handleAzureLogin = async () => {
+    setError('');
+    setSsoLoading(true);
+    try {
+      const response = await signInWithAzure();
+      if (response && response.account) {
+        handleAuthSuccess(response.account);
+      }
+    } catch (err) {
+      console.error('Azure SSO error:', err);
+      if (err.errorCode === 'user_cancelled') {
+        setError('Azure login was cancelled.');
+      } else {
+        setError(err.message || 'Failed to authenticate with Azure SSO');
+      }
+    } finally {
+      setSsoLoading(false);
+    }
+  };
 
   useEffect(() => {
     let interval;
@@ -55,6 +109,9 @@ const Login = () => {
     if (userMatch) {
       localStorage.setItem('is_logged', 'true');
       localStorage.setItem('role', userMatch.role);
+      localStorage.setItem('auth_provider', 'local');
+      localStorage.setItem('user_email', userMatch.email);
+      localStorage.setItem('user', JSON.stringify({ email: userMatch.email, role: userMatch.role, provider: 'local' }));
       navigate('/');
     } else {
       setError('Invalid email or password');
@@ -168,6 +225,31 @@ const Login = () => {
                 disabled={!isFormValid}
               >
                 <BsArrowRight className="arrow-icon-left" /> Log in to Intelgenz
+              </button>
+
+              <div className="sso-divider">
+                <span className="divider-line" />
+                <span className="divider-text">OR CONTINUE WITH</span>
+                <span className="divider-line" />
+              </div>
+
+              <button
+                type="button"
+                className="azure-sso-button"
+                onClick={handleAzureLogin}
+                disabled={ssoLoading}
+              >
+                {ssoLoading ? (
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                ) : (
+                  <svg className="ms-logo" width="18" height="18" viewBox="0 0 21 21" fill="none">
+                    <rect x="1" y="1" width="9" height="9" fill="#f25022" />
+                    <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
+                    <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
+                    <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
+                  </svg>
+                )}
+                <span>{ssoLoading ? 'Connecting to Azure...' : 'Sign in with Azure SSO'}</span>
               </button>
             </form>
           ) : null
