@@ -67,11 +67,21 @@ function IntelCard({ threatData }) {
 
   return (
     <div
-      className="custom-card-intel"
+      className="custom-card-intel threat-purple"
       onClick={() => navigate(`/intel-card-threat-details/${threatData?.actor_id}`)}
       role="button"
       tabIndex={0}
     >
+      {/* SVG Linear Gradient for Icons (Top to Bottom) */}
+      <svg width="0" height="0" style={{ position: 'absolute', pointerEvents: 'none' }} aria-hidden="true">
+        <defs>
+          <linearGradient id="threatIconGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--map-arc-start, #987eb3)" />
+            <stop offset="100%" stopColor="var(--map-arc-end, #ad5276)" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       <div className="intel-card-top-row">
         <div className="intel-card-content">
           <div className="d-flex justify-content-between align-items-center w-100">
@@ -98,18 +108,20 @@ function IntelCard({ threatData }) {
           {/* Details Section */}
           <div className="d-flex flex-column gap-2 mt-2 position-relative" style={{ zIndex: 1 }}>
             {/* Alias Names */}
-            <div className="d-flex align-items-center" style={{ minWidth: 0, maxWidth: 'calc(100% - 50px)' }}>
-              <div className="d-flex justify-content-center align-items-center me-1 rounded-circle flex-shrink-0" style={{ width: '22px', height: '22px', backgroundColor: 'var(--intel-card-bg)', border: '1px solid var(--intel-card-badge-border, #fae8eb)', color: '#e11d48' }}>
-                <PiBug size={12} />
+            {fullData.aliases && fullData.aliases !== 'N/A' && (
+              <div className="d-flex align-items-center" style={{ minWidth: 0, maxWidth: 'calc(100% - 50px)' }}>
+                <div className="intel-card-meta-icon d-flex justify-content-center align-items-center me-1 rounded-circle flex-shrink-0">
+                  <PiBug size={13} style={{ fill: 'url(#threatIconGrad)', stroke: 'url(#threatIconGrad)' }} />
+                </div>
+                <span className="text-truncate" title={`Alias Names: ${fullData.aliases}`} style={{ fontSize: '11px', color: 'var(--intel-card-desc-color)' }}>
+                  <span style={{ fontWeight: '600', color: 'var(--intel-card-title-color)' }}>Alias: </span>{truncateText(fullData.aliases, 25)}
+                </span>
               </div>
-              <span className="text-truncate" title={`Alias Names: ${fullData.aliases}`} style={{ fontSize: '11px', color: 'var(--intel-card-desc-color)' }}>
-                <span style={{ fontWeight: '600', color: 'var(--intel-card-title-color)' }}>Alias: </span>{truncateText(fullData.aliases, 25)}
-              </span>
-            </div>
+            )}
             {/* Region */}
             <div className="d-flex align-items-center" style={{ minWidth: 0 }}>
-              <div className="d-flex justify-content-center align-items-center me-1 rounded-circle flex-shrink-0" style={{ width: '22px', height: '22px', backgroundColor: 'var(--intel-card-bg)', border: '1px solid var(--intel-card-badge-border, #fae8eb)', color: '#e11d48' }}>
-                <ImEarth size={11} />
+              <div className="intel-card-meta-icon d-flex justify-content-center align-items-center me-1 rounded-circle flex-shrink-0">
+                <ImEarth size={12} style={{ fill: 'url(#threatIconGrad)', stroke: 'url(#threatIconGrad)' }} />
               </div>
               <span className="text-truncate" title={`Region: ${fullData.target_region}`} style={{ fontSize: '11px', color: 'var(--intel-card-desc-color)' }}>
                 <span style={{ fontWeight: '600', color: 'var(--intel-card-title-color)' }}>Region: </span>{truncateText(fullData.target_region, 35)}
@@ -118,8 +130,8 @@ function IntelCard({ threatData }) {
 
             {/* Domain */}
             <div className="d-flex align-items-center" style={{ minWidth: 0, maxWidth: 'calc(100% - 50px)' }}>
-              <div className="d-flex justify-content-center align-items-center me-1 rounded-circle flex-shrink-0" style={{ width: '22px', height: '22px', backgroundColor: 'var(--intel-card-bg)', border: '1px solid var(--intel-card-badge-border, #fae8eb)', color: '#e11d48' }}>
-                <PiShieldWarningDuotone size={12} />
+              <div className="intel-card-meta-icon d-flex justify-content-center align-items-center me-1 rounded-circle flex-shrink-0">
+                <PiShieldWarningDuotone size={13} style={{ fill: 'url(#threatIconGrad)', stroke: 'url(#threatIconGrad)' }} />
               </div>
               <span className="text-truncate" title={`Domain: ${fullData.target_sector}`} style={{ fontSize: '11px', color: 'var(--intel-card-desc-color)' }}>
                 <span style={{ fontWeight: '600', color: 'var(--intel-card-title-color)' }}>Domain: </span>{truncateText(fullData.target_sector, 20)}

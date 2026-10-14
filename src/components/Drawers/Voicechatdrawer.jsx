@@ -53,9 +53,9 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
         {isVoiceMode && <div className="voice-mode-gradient"></div>}
 
         {/* Drawer Header */}
-        <div className="  ">
+        <div className="drawer-header px-4 py-3 d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-2">
-            <h4 className="mb-0">Chat</h4>
+            <h4 className="mb-0" style={{ fontWeight: 600 }}>Chat</h4>
             <BiHelpCircle className="help-icon mt-1" />
           </div>
           <div className="d-flex align-items-center gap-2">
@@ -66,17 +66,17 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
                 title="Switch to Text Chat"
                 aria-label="Switch to Text Chat"
               >
-                <div className="voice-mic-badge d-flex align-items-center justify-content-center" style={{ background: '#0066d4' }}>
-                  <BsFillChatRightDotsFill style={{ fontSize: '10px' }} />
+                <div className="voice-mic-badge d-flex align-items-center justify-content-center">
+                  <BsFillChatRightDotsFill style={{ fontSize: '11px' }} />
                 </div>
-                <span className="voice-btn-label" style={{ background: '#0066d4', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                <span className="voice-btn-label">
                   Text Chat
                 </span>
               </button>
             )}
             <button
               className="btn drawer-close-btn rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-              style={{ width: '34px', height: '34px' }}
+              style={{ width: '36px', height: '36px' }}
               onClick={onClose}
               title="Close Voice Chat"
               aria-label="Close Voice Chat"
@@ -93,17 +93,17 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
           <div className={`logo-container mb-3 position-relative d-flex justify-content-center align-items-center mx-auto ${isVoiceMode ? 'voice-active' : ''}`}>
             <img
               src={logoonly}
-              alt="Integenz Logo"
+              alt="Intelgenz Logo"
               style={{ width: '60px', height: '60px', objectFit: 'contain' }}
             />
           </div>
 
           <h3 className={` mb-3 mt-1 ${isVoiceMode ? 'voice-title' : ''}`}>
             {isVoiceMode ? (
-              <>Integenz Voice Chat</>
+              <>Intelgenz Voice Chat</>
             ) : (
               <>
-                <span style={{ color: '#6366f1' }}>Integenz </span>
+                <span style={{ color: '#6366f1' }}>Intelgenz </span>
                 <span style={{ color: '#f43f5e', opacity: 0.8 }}>Chat</span>
               </>
             )}
@@ -171,7 +171,7 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
                       <div className="bg-purple rounded-circle d-flex align-items-center justify-content-center" style={{ width: '24px', height: '24px', backgroundColor: '#db2777' }}>
                         <BsLightningChargeFill className="text-white" style={{ fontSize: '14px' }} />
                       </div>
-                      <span className="integenz-tag-name" style={{ fontSize: '13.6px' }}>Integenz</span>
+                      <span className="integenz-tag-name" style={{ fontSize: '13.6px' }}>Intelgenz</span>
                     </div>
                     <button className="btn p-0 text-purple">
                       <FiRefreshCw style={{ fontSize: '16px' }} />
@@ -215,7 +215,7 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
           {/* Input Box */}
           <div className={`chat-input-wrapper position-relative w-100 ${isVoiceMode ? 'voice-input-container' : ''}`}>
             {isVoiceMode && (
-              <div className={`px-2 mb-3 voice-transcription-preview ${isListening ? 'listening' : 'placeholder'}`} style={{ fontSize: '14.1px' }}>
+              <div className={`px-2 mb-3 voice-transcription-preview ${isListening ? 'listening' : 'is-placeholder'}`} style={{ fontSize: '14.1px' }}>
                 {isListening ? 'What are some of the active ransomware campaigns targeting hospitality sector in the middle east' : 'Ask about threats, CVEs, or attack activity...'}
               </div>
             )}

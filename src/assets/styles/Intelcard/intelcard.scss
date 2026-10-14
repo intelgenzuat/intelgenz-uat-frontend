@@ -278,6 +278,70 @@
     }
   }
 
+  &.threat-purple {
+    [data-bs-theme='dark'] &,
+    [data-theme='dark'] & {
+      background: linear-gradient(180deg, #181b22 0%, #1c1825 30%, #291a32 60%, #3d1a36 100%) !important;
+      background: 
+        linear-gradient(180deg, rgba(24, 27, 34, 0.98) 0%, rgba(24, 25, 36, 0.92) 30%, rgba(24, 27, 34, 0.70) 60%, rgba(24, 27, 34, 0.45) 100%),
+        linear-gradient(180deg, var(--map-arc-start, #987eb3) 0%, var(--map-arc-end, #ad5276) 100%) !important;
+      background-color: #181b22 !important;
+      border: 1px solid rgba(173, 82, 118, 0.3) !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(173, 82, 118, 0.2) !important;
+
+      .intel-card-cutout {
+        border-left: 1px solid rgba(173, 82, 118, 0.3) !important;
+        border-top: 1px solid rgba(173, 82, 118, 0.3) !important;
+
+        &::before {
+          background: radial-gradient(circle at 0 0,
+              transparent 0,
+              transparent 18.5px,
+              rgba(173, 82, 118, 0.3) 19px,
+              rgba(173, 82, 118, 0.3) 20px,
+              var(--intel-card-cutout-bg, #1e242b) 20.5px) !important;
+        }
+
+        &::after {
+          background: radial-gradient(circle at 0 0,
+              transparent 0,
+              transparent 18.5px,
+              rgba(173, 82, 118, 0.3) 19px,
+              rgba(173, 82, 118, 0.3) 20px,
+              var(--intel-card-cutout-bg, #1e242b) 20.5px) !important;
+        }
+
+        .intel-card-btn-halo {
+          background: rgba(41, 26, 50, 0.85) !important;
+          border: 1px solid rgba(173, 82, 118, 0.32) !important;
+        }
+
+        .intel-card-btn {
+          background: linear-gradient(180deg, var(--map-arc-start, #987eb3) 0%, var(--map-arc-end, #ad5276) 100%) !important;
+          box-shadow: 0 4px 14px rgba(152, 126, 179, 0.5), 0 2px 6px rgba(173, 82, 118, 0.25) !important;
+        }
+      }
+    }
+
+    .intel-card-cutout {
+      .intel-card-btn-halo {
+        background: rgba(243, 240, 255, 0.85);
+        border: 1px solid rgba(220, 205, 255, 0.7);
+
+        [data-bs-theme='dark'] &,
+        [data-theme='dark'] & {
+          background: rgba(41, 26, 50, 0.85);
+          border: 1px solid rgba(173, 82, 118, 0.32);
+        }
+      }
+
+      .intel-card-btn {
+        background: linear-gradient(180deg, var(--map-arc-start, #987eb3) 0%, var(--map-arc-end, #ad5276) 100%);
+        box-shadow: 0 4px 14px rgba(152, 126, 179, 0.35), 0 2px 6px rgba(173, 82, 118, 0.2);
+      }
+    }
+  }
+
   &.malware-blue {
     [data-bs-theme='dark'] &,
     [data-theme='dark'] & {
@@ -292,8 +356,8 @@
 
         &::before {
           background: radial-gradient(circle at 0 0,
-              #17263e 0,
-              #17263e 18.5px,
+              transparent 0,
+              transparent 18.5px,
               rgba(59, 130, 246, 0.28) 19px,
               rgba(59, 130, 246, 0.28) 20px,
               var(--intel-card-cutout-bg, #1e242b) 20.5px) !important;
@@ -301,8 +365,8 @@
 
         &::after {
           background: radial-gradient(circle at 0 0,
-              #1a3258 0,
-              #1a3258 18.5px,
+              transparent 0,
+              transparent 18.5px,
               rgba(59, 130, 246, 0.28) 19px,
               rgba(59, 130, 246, 0.28) 20px,
               var(--intel-card-cutout-bg, #1e242b) 20.5px) !important;
