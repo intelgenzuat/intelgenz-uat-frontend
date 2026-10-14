@@ -62,7 +62,7 @@ const menuOptions = [
         key: 'Adversary Triage',
         title: 'Adversary Triage',
         subtitle: 'Adversary triage, attribution & threat actors',
-        path: '/threat-actor-profiling',
+        path: '/adversary-triage',
         customIcon: (
             <svg width="35" height="36" viewBox="0 0 47 48" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                 <rect width="46.4951" height="47.6113" fill="url(#pattern0_166_738)" />

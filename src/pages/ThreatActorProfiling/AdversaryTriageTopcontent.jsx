@@ -8,7 +8,7 @@ const AdversaryTriageTopcontent = ({ title, breadcrumbTitle, children }) => {
 
   const isNeuraView = location.pathname === '/neura-view' || location.pathname === '/intel-neura-view';
   const activeTitle = title || (isNeuraView ? 'Neura View' : 'Adversary Triage');
-  const activeBreadcrumb = breadcrumbTitle || (isNeuraView ? 'Neura View' : 'Threat Actor Profile');
+  const activeBreadcrumb = breadcrumbTitle || (isNeuraView ? 'Neura View' : 'Adversary Triage');
 
   return (
     <div className="tap-header-section flex-shrink-0">
@@ -20,7 +20,7 @@ const AdversaryTriageTopcontent = ({ title, breadcrumbTitle, children }) => {
           <span className="mx-2 text-black-50">/</span>
           {isNeuraView && (
             <>
-              <span onClick={() => navigate('/threat-actor-profiling')} style={{ cursor: 'pointer' }}>Threat Actor Profile</span>
+              <span onClick={() => navigate('/adversary-triage')} style={{ cursor: 'pointer' }}>Adversary Triage</span>
               <span className="mx-2 text-black-50">/</span>
             </>
           )}

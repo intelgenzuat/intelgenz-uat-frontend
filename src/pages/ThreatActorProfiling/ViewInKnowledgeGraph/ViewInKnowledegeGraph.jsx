@@ -356,8 +356,8 @@ const ViewInKnowledgeGraph = () => {
     const svgRef = useRef(null);
 
     const isIntelCard = location.pathname.includes("intel") || location.pathname === "/intel-neura-view";
-    const parentPath = isIntelCard ? "/intel-card" : "/threat-actor-profiling";
-    const parentName = isIntelCard ? "Intel Card" : "Threat Actor Profile";
+    const parentPath = isIntelCard ? "/intel-card" : "/adversary-triage";
+    const parentName = isIntelCard ? "Intel Card" : "Adversary Triage";
 
     // 1. Fetch Malware List on mount
     const fetchMalwareList = useCallback(async () => {

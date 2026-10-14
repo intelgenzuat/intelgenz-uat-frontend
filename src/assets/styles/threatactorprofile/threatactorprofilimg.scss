@@ -8,6 +8,12 @@
   flex-direction: column;
   width: 100%;
   overflow-x: hidden;
+
+  [data-bs-theme='dark'] &,
+  [data-theme='dark'] & {
+    background-color: #1e242b !important;
+    color: #f1f5f9 !important;
+  }
 }
 
 .tap-header-section {

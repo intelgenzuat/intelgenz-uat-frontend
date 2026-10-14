@@ -188,3 +188,50 @@
     }
   }
 }
+
+[data-bs-theme='dark'] .threatactor-sidebar,
+[data-theme='dark'] .threatactor-sidebar {
+  background-color: #1e242b !important;
+  background: #1e242b !important;
+  border-color: #334155 !important;
+
+  .actor-sidebar-nav {
+    .nav-item {
+      .nav-label {
+        color: #cbd5e1 !important;
+      }
+
+      .icon-wrapper {
+        background-color: #181d24 !important;
+        border: 1px solid #334155 !important;
+      }
+
+      &:hover:not(.active) {
+        background: #273549 !important;
+        background-color: #273549 !important;
+
+        .nav-label {
+          color: #f1f5f9 !important;
+        }
+      }
+
+      &.active {
+        background: rgba(99, 102, 241, 0.15) !important;
+        background-color: rgba(99, 102, 241, 0.15) !important;
+
+        .nav-label {
+          color: #ffffff !important;
+        }
+
+        .icon-wrapper {
+          background-color: #181d24 !important;
+          border: 1px solid #334155 !important;
+        }
+      }
+    }
+  }
+
+  .cursor-pointer:hover {
+    background-color: #273549 !important;
+  }
+}

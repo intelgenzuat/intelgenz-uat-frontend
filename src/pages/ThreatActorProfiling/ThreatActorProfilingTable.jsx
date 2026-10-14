@@ -529,7 +529,7 @@ export default function ThreatActorProfilingTable() {
             }}
             noOptionsMessage={() =>
               techniqueId.trim().length < 2
-                ? 'Type at least 2 characters to search...'
+                ? 'Type at least 3 characters to search...'
                 : searchLoading
                 ? 'Searching...'
                 : 'No MITRE Technique found'

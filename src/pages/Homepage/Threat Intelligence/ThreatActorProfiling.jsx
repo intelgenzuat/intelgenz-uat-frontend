@@ -8,7 +8,7 @@ export default function ThreatActorProfiling() {
     return (
         <div
             className="custom-card-intel"
-            onClick={() => navigate('/threat-actor-profiling')}
+            onClick={() => navigate('/adversary-triage')}
             role="button"
             tabIndex={0}
         >

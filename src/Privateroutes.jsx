@@ -97,6 +97,7 @@ const Privateroutes = () => {
                         </Route>
                         <Route element={<ThreatActorProfilingLayout noFooter />}>
                             <Route exact path={ThreatActorprofile} element={<ThreatActorProfilingTable noFooter />}></Route>
+                            <Route exact path="/threat-actor-profiling" element={<Navigate to={ThreatActorprofile} replace />}></Route>
                             <Route exact path={viewinKnowlegdeGraph} element={<ViewinKnowledgegrap noFooter />}></Route>
                         </Route>
                         <Route exact path={IntelCardDetails} element={<IntelcardMalwareDetailNew noFooter />}></Route>
