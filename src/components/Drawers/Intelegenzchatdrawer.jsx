@@ -7,6 +7,7 @@ import { LuHistory, LuBoxes } from 'react-icons/lu';
 import ReactMarkdown from 'react-markdown';
 import { chatWsUrl, chatHttpUrl } from '../../Context/chat';
 import man from '../../assets/images/man.jpg';
+import logoonly from '../../assets/images/logoonly.png';
 
 const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
     const [chatState, setChatState] = useState('idle'); // idle | loading | done
@@ -161,13 +162,13 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
                             <span className="voice-btn-label">Voice Chat</span>
                         </button>
                         <button
-                            className="btn btn-light bg-white border rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                            className="btn drawer-close-btn rounded-3 d-flex align-items-center justify-content-center shadow-sm"
                             style={{ width: '36px', height: '36px' }}
                             onClick={onClose}
                             title="Close Chat"
                             aria-label="Close Chat"
                         >
-                            <FiChevronDown className="text-secondary" style={{ fontSize: '18px' }} />
+                            <FiChevronDown className="drawer-close-icon" style={{ fontSize: '18px' }} />
                         </button>
                     </div>
                 </div>
@@ -176,11 +177,12 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
                 {!isInChat ? (
                     /* IDLE: centered logo + description */
                     <div className="drawer-body px-4 d-flex flex-column flex-grow-1 align-items-center justify-content-center my-auto">
-                        <div
-                            className="logo-container mb-3 d-flex justify-content-center align-items-center mx-auto shadow-sm"
-                            style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'linear-gradient(135deg, #ec4899 0%, #db2777 50%, #7c3aed 100%)' }}
-                        >
-                            <BsLightningChargeFill className="text-white" style={{ fontSize: '24px' }} />
+                        <div className="logo-container mb-3 d-flex justify-content-center align-items-center mx-auto">
+                            <img
+                                src={logoonly}
+                                alt="Integenz Logo"
+                                style={{ width: '64px', height: '64px', objectFit: 'contain' }}
+                            />
                         </div>
                         <h3 className="mb-2 mt-1 chat-title-gradient">
                             Integenz Chat
@@ -209,14 +211,14 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
                     >
                         {messages.map((msg, idx) => (
                             msg.sender === 'user' ? (
-                                <div key={idx} className="user-message-container animation-fade-in w-100 mb-3 p-4 shadow-sm border" style={{ background: '#f8fafc', borderRadius: '20px' }}>
-                                    <div className="d-inline-flex align-items-center gap-2 mb-3 px-2 py-1 bg-white rounded-pill shadow-sm border border-light">
+                                <div key={idx} className="user-message-container animation-fade-in w-100 mb-3 p-4 shadow-sm border">
+                                    <div className="d-inline-flex align-items-center gap-2 mb-3 px-2 py-1 user-pill-badge rounded-pill shadow-sm border">
                                         <div className="user-avatar-wrap" style={{ width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden' }}>
                                             <img src={man} alt="User" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                         </div>
-                                        <span className="sender-name" style={{ fontSize: '15px', fontWeight: 600, color: '#0f172a' }}>Manesh mani</span>
+                                        <span className="sender-name">Manesh mani</span>
                                     </div>
-                                    <p className="user-bubble-text mb-0 ps-1" style={{ fontSize: '16px', color: '#1e293b', lineHeight: '1.5' }}>{msg.text}</p>
+                                    <p className="user-bubble-text mb-0 ps-1">{msg.text}</p>
                                 </div>
                             ) : (
                                 <div key={idx} className="intelgenz-response-row animation-fade-in">
@@ -226,20 +228,20 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
                                         </div>
                                         <span className="sender-name" style={{ fontWeight: 600 }}>Integenz</span>
                                     </div>
-                                    <div className="response-content shadow-sm border" style={{ backgroundColor: '#ffffff', borderRadius: '16px', padding: '16px' }}>
+                                    <div className="response-content shadow-sm border">
                                         {msg.isError ? (
                                             <p className="text-danger mb-0" style={{ fontSize: '14.5px' }}>{msg.text}</p>
                                         ) : (
                                             <ReactMarkdown components={{
-                                                p: ({node, ...props}) => <p className="mb-3" style={{ fontSize: '14.5px', color: '#1e293b', lineHeight: '1.6' }} {...props} />,
-                                                ul: ({node, ...props}) => <ul className="ps-3 mb-4" style={{ fontSize: '14.5px', color: '#475569', lineHeight: '1.6' }} {...props} />,
-                                                ol: ({node, ...props}) => <ol className="ps-3 mb-4" style={{ fontSize: '14.5px', color: '#475569', lineHeight: '1.6' }} {...props} />,
-                                                li: ({node, ...props}) => <li className="mb-2" {...props} />,
-                                                h1: ({node, ...props}) => <h1 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#0f172a' }} className="mb-3 mt-4" {...props} />,
-                                                h2: ({node, ...props}) => <h2 style={{ fontSize: '1.3rem', fontWeight: 600, color: '#0f172a' }} className="mb-3 mt-4" {...props} />,
-                                                h3: ({node, ...props}) => <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#0f172a' }} className="mb-3 mt-4" {...props} />,
-                                                h4: ({node, ...props}) => <h4 style={{ fontSize: '1rem', fontWeight: 600, color: '#0f172a' }} className="mb-3 mt-4" {...props} />,
-                                                strong: ({node, ...props}) => <strong style={{ fontWeight: 600, color: '#0f172a' }} {...props} />
+                                                p: ({node, ...props}) => <p className="markdown-p mb-3" style={{ fontSize: '14.5px', lineHeight: '1.6' }} {...props} />,
+                                                ul: ({node, ...props}) => <ul className="markdown-list ps-3 mb-4" style={{ fontSize: '14.5px', lineHeight: '1.6' }} {...props} />,
+                                                ol: ({node, ...props}) => <ol className="markdown-list ps-3 mb-4" style={{ fontSize: '14.5px', lineHeight: '1.6' }} {...props} />,
+                                                li: ({node, ...props}) => <li className="markdown-li mb-2" {...props} />,
+                                                h1: ({node, ...props}) => <h1 className="markdown-h1 mb-3 mt-4" style={{ fontSize: '1.5rem', fontWeight: 600 }} {...props} />,
+                                                h2: ({node, ...props}) => <h2 className="markdown-h2 mb-3 mt-4" style={{ fontSize: '1.3rem', fontWeight: 600 }} {...props} />,
+                                                h3: ({node, ...props}) => <h3 className="markdown-h3 mb-3 mt-4" style={{ fontSize: '1.1rem', fontWeight: 600 }} {...props} />,
+                                                h4: ({node, ...props}) => <h4 className="markdown-h4 mb-3 mt-4" style={{ fontSize: '1rem', fontWeight: 600 }} {...props} />,
+                                                strong: ({node, ...props}) => <strong className="markdown-strong" style={{ fontWeight: 600 }} {...props} />
                                             }}>
                                                 {msg.text}
                                             </ReactMarkdown>
@@ -316,8 +318,8 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
                                 style={{ overflow: 'hidden', resize: 'none', position: 'relative', zIndex: 2 }}
                             />
                             <div className="chat-footer-actions d-flex justify-content-between align-items-center mt-2" style={{ position: 'relative', zIndex: 2 }}>
-                                <button className="btn rounded-circle footer-icon-btn d-flex align-items-center justify-content-center" style={{ width: '36px', height: '36px', backgroundColor: 'rgba(255, 255, 255, 0.7)' }}>
-                                    <LuHistory style={{ fontSize: '19.2px', color: '#64748b' }} />
+                                <button className="btn rounded-circle footer-icon-btn d-flex align-items-center justify-content-center">
+                                    <LuHistory className="footer-history-icon" style={{ fontSize: '19.2px' }} />
                                 </button>
                                 <button 
                                     className="btn rounded-circle d-flex align-items-center justify-content-center text-white" 
@@ -342,10 +344,10 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
                                 style={{ overflow: 'hidden', resize: 'none' }}
                             />
                             <button
-                                className="btn btn-sm bg-white border rounded-circle input-plus-btn shadow-sm d-flex align-items-center justify-content-center position-absolute"
+                                className="btn btn-sm drawer-plus-btn border rounded-circle input-plus-btn shadow-sm d-flex align-items-center justify-content-center position-absolute"
                                 style={{ width: '32px', height: '32px', left: '16px', top: '50%', transform: 'translateY(-50%)', zIndex: 5 }}
                             >
-                                <FiPlus className="text-secondary" />
+                                <FiPlus className="drawer-plus-icon" />
                             </button>
                             <button
                                 className="btn rounded-circle input-send-btn shadow-sm d-flex align-items-center justify-content-center position-absolute text-white"

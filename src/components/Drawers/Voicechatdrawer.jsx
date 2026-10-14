@@ -3,6 +3,7 @@ import './Voicechatdrawer.scss';
 import { BiHelpCircle } from 'react-icons/bi';
 import { FiChevronDown, FiPlus, FiArrowUp, FiRefreshCw } from 'react-icons/fi';
 import { BsLightningChargeFill, BsFillChatRightDotsFill } from 'react-icons/bs';
+import logoonly from '../../assets/images/logoonly.png';
 
 const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
   const [isVoiceMode, setIsVoiceMode] = useState(false);
@@ -74,13 +75,13 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
               </button>
             )}
             <button
-              className="btn btn-light bg-white border rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+              className="btn drawer-close-btn rounded-3 d-flex align-items-center justify-content-center shadow-sm"
               style={{ width: '34px', height: '34px' }}
               onClick={onClose}
               title="Close Voice Chat"
               aria-label="Close Voice Chat"
             >
-              <FiChevronDown className="text-secondary" style={{ fontSize: '18px' }} />
+              <FiChevronDown className="drawer-close-icon" style={{ fontSize: '18px' }} />
             </button>
           </div>
         </div>
@@ -89,8 +90,12 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
         <div className="drawer-body px-4 d-flex flex-column flex-grow-1 align-items-center justify-content-center position-relative" style={{ zIndex: 2, paddingBottom: '10vh' }}>
 
           {/* Logo Section */}
-          <div className={`logo-container mb-3 position-relative d-flex justify-content-center align-items-center mx-auto shadow-sm ${isVoiceMode ? 'voice-active' : ''}`} style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'linear-gradient(135deg, #ec4899 0%, #db2777 50%, #7c3aed 100%)' }}>
-            <BsLightningChargeFill className="text-white" style={{ fontSize: '22px' }} />
+          <div className={`logo-container mb-3 position-relative d-flex justify-content-center align-items-center mx-auto ${isVoiceMode ? 'voice-active' : ''}`}>
+            <img
+              src={logoonly}
+              alt="Integenz Logo"
+              style={{ width: '60px', height: '60px', objectFit: 'contain' }}
+            />
           </div>
 
           <h3 className={` mb-3 mt-1 ${isVoiceMode ? 'voice-title' : ''}`}>
@@ -143,41 +148,41 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
               )}
               {answeringStep >= 3 && (
                 <div className="chat-bubble ai-answer animation-fade-in ">
-                  <div className="mb-1" style={{ color: '#1e293b' }}>Akira:</div>
+                  <div className="mb-1 ai-answer-title">Akira:</div>
                   <div>“Here’s your latest intelligence update on ransomware activity impacting hospitality organizations across the Middle East and adjacent global hotel ecosystems.”</div>
                 </div>
               )}
               {answeringStep >= 4 && (
                 <div className="chat-bubble ai-answer animation-fade-in ">
-                  <div className="mb-1" style={{ color: '#1e293b' }}>Conti-lineage Groups</div>
+                  <div className="mb-1 ai-answer-title">Conti-lineage Groups</div>
                   <div>“Former Conti affiliates using credential theft and lateral movement to disrupt hotel operations and demand ransom payments.”</div>
                 </div>
               )}
               {answeringStep >= 5 && (
                 <div className="chat-bubble ai-answer animation-fade-in ">
-                  <div className="mb-1" style={{ color: '#1e293b' }}>AI-Enabled Extortion Campaigns</div>
+                  <div className="mb-1 ai-answer-title">AI-Enabled Extortion Campaigns</div>
                   <div>“Attackers use AI-generated phishing emails to steal staff credentials and deploy ransomware inside hotel environments.”</div>
                 </div>
               )}
               {answeringStep >= 6 && (
                 <div className="integenz-response-card w-100 animation-fade-in ">
                   <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div className="d-flex align-items-center gap-2 bg-light px-2 py-1 rounded-pill">
+                    <div className="d-flex align-items-center gap-2 integenz-tag px-2 py-1 rounded-pill">
                       <div className="bg-purple rounded-circle d-flex align-items-center justify-content-center" style={{ width: '24px', height: '24px', backgroundColor: '#db2777' }}>
                         <BsLightningChargeFill className="text-white" style={{ fontSize: '14px' }} />
                       </div>
-                      <span className="" style={{ fontSize: '13.6px', color: '#1e293b' }}>Integenz</span>
+                      <span className="integenz-tag-name" style={{ fontSize: '13.6px' }}>Integenz</span>
                     </div>
                     <button className="btn p-0 text-purple">
                       <FiRefreshCw style={{ fontSize: '16px' }} />
                     </button>
                   </div>
                   <div className="d-flex flex-wrap gap-2">
-                    <button className="chip-btn border-0 py-1" style={{ backgroundColor: '#f3f7fb', fontSize: '12px' }}>More detailed narration</button>
-                    <button className="chip-btn border-0 py-1" style={{ backgroundColor: '#f3f7fb', fontSize: '12px' }}>Summarize</button>
-                    <button className="chip-btn border-0 py-1" style={{ backgroundColor: '#f3f7fb', fontSize: '12px' }}>Active campaigns</button>
-                    <button className="chip-btn border-0 py-1" style={{ backgroundColor: '#f3f7fb', fontSize: '12px' }}>Attack trends</button>
-                    <button className="chip-btn border-0 py-1" style={{ backgroundColor: '#f3f7fb', fontSize: '12px' }}>Mitigation techniques</button>
+                    <button className="chip-btn border-0 py-1" style={{ fontSize: '12px' }}>More detailed narration</button>
+                    <button className="chip-btn border-0 py-1" style={{ fontSize: '12px' }}>Summarize</button>
+                    <button className="chip-btn border-0 py-1" style={{ fontSize: '12px' }}>Active campaigns</button>
+                    <button className="chip-btn border-0 py-1" style={{ fontSize: '12px' }}>Attack trends</button>
+                    <button className="chip-btn border-0 py-1" style={{ fontSize: '12px' }}>Mitigation techniques</button>
                   </div>
                 </div>
               )}
@@ -197,7 +202,6 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
         <div className="drawer-footer px-4 pb-4 position-relative" style={{ zIndex: 2 }}>
 
           {/* Chips */}
-          {/* Chips */}
           <div className={`chips-container d-flex flex-wrap gap-2 mb-4 justify-content-center transition-collapse ${isListening || isAnswering ? 'collapsed' : ''}`}>
             <button className="chip-btn">Latest Threats Summary</button>
             <button className="chip-btn">Critical CVEs Today</button>
@@ -211,29 +215,29 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
           {/* Input Box */}
           <div className={`chat-input-wrapper position-relative w-100 ${isVoiceMode ? 'voice-input-container' : ''}`}>
             {isVoiceMode && (
-              <div className={` px-2 mb-3 ${isListening ? 'text-dark lh-sm' : 'text-secondary'}`} style={{ fontSize: '14.1px' }}>
+              <div className={`px-2 mb-3 voice-transcription-preview ${isListening ? 'listening' : 'placeholder'}`} style={{ fontSize: '14.1px' }}>
                 {isListening ? 'What are some of the active ransomware campaigns targeting hospitality sector in the middle east' : 'Ask about threats, CVEs, or attack activity...'}
               </div>
             )}
 
             {isVoiceMode ? (
               <div className="voice-input-row mt-2">
-                <button className="btn btn-sm bg-white border rounded-circle input-plus-btn d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: '38px', height: '38px' }}>
-                  <FiPlus className="text-secondary" />
+                <button className="btn btn-sm drawer-plus-btn border rounded-circle input-plus-btn d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: '38px', height: '38px' }}>
+                  <FiPlus className="drawer-plus-icon" />
                 </button>
                 <div className="flex-grow-1 wave-pill">
-                  <i className="bi bi-mic-fill ms-2 me-2" style={{ color: '#a78bfa', fontSize: '17.6px' }}></i>
+                  <i className="bi bi-mic-fill ms-2 me-2 wave-mic-icon" style={{ fontSize: '17.6px' }}></i>
                   <div className="flex-grow-1 d-flex align-items-center justify-content-center overflow-hidden px-1" style={{ height: '30px', gap: '3px' }}>
                     {[
                       8, 14, 10, 20, 12, 16, 24, 14, 18, 10, 14, 16, 12, 22, 10, 16, 12, 14, 20, 12, 18, 10, 14, 8
                     ].map((h, i) => (
                       <span
                         key={i}
+                        className={`wave-bar ${isListening ? 'listening' : (i > 8 && i < 16 ? 'active' : 'idle')}`}
                         style={{
                           width: '3.5px',
                           height: isListening ? `${h}px` : '4px',
                           borderRadius: '50px',
-                          backgroundColor: isListening ? '#8b5cf6' : (i > 8 && i < 16 ? '#8b5cf6' : '#c4b5fd'),
                           transition: 'height 0.4s ease'
                         }}></span>
                     ))}
@@ -250,8 +254,8 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
                   </button>
                 </div>
                 <button
-                  className="btn rounded-circle input-send-btn d-flex align-items-center justify-content-center flex-shrink-0 shadow-sm"
-                  style={{ width: '38px', height: '38px', backgroundColor: isListening ? '#5200ff' : '#f5f3ff', color: isListening ? 'white' : '#c4b5fd', transition: 'all 0.3s ease' }}
+                  className={`btn rounded-circle input-send-btn d-flex align-items-center justify-content-center flex-shrink-0 shadow-sm ${isListening ? 'active' : 'inactive'}`}
+                  style={{ width: '38px', height: '38px' }}
                   onClick={() => {
                     if (isListening) {
                       setIsListening(false);
@@ -264,8 +268,8 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
               </div>
             ) : (
               <>
-                <button className="btn btn-sm bg-white border rounded-circle input-plus-btn shadow-sm d-flex align-items-center justify-content-center position-absolute" style={{ width: '32px', height: '32px', left: '16px', top: '50%', transform: 'translateY(-50%)', zIndex: 5 }}>
-                  <FiPlus className="text-secondary" />
+                <button className="btn btn-sm drawer-plus-btn border rounded-circle input-plus-btn shadow-sm d-flex align-items-center justify-content-center position-absolute" style={{ width: '32px', height: '32px', left: '16px', top: '50%', transform: 'translateY(-50%)', zIndex: 5 }}>
+                  <FiPlus className="drawer-plus-icon" />
                 </button>
 
                 <textarea
