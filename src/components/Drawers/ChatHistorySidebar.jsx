@@ -107,7 +107,7 @@ const ChatHistorySidebar = ({
         />
       )}
 
-      <aside className={`chat-history-sidebar pro-white-sidebar ${isOpen ? 'expanded' : 'collapsed'}`}>
+      <aside className={`chat-history-sidebar ${isOpen ? 'expanded' : 'collapsed'}`}>
         <div className="sidebar-inner-content">
           {/* Top Header: Clean Professional New Chat Button & Collapse Toggle */}
           <div className="pro-sidebar-top px-3 py-3 border-bottom d-flex align-items-center gap-2">

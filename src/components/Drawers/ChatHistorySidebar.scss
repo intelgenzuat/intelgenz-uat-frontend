@@ -14,14 +14,15 @@
   transition: opacity 0.3s ease;
 }
 
+.chat-history-sidebar,
 .chat-history-sidebar.pro-white-sidebar {
   width: 270px;
   min-width: 270px;
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #ffffff !important;
-  border-right: 1px solid #e2e8f0 !important;
+  background-color: #ffffff;
+  border-right: 1px solid #e2e8f0;
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.03);
   overflow: hidden;
   position: relative;
@@ -370,153 +371,213 @@
   }
 }
 
-/* Ensure white sidebar remains clean white with high-contrast elements even in dark mode */
+/* ==========================================================================
+   Dark Mode Overrides
+   ========================================================================== */
+[data-bs-theme='dark'] .chat-history-backdrop,
+[data-theme='dark'] .chat-history-backdrop {
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+[data-bs-theme='dark'] .chat-history-sidebar,
+[data-theme='dark'] .chat-history-sidebar,
 [data-bs-theme='dark'] .chat-history-sidebar.pro-white-sidebar,
 [data-theme='dark'] .chat-history-sidebar.pro-white-sidebar {
-  background-color: #ffffff !important;
-  border-right-color: #e2e8f0 !important;
+  background-color: #181d24 !important;
+  border-right-color: #334155 !important;
+  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.45);
 
+  @media (max-width: 680px) {
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Top Section */
   .pro-sidebar-top {
-    background-color: #ffffff;
-    border-color: #f1f5f9 !important;
+    background-color: #181d24;
+    border-color: #334155 !important;
 
     .pro-new-chat-btn {
-      background-color: #f8fafc;
-      border-color: #e2e8f0;
-      color: #0f172a;
+      background-color: #1e242b;
+      border-color: #334155;
+      color: #f1f5f9;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 
       .pro-plus-icon {
-        color: #7c3aed;
+        color: #a78bfa;
+      }
+
+      .pro-new-chat-text {
+        color: #f1f5f9;
       }
 
       &:hover {
-        background-color: #ffffff;
-        border-color: #cbd5e1;
-        color: #0f172a;
+        background-color: #273549;
+        border-color: #475569;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+
+        .pro-plus-icon {
+          color: #c4b5fd;
+        }
+
+        .pro-new-chat-text {
+          color: #ffffff;
+        }
+      }
+
+      &:active {
+        background-color: #1e242b;
+        transform: translateY(0);
       }
     }
 
     .pro-collapse-btn {
-      color: #64748b;
+      color: #94a3b8;
+      background: transparent;
+      border-color: transparent;
 
       &:hover {
-        background-color: #f1f5f9;
-        border-color: #e2e8f0;
-        color: #0f172a;
+        background-color: #1e242b;
+        border-color: #334155;
+        color: #f8fafc;
       }
     }
   }
 
+  /* Scrollable Content */
   .sidebar-scroll-content {
-    background-color: #ffffff;
+    background-color: #181d24;
 
     &::-webkit-scrollbar-thumb {
-      background: #e2e8f0;
+      background: #334155;
 
       &:hover {
-        background: #cbd5e1;
+        background: #475569;
       }
     }
 
     .pro-section-header {
-      color: #94a3b8;
+      color: #64748b;
     }
 
+    /* Chat Row */
     .pro-chat-row {
-      color: #334155;
+      color: #cbd5e1;
+      background-color: transparent;
+      border-color: transparent;
 
       .pro-chat-left {
         .pro-chat-icon {
-          color: #94a3b8;
+          color: #64748b;
         }
 
         .pro-chat-title {
-          color: #1e293b;
+          color: #cbd5e1;
         }
       }
 
       .pro-delete-btn {
-        color: #94a3b8;
+        color: #64748b;
 
         &:hover {
-          color: #ef4444;
-          background-color: #fee2e2;
+          color: #f87171;
+          background-color: rgba(239, 68, 68, 0.16);
         }
       }
 
       &:hover {
-        background-color: #f8fafc;
-        border-color: #e2e8f0;
+        background-color: #1e242b;
+        border-color: #334155;
 
         .pro-chat-left {
           .pro-chat-icon {
-            color: #475569;
+            color: #a78bfa;
           }
 
           .pro-chat-title {
-            color: #0f172a;
+            color: #f8fafc;
           }
+        }
+
+        .pro-delete-btn {
+          opacity: 1;
         }
       }
 
       &.active {
-        background-color: #f5f3ff;
-        border-color: #ddd6fe;
+        background-color: rgba(124, 58, 237, 0.18);
+        border-color: rgba(124, 58, 237, 0.42);
+        box-shadow: 0 1px 4px rgba(124, 58, 237, 0.12);
 
         .pro-chat-left {
           .pro-chat-icon {
-            color: #7c3aed;
+            color: #a78bfa;
           }
 
           .pro-chat-title {
-            color: #7c3aed;
+            color: #c4b5fd;
+            font-weight: 600;
+          }
+        }
+
+        .pro-delete-btn {
+          opacity: 0.8;
+          color: #94a3b8;
+
+          &:hover {
+            color: #f87171;
+            background-color: rgba(239, 68, 68, 0.2);
           }
         }
       }
     }
 
+    /* Empty state */
     .pro-empty-state {
       .pro-empty-icon {
-        background-color: #f1f5f9;
-        color: #94a3b8;
+        background-color: #1e242b;
+        color: #64748b;
+        border: 1px solid #334155;
       }
 
       .pro-empty-title {
-        color: #1e293b;
+        color: #f1f5f9;
       }
 
       .pro-empty-desc {
-        color: #64748b !important;
+        color: #94a3b8 !important;
       }
 
       .pro-empty-new-btn {
-        background-color: #ffffff;
-        border-color: #cbd5e1;
-        color: #475569;
+        background-color: #1e242b;
+        border-color: #334155;
+        color: #cbd5e1;
 
         &:hover {
+          background-color: rgba(124, 58, 237, 0.2);
           border-color: #7c3aed;
-          color: #7c3aed;
-          background-color: #f5f3ff;
+          color: #c4b5fd;
         }
       }
     }
   }
 
+  /* Bottom Footer */
   .pro-sidebar-footer {
-    background-color: #ffffff;
-    border-color: #f1f5f9 !important;
+    background-color: #181d24;
+    border-color: #334155 !important;
 
     .pro-footer-count {
-      color: #94a3b8 !important;
+      color: #64748b !important;
     }
 
     .pro-clear-all-btn {
       color: #94a3b8;
+      background-color: transparent;
 
       &:hover {
-        color: #ef4444;
-        background-color: #fee2e2;
+        color: #f87171;
+        background-color: rgba(239, 68, 68, 0.16);
       }
     }
   }
