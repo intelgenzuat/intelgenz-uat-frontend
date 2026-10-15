@@ -13,7 +13,7 @@
   transform: translateY(calc(100% + 40px));
   opacity: 0;
   pointer-events: none;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), height 0.35s ease;
   display: flex;
   flex-direction: column;
   border: 1px solid #e2e8f0;
@@ -45,6 +45,33 @@
     transform: translateY(0);
     opacity: 1;
     pointer-events: auto;
+  }
+
+  &.expanded {
+    max-width: 760px;
+    height: 720px;
+    max-height: calc(100vh - 80px);
+
+    @media (min-width: 1400px) {
+      max-width: 840px;
+      height: 760px;
+      max-height: calc(100vh - 80px);
+    }
+
+    @media (min-width: 1800px) {
+      max-width: 960px;
+      height: 820px;
+      max-height: calc(100vh - 100px);
+    }
+
+    @media (max-width: 991px) {
+      max-width: min(760px, calc(100vw - 48px));
+    }
+
+    @media (max-width: 576px) {
+      max-width: 100%;
+      height: calc(100vh - 24px);
+    }
   }
 
   // --- Voice Mode Aesthetics ---
@@ -146,12 +173,14 @@
       }
     }
 
+    .drawer-expand-btn,
     .drawer-close-btn {
       background-color: #ffffff;
       border: 1px solid #e2e8f0;
       color: #64748b;
       transition: all 0.2s ease;
 
+      .drawer-expand-icon,
       .drawer-close-icon {
         color: #64748b;
         transition: color 0.2s ease;
@@ -161,6 +190,7 @@
         background-color: #f1f5f9;
         border-color: #cbd5e1;
 
+        .drawer-expand-icon,
         .drawer-close-icon {
           color: #1e293b;
         }
@@ -675,11 +705,13 @@
         }
       }
 
+      .drawer-expand-btn,
       .drawer-close-btn {
         background-color: #1e242b !important;
         border-color: #334155 !important;
         color: #94a3b8 !important;
 
+        .drawer-expand-icon,
         .drawer-close-icon {
           color: #94a3b8 !important;
         }
@@ -689,6 +721,7 @@
           border-color: #475569 !important;
           color: #f8fafc !important;
 
+          .drawer-expand-icon,
           .drawer-close-icon {
             color: #f8fafc !important;
           }

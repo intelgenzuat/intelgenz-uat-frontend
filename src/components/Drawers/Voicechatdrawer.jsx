@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import './Voicechatdrawer.scss';
 import { BiHelpCircle } from 'react-icons/bi';
-import { FiChevronDown, FiPlus, FiArrowUp, FiRefreshCw } from 'react-icons/fi';
+import { FiChevronDown, FiPlus, FiArrowUp, FiRefreshCw, FiMaximize2, FiMinimize2 } from 'react-icons/fi';
 import { BsLightningChargeFill, BsFillChatRightDotsFill } from 'react-icons/bs';
 import logoonly from '../../assets/images/logoonly.png';
 
-const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
+const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat, isExpanded: propIsExpanded, onToggleExpand }) => {
+  const [localIsExpanded, setLocalIsExpanded] = useState(false);
+  const isExpanded = propIsExpanded !== undefined ? propIsExpanded : localIsExpanded;
+
+  const toggleExpand = () => {
+    if (onToggleExpand) {
+      onToggleExpand(!isExpanded);
+    } else {
+      setLocalIsExpanded(!isExpanded);
+    }
+  };
+
   const [isVoiceMode, setIsVoiceMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isAnswering, setIsAnswering] = useState(false);
@@ -40,6 +51,7 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
       setIsVoiceMode(false);
       setIsListening(false);
       setIsAnswering(false);
+      setLocalIsExpanded(false);
     }
     return () => clearTimeout(timer);
   }, [isOpen]);
@@ -47,7 +59,7 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
   return (
     <>
       {/* Sliding Drawer Container */}
-      <div className={`voicechat-drawer ${isOpen ? 'open' : ''} ${isVoiceMode ? 'voice-mode' : ''}`}>
+      <div className={`voicechat-drawer ${isOpen ? 'open' : ''} ${isVoiceMode ? 'voice-mode' : ''} ${isExpanded ? 'expanded' : ''}`}>
 
         {/* Voice Mode Gradient Background */}
         {isVoiceMode && <div className="voice-mode-gradient"></div>}
@@ -74,6 +86,19 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat }) => {
                 </span>
               </button>
             )}
+            <button
+              className="btn drawer-expand-btn rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+              style={{ width: '36px', height: '36px' }}
+              onClick={toggleExpand}
+              title={isExpanded ? "Collapse chat width" : "Expand chat width"}
+              aria-label={isExpanded ? "Collapse chat width" : "Expand chat width"}
+            >
+              {isExpanded ? (
+                <FiMinimize2 className="drawer-expand-icon" style={{ fontSize: '16px' }} />
+              ) : (
+                <FiMaximize2 className="drawer-expand-icon" style={{ fontSize: '16px' }} />
+              )}
+            </button>
             <button
               className="btn drawer-close-btn rounded-3 d-flex align-items-center justify-content-center shadow-sm"
               style={{ width: '36px', height: '36px' }}

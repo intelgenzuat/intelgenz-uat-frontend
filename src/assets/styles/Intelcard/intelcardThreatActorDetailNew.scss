@@ -261,6 +261,10 @@
     p {
       margin: 0 0 1.7mm;
     }
+
+    .exec-desc-text {
+      color: #475569;
+    }
   }
 
   .chips {
@@ -892,6 +896,443 @@
     font-size: calc(7.5pt + 2px);
     display: inline-block;
   }
+
+  /* ==========================================================================
+     Dark Mode Styles
+     ========================================================================== */
+  [data-bs-theme='dark'] &,
+  [data-theme='dark'] & {
+    background-color: #121820;
+    color: #f1f5f9;
+    min-height: 100vh;
+
+    .page {
+      background: #182230;
+      border: 1px solid #2e3a4e;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    .hero {
+      background: linear-gradient(90deg, #3d0768 0%, #7a0419 50%, #b8001e 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+      p {
+        color: #cbd5e1;
+      }
+    }
+
+    .top {
+      color: #94a3b8;
+
+      .back-btn,
+      .download-btn {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        color: #ffffff;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.25);
+          border-color: rgba(255, 255, 255, 0.4);
+          color: #ffffff;
+        }
+      }
+    }
+
+    .aliases {
+      color: #e2e8f0;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .badge {
+      border-color: #475569;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.05);
+
+      &.status {
+        border-color: #f59e0b;
+        color: #fde68a;
+        background: rgba(245, 158, 11, 0.15);
+      }
+    }
+
+    .title {
+      color: #f8fafc;
+
+      b {
+        background: #334155;
+        color: #f8fafc;
+      }
+
+      &:after {
+        background: #334155;
+      }
+    }
+
+    .card {
+      background: #1e293b;
+      border-color: #334155;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    }
+
+    .label {
+      color: #94a3b8;
+    }
+
+    .value {
+      color: #f8fafc;
+    }
+
+    .small {
+      color: #94a3b8;
+    }
+
+    .desc {
+      color: #cbd5e1;
+
+      p {
+        color: #cbd5e1;
+      }
+
+      .exec-desc-text {
+        color: #cbd5e1;
+      }
+    }
+
+    .chip {
+      background: rgba(245, 158, 11, 0.16);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.28);
+
+      &.blue {
+        background: rgba(14, 165, 233, 0.16);
+        color: #38bdf8;
+        border: 1px solid rgba(14, 165, 233, 0.28);
+      }
+    }
+
+    .event {
+      background: #1e293b;
+      border-top: 1px solid #334155;
+      border-right: 1px solid #334155;
+      border-bottom: 1px solid #334155;
+      border-left: 3px solid #f59e0b;
+
+      p {
+        color: #cbd5e1;
+      }
+    }
+
+    .date {
+      color: #fbbf24;
+    }
+
+    .diamond-wrap {
+      border-color: #334155;
+      background: radial-gradient(circle at center, #1e293b 0, #16202e 55%, #0f172a 100%);
+
+      svg {
+        path[stroke="#bfd0dc"] {
+          stroke: #334155;
+        }
+      }
+    }
+
+    .diamond-node {
+      background: #1e293b;
+      border-color: #334155;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+
+      strong {
+        color: #f8fafc;
+      }
+
+      small {
+        color: #94a3b8;
+      }
+
+      &.adversary {
+        border-top: 2px solid #f59e0b;
+      }
+
+      &.infra {
+        border-right: 2px solid #20b8cb;
+
+        .infra-list .infra-item {
+          color: #94a3b8;
+        }
+      }
+
+      &.victim {
+        border-bottom: 2px solid #f87171;
+      }
+
+      &.capability {
+        border-left: 2px solid #818cf8;
+      }
+    }
+
+    .center {
+      background: #0f172a;
+      color: #f8fafc;
+      border: 1.5px solid #38bdf8;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.22);
+    }
+
+    .foot {
+      border-top-color: #334155;
+      color: #94a3b8;
+    }
+
+    .pagehead {
+      border-bottom-color: #334155;
+
+      h2 {
+        color: #f8fafc;
+      }
+    }
+
+    .over {
+      color: #fbbf24;
+    }
+
+    .steps {
+      .step {
+        background: #1e293b;
+        border-color: #334155;
+
+        strong {
+          color: #f8fafc;
+        }
+
+        .meta {
+          color: #94a3b8;
+        }
+      }
+    }
+
+    .num {
+      background: #334155;
+      color: #f8fafc;
+    }
+
+    .warning {
+      border-left: 3px solid #f59e0b;
+      background: rgba(245, 158, 11, 0.12);
+      color: #fde68a;
+    }
+
+    .callout {
+      border-left: 3px solid #ef4444;
+      background: rgba(239, 68, 68, 0.12);
+      color: #fca5a5;
+    }
+
+    table {
+      background: #1e293b;
+      border: 1px solid #334155;
+
+      th {
+        background: #0f172a;
+        color: #f8fafc;
+        border-bottom: 1px solid #334155;
+      }
+
+      td {
+        color: #e2e8f0;
+        border-bottom: 1px solid #2a3749;
+        background: transparent;
+
+        strong {
+          color: #f8fafc;
+        }
+      }
+
+      tbody tr:nth-child(even) td {
+        background: rgba(15, 23, 42, 0.35);
+      }
+
+      tbody tr:hover td {
+        background: rgba(51, 65, 85, 0.25);
+      }
+
+      code {
+        color: #93c5fd;
+        background: rgba(147, 197, 253, 0.1);
+        padding: 1px 5px;
+        border-radius: 4px;
+        border: 1px solid rgba(147, 197, 253, 0.15);
+      }
+    }
+
+    .tag {
+      background: rgba(14, 165, 233, 0.18);
+      color: #38bdf8;
+      border: 1px solid rgba(14, 165, 233, 0.3);
+
+      &.category-tag {
+        background: rgba(99, 102, 241, 0.18);
+        color: #a5b4fc;
+        border: 1px solid rgba(99, 102, 241, 0.3);
+      }
+    }
+
+    .tid {
+      color: #38bdf8;
+    }
+
+    .exec-path-header {
+      background: #1e293b;
+      border-color: #334155;
+      color: #cbd5e1;
+
+      .label {
+        color: #f8fafc;
+      }
+    }
+
+    .exec-unified-table {
+      border: 1px solid #334155;
+
+      th {
+        background: #0f172a;
+        color: #f8fafc;
+        border-bottom: 1px solid #334155;
+
+        &:first-child {
+          border-right: 1px solid #334155;
+        }
+      }
+
+      .exec-path-group-row {
+        td {
+          background: #16202e !important;
+          border-top: 1.5px solid #334155;
+          border-bottom: 1.5px solid #334155;
+        }
+
+        &:hover td {
+          background: #1e2d40 !important;
+        }
+
+        .exec-path-group-header {
+          .group-left {
+            .toggle-icon {
+              color: #94a3b8;
+            }
+
+            .path-title-badge {
+              color: #f8fafc;
+            }
+
+            .steps-count-badge {
+              background: #334155;
+              color: #f1f5f9;
+            }
+
+            .path-timeline-badge {
+              background: rgba(245, 158, 11, 0.2);
+              color: #fbbf24;
+              border: 1px solid rgba(245, 158, 11, 0.3);
+            }
+          }
+
+          .group-right {
+            .target-context-text {
+              color: #94a3b8;
+            }
+          }
+        }
+      }
+
+      .exec-step-row {
+        td {
+          border-bottom: 1px solid #2a3749;
+          color: #e2e8f0;
+
+          &:first-child {
+            border-right: 1px solid #334155;
+            background: #1a2433;
+          }
+
+          &:last-child {
+            background: #16202c;
+          }
+        }
+
+        &:nth-child(even) {
+          td:first-child {
+            background: #18202d;
+          }
+
+          td:last-child {
+            background: #141b26;
+          }
+        }
+      }
+
+      .exec-empty-step-row td {
+        background: #1a2433 !important;
+        color: #94a3b8;
+        border-bottom: 1px solid #334155;
+      }
+    }
+
+    .step-num {
+      background: #253346;
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .exec-code-badge {
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #93c5fd;
+    }
+
+    .exec-step-cell {
+      .exec-step-body {
+        .exec-step-title {
+          color: #f8fafc;
+        }
+
+        .exec-step-action {
+          color: #94a3b8;
+        }
+      }
+    }
+
+    .exec-meta-list {
+      .exec-meta-row {
+        .meta-label {
+          color: #64748b;
+        }
+      }
+    }
+
+    .exec-ttp-list {
+      .exec-ttp-item {
+        .ttp-badge-row {
+          .tactic-tag {
+            background: rgba(245, 158, 11, 0.18);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+          }
+        }
+
+        .ttp-technique-title {
+          color: #f8fafc;
+        }
+
+        .ttp-procedure-text {
+          color: #94a3b8;
+        }
+      }
+    }
+
+    .text-dash {
+      color: #64748b;
+    }
+  }
 }
 
 @media print {
@@ -903,11 +1344,15 @@
   .intelcard-threat-actor-detail-new-container {
     padding: 0 !important;
     background: transparent !important;
+    color: #172435 !important;
 
     .page {
       margin: 0 !important;
       box-shadow: none !important;
       break-after: page;
+      background: #ffffff !important;
+      border: none !important;
+      color: #172435 !important;
 
       &:last-child {
         break-after: auto;
@@ -922,6 +1367,60 @@
     .back-btn,
     .download-btn {
       display: none !important;
+    }
+
+    [data-bs-theme='dark'] &,
+    [data-theme='dark'] & {
+      background: transparent !important;
+      color: #172435 !important;
+
+      .page {
+        background: #ffffff !important;
+        color: #172435 !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+
+      .hero {
+        background: linear-gradient(90deg, #4c0a829c 0%, #95051e85 50%, #e60026bb 100%) !important;
+        color: #fff !important;
+      }
+
+      .card,
+      table,
+      .exec-unified-table,
+      .diamond-wrap,
+      .diamond-node,
+      .event,
+      .step {
+        background: #ffffff !important;
+        border-color: #dfe6ed !important;
+        color: #172435 !important;
+      }
+
+      th {
+        background: #17334a !important;
+        color: #ffffff !important;
+      }
+
+      td {
+        color: #172435 !important;
+        border-color: #e5eaf0 !important;
+      }
+
+      .value,
+      strong,
+      h1,
+      h2,
+      .title {
+        color: #0b1729 !important;
+      }
+
+      .label,
+      .meta,
+      small {
+        color: #68778a !important;
+      }
     }
   }
 }

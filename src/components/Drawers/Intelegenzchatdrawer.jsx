@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './intelegenzchatdrawer.scss';
 import { BiHelpCircle } from 'react-icons/bi';
-import { FiChevronDown, FiPlus, FiArrowUp, FiShield, FiCrosshair, FiGlobe, FiAlertTriangle, FiArrowRight } from 'react-icons/fi';
+import { FiChevronDown, FiPlus, FiArrowUp, FiShield, FiCrosshair, FiGlobe, FiAlertTriangle, FiArrowRight, FiMaximize2, FiMinimize2 } from 'react-icons/fi';
 import { BsLightningChargeFill, BsFillMicFill } from 'react-icons/bs';
 import { LuHistory, LuBoxes } from 'react-icons/lu';
 import ReactMarkdown from 'react-markdown';
@@ -9,7 +9,18 @@ import { chatWsUrl, chatHttpUrl } from '../../Context/chat';
 import man from '../../assets/images/man.jpg';
 import logoonly from '../../assets/images/logoonly.png';
 
-const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
+const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat, isExpanded: propIsExpanded, onToggleExpand }) => {
+    const [localIsExpanded, setLocalIsExpanded] = useState(false);
+    const isExpanded = propIsExpanded !== undefined ? propIsExpanded : localIsExpanded;
+
+    const toggleExpand = () => {
+        if (onToggleExpand) {
+            onToggleExpand(!isExpanded);
+        } else {
+            setLocalIsExpanded(!isExpanded);
+        }
+    };
+
     const [chatState, setChatState] = useState('idle'); // idle | loading | done
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
@@ -55,6 +66,7 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
             setMessages([]);
             setInputValue('');
             setSessionId(crypto.randomUUID());
+            setLocalIsExpanded(false);
             if (wsRef.current) {
                 wsRef.current.close();
                 wsRef.current = null;
@@ -139,7 +151,7 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
 
     return (
         <>
-            <div className={`intelegenzchat-drawer ${isOpen ? 'open' : ''}`}>
+            <div className={`intelegenzchat-drawer ${isOpen ? 'open' : ''} ${isExpanded ? 'expanded' : ''}`}>
 
                 {/* ── Header ── */}
                 <div className="drawer-header px-4 py-4 d-flex justify-content-between align-items-center">
@@ -160,6 +172,19 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat }) => {
                                 <BsFillMicFill className="voice-mic-icon" />
                             </div>
                             <span className="voice-btn-label">Voice Chat</span>
+                        </button>
+                        <button
+                            className="btn drawer-expand-btn rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                            style={{ width: '36px', height: '36px' }}
+                            onClick={toggleExpand}
+                            title={isExpanded ? "Collapse chat width" : "Expand chat width"}
+                            aria-label={isExpanded ? "Collapse chat width" : "Expand chat width"}
+                        >
+                            {isExpanded ? (
+                                <FiMinimize2 className="drawer-expand-icon" style={{ fontSize: '16px' }} />
+                            ) : (
+                                <FiMaximize2 className="drawer-expand-icon" style={{ fontSize: '16px' }} />
+                            )}
                         </button>
                         <button
                             className="btn drawer-close-btn rounded-3 d-flex align-items-center justify-content-center shadow-sm"

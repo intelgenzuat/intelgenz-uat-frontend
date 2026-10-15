@@ -320,7 +320,7 @@ export default function IntelcardThreatActorDetailNew() {
         </div>
 
         <div className="desc" style={{ margin: '1.5mm 0 2.5mm' }}>
-          <p style={{ margin: 0, color: '#475569', fontSize: 'calc(7.5pt + 1px)' }}>
+          <p className="exec-desc-text" style={{ margin: 0, fontSize: 'calc(7.5pt + 1px)' }}>
             {threatData?.execution?.description ||
               (threatData?.execution?.execution_path_description
                 ? `Execution path description: ${threatData.execution.execution_path_description}`
