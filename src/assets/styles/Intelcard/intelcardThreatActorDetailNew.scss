@@ -261,10 +261,6 @@
     p {
       margin: 0 0 1.7mm;
     }
-
-    .exec-desc-text {
-      color: #475569;
-    }
   }
 
   .chips {
@@ -898,18 +894,17 @@
   }
 
   /* ==========================================================================
-     Dark Mode Styles
+     Dark Mode Styles (Colors Only - Preserving All Layout & Sizing)
      ========================================================================== */
   [data-bs-theme='dark'] &,
   [data-theme='dark'] & {
     background-color: #121820;
     color: #f1f5f9;
-    min-height: 100vh;
 
     .page {
       background: #182230;
       border: 1px solid #2e3a4e;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     }
 
     .hero {
@@ -1344,15 +1339,11 @@
   .intelcard-threat-actor-detail-new-container {
     padding: 0 !important;
     background: transparent !important;
-    color: #172435 !important;
 
     .page {
       margin: 0 !important;
       box-shadow: none !important;
       break-after: page;
-      background: #ffffff !important;
-      border: none !important;
-      color: #172435 !important;
 
       &:last-child {
         break-after: auto;
