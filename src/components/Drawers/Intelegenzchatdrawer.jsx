@@ -8,28 +8,51 @@ import ReactMarkdown from 'react-markdown';
 import { chatWsUrl, chatHttpUrl } from '../../Context/chat';
 import man from '../../assets/images/man.jpg';
 import logoonly from '../../assets/images/logoonly.png';
+import ChatHistorySidebar from './ChatHistorySidebar';
+import { 
+    getChatHistory, 
+    saveChatSession, 
+    getActiveSessionId, 
+    setActiveSessionId 
+} from '../../utils/chatHistory';
 
 const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat, isExpanded: propIsExpanded, onToggleExpand }) => {
     const [localIsExpanded, setLocalIsExpanded] = useState(false);
     const isExpanded = propIsExpanded !== undefined ? propIsExpanded : localIsExpanded;
 
     const toggleExpand = () => {
+        const nextExpanded = !isExpanded;
         if (onToggleExpand) {
-            onToggleExpand(!isExpanded);
+            onToggleExpand(nextExpanded);
         } else {
-            setLocalIsExpanded(!isExpanded);
+            setLocalIsExpanded(nextExpanded);
         }
+        setIsHistoryOpen(nextExpanded);
     };
 
     const [chatState, setChatState] = useState('idle'); // idle | loading | done
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [enableNeura, setEnableNeura] = useState(false);
+    const [isHistoryOpen, setIsHistoryOpen] = useState(false);
     const chatBodyRef = useRef(null);
     const textareaRef = useRef(null);
     const [sessionId, setSessionId] = useState(() => crypto.randomUUID());
     const wsRef = useRef(null);
 
+    const toggleHistory = () => {
+        setIsHistoryOpen(prev => {
+            const next = !prev;
+            if (next && !isExpanded) {
+                if (onToggleExpand) {
+                    onToggleExpand(true);
+                } else {
+                    setLocalIsExpanded(true);
+                }
+            }
+            return next;
+        });
+    };
 
     const connectWebSocket = () => {
         if (wsRef.current && (wsRef.current.readyState === WebSocket.OPEN || wsRef.current.readyState === WebSocket.CONNECTING)) {
@@ -45,10 +68,18 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat, isExpanded: 
             const data = JSON.parse(event.data);
             if (data.type === 'response') {
                 setChatState('done');
-                setMessages(prev => [...prev, { sender: 'ai', text: data.response }]);
+                setMessages(prev => {
+                    const updated = [...prev, { sender: 'ai', text: data.response }];
+                    saveChatSession({ id: sessionId, messages: updated });
+                    return updated;
+                });
             } else if (data.type === 'error') {
                 setChatState('done');
-                setMessages(prev => [...prev, { sender: 'ai', text: data.response, isError: true }]);
+                setMessages(prev => {
+                    const updated = [...prev, { sender: 'ai', text: data.response, isError: true }];
+                    saveChatSession({ id: sessionId, messages: updated });
+                    return updated;
+                });
             }
         };
         
@@ -59,7 +90,7 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat, isExpanded: 
         wsRef.current = ws;
     };
 
-    // Reset when drawer closes
+    // Reset when drawer closes or load active session when opens
     useEffect(() => {
         if (!isOpen) {
             setChatState('idle');
@@ -67,12 +98,26 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat, isExpanded: 
             setInputValue('');
             setSessionId(crypto.randomUUID());
             setLocalIsExpanded(false);
+            setIsHistoryOpen(false);
             if (wsRef.current) {
                 wsRef.current.close();
                 wsRef.current = null;
             }
         } else {
-            connectWebSocket();
+            const activeId = getActiveSessionId();
+            if (activeId) {
+                const history = getChatHistory();
+                const session = history.find(s => s.id === activeId);
+                if (session && session.messages && session.messages.length > 0) {
+                    setSessionId(session.id);
+                    setMessages(session.messages);
+                    setChatState('done');
+                } else {
+                    connectWebSocket();
+                }
+            } else {
+                connectWebSocket();
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen]);
@@ -84,9 +129,36 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat, isExpanded: 
         }
     }, [chatState, messages]);
 
+    const handleSelectSession = (session) => {
+        if (!session) return;
+        setSessionId(session.id);
+        setActiveSessionId(session.id);
+        setMessages(session.messages || []);
+        setChatState((session.messages && session.messages.length > 0) ? 'done' : 'idle');
+        if (window.innerWidth < 680) {
+            setIsHistoryOpen(false);
+        }
+    };
+
+    const handleNewChat = () => {
+        setChatState('idle');
+        setMessages([]);
+        setInputValue('');
+        const newId = crypto.randomUUID();
+        setSessionId(newId);
+        setActiveSessionId(newId);
+        if (wsRef.current) {
+            wsRef.current.close();
+            wsRef.current = null;
+        }
+    };
+
     const handleSendMsg = async (textToSend) => {
         if (!textToSend.trim()) return;
-        setMessages(prev => [...prev, { sender: 'user', text: textToSend.trim() }]);
+        const userMsg = { sender: 'user', text: textToSend.trim() };
+        const updatedMessages = [...messages, userMsg];
+        setMessages(updatedMessages);
+        saveChatSession({ id: sessionId, messages: updatedMessages });
         setChatState('loading');
         setInputValue('');
         resetTextareaHeight();
@@ -112,10 +184,14 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat, isExpanded: 
                 });
                 const data = await response.json();
                 setChatState('done');
-                setMessages(prev => [...prev, { sender: 'ai', text: data.response }]);
+                const finalMessages = [...updatedMessages, { sender: 'ai', text: data.response }];
+                setMessages(finalMessages);
+                saveChatSession({ id: sessionId, messages: finalMessages });
             } catch (error) {
                 setChatState('done');
-                setMessages(prev => [...prev, { sender: 'ai', text: 'Error connecting to the service.', isError: true }]);
+                const errMessages = [...updatedMessages, { sender: 'ai', text: 'Error connecting to the service.', isError: true }];
+                setMessages(errMessages);
+                saveChatSession({ id: sessionId, messages: errMessages });
             }
         }
     };
@@ -151,7 +227,7 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat, isExpanded: 
 
     return (
         <>
-            <div className={`intelegenzchat-drawer ${isOpen ? 'open' : ''} ${isExpanded ? 'expanded' : ''}`}>
+            <div className={`intelegenzchat-drawer ${isOpen ? 'open' : ''} ${isExpanded ? 'expanded' : ''} ${isHistoryOpen ? 'has-history-open' : ''}`}>
 
                 {/* ── Header ── */}
                 <div className="drawer-header px-4 py-4 d-flex justify-content-between align-items-center">
@@ -197,6 +273,20 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat, isExpanded: 
                         </button>
                     </div>
                 </div>
+
+                {/* ── Content Layout (Sidebar + Chat Area) ── */}
+                <div className="drawer-content-layout">
+                    {/* Chat History Sidebar */}
+                    <ChatHistorySidebar
+                        isOpen={isHistoryOpen}
+                        onClose={() => setIsHistoryOpen(false)}
+                        currentSessionId={sessionId}
+                        onSelectSession={handleSelectSession}
+                        onNewChat={handleNewChat}
+                    />
+
+                    {/* Main Chat Area */}
+                    <div className="drawer-main-chat">
 
                 {/* ── Body ── */}
                 {!isInChat ? (
@@ -343,7 +433,12 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat, isExpanded: 
                                 style={{ overflow: 'hidden', resize: 'none', position: 'relative', zIndex: 2 }}
                             />
                             <div className="chat-footer-actions d-flex justify-content-between align-items-center mt-2" style={{ position: 'relative', zIndex: 2 }}>
-                                <button className="btn rounded-circle footer-icon-btn d-flex align-items-center justify-content-center">
+                                <button 
+                                    className={`btn rounded-circle footer-icon-btn d-flex align-items-center justify-content-center ${isHistoryOpen ? 'active' : ''}`}
+                                    onClick={toggleHistory}
+                                    title={isHistoryOpen ? "Collapse chat history" : "Expand chat history"}
+                                    aria-label="Toggle chat history"
+                                >
                                     <LuHistory className="footer-history-icon" style={{ fontSize: '19.2px' }} />
                                 </button>
                                 <button 
@@ -383,6 +478,8 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat, isExpanded: 
                             </button>
                         </div>
                     )}
+                </div>
+                    </div>
                 </div>
             </div>
         </>

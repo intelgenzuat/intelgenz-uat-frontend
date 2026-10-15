@@ -4,23 +4,47 @@ import { BiHelpCircle } from 'react-icons/bi';
 import { FiChevronDown, FiPlus, FiArrowUp, FiRefreshCw, FiMaximize2, FiMinimize2 } from 'react-icons/fi';
 import { BsLightningChargeFill, BsFillChatRightDotsFill } from 'react-icons/bs';
 import logoonly from '../../assets/images/logoonly.png';
+import ChatHistorySidebar from './ChatHistorySidebar';
+import { setActiveSessionId, getActiveSessionId } from '../../utils/chatHistory';
 
 const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat, isExpanded: propIsExpanded, onToggleExpand }) => {
   const [localIsExpanded, setLocalIsExpanded] = useState(false);
   const isExpanded = propIsExpanded !== undefined ? propIsExpanded : localIsExpanded;
 
   const toggleExpand = () => {
+    const nextExpanded = !isExpanded;
     if (onToggleExpand) {
-      onToggleExpand(!isExpanded);
+      onToggleExpand(nextExpanded);
     } else {
-      setLocalIsExpanded(!isExpanded);
+      setLocalIsExpanded(nextExpanded);
     }
+    setIsHistoryOpen(nextExpanded);
   };
 
   const [isVoiceMode, setIsVoiceMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isAnswering, setIsAnswering] = useState(false);
   const [answeringStep, setAnsweringStep] = useState(0);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [currentSessionId, setCurrentSessionId] = useState(() => getActiveSessionId() || '');
+
+  const handleSelectSession = (session) => {
+    if (session) {
+      setActiveSessionId(session.id);
+      setCurrentSessionId(session.id);
+      if (onEnableTextChat) {
+        onEnableTextChat();
+      }
+    }
+  };
+
+  const handleNewChat = () => {
+    const newId = crypto.randomUUID();
+    setActiveSessionId(newId);
+    setCurrentSessionId(newId);
+    setIsListening(false);
+    setIsAnswering(false);
+  };
 
   useEffect(() => {
     let timers = [];
@@ -44,6 +68,7 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat, isExpanded: propIs
       setIsVoiceMode(false);
       setIsListening(false);
       setIsAnswering(false);
+      setCurrentSessionId(getActiveSessionId() || '');
       timer = setTimeout(() => {
         setIsVoiceMode(true);
       }, 500);
@@ -52,6 +77,7 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat, isExpanded: propIs
       setIsListening(false);
       setIsAnswering(false);
       setLocalIsExpanded(false);
+      setIsHistoryOpen(false);
     }
     return () => clearTimeout(timer);
   }, [isOpen]);
@@ -59,7 +85,7 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat, isExpanded: propIs
   return (
     <>
       {/* Sliding Drawer Container */}
-      <div className={`voicechat-drawer ${isOpen ? 'open' : ''} ${isVoiceMode ? 'voice-mode' : ''} ${isExpanded ? 'expanded' : ''}`}>
+      <div className={`voicechat-drawer ${isOpen ? 'open' : ''} ${isVoiceMode ? 'voice-mode' : ''} ${isExpanded ? 'expanded' : ''} ${isHistoryOpen ? 'has-history-open' : ''}`}>
 
         {/* Voice Mode Gradient Background */}
         {isVoiceMode && <div className="voice-mode-gradient"></div>}
@@ -110,6 +136,20 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat, isExpanded: propIs
             </button>
           </div>
         </div>
+
+        {/* ── Content Layout (History Sidebar + Voice Chat Area) ── */}
+        <div className="drawer-content-layout" style={{ zIndex: 2 }}>
+          {/* Chat History Sidebar */}
+          <ChatHistorySidebar
+            isOpen={isHistoryOpen}
+            onClose={() => setIsHistoryOpen(false)}
+            currentSessionId={currentSessionId}
+            onSelectSession={handleSelectSession}
+            onNewChat={handleNewChat}
+          />
+
+          {/* Main Voice Chat Area */}
+          <div className="drawer-main-chat">
 
         {/* Drawer Body Area (Scrollable if needed, currently just centered content) */}
         <div className="drawer-body px-4 d-flex flex-column flex-grow-1 align-items-center justify-content-center position-relative" style={{ zIndex: 2, paddingBottom: '10vh' }}>
@@ -310,6 +350,8 @@ const Voicechatdrawer = ({ isOpen, onClose, onEnableTextChat, isExpanded: propIs
             )}
           </div>
 
+        </div>
+          </div>
         </div>
       </div>
     </>
