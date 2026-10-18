@@ -322,6 +322,8 @@ const Defend = ({
                         ) : (
                             tacticsData.map(tactic => {
                                 const isTacticExpanded = !collapsedTactics.has(tactic.id);
+                                const isTwoTactics = tacticsData.length === 2;
+                                const shouldStretch = isTwoTactics && tactic.columns.length <= 2;
                                 return (
                                     <div key={tactic.id} className={`tactic-group d-flex flex-column ${!isTacticExpanded ? 'tactic-collapsed' : ''}`}>
                                         <div className="tactic-group-header" onClick={() => toggleTactic(tactic.id)}>
@@ -332,7 +334,7 @@ const Defend = ({
                                         </div>
 
                                         {isTacticExpanded && (
-                                            <div className="tactic-columns d-flex flex-grow-1">
+                                            <div className={`tactic-columns d-flex flex-grow-1 ${shouldStretch ? 'columns-stretched' : ''}`}>
                                                 {tactic.columns.map((col, colIndex) => {
                                                     const displayedItems = showOverlaps ? filterOverlaps(col.items) : col.items;
                                                     return (
