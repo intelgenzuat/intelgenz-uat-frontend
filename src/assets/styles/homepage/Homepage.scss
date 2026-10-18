@@ -1106,9 +1106,10 @@ $card-cap-bg: transparent;
           &:hover {
             background: #f8fafc;
 
-            .arrow-icon {
+            .arrow-icon,
+            .action-link-btn {
               color: #5200ff;
-              transform: translateX(4px) translateY(-4px);
+              transform: translate(1px, -1px);
             }
           }
 
@@ -1133,12 +1134,37 @@ $card-cap-bg: transparent;
             line-height: 20px;
             display: flex;
             align-items: center;
+            flex: 1;
+            min-width: 0;
           }
 
           .arrow-icon {
             color: #94a3b8;
             font-size: 17.6px;
             transition: all 0.2s;
+          }
+
+          .action-link-btn {
+            background: transparent;
+            border: none;
+            padding: 3px;
+            color: #94a3b8;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.15s ease, transform 0.15s ease;
+            flex-shrink: 0;
+            margin-left: auto;
+
+            &:hover {
+              color: #5200ff;
+              transform: translate(1px, -1px);
+            }
+
+            svg {
+              display: block;
+            }
           }
         }
 

@@ -311,7 +311,7 @@ const Intelegenzchatdrawer = ({ isOpen, onClose, onEnableVoiceChat, isExpanded: 
                                     checked={enableNeura}
                                     onChange={(e) => setEnableNeura(e.target.checked)}
                                 />
-                                <span className="enable-neura-text">enable neura</span>
+                                <span className="enable-neura-text">Enable Neura</span>
                             </label>
                         </div>
                         <p className="text-secondary text-center px-md-3 mb-5">

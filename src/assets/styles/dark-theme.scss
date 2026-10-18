@@ -866,10 +866,24 @@
 
         &:hover {
           background: #0f172a !important;
+
+          .action-link-btn {
+            color: #c4b5fd !important;
+          }
         }
 
         .news-title {
           color: #cbd5e1 !important;
+        }
+
+        .action-link-btn {
+          color: #94a3b8;
+
+          &:hover {
+            color: #c4b5fd !important;
+            background: rgba(167, 139, 250, 0.12);
+            border-radius: 6px;
+          }
         }
       }
     }
