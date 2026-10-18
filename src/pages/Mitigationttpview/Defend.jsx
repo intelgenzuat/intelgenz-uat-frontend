@@ -145,16 +145,47 @@ const Defend = ({
         return transformD3fendTactics(d3fendList, selectedMalware);
     }, [d3fendList, selectedMalware]);
 
+    const filterOverlaps = (items) => {
+        return items
+            .map(item => {
+                const filteredChildren = item.children ? filterOverlaps(item.children) : [];
+                const hasOverlap = Boolean(item.has_overlap || item.overlaps > 1 || item.overlap_percentage > 0);
+                if (hasOverlap || filteredChildren.length > 0) {
+                    return { ...item, children: filteredChildren };
+                }
+                return null;
+            })
+            .filter(item => item !== null);
+    };
+
+    const visibleTactics = useMemo(() => {
+        if (!showOverlaps) return tacticsData;
+        return tacticsData
+            .map(tactic => {
+                const visibleCols = tactic.columns
+                    .map(col => ({
+                        ...col,
+                        items: filterOverlaps(col.items)
+                    }))
+                    .filter(col => col.items.length > 0);
+                return {
+                    ...tactic,
+                    columns: visibleCols
+                };
+            })
+            .filter(tactic => tactic.columns.length > 0);
+    }, [tacticsData, showOverlaps]);
+
     const [collapsedTactics, setCollapsedTactics] = useState(() => new Set());
     const [expandedItems, setExpandedItems] = useState(() => new Set());
 
-    const isAllCollapsed = tacticsData.length > 0 && collapsedTactics.size === tacticsData.length;
+    const isAllCollapsed = visibleTactics.length > 0 && collapsedTactics.size === visibleTactics.length;
 
     const handleToggleAll = () => {
         if (isAllCollapsed) {
             setCollapsedTactics(new Set());
         } else {
-            setCollapsedTactics(new Set(tacticsData.map(t => t.id)));
+            setCollapsedTactics(new Set(visibleTactics.map(t => t.id)));
             setExpandedItems(new Set());
         }
     };
@@ -181,19 +212,6 @@ const Defend = ({
             }
             return next;
         });
-    };
-
-    const filterOverlaps = (items) => {
-        return items
-            .map(item => {
-                const filteredChildren = item.children ? filterOverlaps(item.children) : [];
-                const hasOverlap = Boolean(item.has_overlap || item.overlaps > 1 || item.overlap_percentage > 0);
-                if (hasOverlap || filteredChildren.length > 0) {
-                    return { ...item, children: filteredChildren };
-                }
-                return null;
-            })
-            .filter(item => item !== null);
     };
 
     const renderItem = (item, indent, treeLineType) => {
@@ -315,14 +333,14 @@ const Defend = ({
                             <div className="d-flex justify-content-center align-items-center w-100 py-5">
                                 <Loader />
                             </div>
-                        ) : tacticsData.length === 0 ? (
+                        ) : visibleTactics.length === 0 ? (
                             <div className="d-flex justify-content-center align-items-center w-100 py-5 text-muted">
-                                No D3FEND tactics data available.
+                                {showOverlaps ? 'No overlapping D3FEND tactics found.' : 'No D3FEND tactics data available.'}
                             </div>
                         ) : (
-                            tacticsData.map(tactic => {
+                            visibleTactics.map(tactic => {
                                 const isTacticExpanded = !collapsedTactics.has(tactic.id);
-                                const isTwoTactics = tacticsData.length === 2;
+                                const isTwoTactics = visibleTactics.length === 2;
                                 const shouldStretch = isTwoTactics && tactic.columns.length <= 2;
                                 return (
                                     <div key={tactic.id} className={`tactic-group d-flex flex-column ${!isTacticExpanded ? 'tactic-collapsed' : ''}`}>
@@ -336,14 +354,13 @@ const Defend = ({
                                         {isTacticExpanded && (
                                             <div className={`tactic-columns d-flex flex-grow-1 ${shouldStretch ? 'columns-stretched' : ''}`}>
                                                 {tactic.columns.map((col, colIndex) => {
-                                                    const displayedItems = showOverlaps ? filterOverlaps(col.items) : col.items;
                                                     return (
                                                         <div key={colIndex} className="mitigation-col d-flex flex-column">
                                                             <div className="col-header">
                                                                 <span className="col-header-name" title={col.name}>{col.name}</span>
                                                             </div>
                                                             <div className="col-body d-flex flex-column">
-                                                                {displayedItems.map(item => renderItem(item, 0, null))}
+                                                                {col.items.map(item => renderItem(item, 0, null))}
                                                             </div>
                                                         </div>
                                                     );
